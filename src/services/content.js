@@ -31,3 +31,13 @@ export async function getLesson(lessonId) {
   const snapshot = await getDoc(doc(db, 'lessons', lessonId));
   return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
 }
+
+export async function getAllModules() {
+  const snapshot = await getDocs(collection(db, 'modules'));
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byOrder);
+}
+
+export async function getAllLessonsCount() {
+  const snapshot = await getDocs(collection(db, 'lessons'));
+  return snapshot.size;
+}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { getLessonQuestions, getModuleQuestions, recordAttempt } from '../services/quizzes';
+import { recordLessonQuizCompletion, recordModuleQuizCompletion } from '../services/progress';
 
 export default function QuizScreen({ route, navigation }) {
   const { mode, refId, title } = route.params;
@@ -93,8 +94,17 @@ export default function QuizScreen({ route, navigation }) {
     }
   }
 
-  function handleNext() {
+  async function handleNext() {
     if (isLast) {
+      try {
+        if (mode === 'lesson') {
+          await recordLessonQuizCompletion(refId);
+        } else {
+          await recordModuleQuizCompletion(refId, score, questions.length);
+        }
+      } catch (err) {
+        setError(err.message);
+      }
       setFinished(true);
       return;
     }

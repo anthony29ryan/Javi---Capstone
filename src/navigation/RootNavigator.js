@@ -10,6 +10,7 @@ import LessonDetailScreen from '../screens/LessonDetailScreen';
 import LessonsScreen from '../screens/LessonsScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModulesScreen from '../screens/ModulesScreen';
+import ProgressScreen from '../screens/ProgressScreen';
 import QuizScreen from '../screens/QuizScreen';
 import SignupScreen from '../screens/SignupScreen';
 
@@ -38,6 +39,7 @@ function AppStack() {
       <Stack.Screen name="Lessons" component={LessonsScreen} />
       <Stack.Screen name="LessonDetail" component={LessonDetailScreen} options={{ title: 'Lesson' }} />
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'Quiz' }} />
+      <Stack.Screen name="Progress" component={ProgressScreen} options={{ title: 'My Progress' }} />
     </Stack.Navigator>
   );
 }
