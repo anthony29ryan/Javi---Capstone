@@ -14,6 +14,10 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.buttonText}>Start Learning</Text>
       </Pressable>
 
+      <Pressable style={styles.secondaryButton} onPress={() => navigation.navigate('EditProfile')}>
+        <Text style={styles.secondaryButtonText}>Edit Name</Text>
+      </Pressable>
+
       <Pressable style={styles.secondaryButton} onPress={logOut}>
         <Text style={styles.secondaryButtonText}>Log Out</Text>
       </Pressable>

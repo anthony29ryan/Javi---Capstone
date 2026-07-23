@@ -6,7 +6,7 @@ import {
   signOut,
   updateProfile,
 } from 'firebase/auth';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 
 import { auth, db } from '../services/firebase';
 
@@ -41,8 +41,18 @@ export function AuthProvider({ children }) {
     return signOut(auth);
   }
 
+  async function updateDisplayName(displayName) {
+    await updateProfile(auth.currentUser, { displayName });
+    await updateDoc(doc(db, 'users', auth.currentUser.uid), { displayName });
+    // updateProfile mutates auth.currentUser in place; spread it so React sees a new
+    // reference and re-renders anything reading user.displayName.
+    setUser({ ...auth.currentUser });
+  }
+
   return (
-    <AuthContext.Provider value={{ user, initializing, signUp, logIn, logOut }}>
+    <AuthContext.Provider
+      value={{ user, initializing, signUp, logIn, logOut, updateDisplayName }}
+    >
       {children}
     </AuthContext.Provider>
   );

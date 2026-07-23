@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { useAuth } from '../context/AuthContext';
 import CoursesScreen from '../screens/CoursesScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LessonDetailScreen from '../screens/LessonDetailScreen';
 import LessonsScreen from '../screens/LessonsScreen';
@@ -26,6 +27,11 @@ function AppStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfileScreen}
+        options={{ title: 'Edit Name' }}
+      />
       <Stack.Screen name="Courses" component={CoursesScreen} options={{ title: 'Courses' }} />
       <Stack.Screen name="Modules" component={ModulesScreen} />
       <Stack.Screen name="Lessons" component={LessonsScreen} />
