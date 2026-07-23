@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useAuth } from '../context/AuthContext';
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const { user, logOut } = useAuth();
 
   return (
@@ -10,8 +10,12 @@ export default function HomeScreen() {
       <Text style={styles.title}>Java Learning App</Text>
       <Text>Welcome, {user?.displayName || user?.email}</Text>
 
-      <Pressable style={styles.button} onPress={logOut}>
-        <Text style={styles.buttonText}>Log Out</Text>
+      <Pressable style={styles.button} onPress={() => navigation.navigate('Courses')}>
+        <Text style={styles.buttonText}>Start Learning</Text>
+      </Pressable>
+
+      <Pressable style={styles.secondaryButton} onPress={logOut}>
+        <Text style={styles.secondaryButtonText}>Log Out</Text>
       </Pressable>
     </View>
   );
@@ -38,5 +42,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: '600',
+  },
+  secondaryButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  secondaryButtonText: {
+    color: '#555',
   },
 });

@@ -7,6 +7,20 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
+    // TEMPORARY: any signed-in user can read/write course content while we're
+    // still seeding placeholder lessons via scripts/seedContent.js. Once real
+    // content is in place, tighten this to read-only (no client write) since
+    // content should only ever be authored via the seed script, not the app.
+    match /courses/{courseId} {
+      allow read, write: if request.auth != null;
+    }
+    match /modules/{moduleId} {
+      allow read, write: if request.auth != null;
+    }
+    match /lessons/{lessonId} {
+      allow read, write: if request.auth != null;
+    }
+
     // Everything else stays default-deny until those collections get rules.
   }
 }

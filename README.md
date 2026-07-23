@@ -49,7 +49,15 @@ These are client identifiers, not secrets — safe to have in the built app. Rea
 tutor, code execution) stay server-side in Cloud Functions and never ship to the client.
 
 Publish `firestore.rules` in the Firebase console (Firestore Database → Rules tab) so signed-in
-users can read/write their own profile document.
+users can read/write their own profile document, plus content collections while placeholder
+content is being seeded.
+
+Seed placeholder lesson content (courses/modules/lessons) so the app has data to render — add
+`SEED_EMAIL` / `SEED_PASSWORD` to `.env` (an existing dev/test account), then:
+
+```bash
+node --env-file=.env scripts/seedContent.js
+```
 
 ### Run
 
@@ -66,8 +74,11 @@ computer are on the same network but auto-discovery doesn't find it.
 src/
   context/     # AuthContext — auth state, sign up/log in/log out
   navigation/  # RootNavigator — switches Auth stack vs. App stack based on auth state
-  screens/     # LoginScreen, SignupScreen, HomeScreen
-  services/    # firebase.js — Firebase app/auth/Firestore initialization
+  screens/     # LoginScreen, SignupScreen, HomeScreen, CoursesScreen, ModulesScreen,
+               # LessonsScreen, LessonDetailScreen
+  services/    # firebase.js (init), content.js (courses/modules/lessons reads)
+scripts/
+  seedContent.js  # one-off placeholder content seeder
 firestore.rules
 ```
 
@@ -83,7 +94,7 @@ Core collections: `users`, `courses`, `modules`, `lessons`, `questions`, `attemp
 
 - [x] Expo scaffold + Firebase Auth/Firestore connection
 - [x] Sign up / log in flow
-- [ ] Lesson tier structure
+- [x] Lesson tier structure (Courses → Modules → Lessons, placeholder content)
 - [ ] Quizzes and coding problems
 - [ ] AI tutor (Cloud Function)
 - [ ] Progress tracking
