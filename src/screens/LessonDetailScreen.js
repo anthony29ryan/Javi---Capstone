@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { getLesson } from '../services/content';
 
@@ -61,6 +61,15 @@ export default function LessonDetailScreen({ route, navigation }) {
       {(lesson.blocks || []).map((block, index) => (
         <Block key={index} block={block} />
       ))}
+
+      <Pressable
+        style={styles.quizButton}
+        onPress={() =>
+          navigation.navigate('Quiz', { mode: 'lesson', refId: lesson.id, title: `${lesson.title} Quiz` })
+        }
+      >
+        <Text style={styles.quizButtonText}>Take Quiz</Text>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -97,5 +106,16 @@ const styles = StyleSheet.create({
     fontFamily: 'monospace',
     fontSize: 13,
     lineHeight: 20,
+  },
+  quizButton: {
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  quizButtonText: {
+    color: '#fff',
+    fontWeight: '600',
   },
 });

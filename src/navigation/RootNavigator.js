@@ -10,6 +10,7 @@ import LessonDetailScreen from '../screens/LessonDetailScreen';
 import LessonsScreen from '../screens/LessonsScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModulesScreen from '../screens/ModulesScreen';
+import QuizScreen from '../screens/QuizScreen';
 import SignupScreen from '../screens/SignupScreen';
 
 const Stack = createNativeStackNavigator();
@@ -36,6 +37,7 @@ function AppStack() {
       <Stack.Screen name="Modules" component={ModulesScreen} />
       <Stack.Screen name="Lessons" component={LessonsScreen} />
       <Stack.Screen name="LessonDetail" component={LessonDetailScreen} options={{ title: 'Lesson' }} />
+      <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'Quiz' }} />
     </Stack.Navigator>
   );
 }

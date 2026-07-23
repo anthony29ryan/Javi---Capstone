@@ -59,6 +59,16 @@ export default function LessonsScreen({ route, navigation }) {
           <Text style={styles.cardTitle}>{item.title}</Text>
         </Pressable>
       )}
+      ListFooterComponent={
+        <Pressable
+          style={styles.quizButton}
+          onPress={() =>
+            navigation.navigate('Quiz', { mode: 'module', refId: moduleId, title: `${moduleTitle} Quiz` })
+          }
+        >
+          <Text style={styles.quizButtonText}>Take Module Quiz</Text>
+        </Pressable>
+      }
     />
   );
 }
@@ -84,6 +94,17 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
+    fontWeight: '600',
+  },
+  quizButton: {
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  quizButtonText: {
+    color: '#fff',
     fontWeight: '600',
   },
 });
