@@ -98,5 +98,5 @@ Core collections: `users`, `courses`, `modules`, `lessons`, `questions`, `attemp
 - [x] Multiple-choice quizzes (per lesson and per module) with attempt tracking
 - [ ] Runnable coding problems (Piston/Judge0 via Cloud Function)
 - [ ] AI tutor (Cloud Function)
-- [ ] Progress tracking
+- [x] Progress tracking (streaks, lessons completed, module quiz scores)
 - [ ] Trained personalization model
