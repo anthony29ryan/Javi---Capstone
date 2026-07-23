@@ -95,7 +95,8 @@ Core collections: `users`, `courses`, `modules`, `lessons`, `questions`, `attemp
 - [x] Expo scaffold + Firebase Auth/Firestore connection
 - [x] Sign up / log in flow
 - [x] Lesson tier structure (Courses → Modules → Lessons, placeholder content)
-- [ ] Quizzes and coding problems
+- [x] Multiple-choice quizzes (per lesson and per module) with attempt tracking
+- [ ] Runnable coding problems (Piston/Judge0 via Cloud Function)
 - [ ] AI tutor (Cloud Function)
 - [ ] Progress tracking
 - [ ] Trained personalization model
