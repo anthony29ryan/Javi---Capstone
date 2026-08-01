@@ -1,0 +1,11 @@
+{
+  "id": "introduction-to-java-jdk-jre-errors",
+  "moduleId": "introduction-to-java",
+  "title": "JDK, JRE, and Types of Errors",
+  "order": 6,
+  "blocks": [
+    { "type": "text", "value": "The Java Development Kit (JDK) is the full toolkit for writing, compiling, and debugging Java programs. The Java Runtime Environment (JRE) is just what's needed to run an already-compiled Java program." },
+    { "type": "text", "value": "Syntax errors are invalid statements the compiler catches while compiling — for example, a missing semicolon. The compiler reports an error message, and you have to find and fix the mistake before the program will compile." },
+    { "type": "text", "value": "Logical errors are different: the program compiles and runs fine, but produces the wrong result — for example, a program meant to add two numbers that multiplies them instead. Logical errors don't produce error messages, so they're harder to catch — you have to notice the output is wrong and trace back to the cause yourself." }
+  ]
+}

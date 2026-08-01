@@ -1,0 +1,12 @@
+{
+  "id": "introduction-to-java-first-program",
+  "moduleId": "introduction-to-java",
+  "title": "Your First Java Program",
+  "order": 2,
+  "blocks": [
+    { "type": "text", "value": "Every Java program is organized into a class — the basic unit of a Java program. A class definition starts with an access modifier like public, followed by the keyword class, and its body is wrapped in curly braces { }." },
+    { "type": "code", "language": "java", "value": "public class FirstJavaProgram {\n    public static void main(String[] args) {\n        System.out.println(\"First Java Application\");\n    }\n}" },
+    { "type": "text", "value": "The main method is the entry point of any Java program — execution always starts there. A Java class can only have one main method." },
+    { "type": "text", "value": "Breaking down the one statement inside main — System.out.println(\"First Java Application\"); — System is a class, out is an object defined inside it, and println() is a method being called on that object using dot notation. The text in quotes is a literal string — an argument being passed to println() so it knows what to print. Every Java statement ends with a semicolon." }
+  ]
+}
