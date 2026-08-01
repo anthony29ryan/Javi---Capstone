@@ -48,15 +48,15 @@ EXPO_PUBLIC_FIREBASE_APP_ID=
 These are client identifiers, not secrets — safe to have in the built app. Real API keys (AI
 tutor, code execution) stay server-side in Cloud Functions and never ship to the client.
 
-Publish `firestore.rules` in the Firebase console (Firestore Database → Rules tab) so signed-in
-users can read/write their own profile document, plus content collections while placeholder
-content is being seeded.
+Publish `firestore.rules` (Firestore Database → Rules tab) and `storage.rules` (Storage → Rules
+tab, after enabling Storage) in the Firebase console so signed-in users can read/write their own
+profile document, plus content collections/images while content is being actively authored.
 
-Seed placeholder lesson content (courses/modules/lessons) so the app has data to render — add
+Publish lesson content (courses/modules/lessons, sourced from the `content/` folder) — add
 `SEED_EMAIL` / `SEED_PASSWORD` to `.env` (an existing dev/test account), then:
 
 ```bash
-node --env-file=.env scripts/seedContent.js
+node --env-file=.env scripts/publishContent.js
 ```
 
 ### Run
@@ -75,12 +75,33 @@ src/
   context/     # AuthContext — auth state, sign up/log in/log out
   navigation/  # RootNavigator — switches Auth stack vs. App stack based on auth state
   screens/     # LoginScreen, SignupScreen, HomeScreen, CoursesScreen, ModulesScreen,
-               # LessonsScreen, LessonDetailScreen
-  services/    # firebase.js (init), content.js (courses/modules/lessons reads)
+               # LessonsScreen, LessonDetailScreen, QuizScreen, ProgressScreen, ...
+  services/    # firebase.js (init), content.js (courses/modules/lessons reads),
+               # quizzes.js, progress.js
+content/
+  courses.json   # the 3 tiers
+  modules.json   # all modules (one per topic), tagged with courseId
+  lessons/       # one JSON file per lesson (blocks array) — real content lives here
 scripts/
-  seedContent.js  # one-off placeholder content seeder
+  publishContent.js  # reads content/ and upserts it to Firestore; re-run after any edit
 firestore.rules
+storage.rules
 ```
+
+### Adding/editing lesson content
+
+Each lesson is a JSON file in `content/lessons/<lessonId>.json` with a `blocks` array — an
+ordered mix of:
+
+```json
+{ "type": "text", "value": "..." }
+{ "type": "code", "language": "java", "value": "..." }
+{ "type": "image", "url": "<Firebase Storage download URL>", "caption": "optional" }
+{ "type": "video", "videoId": "<YouTube video ID>", "caption": "optional" }
+```
+
+Edit the file, then re-run `node --env-file=.env scripts/publishContent.js` to push the change —
+safe to run any time, it just upserts whatever's in `content/`.
 
 ## Firestore data model
 
@@ -94,7 +115,8 @@ Core collections: `users`, `courses`, `modules`, `lessons`, `questions`, `attemp
 
 - [x] Expo scaffold + Firebase Auth/Firestore connection
 - [x] Sign up / log in flow
-- [x] Lesson tier structure (Courses → Modules → Lessons, placeholder content)
+- [x] Lesson tier structure (3 tiers, 21 real modules from course PDFs; lesson content being
+      authored module by module)
 - [x] Multiple-choice quizzes (per lesson and per module) with attempt tracking
 - [ ] Runnable coding problems (Piston/Judge0 via Cloud Function)
 - [ ] AI tutor (Cloud Function)

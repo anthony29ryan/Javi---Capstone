@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { WebView } from 'react-native-webview';
 
 import { getLesson } from '../services/content';
 
@@ -11,6 +20,30 @@ function Block({ block }) {
       </View>
     );
   }
+
+  if (block.type === 'image') {
+    return (
+      <View style={styles.mediaBlock}>
+        <Image source={{ uri: block.url }} style={styles.image} resizeMode="contain" />
+        {block.caption ? <Text style={styles.caption}>{block.caption}</Text> : null}
+      </View>
+    );
+  }
+
+  if (block.type === 'video') {
+    return (
+      <View style={styles.mediaBlock}>
+        <View style={styles.videoContainer}>
+          <WebView
+            source={{ uri: `https://www.youtube.com/embed/${block.videoId}` }}
+            allowsFullscreenVideo
+          />
+        </View>
+        {block.caption ? <Text style={styles.caption}>{block.caption}</Text> : null}
+      </View>
+    );
+  }
+
   return <Text style={styles.paragraph}>{block.value}</Text>;
 }
 
@@ -106,6 +139,25 @@ const styles = StyleSheet.create({
     fontFamily: 'monospace',
     fontSize: 13,
     lineHeight: 20,
+  },
+  mediaBlock: {
+    gap: 6,
+  },
+  image: {
+    width: '100%',
+    aspectRatio: 4 / 3,
+    borderRadius: 8,
+  },
+  videoContainer: {
+    width: '100%',
+    aspectRatio: 16 / 9,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  caption: {
+    fontSize: 13,
+    color: '#555',
+    textAlign: 'center',
   },
   quizButton: {
     backgroundColor: '#2563eb',

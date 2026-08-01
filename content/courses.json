@@ -1,0 +1,20 @@
+[
+  {
+    "id": "beginner",
+    "title": "Beginner",
+    "description": "Java syntax fundamentals: variables, operators, control flow, and loops.",
+    "order": 1
+  },
+  {
+    "id": "intermediate",
+    "title": "Intermediate",
+    "description": "Working with strings and arrays, functions, recursion, and the basics of object-oriented programming.",
+    "order": 2
+  },
+  {
+    "id": "advanced",
+    "title": "Advanced",
+    "description": "Deeper OOP, error handling, file I/O, and specialized Java features like concurrency and generics.",
+    "order": 3
+  }
+]

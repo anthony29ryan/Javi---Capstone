@@ -1,0 +1,13 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // TEMPORARY: any signed-in user can read/write lesson images while
+    // content is actively being authored. Once real content is in place,
+    // tighten write access since images should only be uploaded by the
+    // developer, not app users.
+    match /lessons/{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

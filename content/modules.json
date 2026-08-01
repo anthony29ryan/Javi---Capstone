@@ -1,0 +1,25 @@
+[
+  { "id": "introduction-to-java", "courseId": "beginner", "title": "Introduction to Java", "description": "What Java is, how programs are structured, and writing your first program.", "order": 1 },
+  { "id": "data-types", "courseId": "beginner", "title": "Data Types", "description": "Primitive types and how to declare and store values.", "order": 2 },
+  { "id": "operators", "courseId": "beginner", "title": "Operators", "description": "Arithmetic, comparison, and logical operators.", "order": 3 },
+  { "id": "expressions", "courseId": "beginner", "title": "Expressions", "description": "Combining variables and operators to compute values.", "order": 4 },
+  { "id": "input-output", "courseId": "beginner", "title": "Input/Output", "description": "Reading input and printing output.", "order": 5 },
+  { "id": "control-structures", "courseId": "beginner", "title": "Control Structures", "description": "Making decisions with if/else and switch.", "order": 6 },
+  { "id": "loops", "courseId": "beginner", "title": "Loops", "description": "Repeating code with for, while, and do-while.", "order": 7 },
+
+  { "id": "strings", "courseId": "intermediate", "title": "Strings", "description": "Working with text data and common String methods.", "order": 1 },
+  { "id": "arrays", "courseId": "intermediate", "title": "Arrays", "description": "Storing and working with collections of values.", "order": 2 },
+  { "id": "predefined-functions", "courseId": "intermediate", "title": "Predefined Functions", "description": "Using Java's built-in library methods.", "order": 3 },
+  { "id": "recursion", "courseId": "intermediate", "title": "Recursion", "description": "Functions that call themselves to solve problems.", "order": 4 },
+  { "id": "oop", "courseId": "intermediate", "title": "Object-Oriented Programming", "description": "Core OOP concepts: classes and objects.", "order": 5 },
+  { "id": "classes-and-methods", "courseId": "intermediate", "title": "Classes and Methods", "description": "Defining your own classes and methods.", "order": 6 },
+  { "id": "object-and-methods", "courseId": "intermediate", "title": "Objects and Methods", "description": "Creating objects and calling their methods.", "order": 7 },
+
+  { "id": "inheritance-polymorphism-interfaces", "courseId": "advanced", "title": "Inheritance, Polymorphism, and Interfaces", "description": "Building on classes with inheritance, polymorphism, and interfaces.", "order": 1 },
+  { "id": "exception-handling", "courseId": "advanced", "title": "Exception Handling", "description": "Handling errors safely with try/catch.", "order": 2 },
+  { "id": "file-io", "courseId": "advanced", "title": "File Input and Output", "description": "Reading from and writing to files.", "order": 3 },
+  { "id": "enums-nested-classes", "courseId": "advanced", "title": "Enumerations and Nested Classes", "description": "Enums and classes defined inside other classes.", "order": 4 },
+  { "id": "regular-expressions", "courseId": "advanced", "title": "Regular Expressions", "description": "Pattern matching in text.", "order": 5 },
+  { "id": "concurrency", "courseId": "advanced", "title": "Concurrency", "description": "Running code on multiple threads.", "order": 6 },
+  { "id": "generics", "courseId": "advanced", "title": "Generics", "description": "Writing type-safe, reusable classes and methods.", "order": 7 }
+]
