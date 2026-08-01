@@ -1,0 +1,12 @@
+{
+  "id": "control-structures-switch",
+  "moduleId": "control-structures",
+  "title": "The switch Statement",
+  "order": 4,
+  "blocks": [
+    { "type": "text", "value": "A switch statement tests one variable against a list of possible values (each called a case) and runs the matching block. The variable can only be an int, byte, short, char, or String." },
+    { "type": "code", "language": "java", "value": "switch (expression) {\n    case value1:\n        // statements\n        break;\n    case value2:\n        // statements\n        break;\n    default:\n        // statements\n}" },
+    { "type": "text", "value": "When the switch value matches a case, execution starts there and continues until it hits a break, which exits the switch. If a case has no break, execution falls through into the next case. default (optional, placed last) runs when nothing else matches, and doesn't need its own break." },
+    { "type": "code", "language": "java", "value": "char grade = 'A';\nswitch (grade) {\n    case 'A':\n        System.out.println(\"Excellent\");\n        break;\n    case 'B':\n        System.out.println(\"Very Good\");\n        break;\n    case 'C':\n        System.out.println(\"Good\");\n        break;\n    case 'D':\n        System.out.println(\"Satisfactory\");\n        break;\n    case 'F':\n        System.out.println(\"Failed\");\n        break;\n    default:\n        System.out.println(\"Invalid letter of grade.\");\n}" }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "control-structures-nested-if",
+  "moduleId": "control-structures",
+  "title": "Nested if and Multiple Selection",
+  "order": 2,
+  "blocks": [
+    { "type": "text", "value": "When one control structure sits inside another, it's nested. Chaining else if lets a program choose between more than two outcomes — Java checks each condition in order and runs the first one that's true:" },
+    { "type": "code", "language": "java", "value": "if (score >= 90) {\n    System.out.println(\"The grade is A\");\n} else if (score >= 80) {\n    System.out.println(\"The grade is B\");\n} else if (score >= 70) {\n    System.out.println(\"The grade is C\");\n} else if (score >= 60) {\n    System.out.println(\"The grade is D\");\n} else {\n    System.out.println(\"The grade is F\");\n}" },
+    { "type": "text", "value": "An if can also be nested directly inside another if's block, letting a program narrow down a decision in stages:" },
+    { "type": "code", "language": "java", "value": "if (temperature >= 50) {\n    if (temperature >= 110) {\n        System.out.println(\"hot\");\n    } else {\n        System.out.println(\"warm\");\n    }\n} else {\n    System.out.println(\"cold\");\n}" }
+  ]
+}
