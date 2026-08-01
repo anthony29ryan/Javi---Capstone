@@ -1,0 +1,11 @@
+{
+  "id": "operators-arithmetic",
+  "moduleId": "operators",
+  "title": "Arithmetic Operators",
+  "order": 1,
+  "blocks": [
+    { "type": "text", "value": "Operators are symbols that tell the compiler to perform a mathematical, relational, or logical operation and produce a result. The values on either side of an operator are called operands." },
+    { "type": "code", "language": "text", "value": "Operator  Description     Example (x=11,y=3)  Result\n+         Addition        x + y               14\n-         Subtraction     x - y               8\n*         Multiplication  x * y               33\n/         Division        x / y               3 (not 3.66)\n%         Modulus         x % y               2" },
+    { "type": "text", "value": "Division behaves differently depending on operand types: floating-point division happens when either operand is a floating-point value, giving a decimal result (11 / 3.0 gives 3.66). Integer division happens when both operands are integers — the result is an integer, and anything after the decimal point is simply dropped (11 / 3 gives 3)." }
+  ]
+}

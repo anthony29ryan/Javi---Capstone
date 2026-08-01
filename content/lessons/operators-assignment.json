@@ -1,0 +1,10 @@
+{
+  "id": "operators-assignment",
+  "moduleId": "operators",
+  "title": "Assignment Operators",
+  "order": 3,
+  "blocks": [
+    { "type": "text", "value": "Assignment operators assign a value to a variable — the left operand receives the value of the expression on the right. The compound forms (+=, -=, etc.) combine an operation with assignment in one step." },
+    { "type": "code", "language": "java", "value": "int score;\nscore = 32;   // score is 32\nscore += 2;   // score is 34  (same as score = score + 2)\nscore -= 3;   // score is 31\nscore *= 2;   // score is 62\nscore /= 2;   // score is 31\nscore %= 2;   // score is 1\nscore++;      // score is 2\nscore--;      // score is 1" }
+  ]
+}
