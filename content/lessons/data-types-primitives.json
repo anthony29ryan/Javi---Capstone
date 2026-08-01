@@ -1,0 +1,13 @@
+{
+  "id": "data-types-primitives",
+  "moduleId": "data-types",
+  "title": "Primitive Data Types",
+  "order": 1,
+  "blocks": [
+    { "type": "text", "value": "A data type defines the kind of value a variable can hold and what operations can be done on it. Java has eight built-in primitive types:" },
+    { "type": "code", "language": "text", "value": "Keyword   Description                  Range                          Default\nbyte      8-bit signed integer         -128 to 127                    0\nshort     16-bit signed integer        -32,768 to 32,767              0\nint       32-bit signed integer        -2^31 to 2^31-1                0\nlong      64-bit signed integer        -2^63 to 2^63-1                0L\nfloat     32-bit floating-point        ~1.4E-45 to ~3.4E38            0.0f\ndouble    64-bit floating-point        ~4.9E-324 to ~1.8E308          0.0d\nboolean   1 bit                        true or false                  false\nchar      16-bit Unicode character     '\\u0000' to '\\uffff'          '\\u0000'" },
+    { "type": "text", "value": "int and double are the default choices for whole numbers and decimals. byte, short, and float mainly save memory in large arrays. long is for values bigger than int can hold. boolean holds true/false flags. char holds a single character in single quotes." },
+    { "type": "code", "language": "java", "value": "byte b = 100;\nshort s = 1400;\nint a = 12400;\nlong a2 = 124000L;\nfloat f1 = 234.5f;\ndouble d1 = 234.5;\nboolean isCorrect = true;\nchar letter = 'A';" },
+    { "type": "text", "value": "String (java.lang.String) handles text but isn't technically a primitive type." }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "data-types-type-casting",
+  "moduleId": "data-types",
+  "title": "Type Casting",
+  "order": 3,
+  "blocks": [
+    { "type": "text", "value": "Type casting converts a value from one type to another (booleans can't be cast to numeric types). There are two kinds: widening and narrowing." },
+    { "type": "text", "value": "Widening (implicit): converting a lower-precision type to a higher-precision one. No data is lost, so Java does this automatically." },
+    { "type": "code", "language": "java", "value": "int x = 4;\ndouble a = x; // a is 4.0" },
+    { "type": "text", "value": "Allowed widening conversions: byte -> short/int/long/float/double, short -> int/long/float/double, char -> int/long/float/double, int -> long/float/double, long -> float/double, float -> double." },
+    { "type": "text", "value": "Narrowing (explicit): converting a higher-precision type to a lower-precision one. Data can be lost, so Java requires an explicit cast: (data_type_name) expression." },
+    { "type": "code", "language": "java", "value": "float x = 6.82f;\nint a = x;        // illegal, won't compile\nint a2 = (int) x; // a2 is 6, explicit cast works" },
+    { "type": "text", "value": "Allowed narrowing conversions: byte -> char, short -> byte/char, char -> byte/short, int -> byte/short/char, long -> byte/short/char/int, float -> byte/short/char/int/long, double -> byte/short/char/int/long/float. Casting a float or double to an integer type truncates the decimal — it doesn't round." },
+    { "type": "code", "language": "java", "value": "int a = (int) 7.9;            // 7\ndouble d = (double) (5 + 3);  // 8.0" }
+  ]
+}
