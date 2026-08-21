@@ -1,0 +1,14 @@
+{
+  "id": "classes-and-methods-encapsulation",
+  "moduleId": "classes-and-methods",
+  "title": "Information Hiding and Encapsulation",
+  "order": 2,
+  "blocks": [
+    { "type": "text", "value": "Information hiding restricts access to parts of an object. A public instance variable or method can be used from anywhere; a private one can only be used inside its own class's definition." },
+    { "type": "text", "value": "Information hiding makes code easier to understand and use, simplifies fixing and modifying it, and makes it easier to reuse." },
+    { "type": "text", "value": "Two common types of methods work around private data: an accessor (a public method that returns a private instance variable's value) and a mutator (a public method that changes it)." },
+    { "type": "code", "language": "java", "value": "public class Student {\n    private int age; // private - hidden from outside the class\n\n    public int getAge() {          // accessor\n        return age;\n    }\n\n    public void setAge(int newAge) { // mutator\n        age = newAge;\n    }\n}" },
+    { "type": "text", "value": "Encapsulation is the practice this enables: bundling instance variables and methods together into a class, and hiding the implementation details behind public methods like accessors and mutators." },
+    { "type": "text", "value": "A UML class diagram is a standard way to sketch a class's structure: the class name on top, its variables below that, and its methods at the bottom." }
+  ]
+}
