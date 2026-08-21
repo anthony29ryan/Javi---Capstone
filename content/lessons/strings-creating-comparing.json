@@ -1,0 +1,14 @@
+{
+  "id": "strings-creating-comparing",
+  "moduleId": "strings",
+  "title": "Creating and Comparing Strings",
+  "order": 2,
+  "blocks": [
+    { "type": "text", "value": "There are two ways to create a String: assign a string literal directly, or use the new keyword with the String constructor." },
+    { "type": "code", "language": "java", "value": "String strGreeting = \"Hello World!\";      // string literal\nString strName = \"Jess Diaz\";              // string literal\nString strGreeting2 = new String(\"Hello World!\"); // using new" },
+    { "type": "text", "value": "This distinction matters for comparison: string literals with the same content share one memory location, but strings created with new always get their own separate memory location — even if the content is identical." },
+    { "type": "code", "language": "java", "value": "String str1 = \"Computer\";\nString str2 = \"Computer\";\nString str3 = new String(\"Computer\");\nString str4 = new String(\"Computer\");\n\nstr1 == str2       // true  - same literal, same memory location\nstr1 == str3       // false - different memory locations\nstr1.equals(str3)  // true  - same content\nstr3 == str4       // false - different memory locations\nstr3.equals(str4)  // true  - same content" },
+    { "type": "text", "value": "Use == to check whether two variables point to the same object in memory; use .equals() to check whether their content is the same. For strings, always use .equals() unless you specifically need to check object identity." },
+    { "type": "text", "value": "Strings are also immutable — once created, a String's content can never change. Unlike a primitive variable (where num++ actually changes num's stored value), every String method that seems to \"modify\" a string actually returns a brand new string instead." }
+  ]
+}

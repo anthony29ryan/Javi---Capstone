@@ -1,0 +1,11 @@
+{
+  "id": "strings-what-is-a-string",
+  "moduleId": "strings",
+  "title": "What is a String?",
+  "order": 1,
+  "blocks": [
+    { "type": "text", "value": "Java provides a String class (from java.lang) for working with text — it's not a primitive type, but you'll use it just as often. A string is a sequence of characters, and each character has a position (index) starting at 0." },
+    { "type": "code", "language": "text", "value": "String:  H  e  l  l  o     W  o  r  l  d\nIndex:   0  1  2  3  4  5  6  7  8  9  10" },
+    { "type": "text", "value": "The length of a string is its character count — \"Hello World\" has a length of 11." }
+  ]
+}
