@@ -1,0 +1,12 @@
+{
+  "id": "generics-using-a-generic-class",
+  "moduleId": "generics",
+  "title": "Using a Generic Class",
+  "order": 2,
+  "blocks": [
+    { "type": "text", "value": "Create a generic object by naming the type in angle brackets:" },
+    { "type": "code", "language": "java", "value": "Gen<Integer> iData = new Gen<Integer>();\nGen<String> sData = new Gen<String>();\n\niData.setValue(1);\niData.showType();       // Type of T is java.lang.Integer\nsData.setValue(\"One\");\nsData.showType();       // Type of T is java.lang.String\n\nint num = iData.getValue();\nString str = sData.getValue();" },
+    { "type": "text", "value": "The type on the right side of new can be left empty using the diamond operator, since Java can already infer it from the left side:" },
+    { "type": "code", "language": "java", "value": "Gen<Integer> iData = new Gen<>();" }
+  ]
+}

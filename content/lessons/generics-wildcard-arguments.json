@@ -1,0 +1,14 @@
+{
+  "id": "generics-wildcard-arguments",
+  "moduleId": "generics",
+  "title": "Wildcard Arguments",
+  "order": 4,
+  "blocks": [
+    { "type": "text", "value": "A wildcard (?) stands in for an unknown type when you don't need to name it. An unbounded wildcard <?> accepts any type at all:" },
+    { "type": "code", "language": "java", "value": "public void printList(List<?> list) {\n    for (Object elem : list) {\n        System.out.println(elem + \" \");\n    }\n}\n// works on a List<Integer>, a List<String>, anything" },
+    { "type": "text", "value": "An upper bounded wildcard restricts the unknown type to a given type or any of its subtypes, using extends. This method accepts a list of any kind of Number (Integer, Double, and so on):" },
+    { "type": "code", "language": "java", "value": "public double sumOfList(List<? extends Number> list) {\n    double s = 0.0;\n    for (Number n : list) {\n        s += n.doubleValue();\n    }\n    return s;\n}\n// sumOfList(List.of(1, 2, 3)) sums to 6.0\n// sumOfList(List.of(1.2, 2.3, 3.5)) sums to 7.0" },
+    { "type": "text", "value": "A lower bounded wildcard restricts the unknown type to a given type or any of its supertypes, using super. This method accepts anything that can hold an Integer, whether the list is actually typed as Integer, Number, or Object:" },
+    { "type": "code", "language": "java", "value": "public void addNumbers(List<? super Integer> list) {\n    for (int i = 1; i <= 10; i++) {\n        list.add(i);\n    }\n}" }
+  ]
+}
