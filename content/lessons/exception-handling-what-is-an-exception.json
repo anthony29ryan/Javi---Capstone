@@ -1,0 +1,13 @@
+{
+  "id": "exception-handling-what-is-an-exception",
+  "moduleId": "exception-handling",
+  "title": "What is an Exception?",
+  "order": 1,
+  "blocks": [
+    { "type": "text", "value": "An exception is an event that disrupts a program's normal flow while it's running. Exception handling is how you intercept that disruption and respond to it instead of letting the program crash." },
+    { "type": "text", "value": "Checked exceptions are caught by the compiler before the program even runs:" },
+    { "type": "code", "language": "text", "value": "Exception                Description\nClassNotFoundException   The class is not found.\nIllegalAccessException   Access to a class is denied.\nInstantiationException   Attempt to create an object of an abstract class or interface.\nNoSuchMethodException    A requested method does not exist." },
+    { "type": "text", "value": "Unchecked exceptions (also called runtime exceptions) only surface while the program is actually executing:" },
+    { "type": "code", "language": "text", "value": "Exception                          Description\nArithmeticException                Arithmetic error, such as dividing an integer by 0\nArrayIndexOutOfBoundsException     Accessing an invalid index of an array\nArrayStoreException                Assigning a value to an array index of the wrong type\nInputMismatchException             Entering a value that doesn't match the expected type\nNullPointerException               Invalid use of a null reference\nNumberFormatException              Invalid conversion of a string to a numeric format\nStringIndexOutOfBoundsException    Accessing an invalid index of a string" }
+  ]
+}

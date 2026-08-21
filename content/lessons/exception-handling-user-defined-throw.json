@@ -1,0 +1,13 @@
+{
+  "id": "exception-handling-user-defined-throw",
+  "moduleId": "exception-handling",
+  "title": "User-Defined Exceptions and throw",
+  "order": 3,
+  "blocks": [
+    { "type": "text", "value": "You can define your own exception type by extending the built-in Exception class:" },
+    { "type": "code", "language": "java", "value": "public class HighBalanceException extends Exception {\n    public HighBalanceException() {\n        super(\"Customer balance is higher than the credit limit.\");\n    }\n}" },
+    { "type": "text", "value": "Use throw to actually raise an exception, sending it out of the current block so a catch elsewhere can handle it:" },
+    { "type": "code", "language": "java", "value": "public class CustomerAccount {\n    private Scanner s = new Scanner(System.in);\n    private int acctNum;\n    private double bal;\n    public static double HIGH_CREDIT_LIMIT = 30000.00;\n\n    public void input() {\n        try {\n            System.out.print(\"Enter account number: \");\n            acctNum = s.nextInt();\n            System.out.print(\"Enter balance due: \");\n            bal = s.nextDouble();\n            if (bal > HIGH_CREDIT_LIMIT) {\n                throw new HighBalanceException();\n            }\n        } catch (HighBalanceException hbe) {\n            System.out.println(hbe.getMessage());\n        }\n    }\n}" },
+    { "type": "text", "value": "Entering a balance of 31560.50 (above the 30000.00 limit) triggers the throw, and the catch block prints the exception's message: \"Customer balance is higher than the credit limit.\"" }
+  ]
+}
