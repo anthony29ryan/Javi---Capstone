@@ -1,0 +1,12 @@
+{
+  "id": "inheritance-polymorphism-interfaces-polymorphism",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Polymorphism and Dynamic Binding",
+  "order": 3,
+  "blocks": [
+    { "type": "text", "value": "Polymorphism is an object's ability to take on many forms. It shows up most often when a base class reference is used to refer to a derived class object." },
+    { "type": "text", "value": "When an overridden method is called, Java runs the version defined in the actual class used to create the object, not the type of the variable referring to it. This is called dynamic binding: the method that runs isn't decided until the program is actually running and the call happens." },
+    { "type": "code", "language": "java", "value": "public class PolymorphismSample {\n    public static void main(String[] args) {\n        Person[] people = new Person[4];\n        people[0] = new Undergraduate(\"Velasquez, Veronica\", 4910, 1);\n        people[1] = new Undergraduate(\"Santos, Stephanie\", 9931, 2);\n        people[2] = new Student(\"Mendoza, Marie\", 8812);\n        people[3] = new Undergraduate(\"Dela Cruz, Diane\", 9901, 4);\n\n        for (Person p : people) {\n            p.writeOutput();\n            System.out.println();\n        }\n    }\n}" },
+    { "type": "text", "value": "Assuming Undergraduate inherits from Student, which inherits from Person: even though p is declared as type Person, calling p.writeOutput() runs whichever version of writeOutput() belongs to the object's real class (Undergraduate or Student), not Person's version." }
+  ]
+}

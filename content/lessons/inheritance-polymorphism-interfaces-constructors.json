@@ -1,0 +1,13 @@
+{
+  "id": "inheritance-polymorphism-interfaces-constructors",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Constructors in Inherited Classes",
+  "order": 2,
+  "blocks": [
+    { "type": "text", "value": "A derived class doesn't inherit any constructors from its base class. It needs its own, and the first action inside a derived class constructor is typically to call a constructor from the base class." },
+    { "type": "text", "value": "A constructor can also call another constructor in the same class using the this keyword:" },
+    { "type": "code", "language": "java", "value": "public Person() {\n    this(\"No name yet\");\n}\n\npublic Person(String initialName) {\n    name = initialName;\n}" },
+    { "type": "text", "value": "Here, the default Person() constructor calls the other Person(String) constructor instead of duplicating its logic." },
+    { "type": "text", "value": "Calling a base class constructor uses super instead, and that call must be the very first action in the constructor. Because of this, a constructor can't use both super and this. If you need both, call this to reach a constructor that itself starts with super." }
+  ]
+}

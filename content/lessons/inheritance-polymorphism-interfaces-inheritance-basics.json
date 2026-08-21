@@ -1,0 +1,12 @@
+{
+  "id": "inheritance-polymorphism-interfaces-inheritance-basics",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Inheritance Basics",
+  "order": 1,
+  "blocks": [
+    { "type": "text", "value": "Inheritance lets you define a new class by building on an existing one. The new class is called the derived class (also known as a subclass, child class, or descendant class), and the class it's built on is the base class (also called a superclass, parent class, or ancestor class)." },
+    { "type": "code", "language": "java", "value": "public class DerivedClass extends BaseClass { }\n\npublic class Student extends Person { }" },
+    { "type": "text", "value": "Here, Student is the derived class and Person is the base class. Student automatically inherits Person's declared instance variables and public methods, but not its constructors." },
+    { "type": "text", "value": "If a derived class defines a method with the same name, parameter list, and return type as one in the base class, that method is said to override the base class's version." }
+  ]
+}
