@@ -1,0 +1,12 @@
+{
+  "id": "recursion-void-functions",
+  "moduleId": "recursion",
+  "title": "Recursive Void Functions",
+  "order": 2,
+  "blocks": [
+    { "type": "text", "value": "A recursive method doesn't have to return a value — it can be void too. Where you place the recursive call relative to other statements changes the order things happen in." },
+    { "type": "code", "language": "java", "value": "public static void countDown(int num) {\n    if (num <= 0) {\n        System.out.println(\"End\");\n    } else {\n        System.out.print(num + \" \");\n        countDown(num - 1); // recursive call happens after printing\n    }\n}\n// countDown(4); prints: 4 3 2 1 End" },
+    { "type": "text", "value": "Flip the order — call first, print after — and the output reverses, since nothing prints until the recursion has already unwound all the way back to the base case:" },
+    { "type": "code", "language": "java", "value": "public static void counting(int num) {\n    if (num <= 0) {\n        System.out.println(\"Start\");\n    } else {\n        counting(num - 1); // recursive call happens before printing\n        System.out.print(num + \" \");\n    }\n}\n// counting(4); prints:\n// Start\n// 1 2 3 4" }
+  ]
+}

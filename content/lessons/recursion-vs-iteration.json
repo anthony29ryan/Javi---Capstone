@@ -1,0 +1,13 @@
+{
+  "id": "recursion-vs-iteration",
+  "moduleId": "recursion",
+  "title": "Recursion vs. Iteration",
+  "order": 4,
+  "blocks": [
+    { "type": "text", "value": "Many problems can be solved either recursively or iteratively (with a loop) — recursion often reads more clearly, while iteration is usually faster and uses less memory, since each recursive call needs its own space for parameters and local variables until it returns." },
+    { "type": "code", "language": "java", "value": "public static void decToBin(int num) {\n    if (num == 0) {\n        System.out.print(0);\n    } else if (num > 0) {\n        decToBin(num / 2);\n        System.out.print(num % 2);\n    }\n}\n// decToBin(13); prints: 01101" },
+    { "type": "text", "value": "Compare the recursive factorial from earlier to an iterative version using a for loop — same result, without the overhead of repeated method calls:" },
+    { "type": "code", "language": "java", "value": "public static int factorial(int num) {\n    int fact = 1;\n    for (int i = 1; i <= num; i++) {\n        fact = fact * i;\n    }\n    return fact;\n}" },
+    { "type": "text", "value": "Recursion trades some speed and memory for clarity. For most everyday code that tradeoff is fine, but for performance-critical situations (like control systems), the efficiency of iteration usually wins out." }
+  ]
+}
