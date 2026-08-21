@@ -1,0 +1,15 @@
+{
+  "id": "enums-nested-classes-working-with-enums",
+  "moduleId": "enums-nested-classes",
+  "title": "Working with Enums",
+  "order": 2,
+  "blocks": [
+    { "type": "text", "value": "Two static methods work on the enum type itself, not on an individual constant:" },
+    { "type": "code", "language": "text", "value": "Method       Description                              Example\nvalueOf()    converts a String into the matching constant   Period.valueOf(\"PRELIM\") returns PRELIM\nvalues()     returns an array of all the constants           Period.values() returns an array of 4 elements" },
+    { "type": "text", "value": "This lets you loop over every constant and let a user pick one by name:" },
+    { "type": "code", "language": "java", "value": "enum Period {PRELIM, MIDTERM, PREFINAL, FINAL};\n\nPeriod pd;\nSystem.out.println(\"The grading periods are:\");\nfor (Period p : Period.values()) {\n    System.out.print(p + \" \");\n}\nSystem.out.print(\"\\nSelect a grading period: \");\nString input = sc.nextLine().toUpperCase();\npd = Period.valueOf(input);\nSystem.out.println(pd + \" is in position \" + pd.ordinal());\n// entering \"Midterm\" prints: MIDTERM is in position 1" },
+    { "type": "text", "value": "Enums also work directly as switch values:" },
+    { "type": "code", "language": "java", "value": "enum Size {REGULAR, LARGE, PARTY};\n\nSize s = Size.LARGE;\nswitch (s) {\n    case REGULAR:\n        System.out.println(\"381.00\");\n        break;\n    case LARGE:\n        System.out.println(\"602.00\");\n        break;\n    case PARTY:\n        System.out.println(\"799.00\");\n        break;\n}\n// prints: 602.00" },
+    { "type": "text", "value": "Enums make values type-safe: a variable of type Period can only ever hold PRELIM, MIDTERM, PREFINAL, or FINAL, nothing else." }
+  ]
+}

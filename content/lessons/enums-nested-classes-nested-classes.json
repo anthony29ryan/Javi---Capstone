@@ -1,0 +1,13 @@
+{
+  "id": "enums-nested-classes-nested-classes",
+  "moduleId": "enums-nested-classes",
+  "title": "Nested Classes",
+  "order": 3,
+  "blocks": [
+    { "type": "text", "value": "A nested class is a class declared inside another class. The containing class is called the top-level class. There are four kinds:" },
+    { "type": "text", "value": "- Static member class: has access to the top-level class's static methods.\n- Non-static member class (inner class): requires an instance of the top-level class, and can access all its data and methods.\n- Local class: defined inside a method body.\n- Anonymous class: a local class with no name." },
+    { "type": "text", "value": "The most common reason to nest a class is that it's only ever used by its top-level class, so packaging them together keeps the connection clear." },
+    { "type": "code", "language": "java", "value": "public class RealEstateListing {\n    private int listingNumber;\n    private double price;\n    private HouseData hData;\n\n    public RealEstateListing(int num, double price, String address, int sqFt) {\n        listingNumber = num;\n        this.price = price;\n        hData = new HouseData(address, sqFt);\n    }\n\n    public void display() {\n        System.out.println(\"Listing number #\" + listingNumber + \" Selling for Php\" + price);\n        System.out.println(\"Address: \" + hData.streetAddress);\n        System.out.println(hData.squareFeet + \" square feet\");\n    }\n\n    private class HouseData {\n        private String streetAddress;\n        private int squareFeet;\n\n        public HouseData(String address, int sqFt) {\n            streetAddress = address;\n            squareFeet = sqFt;\n        }\n    }\n}" },
+    { "type": "text", "value": "HouseData is private here, which hides its members from anything outside RealEstateListing. An inner class can reach its top-level class's fields and methods even when they're private, and the top-level class can reach right back into its inner class too." }
+  ]
+}
