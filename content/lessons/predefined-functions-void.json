@@ -1,0 +1,13 @@
+{
+  "id": "predefined-functions-void",
+  "moduleId": "predefined-functions",
+  "title": "Void Functions",
+  "order": 3,
+  "blocks": [
+    { "type": "text", "value": "A void function performs an action but doesn't return a value — it uses void as its return type instead of an actual type, and has no return statement." },
+    { "type": "code", "language": "java", "value": "modifiers void methodName(parameter list) {\n    statement(s)\n}" },
+    { "type": "code", "language": "java", "value": "public static void displayMessage() {\n    System.out.println(\"This is an example void function that will display when invoked.\");\n}\n\npublic static void displayInfo(String fname, String lname, int age) {\n    System.out.println(\"Student Information:\");\n    System.out.println(\"First Name: \" + fname);\n    System.out.println(\"Last Name: \" + lname);\n    System.out.println(\"Age: \" + age);\n}" },
+    { "type": "text", "value": "Since a void function returns nothing, it can't be used inside an expression — you just call it as its own statement. A non-static void method needs an object to call it on; a static one can be called directly:" },
+    { "type": "code", "language": "java", "value": "public class VoidExamples {\n    public static void main(String[] args) {\n        VoidExamples msg = new VoidExamples();\n        msg.displayMessage();            // non-static, needs an object\n        displayInfo(\"Jess\", \"Diaz\", 19); // static, called directly\n    }\n\n    public void displayMessage() {\n        System.out.println(\"This is an example void function that will display when invoked.\");\n    }\n\n    public static void displayInfo(String fname, String lname, int age) {\n        System.out.println(\"Student Information:\");\n        System.out.println(\"First Name: \" + fname);\n        System.out.println(\"Last Name: \" + lname);\n        System.out.println(\"Age: \" + age);\n    }\n}" }
+  ]
+}
