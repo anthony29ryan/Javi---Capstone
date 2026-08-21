@@ -1,0 +1,14 @@
+{
+  "id": "arrays-initializing-looping",
+  "moduleId": "arrays",
+  "title": "Initializing and Looping Through Arrays",
+  "order": 2,
+  "blocks": [
+    { "type": "text", "value": "An array can also be initialized with specific values right when it's declared, using an initializer list in braces:" },
+    { "type": "code", "language": "java", "value": "double prices[] = {12.25, 32.50, 16.90, 1.25, 43};\n// prices[0] is 12.25, prices[1] is 32.50, and so on" },
+    { "type": "text", "value": "Elements can also be assigned individually after creation:" },
+    { "type": "code", "language": "java", "value": "int[] ageList = new int[5];\nageList[0] = 23;\nageList[1] = 18;\nageList[2] = 22;\nageList[3] = 17;\nageList[4] = 34;" },
+    { "type": "text", "value": "Use a for loop with .length (which returns the array's size) to step through every element, or an enhanced for (foreach) loop to do the same without tracking an index:" },
+    { "type": "code", "language": "java", "value": "for (int i = 0; i < prices.length; i++) {\n    System.out.println(prices[i]);\n}\n\nfor (double value : prices) {\n    System.out.println(value);\n}" }
+  ]
+}

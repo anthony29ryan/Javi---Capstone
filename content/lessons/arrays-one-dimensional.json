@@ -1,0 +1,11 @@
+{
+  "id": "arrays-one-dimensional",
+  "moduleId": "arrays",
+  "title": "One-Dimensional Arrays",
+  "order": 1,
+  "blocks": [
+    { "type": "text", "value": "An array is a fixed-size collection of elements, all of the same type. Its length is set when it's created and can't change afterward. Elements are accessed by index, starting at 0." },
+    { "type": "code", "language": "java", "value": "dataType[] arrayName = new dataType[arraySize];\n\nint[] num = new int[5]; // 5 int elements: num[0] through num[4]" },
+    { "type": "text", "value": "When an array is created this way, Java automatically fills numeric elements with 0 as a default." }
+  ]
+}

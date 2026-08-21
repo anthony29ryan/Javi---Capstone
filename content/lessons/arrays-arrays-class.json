@@ -1,0 +1,12 @@
+{
+  "id": "arrays-arrays-class",
+  "moduleId": "arrays",
+  "title": "The Arrays Class",
+  "order": 5,
+  "blocks": [
+    { "type": "text", "value": "The Arrays class (java.util) provides static utility methods for common array tasks — search, compare, fill, and sort. Being static, they're called on the class itself, not on an array object: Arrays.sort(myArray), not myArray.sort()." },
+    { "type": "code", "language": "java", "value": "int[] a = {1, 3, 4, 5, 7, 4};\nint[] b = {6, 7, 12, 5, 1, 2};\nint[] c = {1, 3, 4, 5, 7, 4};" },
+    { "type": "code", "language": "text", "value": "Method                      Example                      Result\nbinarySearch(array, key)    Arrays.binarySearch(a, 4)   2 (found at index 2)\nbinarySearch(array, key)    Arrays.binarySearch(a, 53)  -7 (not found)\nequals(array, array)        Arrays.equals(a, b)         false (different contents)\nequals(array, array)        Arrays.equals(a, c)         true (same contents)\nfill(array, value)          Arrays.fill(a, 8)           every element in a becomes 8\nsort(array)                 Arrays.sort(b)              sorts b ascending: {1,2,5,6,7,12}\nsort(array, from, to)       Arrays.sort(b, 1, 5)        sorts only indices 1 through 4" },
+    { "type": "text", "value": "Note: binarySearch only gives reliable results on an already-sorted array — sort first if you're not sure the array is in order." }
+  ]
+}
