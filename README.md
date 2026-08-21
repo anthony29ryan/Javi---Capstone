@@ -9,13 +9,13 @@ Solo capstone project, built incrementally over one semester.
 ## Stack
 
 - **Client:** Expo (React Native), JavaScript
-- **Backend:** Firebase — Auth, Firestore, Cloud Functions
+- **Backend:** Firebase (Auth, Firestore, Cloud Functions)
 - **Navigation:** React Navigation
 - **AI tutor:** Claude or OpenAI API, called from a Cloud Function (never from the client)
 - **Code execution:** Piston or Judge0 API, called from a Cloud Function
 - **Trained model:** TensorFlow.js (tfjs-node), run inside a Cloud Function
 
-There is no custom Node/Express server — Firebase Cloud Functions are the only backend layer.
+There is no custom Node/Express server. Firebase Cloud Functions are the only backend layer.
 The app stays inside **Expo Go** (no custom dev client or native modules).
 
 ## Getting started
@@ -45,14 +45,14 @@ EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
 EXPO_PUBLIC_FIREBASE_APP_ID=
 ```
 
-These are client identifiers, not secrets — safe to have in the built app. Real API keys (AI
+These are client identifiers, not secrets, safe to have in the built app. Real API keys (AI
 tutor, code execution) stay server-side in Cloud Functions and never ship to the client.
 
 Publish `firestore.rules` (Firestore Database → Rules tab) and `storage.rules` (Storage → Rules
 tab, after enabling Storage) in the Firebase console so signed-in users can read/write their own
 profile document, plus content collections/images while content is being actively authored.
 
-Publish lesson content (courses/modules/lessons, sourced from the `content/` folder) — add
+Publish lesson content (courses/modules/lessons, sourced from the `content/` folder). Add
 `SEED_EMAIL` / `SEED_PASSWORD` to `.env` (an existing dev/test account), then:
 
 ```bash
@@ -76,7 +76,7 @@ src/
   navigation/  # RootNavigator — switches Auth stack vs. App stack based on auth state
   screens/     # LoginScreen, SignupScreen, HomeScreen, CoursesScreen, ModulesScreen,
                # LessonsScreen, LessonDetailScreen, QuizScreen, ProgressScreen, ...
-  services/    # firebase.js (init), content.js (courses/modules/lessons reads),
+  services/    # firebase.js (init), content.js (courses/modules/lessons reads);
                # quizzes.js, progress.js
 content/
   courses.json   # the 3 tiers
@@ -100,23 +100,22 @@ ordered mix of:
 { "type": "video", "videoId": "<YouTube video ID>", "caption": "optional" }
 ```
 
-Edit the file, then re-run `node --env-file=.env scripts/publishContent.js` to push the change —
-safe to run any time, it just upserts whatever's in `content/`.
+Edit the file, then re-run `node --env-file=.env scripts/publishContent.js` to push the change.
+Safe to run any time, it just upserts whatever's in `content/`.
 
 ## Firestore data model
 
 Core collections: `users`, `courses`, `modules`, `lessons`, `questions`, `attempts`, `progress`.
 
 - `attempts` records individual quiz answers (topic, correct/incorrect, time taken, attempt
-  number) — also the feature source for the trained personalization model.
+  number). Also the feature source for the trained personalization model.
 - `progress` tracks completed lessons, test scores, and streaks per user.
 
 ## Status
 
 - [x] Expo scaffold + Firebase Auth/Firestore connection
 - [x] Sign up / log in flow
-- [x] Lesson tier structure (3 tiers, 21 real modules from course PDFs; lesson content being
-      authored module by module)
+- [x] Lesson tier structure (3 tiers, 21 real modules from course PDFs, all 77 lessons authored)
 - [x] Multiple-choice quizzes (per lesson and per module) with attempt tracking
 - [ ] Runnable coding problems (Piston/Judge0 via Cloud Function)
 - [ ] AI tutor (Cloud Function)
