@@ -1,0 +1,14 @@
+{
+  "id": "regular-expressions-common-operations",
+  "moduleId": "regular-expressions",
+  "title": "Common RegEx Operations",
+  "order": 4,
+  "blocks": [
+    { "type": "text", "value": "find() checks whether the pattern appears anywhere inside the string, as a substring, rather than requiring the whole string to match:" },
+    { "type": "code", "language": "java", "value": "Pattern p = Pattern.compile(\"[0-9]\");\nString str = \"Passw0rd\";\nMatcher match = p.matcher(str);\nSystem.out.println(match.find()); // true, because of the '0'" },
+    { "type": "text", "value": "split() breaks a string into pieces wherever the regex matches:" },
+    { "type": "code", "language": "java", "value": "String phone = \"991-978-6452\";\nString[] tokens = phone.split(\"-\");\nfor (String t : tokens) {\n    System.out.println(t);\n}\n// Output: 991, 978, 6452 (each on its own line)" },
+    { "type": "text", "value": "replaceAll() swaps every match of a regex for a replacement string, for example collapsing runs of two or more spaces down to one:" },
+    { "type": "code", "language": "java", "value": "String str = \"Help me  I have   no idea what's   going on!\";\nstr = str.replaceAll(\" {2,}\", \" \");\nSystem.out.println(str);\n// Output: Help me I have no idea what's going on!" }
+  ]
+}

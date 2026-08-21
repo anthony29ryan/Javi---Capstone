@@ -1,0 +1,18 @@
+{
+  "id": "regular-expressions-basics",
+  "moduleId": "regular-expressions",
+  "title": "Regex Basics: matches() and Character Classes",
+  "order": 1,
+  "blocks": [
+    { "type": "text", "value": "A regular expression (regex) is a pattern that describes a string, or a whole family of strings, instead of just one exact value. Java's regex support lives in the java.util.regex package." },
+    { "type": "text", "value": "The String class's matches(regex) method checks whether a string fits a pattern, similar to equals(), but with room for variability. Compare a rigid check with equals():" },
+    { "type": "code", "language": "java", "value": "if (animal.equals(\"cat\")) return true;\nelse if (animal.equals(\"dog\")) return true;\nreturn false;" },
+    { "type": "text", "value": "to the equivalent using a regex, where the | symbol means \"or\":" },
+    { "type": "code", "language": "java", "value": "return animal.matches(\"cat|dog\");" },
+    { "type": "text", "value": "Square brackets define a set of acceptable characters at one position. To accept both \"dog\" and \"Dog\" but not \"dOg\":" },
+    { "type": "code", "language": "java", "value": "return animal.matches(\"[Cc]at|[Dd]og\");" },
+    { "type": "text", "value": "Add a hyphen inside brackets to match a whole range of characters, like any lowercase letter:" },
+    { "type": "code", "language": "java", "value": "return word.matches(\"[a-z]at\");         // any lowercase letter, then \"at\"\nreturn word.matches(\"[a-zA-Z](at|AT)\"); // any letter, then \"at\" or \"AT\"" },
+    { "type": "text", "value": "The dot (.) matches any single character. [0-9]. matches a digit followed by any one character." }
+  ]
+}

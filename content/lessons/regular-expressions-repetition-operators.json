@@ -1,0 +1,11 @@
+{
+  "id": "regular-expressions-repetition-operators",
+  "moduleId": "regular-expressions",
+  "title": "Repetition Operators",
+  "order": 2,
+  "blocks": [
+    { "type": "text", "value": "A repetition operator controls how many times a character (or group) can repeat in a match:" },
+    { "type": "code", "language": "text", "value": "Operator   Meaning              Example    Meaning\n*          0 or more            \"A*\"       zero or more A's, nothing else\n?          0 or 1               \"A?\"       either \"\" or \"A\"\n+          1 or more            \"A+\"       one or more A's in a row\n{x}        exactly x            \"A{7}\"     exactly 7 A's\n{x,y}      between x and y      \"A{7,9}\"   7, 8, or 9 A's\n{x,}       x or more            \"A{5,}\"    5 or more A's" },
+    { "type": "text", "value": "Combine the dot with * to match anything at all: \".*\" matches any number of any characters. Symbols can be chained together freely, for example \".?[0-5]{10}\" matches an optional single character followed by exactly 10 digits between 0 and 5." }
+  ]
+}

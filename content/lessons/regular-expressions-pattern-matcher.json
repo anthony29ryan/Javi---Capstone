@@ -1,0 +1,14 @@
+{
+  "id": "regular-expressions-pattern-matcher",
+  "moduleId": "regular-expressions",
+  "title": "Pattern and Matcher",
+  "order": 3,
+  "blocks": [
+    { "type": "text", "value": "For regex work beyond a simple matches() call, java.util.regex provides two classes. Pattern stores a compiled regex:" },
+    { "type": "code", "language": "java", "value": "Pattern p = Pattern.compile(\"[A-F]{5,}.*\");" },
+    { "type": "text", "value": "Compiling a pattern once and reusing it is faster than checking the same regex over and over as a plain string. Matcher pairs a compiled Pattern with a specific string to test:" },
+    { "type": "code", "language": "java", "value": "Matcher match = p.matcher(str);" },
+    { "type": "text", "value": "Call matches() on the Matcher to check if the whole string fits the pattern:" },
+    { "type": "code", "language": "java", "value": "Pattern p = Pattern.compile(\"[A-F]{5,}.*\");\nString str = \"AAAAAhhh\";\nMatcher match = p.matcher(str);\nSystem.out.println(match.matches()); // true" }
+  ]
+}
