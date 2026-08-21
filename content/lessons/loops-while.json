@@ -4,8 +4,8 @@
   "title": "while Loop",
   "order": 1,
   "blocks": [
-    { "type": "text", "value": "The while loop repeats its body as long as a condition stays true. Java checks the condition before each iteration — including before the very first one." },
+    { "type": "text", "value": "The while loop repeats its body as long as a condition stays true. Java checks the condition before each iteration, including before the very first one." },
     { "type": "code", "language": "java", "value": "int num = 0;\nwhile (num <= 10) {\n    System.out.println(num);\n    num++; // updates the loop control variable\n}" },
-    { "type": "text", "value": "num is the loop control variable — its value determines whether the loop keeps going. If nothing inside the loop ever makes the condition false, you get an infinite loop, so the body must always contain something that eventually stops it." }
+    { "type": "text", "value": "num is the loop control variable. Its value determines whether the loop keeps going. If nothing inside the loop ever makes the condition false, you get an infinite loop, so the body must always contain something that eventually stops it." }
   ]
 }

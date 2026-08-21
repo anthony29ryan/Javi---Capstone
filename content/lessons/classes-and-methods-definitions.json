@@ -5,9 +5,9 @@
   "order": 1,
   "blocks": [
     { "type": "text", "value": "A method is a collection of statements grouped together to perform an operation. The void keyword means a method doesn't return a value." },
-    { "type": "text", "value": "A parameter is a variable listed in a method's declaration; an argument is the actual value passed in when the method is called. The value returned must match the method's declared return type — you can't return an int from a method declared to return boolean." },
-    { "type": "text", "value": "Instance variables are declared outside any method, constructor, or block — they belong to the object itself. Local variables are declared inside a method and only exist there; nothing outside that method can see them." },
+    { "type": "text", "value": "A parameter is a variable listed in a method's declaration; an argument is the actual value passed in when the method is called. The value returned must match the method's declared return type: you can't return an int from a method declared to return boolean." },
+    { "type": "text", "value": "Instance variables are declared outside any method, constructor, or block; they belong to the object itself. Local variables are declared inside a method and only exist there; nothing outside that method can see them." },
     { "type": "code", "language": "java", "value": "public class Student {\n    private String name; // instance variable\n\n    public void greet() {\n        String message = \"Hello, \" + this.name; // local variable; 'this' refers to the calling object\n        System.out.println(message);\n    }\n}" },
-    { "type": "text", "value": "this refers to the object that the method was called on — useful for referring to an instance variable when a parameter or local variable happens to share its name." }
+    { "type": "text", "value": "this refers to the object that the method was called on. It's useful for referring to an instance variable when a parameter or local variable happens to share its name." }
   ]
 }

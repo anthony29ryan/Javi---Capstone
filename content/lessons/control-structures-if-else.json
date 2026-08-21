@@ -5,11 +5,11 @@
   "order": 1,
   "blocks": [
     { "type": "text", "value": "A control structure directs the flow of a program away from simple top-to-bottom execution. There are two kinds: a selection structure picks which statements run based on a condition, and a repetition structure repeats statements based on a condition." },
-    { "type": "text", "value": "The simplest selection is a one-way if — it runs a block only when its condition is true, and does nothing otherwise:" },
+    { "type": "text", "value": "The simplest selection is a one-way if. It runs a block only when its condition is true, and does nothing otherwise:" },
     { "type": "code", "language": "java", "value": "int score = 70;\nif (score >= 60) {\n    System.out.println(\"The student passed.\");\n}" },
-    { "type": "text", "value": "A two-way selection uses if...else — the else block runs whenever the if condition is false:" },
+    { "type": "text", "value": "A two-way selection uses if...else. The else block runs whenever the if condition is false:" },
     { "type": "code", "language": "java", "value": "if (score >= 60) {\n    System.out.println(\"The student passed.\");\n} else {\n    System.out.println(\"The student failed.\");\n}" },
-    { "type": "text", "value": "Any group of statements wrapped in { } — like the body of an if block — is called a compound statement (or block). It can contain as many statements as needed, all executed together." },
+    { "type": "text", "value": "Any group of statements wrapped in { }, like the body of an if block, is called a compound statement (or block). It can contain as many statements as needed, all executed together." },
     { "type": "code", "language": "java", "value": "if (price >= 500.00) {\n    discount = price * 0.10;\n    salePrice = price - discount;\n    System.out.println(\"The discounted price is \" + salePrice);\n} else {\n    System.out.println(\"No discount.\");\n    System.out.println(\"The price is \" + price);\n}" }
   ]
 }

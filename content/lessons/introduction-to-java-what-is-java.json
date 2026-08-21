@@ -5,8 +5,8 @@
   "order": 1,
   "blocks": [
     { "type": "text", "value": "Java is a high-level programming language developed by Sun Microsystems for general-purpose business applications and interactive, web-based Internet applications. Java programs can run on any operating system or device." },
-    { "type": "text", "value": "The Java Virtual Machine (JVM) is what makes this possible — it translates Java bytecode (the compiled form of a Java program) into machine language and executes it." },
-    { "type": "text", "value": "Here's how source code becomes a running program: you write source code in a text editor or development environment (like NetBeans), the Java compiler converts it into bytecode, and the Java interpreter — running inside the JVM — checks that bytecode and communicates with the operating system to execute it line by line." },
-    { "type": "text", "value": "There are two types of Java programs: an Application (a stand-alone program — either a console application that runs in a command-line window, or a windowed application with a GUI), and an Applet (a program embedded in a web page that runs inside a browser)." }
+    { "type": "text", "value": "The Java Virtual Machine (JVM) is what makes this possible: it translates Java bytecode (the compiled form of a Java program) into machine language and executes it." },
+    { "type": "text", "value": "Here's how source code becomes a running program: you write source code in a text editor or development environment (like NetBeans), the Java compiler converts it into bytecode, and the Java interpreter, running inside the JVM, checks that bytecode and communicates with the operating system to execute it line by line." },
+    { "type": "text", "value": "There are two types of Java programs: an Application (a stand-alone program, either a console application that runs in a command-line window, or a windowed application with a GUI), and an Applet (a program embedded in a web page that runs inside a browser)." }
   ]
 }

@@ -4,8 +4,8 @@
   "title": "What is Recursion?",
   "order": 1,
   "blocks": [
-    { "type": "text", "value": "Recursion is solving a problem by breaking it into smaller versions of itself — a recursive method is one that calls itself. Many problems either can only be solved this way, or are much cleaner to solve this way than with a loop." },
+    { "type": "text", "value": "Recursion is solving a problem by breaking it into smaller versions of itself. A recursive method is one that calls itself. Many problems either can only be solved this way, or are much cleaner to solve this way than with a loop." },
     { "type": "code", "language": "java", "value": "public static int factorial(int num) {\n    if (num == 0) {\n        return 1;\n    } else {\n        return num * factorial(num - 1); // recursive call\n    }\n}" },
-    { "type": "text", "value": "Calling factorial(4) returns 24. Each call gets its own separate copy of num — factorial(4) calls factorial(3), which calls factorial(2), and so on down to factorial(0), then the results multiply back up on the way out: 1, then 1*1, then 2*1, then 3*2, then 4*6 = 24." }
+    { "type": "text", "value": "Calling factorial(4) returns 24. Each call gets its own separate copy of num. factorial(4) calls factorial(3), which calls factorial(2), and so on down to factorial(0), then the results multiply back up on the way out: 1, then 1*1, then 2*1, then 3*2, then 4*6 = 24." }
   ]
 }

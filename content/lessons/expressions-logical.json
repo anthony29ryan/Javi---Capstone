@@ -6,7 +6,7 @@
   "blocks": [
     { "type": "text", "value": "A logical expression returns a boolean value. It's typically built from relational expressions combined with logical operators (&&, ||). Logical operators have low precedence, so relational comparisons are evaluated first." },
     { "type": "code", "language": "java", "value": "14 >= 5 && 12 != 3;  // true (both sides are true)" },
-    { "type": "text", "value": "When multiple logical operators appear together, they're evaluated left to right — but && still binds tighter than ||." },
+    { "type": "text", "value": "When multiple logical operators appear together, they're evaluated left to right, but && still binds tighter than ||." },
     { "type": "code", "language": "java", "value": "3 > 3 || 4 < 2 && 12 > 3 || 4 < 5;  // true" },
     { "type": "text", "value": "Parentheses override this and let you control exactly which parts get grouped together." },
     { "type": "code", "language": "java", "value": "(3 > 3 || 4 < 2) && (12 > 3 || 4 < 5);  // false" }

@@ -6,9 +6,9 @@
   "blocks": [
     { "type": "text", "value": "Inheritance lets a class take on the properties of another class, avoiding repeated code across related classes. Apply it with the extends keyword." },
     { "type": "code", "language": "java", "value": "class Dog extends Animal { }" },
-    { "type": "text", "value": "An interface is a component that defines the headings for a set of public methods — some interfaces cover every public method a class needs, others only specify certain ones. A class uses an interface via the implements keyword." },
+    { "type": "text", "value": "An interface is a component that defines the headings for a set of public methods. Some interfaces cover every public method a class needs, others only specify certain ones. A class uses an interface via the implements keyword." },
     { "type": "code", "language": "java", "value": "class Dog implements Comparable { }" },
-    { "type": "text", "value": "A package groups related classes and interfaces into a folder — the folder's name is the package's name, and each class lives in its own file named after that class. Import any class from a package to use it elsewhere, even outside that package's folder:" },
+    { "type": "text", "value": "A package groups related classes and interfaces into a folder. The folder's name is the package's name, and each class lives in its own file named after that class. Import any class from a package to use it elsewhere, even outside that package's folder:" },
     { "type": "code", "language": "java", "value": "import java.util.Scanner;   // import one class\nimport java.util.*;         // import every class in the package" }
   ]
 }

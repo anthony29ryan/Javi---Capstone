@@ -4,9 +4,9 @@
   "title": "Order of Precedence",
   "order": 4,
   "blocks": [
-    { "type": "text", "value": "When an expression has more than one operator, precedence rules decide which happens first — e.g. in 10 + 3 * 8, multiplication happens before addition, giving 34, not 104." },
+    { "type": "text", "value": "When an expression has more than one operator, precedence rules decide which happens first. For example, in 10 + 3 * 8, multiplication happens before addition, giving 34, not 104." },
     { "type": "code", "language": "text", "value": "Highest -> Lowest\n!\n*, /, %\n+, -\n>, <, >=, <=\n==, !=\n&&\n||\n=" },
-    { "type": "text", "value": "Operators of equal precedence are evaluated left to right (except assignment). Parentheses () override precedence entirely — use them to force a specific evaluation order." },
+    { "type": "text", "value": "Operators of equal precedence are evaluated left to right (except assignment). Parentheses () override precedence entirely, so use them to force a specific evaluation order." },
     { "type": "code", "language": "java", "value": "int a = 10, b = 3, c = 8;\nint ex1 = (a + b) * c; // 104 - adds first, then multiplies\nint ex2 = a + (b * c); // 34  - multiplies first, then adds" }
   ]
 }

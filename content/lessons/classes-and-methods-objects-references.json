@@ -4,7 +4,7 @@
   "title": "Objects and References",
   "order": 3,
   "blocks": [
-    { "type": "text", "value": "A variable of a class type doesn't store the object itself — it stores the object's memory address, called a reference. The actual object lives elsewhere in memory." },
-    { "type": "text", "value": "Because class-type variables hold references rather than the objects themselves, they're called reference types. This is why comparing two objects with == checks whether they're the exact same object in memory, not whether their contents match — use the equals() method to compare content instead, the same distinction covered for String comparisons earlier." }
+    { "type": "text", "value": "A variable of a class type doesn't store the object itself. It stores the object's memory address, called a reference. The actual object lives elsewhere in memory." },
+    { "type": "text", "value": "Because class-type variables hold references rather than the objects themselves, they're called reference types. This is why comparing two objects with == checks whether they're the exact same object in memory, not whether their contents match. Use the equals() method to compare content instead, the same distinction covered for String comparisons earlier." }
   ]
 }

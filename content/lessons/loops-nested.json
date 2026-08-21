@@ -4,10 +4,10 @@
   "title": "Nested Loops and Control Structures",
   "order": 5,
   "blocks": [
-    { "type": "text", "value": "Control structures can be nested inside each other — a for loop inside an if, a loop inside a loop, and so on. Just make sure each block's braces line up correctly." },
+    { "type": "text", "value": "Control structures can be nested inside each other: a for loop inside an if, a loop inside a loop, and so on. Just make sure each block's braces line up correctly." },
     { "type": "code", "language": "java", "value": "for (int x = 1; x <= 10; x++) {\n    for (int y = 1; y <= 10; y++) {\n        System.out.print(x * y + \"\\t\");\n    }\n    System.out.println();\n}" },
-    { "type": "text", "value": "This prints a 10x10 multiplication table — the outer loop picks each row (x), and the inner loop fills in that row's columns (y), finishing all 10 columns before the outer loop moves to the next row." },
+    { "type": "text", "value": "This prints a 10x10 multiplication table. The outer loop picks each row (x), and the inner loop fills in that row's columns (y), finishing all 10 columns before the outer loop moves to the next row." },
     { "type": "code", "language": "java", "value": "char flag = 'y';\nwhile (flag != 'n') {\n    System.out.print(\"Enter a range greater than 0: \");\n    int range = console.nextInt();\n    if (range > 0) {\n        for (int i = 1; i <= range; i++) {\n            System.out.print(i + \", \");\n        }\n    } else {\n        System.out.println(\"Invalid number. Try again!\");\n        continue;\n    }\n    System.out.print(\"\\nRepeat? (y/n): \");\n    flag = console.next().charAt(0);\n}" },
-    { "type": "text", "value": "Here a for loop sits inside an if...else, which sits inside a while loop. If the input is invalid, continue skips straight back to the while condition — bypassing the 'repeat?' prompt entirely — instead of exiting the loop." }
+    { "type": "text", "value": "Here a for loop sits inside an if...else, which sits inside a while loop. If the input is invalid, continue skips straight back to the while condition, bypassing the 'repeat?' prompt entirely, instead of exiting the loop." }
   ]
 }

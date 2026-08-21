@@ -4,7 +4,7 @@
   "title": "Formatted Output with printf",
   "order": 3,
   "blocks": [
-    { "type": "text", "value": "printf() formats output using a format specifier — a placeholder that controls how a value is displayed, like how many decimal places a number shows." },
+    { "type": "text", "value": "printf() formats output using a format specifier, a placeholder that controls how a value is displayed, like how many decimal places a number shows." },
     { "type": "code", "language": "java", "value": "double price = 19.5;\nSystem.out.println(\"Price using println: \" + price);  // Price using println: 19.5\nSystem.out.printf(\"Price using printf: %.2f\", price);  // Price using printf: 19.50" },
     { "type": "text", "value": "%.2f means: format as a floating-point number (f) with 2 digits after the decimal point." },
     { "type": "code", "language": "text", "value": "Specifier   Type            Example\n%c          Character       %c, or %2c (in a 2-space field)\n%d          Integer         %d\n%f          Floating-point  %f, %.2f (2 decimals), %6.2f (2 decimals, 6-space field)\n%e          Exponential     %e\n%s          String          %s, %10s (10-space field), %.2s (first 2 characters)" }

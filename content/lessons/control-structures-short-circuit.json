@@ -4,9 +4,9 @@
   "title": "Short-Circuit Evaluation",
   "order": 3,
   "blocks": [
-    { "type": "text", "value": "Java evaluates logical expressions left to right and stops as soon as the overall result is certain — this is called short-circuit evaluation. && and || are both short-circuit operators." },
+    { "type": "text", "value": "Java evaluates logical expressions left to right and stops as soon as the overall result is certain. This is called short-circuit evaluation. && and || are both short-circuit operators." },
     { "type": "code", "language": "java", "value": "int a = 0, b = 1, c = 4, d = 4;\nif (a == b && c == d) {   // a == b is false, so Java never checks c == d\n    System.out.println(\"Example statement.\");\n}" },
-    { "type": "text", "value": "The same happens with || — if the left side is already true, Java skips checking the right side entirely, since the overall result is already known:" },
+    { "type": "text", "value": "The same happens with ||. If the left side is already true, Java skips checking the right side entirely, since the overall result is already known:" },
     { "type": "code", "language": "java", "value": "if (c == d || a == b) {   // c == d is true, so Java never checks a == b\n    System.out.println(\"Example statement.\");\n}" },
     { "type": "text", "value": "Short-circuiting makes evaluation faster by skipping checks that can't change the outcome." }
   ]

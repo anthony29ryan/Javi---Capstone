@@ -4,10 +4,10 @@
   "title": "Comments and Imports",
   "order": 5,
   "blocks": [
-    { "type": "text", "value": "Comments are notes a programmer adds to explain a program to other readers. The compiler ignores them completely — they have no effect when the program runs." },
+    { "type": "text", "value": "Comments are notes a programmer adds to explain a program to other readers. The compiler ignores them completely, so they have no effect when the program runs." },
     { "type": "text", "value": "Java has two comment styles: single-line comments starting with //, and multi-line comments wrapped between /* and */." },
     { "type": "code", "language": "java", "value": "System.out.println(\"Welcome to Java.\"); //prints Welcome to Java.\n\n/*\nProgram that converts Kilogram to Gram\n*/\npublic class KiloToGram" },
     { "type": "text", "value": "Packages are folders that group related classes together; the package name matches the folder name and is written in lowercase. The import keyword lets you use classes from a package in your own file." },
-    { "type": "text", "value": "To import one specific class: import package_name.Class_name; — for example, import java.util.Date;\nTo import every class in a package: import package_name.*; — for example, import java.util.*;\nAll import statements must appear before the class declaration." }
+    { "type": "text", "value": "To import one specific class: import package_name.Class_name; for example, import java.util.Date;\nTo import every class in a package: import package_name.*; for example, import java.util.*;\nAll import statements must appear before the class declaration." }
   ]
 }

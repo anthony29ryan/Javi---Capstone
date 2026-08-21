@@ -4,7 +4,7 @@
   "title": "do-while Loop",
   "order": 3,
   "blocks": [
-    { "type": "text", "value": "A do...while loop is like a while loop, but it checks the condition after running the body — so the body always executes at least once, even if the condition starts out false." },
+    { "type": "text", "value": "A do...while loop is like a while loop, but it checks the condition after running the body, so the body always executes at least once, even if the condition starts out false." },
     { "type": "code", "language": "java", "value": "int num = 0;\ndo {\n    System.out.println(num);\n    num++;\n} while (num <= 10);" }
   ]
 }

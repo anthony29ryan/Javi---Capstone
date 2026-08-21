@@ -6,6 +6,6 @@
   "blocks": [
     { "type": "text", "value": "A for loop is used when you know how many times you want to repeat something. It packs the setup, condition, and update into one line: for (initialization; condition; update)." },
     { "type": "code", "language": "java", "value": "for (int num = 0; num <= 10; num++) {\n    System.out.println(num);\n}" },
-    { "type": "text", "value": "Execution order: the initialization runs once at the very start; then the condition is checked — if true, the body runs, then the update runs, and the condition is checked again. This repeats until the condition is false." }
+    { "type": "text", "value": "Execution order: the initialization runs once at the very start, then the condition is checked. If true, the body runs, then the update runs, and the condition is checked again. This repeats until the condition is false." }
   ]
 }

@@ -6,6 +6,6 @@
   "blocks": [
     { "type": "text", "value": "Object-oriented programming (OOP) is a programming methodology built around objects whose behaviors and interactions accomplish a task." },
     { "type": "text", "value": "An object has attributes (characteristics), and the current values of those attributes give it a state. The actions an object can perform are its behaviors, and each behavior is defined by a method." },
-    { "type": "text", "value": "Objects of the same kind share a data type and belong to the same class. A class is the blueprint that defines what an object looks like — its data type is the name of the class that created it." }
+    { "type": "text", "value": "Objects of the same kind share a data type and belong to the same class. A class is the blueprint that defines what an object looks like. Its data type is the name of the class that created it." }
   ]
 }

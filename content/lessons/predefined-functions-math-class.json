@@ -5,9 +5,9 @@
   "order": 1,
   "blocks": [
     { "type": "text", "value": "A function (or method) is a reusable block of statements that performs an operation. Pre-defined functions come built into Java's class libraries (like the Math class); user-defined functions are ones you write yourself." },
-    { "type": "text", "value": "To use a class's pre-defined functions, import it from its package — everything in java.lang is imported automatically, but others (like Scanner in java.util) need an explicit import." },
+    { "type": "text", "value": "To use a class's pre-defined functions, import it from its package. Everything in java.lang is imported automatically, but others (like Scanner in java.util) need an explicit import." },
     { "type": "code", "language": "java", "value": "import java.util.Scanner;" },
-    { "type": "text", "value": "Math class methods are static, so they're called directly on the class name — no need to create a Math object. Given double a = 3, b = 23, c = 34.45, d = 65.78; int e = -57;:" },
+    { "type": "text", "value": "Math class methods are static, so they're called directly on the class name, with no need to create a Math object. Given double a = 3, b = 23, c = 34.45, d = 65.78; int e = -57;:" },
     { "type": "code", "language": "text", "value": "Method     Example           Result\nabs(x)     Math.abs(e)       57\nceil(x)    Math.ceil(c)      35.0\nceil(x)    Math.ceil(d)      66.0\nexp(x)     Math.exp(3)       20.085536923187668\nfloor(x)   Math.floor(c)     34.0\nfloor(x)   Math.floor(d)     65.0\nlog(x)     Math.log(a)       1.0986122886681098\nlog10(x)   Math.log10(a)     0.47712125471966244\nmax(x,y)   Math.max(a, b)    23.0\nmin(x,y)   Math.min(a, b)    3.0\npow(x,y)   Math.pow(2, a)    8.0\nround(x)   Math.round(c)     34\nround(x)   Math.round(d)     66\nsqrt(x)    Math.sqrt(4)      2.0" },
     { "type": "text", "value": "A method's return value can be used directly in an expression: int x = Math.abs(-57); stores 57 in x. Using a method like this is called invoking or calling it." }
   ]
