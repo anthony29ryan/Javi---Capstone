@@ -1,0 +1,13 @@
+{
+  "id": "concurrency-creating-threads",
+  "moduleId": "concurrency",
+  "title": "Creating Threads",
+  "order": 2,
+  "blocks": [
+    { "type": "text", "value": "There are two ways to create a thread: extend the Thread class and override run(), or implement the Runnable interface." },
+    { "type": "code", "language": "java", "value": "public class ThreadDemo extends Thread {\n    public static void main(String[] args) {\n        ThreadDemo thread = new ThreadDemo();\n        thread.start();\n        System.out.println(\"Outside of a thread\");\n    }\n\n    public void run() {\n        System.out.println(\"Running in a thread\");\n    }\n}\n// Output:\n// Outside of a thread\n// Running in a thread" },
+    { "type": "text", "value": "start() is what actually launches the thread. It calls run() on a separate line of execution and returns immediately without waiting for run() to finish, which is why \"Outside of a thread\" can print before or interleaved with the thread's own output." },
+    { "type": "text", "value": "Implementing Runnable instead keeps your class free to extend something else, since Java only allows single inheritance:" },
+    { "type": "code", "language": "java", "value": "public class ThreadDemo implements Runnable {\n    public static void main(String[] args) {\n        ThreadDemo obj = new ThreadDemo();\n        Thread thread = new Thread(obj);\n        thread.start();\n        System.out.println(\"Outside of a thread\");\n    }\n\n    public void run() {\n        System.out.println(\"Running in a thread\");\n    }\n}" }
+  ]
+}

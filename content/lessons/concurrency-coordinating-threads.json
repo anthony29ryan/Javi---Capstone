@@ -1,0 +1,11 @@
+{
+  "id": "concurrency-coordinating-threads",
+  "moduleId": "concurrency",
+  "title": "Coordinating Threads: sleep, join, and isAlive",
+  "order": 4,
+  "blocks": [
+    { "type": "text", "value": "sleep(ms) pauses the current thread for the given number of milliseconds. join() makes the calling thread (often main) wait for another thread to finish before continuing; passing a millisecond limit to join(ms) caps how long it will wait." },
+    { "type": "code", "language": "java", "value": "public class ThreadDemo extends Thread {\n    public static void main(String[] args) throws InterruptedException {\n        ThreadDemo t1 = new ThreadDemo();\n        ThreadDemo t2 = new ThreadDemo();\n        t1.start();\n\n        // starts the 2nd thread after 2 seconds, or sooner if t1 already finished\n        t1.join(2000);\n        t2.start();\n\n        // now wait for both threads to fully finish\n        t1.join();\n        t2.join();\n\n        System.out.println(\"Thread-0 is alive: \" + t1.isAlive());\n        System.out.println(\"Thread-1 is alive: \" + t2.isAlive());\n    }\n\n    public void run() {\n        System.out.println(Thread.currentThread().getName() + \" is running.\");\n        try {\n            Thread.sleep(3000); // suspends this thread for 3 seconds\n        } catch (InterruptedException e) {\n            e.printStackTrace();\n        }\n        System.out.println(Thread.currentThread().getName() + \" has ended.\");\n    }\n}\n// Output:\n// Thread-0 is running.\n// Thread-1 is running.\n// Thread-0 has ended.\n// Thread-1 has ended.\n// Thread-0 is alive: false\n// Thread-1 is alive: false" },
+    { "type": "text", "value": "By the time both isAlive() calls run, the earlier join() calls have already waited for each thread to completely finish, so both correctly report false." }
+  ]
+}

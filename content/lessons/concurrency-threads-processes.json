@@ -1,0 +1,11 @@
+{
+  "id": "concurrency-threads-processes",
+  "moduleId": "concurrency",
+  "title": "Threads, Processes, and Concurrency",
+  "order": 1,
+  "blocks": [
+    { "type": "text", "value": "A thread is the smallest unit of execution the operating system can schedule. A process is a group of threads running together in the same shared environment. A single-threaded process has exactly one thread; a multithreaded process has more than one, and those threads share the same memory space so they can communicate directly." },
+    { "type": "text", "value": "Concurrency is the property of running multiple threads and processes at the same time. An OS thread scheduler decides which threads run when. If a thread's allotted time runs out before it finishes, a context switch happens: its current state is saved so it can be resumed later exactly where it left off." },
+    { "type": "text", "value": "Every Java application already runs on one thread automatically: the main thread, created by the JVM to execute main(). You can create and start additional threads to run parts of your program in parallel with it." }
+  ]
+}
