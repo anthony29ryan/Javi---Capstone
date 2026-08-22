@@ -1,4 +1,4 @@
-# Javi — Java Learning App
+# Javi: Java Learning App
 
 An Android app for learning Java programming. Users work through tiered lessons
 (Beginner / Intermediate / Advanced), practice with quizzes and coding problems, chat with an
@@ -72,25 +72,36 @@ computer are on the same network but auto-discovery doesn't find it.
 
 ```
 src/
-  context/     # AuthContext — auth state, sign up/log in/log out
-  navigation/  # RootNavigator — switches Auth stack vs. App stack based on auth state
-  screens/     # LoginScreen, SignupScreen, HomeScreen, CoursesScreen, ModulesScreen,
-               # LessonsScreen, LessonDetailScreen, QuizScreen, ProgressScreen, ...
-  services/    # firebase.js (init), content.js (courses/modules/lessons reads);
-               # quizzes.js, progress.js
+  components/  # shared UI: Button, TextField, ListCard, ScreenState, Avatar, JaviCard
+  context/     # AuthContext: auth state, sign up / log in / log out
+  hooks/       # useProgressSummary: streak and completion figures, reloaded on focus
+  navigation/  # RootNavigator (auth vs. app stack), MainTabs (Home / Learn / Progress)
+  screens/     # one file per screen, including HomeScreen (the dashboard)
+  services/    # firebase.js (init), content.js, quizzes.js, progress.js
+  theme/       # colors.js: palette plus spacing and type scales
 content/
   courses.json   # the 3 tiers
   modules.json   # all modules (one per topic), tagged with courseId
-  lessons/       # one JSON file per lesson (blocks array) — real content lives here
+  lessons/       # one JSON file per lesson (blocks array); real content lives here
 scripts/
   publishContent.js  # reads content/ and upserts it to Firestore; re-run after any edit
 firestore.rules
 storage.rules
 ```
 
+### Changing the look
+
+Every screen reads its colors, spacing, and font sizes from `src/theme/colors.js`, so a
+restyle is a one-file edit rather than a pass over each screen. Change the values freely;
+avoid removing keys, since the screens import `colors`, `radius`, `spacing`, and `type` by
+name.
+
+Javi is the in-app learning companion. His wording lives in `messageFor()` inside
+`src/components/JaviCard.js`, and the message shown depends on the learner's progress.
+
 ### Adding/editing lesson content
 
-Each lesson is a JSON file in `content/lessons/<lessonId>.json` with a `blocks` array — an
+Each lesson is a JSON file in `content/lessons/<lessonId>.json` with a `blocks` array, an
 ordered mix of:
 
 ```json
