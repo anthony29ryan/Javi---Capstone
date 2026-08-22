@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text } from 'react-native';
 
 import ListCard from '../components/ListCard';
+import ProgressRing from '../components/ProgressRing';
 import ScreenState from '../components/ScreenState';
+import { useProgress } from '../context/ProgressContext';
 import { getModules } from '../services/content';
 import { colors, spacing, type } from '../theme/colors';
 
@@ -11,6 +13,7 @@ export default function ModulesScreen({ route, navigation }) {
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { moduleProgress, loading: progressLoading } = useProgress();
 
   useEffect(() => {
     navigation.setOptions({ title: courseTitle });
@@ -23,7 +26,7 @@ export default function ModulesScreen({ route, navigation }) {
       .finally(() => setLoading(false));
   }, [courseId]);
 
-  if (loading) return <ScreenState loading />;
+  if (loading || progressLoading) return <ScreenState loading />;
   if (error) return <ScreenState error={error} />;
   if (modules.length === 0) {
     return <ScreenState message="No modules yet." hint="This tier has no published modules." />;
@@ -40,16 +43,27 @@ export default function ModulesScreen({ route, navigation }) {
           {modules.length} modules, in the order they are meant to be taken.
         </Text>
       }
-      renderItem={({ item }) => (
-        <ListCard
-          index={item.order}
-          title={item.title}
-          description={item.description}
-          onPress={() =>
-            navigation.navigate('Lessons', { moduleId: item.id, moduleTitle: item.title })
-          }
-        />
-      )}
+      renderItem={({ item }) => {
+        const stats = moduleProgress[item.id] ?? { completed: 0, total: 0, percent: 0 };
+
+        return (
+          <ListCard
+            // The ring carries the module's progress; its number sits inside so
+            // the card shows sequence and completion in one element.
+            leading={
+              <ProgressRing percent={stats.percent} size={38} strokeWidth={3}>
+                <Text style={styles.ringIndex}>{item.order}</Text>
+              </ProgressRing>
+            }
+            title={item.title}
+            description={item.description}
+            meta={stats.total > 0 ? `${stats.completed}/${stats.total} lessons` : null}
+            onPress={() =>
+              navigation.navigate('Lessons', { moduleId: item.id, moduleTitle: item.title })
+            }
+          />
+        );
+      }}
     />
   );
 }
@@ -67,5 +81,10 @@ const styles = StyleSheet.create({
     ...type.small,
     color: colors.textMuted,
     marginBottom: spacing.xs,
+  },
+  ringIndex: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.primary,
   },
 });

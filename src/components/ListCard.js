@@ -3,22 +3,27 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, radius, spacing, type } from '../theme/colors';
 
 /**
- * Row card shared by the Courses, Modules, and Lessons lists.
+ * Row card shared by the Modules and Lessons lists.
  *
- * `index` is optional and shows the item's position. Modules and lessons are
- * an ordered sequence, so the number is real information, not decoration.
+ * `leading` takes whatever indicator the list needs on the left: a progress
+ * ring for modules, a completion mark for lessons. `index` is the plain
+ * fallback when a list only needs to show sequence.
  */
-export default function ListCard({ title, description, index, meta, onPress }) {
+export default function ListCard({ title, description, index, meta, leading, onPress }) {
+  const leadingNode =
+    leading ??
+    (index != null ? (
+      <View style={styles.indexBadge}>
+        <Text style={styles.indexText}>{index}</Text>
+      </View>
+    ) : null);
+
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
     >
-      {index != null ? (
-        <View style={styles.indexBadge}>
-          <Text style={styles.indexText}>{index}</Text>
-        </View>
-      ) : null}
+      {leadingNode}
 
       <View style={styles.body}>
         <Text style={styles.title}>{title}</Text>
@@ -78,7 +83,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
   meta: {
-    ...type.small,
+    fontSize: 12,
     color: colors.primary,
     fontWeight: '600',
     marginTop: 2,

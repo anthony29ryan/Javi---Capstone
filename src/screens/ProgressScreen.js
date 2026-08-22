@@ -1,7 +1,8 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import ProgressRing from '../components/ProgressRing';
 import ScreenState from '../components/ScreenState';
-import { useProgressSummary } from '../hooks/useProgressSummary';
+import { useProgress } from '../context/ProgressContext';
 import { colors, radius, spacing, type } from '../theme/colors';
 
 function StatCard({ value, unit, label }) {
@@ -16,12 +17,42 @@ function StatCard({ value, unit, label }) {
   );
 }
 
-function ModuleScoreRow({ title, score, isLast }) {
+function TierRow({ title, stats, isLast }) {
+  const { completed = 0, total = 0, percent = 0 } = stats ?? {};
+
   return (
-    <View style={[styles.moduleRow, !isLast && styles.moduleRowDivider]}>
-      <Text style={styles.moduleTitle} numberOfLines={1}>
-        {title}
-      </Text>
+    <View style={[styles.row, !isLast && styles.rowDivider]}>
+      <ProgressRing percent={percent} size={40} strokeWidth={3.5}>
+        <Text style={styles.ringText}>{percent}%</Text>
+      </ProgressRing>
+      <View style={styles.rowBody}>
+        <Text style={styles.rowTitle}>{title}</Text>
+        <Text style={styles.rowMeta}>
+          {completed} of {total} lessons
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+function ModuleRow({ title, stats, score, isLast }) {
+  const percent = stats?.percent ?? 0;
+
+  return (
+    <View style={[styles.row, !isLast && styles.rowDivider]}>
+      <ProgressRing percent={percent} size={32} strokeWidth={3}>
+        <Text style={styles.ringTextSmall}>{percent}</Text>
+      </ProgressRing>
+
+      <View style={styles.rowBody}>
+        <Text style={styles.rowTitle} numberOfLines={1}>
+          {title}
+        </Text>
+        <Text style={styles.rowMeta}>
+          {stats?.completed ?? 0} of {stats?.total ?? 0} lessons
+        </Text>
+      </View>
+
       {score ? (
         <View style={styles.scorePill}>
           <Text style={styles.scoreText}>
@@ -29,28 +60,35 @@ function ModuleScoreRow({ title, score, isLast }) {
           </Text>
         </View>
       ) : (
-        <Text style={styles.notAttempted}>Not taken</Text>
+        <Text style={styles.notAttempted}>No quiz</Text>
       )}
     </View>
   );
 }
 
 export default function ProgressScreen() {
-  const { progress, modules, totalLessons, completed, percent, loading, error } =
-    useProgressSummary({ includeModules: true });
+  const {
+    courses,
+    modules,
+    totalLessons,
+    completedCount,
+    percent,
+    streak,
+    moduleScores,
+    moduleProgress,
+    courseProgress,
+    loading,
+    error,
+  } = useProgress();
 
   if (loading) return <ScreenState loading />;
   if (error) return <ScreenState error={error} />;
-  if (!progress) return <ScreenState message="No progress recorded yet." />;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.statRow}>
-        <StatCard
-          value={progress.streak.current}
-          label={`Day streak (best ${progress.streak.longest})`}
-        />
-        <StatCard value={completed} unit={`/${totalLessons}`} label="Lessons completed" />
+        <StatCard value={streak.current} label={`Day streak (best ${streak.longest})`} />
+        <StatCard value={completedCount} unit={`/${totalLessons}`} label="Lessons completed" />
       </View>
 
       <View style={styles.progressBlock}>
@@ -60,17 +98,33 @@ export default function ProgressScreen() {
         <Text style={styles.progressText}>{percent}% of the course complete</Text>
       </View>
 
-      <Text style={styles.sectionLabel}>Module quiz scores</Text>
+      <Text style={styles.sectionLabel}>By tier</Text>
+      {courses.length === 0 ? (
+        <Text style={styles.emptyText}>No tiers published yet.</Text>
+      ) : (
+        <View style={styles.group}>
+          {courses.map((course, index) => (
+            <TierRow
+              key={course.id}
+              title={course.title}
+              stats={courseProgress[course.id]}
+              isLast={index === courses.length - 1}
+            />
+          ))}
+        </View>
+      )}
 
+      <Text style={styles.sectionLabel}>By module</Text>
       {modules.length === 0 ? (
         <Text style={styles.emptyText}>No modules published yet.</Text>
       ) : (
         <View style={styles.group}>
-          {modules.map((item, index) => (
-            <ModuleScoreRow
-              key={item.id}
-              title={item.title}
-              score={progress.moduleScores[item.id]}
+          {modules.map((module, index) => (
+            <ModuleRow
+              key={module.id}
+              title={module.title}
+              stats={moduleProgress[module.id]}
+              score={moduleScores[module.id]}
               isLast={index === modules.length - 1}
             />
           ))}
@@ -151,23 +205,40 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     overflow: 'hidden',
   },
-  moduleRow: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     gap: spacing.md,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
-    minHeight: 52,
+    minHeight: 58,
   },
-  moduleRowDivider: {
+  rowDivider: {
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  moduleTitle: {
+  rowBody: {
     flex: 1,
+  },
+  rowTitle: {
     fontSize: 15,
+    fontWeight: '500',
     color: colors.text,
+  },
+  rowMeta: {
+    ...type.small,
+    color: colors.textMuted,
+    marginTop: 1,
+  },
+  ringText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: colors.primary,
+  },
+  ringTextSmall: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: colors.primary,
   },
   scorePill: {
     backgroundColor: colors.primarySoft,

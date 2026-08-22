@@ -3,6 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import Button from '../components/Button';
 import ScreenState from '../components/ScreenState';
+import { useProgress } from '../context/ProgressContext';
 import { getLessonQuestions, getModuleQuestions, recordAttempt } from '../services/quizzes';
 import { recordLessonQuizCompletion, recordModuleQuizCompletion } from '../services/progress';
 import { colors, radius, spacing, type } from '../theme/colors';
@@ -44,6 +45,7 @@ function Choice({ label, letter, state, onPress, disabled }) {
 
 export default function QuizScreen({ route, navigation }) {
   const { mode, refId, title } = route.params;
+  const { refresh: refreshProgress } = useProgress();
 
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -129,6 +131,9 @@ export default function QuizScreen({ route, navigation }) {
         } else {
           await recordModuleQuizCompletion(refId, score, questions.length);
         }
+        // Completion just changed the numbers behind every progress ring, so
+        // reload them before the user navigates back to a screen showing one.
+        await refreshProgress();
       } catch (err) {
         setError(err.message);
       }

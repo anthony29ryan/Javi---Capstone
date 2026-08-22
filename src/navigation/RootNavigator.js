@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { useAuth } from '../context/AuthContext';
+import { ProgressProvider } from '../context/ProgressContext';
 import { colors } from '../theme/colors';
 import MainTabs from './MainTabs';
 import EditProfileScreen from '../screens/EditProfileScreen';
@@ -77,7 +78,15 @@ export default function RootNavigator() {
 
   return (
     <NavigationContainer>
-      {user ? <AppStack /> : <AuthStack />}
+      {/* ProgressProvider sits inside the signed-in branch so it never loads
+          progress for a user that does not exist yet. */}
+      {user ? (
+        <ProgressProvider>
+          <AppStack />
+        </ProgressProvider>
+      ) : (
+        <AuthStack />
+      )}
     </NavigationContainer>
   );
 }

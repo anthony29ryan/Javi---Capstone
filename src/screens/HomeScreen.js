@@ -5,11 +5,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Avatar from '../components/Avatar';
 import JaviCard from '../components/JaviCard';
 import { useAuth } from '../context/AuthContext';
-import { useProgressSummary } from '../hooks/useProgressSummary';
+import { useProgress } from '../context/ProgressContext';
 import { colors, radius, spacing, type } from '../theme/colors';
 
 function ProgressCard({ navigation, summary }) {
-  const { progress, totalLessons, completed, percent, loading, error } = summary;
+  const { streak, totalLessons, completedCount, percent, loading, error } = summary;
 
   return (
     <Pressable
@@ -33,10 +33,10 @@ function ProgressCard({ navigation, summary }) {
             <View style={styles.stat}>
               <View style={styles.streakValue}>
                 <Ionicons name="flame" size={22} color={colors.primaryLight} />
-                <Text style={styles.statNumber}>{progress.streak.current}</Text>
+                <Text style={styles.statNumber}>{streak.current}</Text>
               </View>
               <Text style={styles.statLabel}>
-                day streak{progress.streak.longest > 0 ? ` (best ${progress.streak.longest})` : ''}
+                day streak{streak.longest > 0 ? ` (best ${streak.longest})` : ''}
               </Text>
             </View>
 
@@ -44,7 +44,7 @@ function ProgressCard({ navigation, summary }) {
 
             <View style={styles.stat}>
               <Text style={styles.statNumber}>
-                {completed}
+                {completedCount}
                 <Text style={styles.statNumberMuted}>/{totalLessons}</Text>
               </Text>
               <Text style={styles.statLabel}>lessons done</Text>
@@ -64,7 +64,7 @@ function ProgressCard({ navigation, summary }) {
 export default function HomeScreen({ navigation }) {
   const { user } = useAuth();
   const insets = useSafeAreaInsets();
-  const summary = useProgressSummary();
+  const summary = useProgress();
 
   const name = user?.displayName || user?.email?.split('@')[0] || 'there';
 
@@ -86,9 +86,9 @@ export default function HomeScreen({ navigation }) {
       <ProgressCard navigation={navigation} summary={summary} />
 
       <JaviCard
-        completed={summary.completed}
+        completed={summary.completedCount}
         percent={summary.percent}
-        streak={summary.progress?.streak?.current ?? 0}
+        streak={summary.streak.current}
         onStart={() => navigation.navigate('Learn')}
       />
     </ScrollView>

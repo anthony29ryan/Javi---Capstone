@@ -37,7 +37,12 @@ export async function getAllModules() {
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byOrder);
 }
 
-export async function getAllLessonsCount() {
+/**
+ * Every lesson, reduced to the fields needed to work out progress. The `blocks`
+ * array is dropped here because it is the bulk of a lesson document and nothing
+ * that counts progress ever reads it.
+ */
+export async function getAllLessonProgressRefs() {
   const snapshot = await getDocs(collection(db, 'lessons'));
-  return snapshot.size;
+  return snapshot.docs.map((d) => ({ id: d.id, moduleId: d.data().moduleId }));
 }
