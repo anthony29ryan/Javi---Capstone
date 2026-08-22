@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import {
-  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 
+import Button from '../components/Button';
+import TextField from '../components/TextField';
 import { useAuth } from '../context/AuthContext';
+import { colors, radius, spacing, type } from '../theme/colors';
 
 export default function SignupScreen({ navigation }) {
   const { signUp } = useAuth();
@@ -31,85 +35,124 @@ export default function SignupScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.header}>
+          <Text style={styles.title}>Create account</Text>
+          <Text style={styles.subtitle}>Start working through the Java tiers.</Text>
+        </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Display name"
-        value={displayName}
-        onChangeText={setDisplayName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        autoCapitalize="none"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+        <View style={styles.form}>
+          <TextField
+            label="Display name"
+            placeholder="What should we call you?"
+            value={displayName}
+            onChangeText={setDisplayName}
+          />
+          <TextField
+            label="Email"
+            placeholder="you@example.com"
+            autoCapitalize="none"
+            autoComplete="email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextField
+            label="Password"
+            placeholder="At least 6 characters"
+            hint="Use 6 or more characters."
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
 
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+          {error ? (
+            <View style={styles.errorBox}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          ) : null}
 
-      <Pressable style={styles.button} onPress={handleSignUp} disabled={submitting}>
-        {submitting ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Sign Up</Text>
-        )}
-      </Pressable>
+          <Button
+            label="Sign Up"
+            onPress={handleSignUp}
+            loading={submitting}
+            style={styles.submit}
+          />
+        </View>
 
-      <Pressable onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.link}>Already have an account? Log in</Text>
-      </Pressable>
-    </View>
+        <Pressable
+          onPress={() => navigation.navigate('Login')}
+          style={({ pressed }) => [styles.footer, pressed && styles.footerPressed]}
+        >
+          <Text style={styles.footerText}>
+            Already have an account? <Text style={styles.footerLink}>Log in</Text>
+          </Text>
+        </Pressable>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background,
+  },
+  content: {
+    flexGrow: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
-    gap: 12,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xxl,
+  },
+  header: {
+    marginBottom: spacing.xxl,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '600',
-    marginBottom: 12,
-    textAlign: 'center',
+    ...type.screenTitle,
+    color: colors.text,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+  subtitle: {
+    ...type.body,
+    color: colors.textMuted,
+    marginTop: spacing.xs,
   },
-  error: {
-    color: '#c00',
+  form: {
+    gap: spacing.lg,
   },
-  button: {
-    backgroundColor: '#2563eb',
-    borderRadius: 8,
-    paddingVertical: 12,
+  errorBox: {
+    backgroundColor: colors.errorBg,
+    borderRadius: radius.sm,
+    padding: spacing.md,
+  },
+  errorText: {
+    ...type.small,
+    color: colors.error,
+    lineHeight: 19,
+  },
+  submit: {
+    marginTop: spacing.xs,
+  },
+  footer: {
+    marginTop: spacing.xl,
     alignItems: 'center',
-    marginTop: 8,
+    paddingVertical: spacing.sm,
   },
-  buttonText: {
-    color: '#fff',
+  footerPressed: {
+    opacity: 0.6,
+  },
+  footerText: {
+    ...type.small,
+    color: colors.textMuted,
+  },
+  footerLink: {
+    color: colors.primary,
     fontWeight: '600',
-  },
-  link: {
-    color: '#2563eb',
-    textAlign: 'center',
-    marginTop: 12,
   },
 });

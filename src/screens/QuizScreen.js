@@ -1,8 +1,46 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import Button from '../components/Button';
+import ScreenState from '../components/ScreenState';
 import { getLessonQuestions, getModuleQuestions, recordAttempt } from '../services/quizzes';
 import { recordLessonQuizCompletion, recordModuleQuizCompletion } from '../services/progress';
+import { colors, radius, spacing, type } from '../theme/colors';
+
+const CHOICE_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+function Choice({ label, letter, state, onPress, disabled }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={({ pressed }) => [
+        styles.choice,
+        state === 'correct' && styles.choiceCorrect,
+        state === 'wrong' && styles.choiceWrong,
+        pressed && !disabled && styles.choicePressed,
+      ]}
+    >
+      <View
+        style={[
+          styles.letterBadge,
+          state === 'correct' && styles.letterBadgeCorrect,
+          state === 'wrong' && styles.letterBadgeWrong,
+        ]}
+      >
+        <Text
+          style={[
+            styles.letterText,
+            (state === 'correct' || state === 'wrong') && styles.letterTextRevealed,
+          ]}
+        >
+          {letter}
+        </Text>
+      </View>
+      <Text style={styles.choiceText}>{label}</Text>
+    </Pressable>
+  );
+}
 
 export default function QuizScreen({ route, navigation }) {
   const { mode, refId, title } = route.params;
@@ -33,46 +71,35 @@ export default function QuizScreen({ route, navigation }) {
       .finally(() => setLoading(false));
   }, [mode, refId]);
 
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.error}>{error}</Text>
-      </View>
-    );
-  }
-
+  if (loading) return <ScreenState loading />;
+  if (error) return <ScreenState error={error} />;
   if (questions.length === 0) {
     return (
-      <View style={styles.center}>
-        <Text>No quiz questions yet.</Text>
-      </View>
+      <ScreenState
+        message="No quiz questions yet."
+        hint="Questions have not been written for this topic."
+      />
     );
   }
 
   if (finished) {
+    const percent = Math.round((score / questions.length) * 100);
     return (
-      <View style={styles.center}>
-        <Text style={styles.title}>Quiz Complete</Text>
-        <Text style={styles.score}>
-          {score} / {questions.length} correct
+      <View style={styles.resultContainer}>
+        <Text style={styles.resultLabel}>Quiz complete</Text>
+        <Text style={styles.resultScore}>
+          {score}
+          <Text style={styles.resultScoreTotal}>/{questions.length}</Text>
         </Text>
-        <Pressable style={styles.button} onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Done</Text>
-        </Pressable>
+        <Text style={styles.resultPercent}>{percent}% correct</Text>
+        <Button label="Done" onPress={() => navigation.goBack()} style={styles.resultButton} />
       </View>
     );
   }
 
   const question = questions[index];
   const isLast = index === questions.length - 1;
+  const progress = ((index + (answered ? 1 : 0)) / questions.length) * 100;
 
   async function handleSelect(choiceIndex) {
     if (answered) return;
@@ -115,94 +142,179 @@ export default function QuizScreen({ route, navigation }) {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
-      <Text style={styles.progress}>
-        Question {index + 1} of {questions.length}
-      </Text>
-      <Text style={styles.prompt}>{question.prompt}</Text>
+    <View style={styles.container}>
+      <View style={styles.progressHeader}>
+        <View style={styles.progressTrack}>
+          <View style={[styles.progressFill, { width: `${progress}%` }]} />
+        </View>
+        <Text style={styles.progressText}>
+          {index + 1} of {questions.length}
+        </Text>
+      </View>
 
-      {question.choices.map((choice, choiceIndex) => {
-        const isSelected = selected === choiceIndex;
-        const isCorrectChoice = choiceIndex === question.correctIndex;
-        const showResult = answered && (isSelected || isCorrectChoice);
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.prompt}>{question.prompt}</Text>
 
-        return (
-          <Pressable
-            key={choiceIndex}
-            style={[
-              styles.choice,
-              showResult && isCorrectChoice && styles.choiceCorrect,
-              showResult && isSelected && !isCorrectChoice && styles.choiceWrong,
-            ]}
-            onPress={() => handleSelect(choiceIndex)}
-            disabled={answered}
-          >
-            <Text>{choice}</Text>
-          </Pressable>
-        );
-      })}
+        <View style={styles.choices}>
+          {question.choices.map((choice, choiceIndex) => {
+            const isSelected = selected === choiceIndex;
+            const isCorrectChoice = choiceIndex === question.correctIndex;
+
+            let state = 'default';
+            if (answered && isCorrectChoice) state = 'correct';
+            else if (answered && isSelected) state = 'wrong';
+
+            return (
+              <Choice
+                key={choiceIndex}
+                letter={CHOICE_LETTERS[choiceIndex] ?? String(choiceIndex + 1)}
+                label={choice}
+                state={state}
+                disabled={answered}
+                onPress={() => handleSelect(choiceIndex)}
+              />
+            );
+          })}
+        </View>
+      </ScrollView>
 
       {answered ? (
-        <Pressable style={styles.button} onPress={handleNext}>
-          <Text style={styles.buttonText}>{isLast ? 'Finish' : 'Next'}</Text>
-        </Pressable>
+        <View style={styles.footer}>
+          <Button label={isLast ? 'Finish' : 'Next question'} onPress={handleNext} />
+        </View>
       ) : null}
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  center: {
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  progressHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.sm,
+  },
+  progressTrack: {
+    flex: 1,
+    height: 6,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surfaceSunken,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: radius.pill,
+    backgroundColor: colors.primary,
+  },
+  progressText: {
+    ...type.small,
+    color: colors.textMuted,
+    fontWeight: '600',
+  },
+  content: {
+    padding: spacing.lg,
+    paddingBottom: spacing.xxl,
+  },
+  prompt: {
+    fontSize: 20,
+    fontWeight: '600',
+    lineHeight: 28,
+    color: colors.text,
+    marginBottom: spacing.xl,
+  },
+  choices: {
+    gap: spacing.md,
+  },
+  choice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    padding: spacing.lg,
+  },
+  choicePressed: {
+    backgroundColor: colors.primarySoft,
+    borderColor: colors.borderStrong,
+  },
+  choiceCorrect: {
+    borderColor: colors.success,
+    backgroundColor: colors.successBg,
+  },
+  choiceWrong: {
+    borderColor: colors.error,
+    backgroundColor: colors.errorBg,
+  },
+  choiceText: {
+    flex: 1,
+    fontSize: 15,
+    lineHeight: 21,
+    color: colors.text,
+  },
+  letterBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surfaceSunken,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  letterBadgeCorrect: {
+    backgroundColor: colors.success,
+  },
+  letterBadgeWrong: {
+    backgroundColor: colors.error,
+  },
+  letterText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.textMuted,
+  },
+  letterTextRevealed: {
+    color: colors.white,
+  },
+  footer: {
+    padding: spacing.lg,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  resultContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 12,
+    padding: spacing.xl,
+    backgroundColor: colors.background,
   },
-  error: {
-    color: '#c00',
+  resultLabel: {
+    ...type.sectionLabel,
+    color: colors.textMuted,
   },
-  content: {
-    padding: 16,
-    gap: 12,
-  },
-  progress: {
-    color: '#555',
-  },
-  prompt: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  choice: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
-  },
-  choiceCorrect: {
-    borderColor: '#16a34a',
-    backgroundColor: '#dcfce7',
-  },
-  choiceWrong: {
-    borderColor: '#dc2626',
-    backgroundColor: '#fee2e2',
-  },
-  title: {
-    fontSize: 22,
+  resultScore: {
+    fontSize: 64,
     fontWeight: '700',
+    color: colors.primary,
+    marginTop: spacing.sm,
   },
-  score: {
-    fontSize: 18,
-  },
-  button: {
-    backgroundColor: '#2563eb',
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonText: {
-    color: '#fff',
+  resultScoreTotal: {
+    fontSize: 32,
+    color: colors.textMuted,
     fontWeight: '600',
+  },
+  resultPercent: {
+    ...type.body,
+    color: colors.textMuted,
+  },
+  resultButton: {
+    marginTop: spacing.xxl,
+    alignSelf: 'stretch',
   },
 });

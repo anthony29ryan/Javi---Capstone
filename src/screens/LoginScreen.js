@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import {
-  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 
+import Button from '../components/Button';
+import TextField from '../components/TextField';
 import { useAuth } from '../context/AuthContext';
+import { colors, radius, spacing, type } from '../theme/colors';
 
 export default function LoginScreen({ navigation }) {
   const { logIn } = useAuth();
@@ -30,79 +34,117 @@ export default function LoginScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Log In</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.header}>
+          <Text style={styles.title}>Log in</Text>
+          <Text style={styles.subtitle}>Pick up where you left off.</Text>
+        </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        autoCapitalize="none"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+        <View style={styles.form}>
+          <TextField
+            label="Email"
+            placeholder="you@example.com"
+            autoCapitalize="none"
+            autoComplete="email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextField
+            label="Password"
+            placeholder="Your password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
 
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+          {error ? (
+            <View style={styles.errorBox}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          ) : null}
 
-      <Pressable style={styles.button} onPress={handleLogIn} disabled={submitting}>
-        {submitting ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Log In</Text>
-        )}
-      </Pressable>
+          <Button
+            label="Log In"
+            onPress={handleLogIn}
+            loading={submitting}
+            style={styles.submit}
+          />
+        </View>
 
-      <Pressable onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.link}>Don't have an account? Sign up</Text>
-      </Pressable>
-    </View>
+        <Pressable
+          onPress={() => navigation.navigate('Signup')}
+          style={({ pressed }) => [styles.footer, pressed && styles.footerPressed]}
+        >
+          <Text style={styles.footerText}>
+            Don't have an account? <Text style={styles.footerLink}>Sign up</Text>
+          </Text>
+        </Pressable>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background,
+  },
+  content: {
+    flexGrow: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
-    gap: 12,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xxl,
+  },
+  header: {
+    marginBottom: spacing.xxl,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '600',
-    marginBottom: 12,
-    textAlign: 'center',
+    ...type.screenTitle,
+    color: colors.text,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+  subtitle: {
+    ...type.body,
+    color: colors.textMuted,
+    marginTop: spacing.xs,
   },
-  error: {
-    color: '#c00',
+  form: {
+    gap: spacing.lg,
   },
-  button: {
-    backgroundColor: '#2563eb',
-    borderRadius: 8,
-    paddingVertical: 12,
+  errorBox: {
+    backgroundColor: colors.errorBg,
+    borderRadius: radius.sm,
+    padding: spacing.md,
+  },
+  errorText: {
+    ...type.small,
+    color: colors.error,
+    lineHeight: 19,
+  },
+  submit: {
+    marginTop: spacing.xs,
+  },
+  footer: {
+    marginTop: spacing.xl,
     alignItems: 'center',
-    marginTop: 8,
+    paddingVertical: spacing.sm,
   },
-  buttonText: {
-    color: '#fff',
+  footerPressed: {
+    opacity: 0.6,
+  },
+  footerText: {
+    ...type.small,
+    color: colors.textMuted,
+  },
+  footerLink: {
+    color: colors.primary,
     fontWeight: '600',
-  },
-  link: {
-    color: '#2563eb',
-    textAlign: 'center',
-    marginTop: 12,
   },
 });

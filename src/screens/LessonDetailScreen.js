@@ -1,24 +1,30 @@
 import { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
+import Button from '../components/Button';
+import ScreenState from '../components/ScreenState';
 import { getLesson } from '../services/content';
+import { colors, radius, spacing, type } from '../theme/colors';
+
+function CodeBlock({ value, language }) {
+  return (
+    <View style={styles.codeBlock}>
+      <View style={styles.codeHeader}>
+        <Text style={styles.codeLanguage}>{language || 'code'}</Text>
+      </View>
+      {/* Java lines run long, so the block scrolls sideways instead of wrapping
+          mid-statement and breaking the indentation. */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <Text style={styles.codeText}>{value}</Text>
+      </ScrollView>
+    </View>
+  );
+}
 
 function Block({ block }) {
   if (block.type === 'code') {
-    return (
-      <View style={styles.codeBlock}>
-        <Text style={styles.codeText}>{block.value}</Text>
-      </View>
-    );
+    return <CodeBlock value={block.value} language={block.language} />;
   }
 
   if (block.type === 'image') {
@@ -64,110 +70,119 @@ export default function LessonDetailScreen({ route, navigation }) {
       .finally(() => setLoading(false));
   }, [lessonId]);
 
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.error}>{error}</Text>
-      </View>
-    );
-  }
-
-  if (!lesson) {
-    return (
-      <View style={styles.center}>
-        <Text>Lesson not found.</Text>
-      </View>
-    );
-  }
+  if (loading) return <ScreenState loading />;
+  if (error) return <ScreenState error={error} />;
+  if (!lesson) return <ScreenState message="Lesson not found." />;
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>{lesson.title}</Text>
-      {(lesson.blocks || []).map((block, index) => (
-        <Block key={index} block={block} />
-      ))}
 
-      <Pressable
-        style={styles.quizButton}
-        onPress={() =>
-          navigation.navigate('Quiz', { mode: 'lesson', refId: lesson.id, title: `${lesson.title} Quiz` })
-        }
-      >
-        <Text style={styles.quizButtonText}>Take Quiz</Text>
-      </Pressable>
+      <View style={styles.blocks}>
+        {(lesson.blocks || []).map((block, index) => (
+          <Block key={index} block={block} />
+        ))}
+      </View>
+
+      <View style={styles.quizCard}>
+        <Text style={styles.quizTitle}>Check your understanding</Text>
+        <Button
+          label="Take Quiz"
+          onPress={() =>
+            navigation.navigate('Quiz', {
+              mode: 'lesson',
+              refId: lesson.id,
+              title: `${lesson.title} Quiz`,
+            })
+          }
+          style={styles.quizButton}
+        />
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  center: {
+  container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  error: {
-    color: '#c00',
+    backgroundColor: colors.background,
   },
   content: {
-    padding: 16,
-    gap: 12,
+    padding: spacing.lg,
+    paddingBottom: spacing.xxl,
   },
   title: {
-    fontSize: 22,
+    fontSize: 26,
     fontWeight: '700',
-    marginBottom: 8,
+    letterSpacing: -0.4,
+    lineHeight: 33,
+    color: colors.text,
+    marginBottom: spacing.xl,
+  },
+  blocks: {
+    gap: spacing.lg,
   },
   paragraph: {
-    fontSize: 15,
-    lineHeight: 22,
+    ...type.body,
+    color: colors.text,
   },
   codeBlock: {
-    backgroundColor: '#1e1e1e',
-    borderRadius: 8,
-    padding: 12,
+    backgroundColor: colors.codeBg,
+    borderRadius: radius.md,
+    overflow: 'hidden',
+  },
+  codeHeader: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: '#3D3029',
+  },
+  codeLanguage: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: colors.primaryLight,
   },
   codeText: {
-    color: '#e6e6e6',
+    color: colors.codeText,
     fontFamily: 'monospace',
     fontSize: 13,
-    lineHeight: 20,
+    lineHeight: 21,
+    padding: spacing.md,
   },
   mediaBlock: {
-    gap: 6,
+    gap: spacing.sm,
   },
   image: {
     width: '100%',
     aspectRatio: 4 / 3,
-    borderRadius: 8,
+    borderRadius: radius.md,
+    backgroundColor: colors.surfaceSunken,
   },
   videoContainer: {
     width: '100%',
     aspectRatio: 16 / 9,
-    borderRadius: 8,
+    borderRadius: radius.md,
     overflow: 'hidden',
+    backgroundColor: colors.codeBg,
   },
   caption: {
-    fontSize: 13,
-    color: '#555',
+    ...type.small,
+    color: colors.textMuted,
     textAlign: 'center',
   },
-  quizButton: {
-    backgroundColor: '#2563eb',
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginTop: 8,
+  quizCard: {
+    marginTop: spacing.xxl,
+    paddingTop: spacing.xl,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
   },
-  quizButtonText: {
-    color: '#fff',
-    fontWeight: '600',
+  quizTitle: {
+    ...type.cardTitle,
+    color: colors.text,
+  },
+  quizButton: {
+    marginTop: spacing.md,
   },
 });

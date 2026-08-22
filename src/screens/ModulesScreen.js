@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
+import ListCard from '../components/ListCard';
+import ScreenState from '../components/ScreenState';
 import { getModules } from '../services/content';
+import { colors, spacing, type } from '../theme/colors';
 
 export default function ModulesScreen({ route, navigation }) {
   const { courseId, courseTitle } = route.params;
@@ -20,75 +23,49 @@ export default function ModulesScreen({ route, navigation }) {
       .finally(() => setLoading(false));
   }, [courseId]);
 
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.error}>{error}</Text>
-      </View>
-    );
-  }
-
+  if (loading) return <ScreenState loading />;
+  if (error) return <ScreenState error={error} />;
   if (modules.length === 0) {
-    return (
-      <View style={styles.center}>
-        <Text>No modules yet for this course.</Text>
-      </View>
-    );
+    return <ScreenState message="No modules yet." hint="This tier has no published modules." />;
   }
 
   return (
     <FlatList
+      style={styles.container}
       contentContainerStyle={styles.list}
       data={modules}
       keyExtractor={(item) => item.id}
+      ListHeaderComponent={
+        <Text style={styles.headerText}>
+          {modules.length} modules, in the order they are meant to be taken.
+        </Text>
+      }
       renderItem={({ item }) => (
-        <Pressable
-          style={styles.card}
+        <ListCard
+          index={item.order}
+          title={item.title}
+          description={item.description}
           onPress={() =>
             navigation.navigate('Lessons', { moduleId: item.id, moduleTitle: item.title })
           }
-        >
-          <Text style={styles.cardTitle}>{item.title}</Text>
-          {item.description ? <Text style={styles.cardDescription}>{item.description}</Text> : null}
-        </Pressable>
+        />
       )}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  center: {
+  container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  error: {
-    color: '#c00',
+    backgroundColor: colors.background,
   },
   list: {
-    padding: 16,
-    gap: 12,
+    padding: spacing.lg,
+    gap: spacing.md,
   },
-  card: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    padding: 16,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  cardDescription: {
-    marginTop: 4,
-    color: '#555',
+  headerText: {
+    ...type.small,
+    color: colors.textMuted,
+    marginBottom: spacing.xs,
   },
 });

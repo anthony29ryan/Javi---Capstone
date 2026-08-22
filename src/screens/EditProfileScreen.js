@@ -1,20 +1,18 @@
 import { useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 
+import Button from '../components/Button';
+import TextField from '../components/TextField';
 import { useAuth } from '../context/AuthContext';
+import { colors, radius, spacing, type } from '../theme/colors';
 
 export default function EditProfileScreen({ navigation }) {
   const { user, updateDisplayName } = useAuth();
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const unchanged = displayName.trim() === (user?.displayName || '').trim();
 
   async function handleSave() {
     setError('');
@@ -30,47 +28,58 @@ export default function EditProfileScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Display name</Text>
-      <TextInput style={styles.input} value={displayName} onChangeText={setDisplayName} />
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <View style={styles.content}>
+        <TextField
+          label="Display name"
+          placeholder="What should we call you?"
+          hint="This is the name shown on your home screen."
+          value={displayName}
+          onChangeText={setDisplayName}
+          autoFocus
+        />
 
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+        {error ? (
+          <View style={styles.errorBox}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        ) : null}
 
-      <Pressable style={styles.button} onPress={handleSave} disabled={submitting}>
-        {submitting ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Save</Text>}
-      </Pressable>
-    </View>
+        <Button
+          label="Save changes"
+          onPress={handleSave}
+          loading={submitting}
+          disabled={unchanged || displayName.trim().length === 0}
+          style={styles.submit}
+        />
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    gap: 12,
+    backgroundColor: colors.background,
   },
-  label: {
-    fontWeight: '600',
+  content: {
+    padding: spacing.lg,
+    gap: spacing.lg,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+  errorBox: {
+    backgroundColor: colors.errorBg,
+    borderRadius: radius.sm,
+    padding: spacing.md,
   },
-  error: {
-    color: '#c00',
+  errorText: {
+    ...type.small,
+    color: colors.error,
+    lineHeight: 19,
   },
-  button: {
-    backgroundColor: '#2563eb',
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: '600',
+  submit: {
+    marginTop: spacing.xs,
   },
 });

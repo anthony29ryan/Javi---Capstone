@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
+import ListCard from '../components/ListCard';
+import ScreenState from '../components/ScreenState';
 import { getCourses } from '../services/content';
+import { colors, spacing, type } from '../theme/colors';
 
 export default function CoursesScreen({ navigation }) {
   const [courses, setCourses] = useState([]);
@@ -15,75 +18,53 @@ export default function CoursesScreen({ navigation }) {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.error}>{error}</Text>
-      </View>
-    );
-  }
-
+  if (loading) return <ScreenState loading />;
+  if (error) return <ScreenState error={error} />;
   if (courses.length === 0) {
-    return (
-      <View style={styles.center}>
-        <Text>No courses yet.</Text>
-      </View>
-    );
+    return <ScreenState message="No courses yet." hint="Content has not been published." />;
   }
 
   return (
     <FlatList
+      style={styles.container}
       contentContainerStyle={styles.list}
       data={courses}
       keyExtractor={(item) => item.id}
+      ListHeaderComponent={
+        <View style={styles.header}>
+          <Text style={styles.headerText}>
+            Each tier builds on the one before it. Start at Beginner if you are new to Java.
+          </Text>
+        </View>
+      }
       renderItem={({ item }) => (
-        <Pressable
-          style={styles.card}
+        <ListCard
+          title={item.title}
+          description={item.description}
           onPress={() =>
             navigation.navigate('Modules', { courseId: item.id, courseTitle: item.title })
           }
-        >
-          <Text style={styles.cardTitle}>{item.title}</Text>
-          {item.description ? <Text style={styles.cardDescription}>{item.description}</Text> : null}
-        </Pressable>
+        />
       )}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  center: {
+  container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  error: {
-    color: '#c00',
+    backgroundColor: colors.background,
   },
   list: {
-    padding: 16,
-    gap: 12,
+    padding: spacing.lg,
+    gap: spacing.md,
   },
-  card: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    padding: 16,
+  header: {
+    marginBottom: spacing.xs,
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  cardDescription: {
-    marginTop: 4,
-    color: '#555',
+  headerText: {
+    ...type.small,
+    color: colors.textMuted,
+    lineHeight: 20,
   },
 });
