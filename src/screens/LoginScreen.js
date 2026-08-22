@@ -50,7 +50,7 @@ export default function LoginScreen({ navigation }) {
         <View style={styles.form}>
           <TextField
             label="Email"
-            placeholder="you@example.com"
+            placeholder="javi@gmail.com"
             autoCapitalize="none"
             autoComplete="email"
             keyboardType="email-address"
