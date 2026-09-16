@@ -37,6 +37,21 @@ function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
+// Firestore cannot store an array directly inside another array, and a table
+// block authors its rows as an array of cell arrays. Wrap each row in an object
+// on the way out so the authored JSON stays readable; LessonBlocks unwraps it.
+function encodeBlocks(blocks) {
+  return (blocks || []).map((block) => {
+    // A note block holds its own blocks, and one of them is a table.
+    const encoded = Array.isArray(block.blocks)
+      ? { ...block, blocks: encodeBlocks(block.blocks) }
+      : block;
+
+    if (encoded.type !== 'table' || !Array.isArray(encoded.rows)) return encoded;
+    return { ...encoded, rows: encoded.rows.map((cells) => ({ cells })) };
+  });
+}
+
 async function main() {
   const missingConfig = Object.entries(firebaseConfig).filter(([, v]) => !v);
   if (missingConfig.length > 0) {
@@ -78,7 +93,7 @@ async function main() {
   for (const file of lessonFiles) {
     const lesson = readJson(path.join(lessonsDir, file));
     const { id, ...data } = lesson;
-    await setDoc(doc(db, 'lessons', id), data);
+    await setDoc(doc(db, 'lessons', id), { ...data, blocks: encodeBlocks(data.blocks) });
     publishedLessonIds.add(id);
     console.log('Wrote lesson:', id);
   }

@@ -107,18 +107,25 @@ function TableBlock({ headers, rows }) {
           </View>
         ) : null}
 
-        {rows.map((row, rowIndex) => (
-          <View
-            key={rowIndex}
-            style={[styles.tableRow, rowIndex % 2 === 1 && styles.tableRowAlt]}
-          >
-            {row.map((cell, cellIndex) => (
-              <View key={cellIndex} style={styles.tableCell}>
-                <InlineText value={cell} style={styles.tableText} />
-              </View>
-            ))}
-          </View>
-        ))}
+        {rows.map((row, rowIndex) => {
+          // Firestore cannot nest an array inside an array, so publishContent
+          // wraps each row as { cells: [...] }. Accept the authored plain-array
+          // shape too, so this renders the same either way.
+          const cells = Array.isArray(row) ? row : row?.cells || [];
+
+          return (
+            <View
+              key={rowIndex}
+              style={[styles.tableRow, rowIndex % 2 === 1 && styles.tableRowAlt]}
+            >
+              {cells.map((cell, cellIndex) => (
+                <View key={cellIndex} style={styles.tableCell}>
+                  <InlineText value={cell} style={styles.tableText} />
+                </View>
+              ))}
+            </View>
+          );
+        })}
       </View>
     </ScrollView>
   );
