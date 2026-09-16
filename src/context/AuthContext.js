@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
@@ -31,6 +32,28 @@ export function AuthProvider({ children }) {
       displayName,
       createdAt: serverTimestamp(),
     });
+    await sendEmailVerification(newUser);
+  }
+
+  function resendVerification() {
+    return sendEmailVerification(auth.currentUser);
+  }
+
+  /**
+   * Pulls the account's current state down from Firebase and returns whether the
+   * email is verified yet.
+   *
+   * This has to be manual: the user verifies by opening a link in their browser,
+   * which changes the account on Firebase's side without the app hearing about
+   * it. onAuthStateChanged does not fire for that, so without reloading here the
+   * app would keep showing the unverified state until the next sign in.
+   */
+  async function refreshUser() {
+    await auth.currentUser.reload();
+    // reload() updates auth.currentUser in place, so spread it into a new object
+    // for React to see a changed reference and re-render.
+    setUser({ ...auth.currentUser });
+    return auth.currentUser.emailVerified;
   }
 
   function logIn(email, password) {
@@ -51,7 +74,16 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, initializing, signUp, logIn, logOut, updateDisplayName }}
+      value={{
+        user,
+        initializing,
+        signUp,
+        logIn,
+        logOut,
+        updateDisplayName,
+        refreshUser,
+        resendVerification,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,10 +1,20 @@
 import { ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useFonts } from 'expo-font';
 
 import { useAuth } from '../context/AuthContext';
 import { ProgressProvider } from '../context/ProgressContext';
 import { colors } from '../theme/colors';
+import {
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_800ExtraBold,
+  JetBrainsMono_400Regular,
+  JetBrainsMono_500Medium,
+} from '../theme/authTheme';
 import MainTabs from './MainTabs';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import LessonDetailScreen from '../screens/LessonDetailScreen';
@@ -14,6 +24,8 @@ import ModulesScreen from '../screens/ModulesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import QuizScreen from '../screens/QuizScreen';
 import SignupScreen from '../screens/SignupScreen';
+import VerifyEmailScreen from '../screens/VerifyEmailScreen';
+import WelcomeScreen from '../screens/WelcomeScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,7 +43,12 @@ const headerScreenOptions = {
 
 function AuthStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    // AuthStack remounts fresh every time RootNavigator switches into it —
+    // on first launch (no user yet) and right after logOut() (user goes back
+    // to null) — so starting it at Welcome each time covers both cases
+    // without any extra state.
+    <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
     </Stack.Navigator>
@@ -61,7 +78,21 @@ function AppStack() {
 export default function RootNavigator() {
   const { user, initializing } = useAuth();
 
-  if (initializing) {
+  // The auth screens (Log in, Sign up, Check your email) use their own type-
+  // face per the design handoff, separate from the rest of the app. Loading
+  // it here rather than per-screen means it is ready before either AuthStack
+  // or the standalone VerifyEmailScreen below ever mounts.
+  const [authFontsLoaded] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
+    JetBrainsMono_400Regular,
+    JetBrainsMono_500Medium,
+  });
+
+  if (initializing || !authFontsLoaded) {
     return (
       <View
         style={{
@@ -78,14 +109,17 @@ export default function RootNavigator() {
 
   return (
     <NavigationContainer>
-      {/* ProgressProvider sits inside the signed-in branch so it never loads
+      {/* Three states, in order: signed out, signed in but unverified, and fully
+          in. ProgressProvider sits inside the last branch so it never loads
           progress for a user that does not exist yet. */}
-      {user ? (
+      {!user ? (
+        <AuthStack />
+      ) : !user.emailVerified ? (
+        <VerifyEmailScreen />
+      ) : (
         <ProgressProvider>
           <AppStack />
         </ProgressProvider>
-      ) : (
-        <AuthStack />
       )}
     </NavigationContainer>
   );
