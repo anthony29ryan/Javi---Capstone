@@ -1,0 +1,37 @@
+{
+  "id": "enums-nested-classes-3-a-worked-example",
+  "moduleId": "enums-nested-classes",
+  "title": "A worked example",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "You can declare an enumerated type in its own file, where the filename matches the type name with a `.java` extension. **You can also declare an enumerated type within a class, but not within a method.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Scanner;\n\npublic class EnumDemo {\n    enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }\n\n    public static void main(String[] args) {\n        Period pd;\n        String input;\n        int position;\n        Scanner sc = new Scanner(System.in);\n\n        System.out.println(\"The grading periods are:\");\n        for (Period p : Period.values()) {\n            System.out.print(p + \" \");\n        }\n\n        System.out.print(\"\\nSelect a grading period: \");\n        input = sc.nextLine().toUpperCase();\n\n        try {\n            pd = Period.valueOf(input);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"\\\"\" + input + \"\\\" is not a grading period.\");\n            sc.close();\n            return;\n        }\n\n        System.out.println(\"You entered \" + pd);\n        position = pd.ordinal();\n        System.out.println(pd + \" is in position \" + position);\n        System.out.println(\"So its period number is \" + (position + 1));\n\n        sc.close();\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "The grading periods are:\nPRELIM MIDTERM PREFINAL FINAL\nSelect a grading period: Midterm\nYou entered MIDTERM\nMIDTERM is in position 1\nSo its period number is 2"
+    },
+    {
+      "type": "text",
+      "value": "The user's input is converted to uppercase, then `valueOf()` converts it to an enumeration value. An enhanced `for` loop over `Period.values()` displays each constant in turn."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Added: the crash your handout's version has",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "The original calls `Period.valueOf(input)` with no protection. Type `Pizza` and the program dies with `java.lang.IllegalArgumentException: No enum constant EnumDemo.Period.Pizza`. Since the input comes from a user, this is not a remote possibility. It is the first thing a tester will do. The `try...catch` above is the fix, using exactly the technique from Lesson 16."
+        }
+      ]
+    }
+  ]
+}

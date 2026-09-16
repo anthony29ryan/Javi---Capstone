@@ -1,0 +1,71 @@
+{
+  "id": "input-output-1-reading-input-with-scanner",
+  "moduleId": "input-output",
+  "title": "Reading input with Scanner",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**`Scanner`** is a class in the `java.util` package. Its methods read data from the standard input device and store that data into variables."
+    },
+    {
+      "type": "text",
+      "value": "Using it takes two steps."
+    },
+    {
+      "type": "text",
+      "value": "**Step 1: import the class:**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Scanner;   // or import java.util.*;"
+    },
+    {
+      "type": "text",
+      "value": "**Step 2: create a Scanner object connected to the keyboard:**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Scanner input = new Scanner(System.in);"
+    },
+    {
+      "type": "text",
+      "value": "Breaking that line apart:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "`Scanner input` declares an object of `Scanner` type named `input`. The object name is yours to choose, `input`, `sc`, and `keyboard` are all common.",
+        "`new Scanner(System.in)` creates a Scanner object connected to `System.in`, an `InputStream` connected to the standard input device, the keyboard."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Your first interactive program:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Scanner;\n\npublic class Greeter {\n    public static void main(String[] args) {\n        Scanner input = new Scanner(System.in);\n\n        System.out.print(\"What is your name? \");\n        String name = input.nextLine();\n\n        System.out.print(\"How old are you? \");\n        int age = input.nextInt();\n\n        System.out.println(\"Hello, \" + name + \"! Next year you will be \" + (age + 1) + \".\");\n\n        input.close();\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "What is your name? Ana\nHow old are you? 19\nHello, Ana! Next year you will be 20."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Use `System.out.print`, not `println`, for prompts, so the user types on the same line."
+        }
+      ]
+    }
+  ]
+}

@@ -43,6 +43,26 @@ Core collections: `users`, `courses`, `modules`, `lessons`, `questions`, `attemp
   change its shape without accounting for that.
 - `progress` tracks completed lessons, test scores, and streaks per user.
 
+## Course content
+
+Content is authored as JSON under `content/` and pushed to Firestore by a script; the app
+reads it from Firestore at runtime and nothing is bundled.
+
+```
+content/courses.json · modules.json · lessons/*.json  ->  scripts/publishContent.js  ->  Firestore
+```
+
+- `npm run content:verify` checks the files and exits non-zero if anything is wrong.
+- `npm run content:publish` verifies, then publishes. It upserts every local lesson and
+  **deletes any Firestore lesson that no longer exists locally**, which is what keeps the
+  two in step and what makes a rollback work.
+- Lesson bodies are an array of blocks (`text`, `code`, `heading`, `list`, `note`, `table`,
+  `image`, `video`) rendered by `src/components/LessonBlocks.js`. A block type with no case
+  there renders as blank space, so add both together.
+
+**Read the `publish-content` skill before publishing, regenerating, or rolling back content.**
+It covers the safety steps, what to test afterwards, and how to undo it.
+
 ## Conventions
 
 - Functional React components with hooks. No class components.

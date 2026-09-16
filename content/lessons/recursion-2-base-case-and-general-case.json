@@ -1,0 +1,53 @@
+{
+  "id": "recursion-2-base-case-and-general-case",
+  "moduleId": "recursion",
+  "title": "Base case and general case",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Every recursive method must use a selection structure leading to different cases:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "The **general case** contains the recursive call, and reduces the problem to a smaller version of itself.",
+        "The **base case** stops the recursion, avoiding infinite recursion."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**Every recursive definition must have one or more base cases.** In `factorial`, the base case is `num == 0`, which returns `1` without recursing."
+    },
+    {
+      "type": "text",
+      "value": "Without a base case, the calls never stop:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static int broken(int num) {\n    return num * broken(num - 1);   // no base case, never terminates\n}"
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Added: what actually happens",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Your handout does not name the failure. Each pending call occupies memory on the **call stack**, and when that space runs out the JVM throws **`StackOverflowError`**:"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "value": "Exception in thread \"main\" java.lang.StackOverflowError\n        at Broken.broken(Broken.java:2)\n        at Broken.broken(Broken.java:2)\n        ... thousands of identical lines"
+        },
+        {
+          "type": "text",
+          "value": "A page of identical stack-trace lines means one thing: a recursion that never reached its base case. Check that the base case exists, **and** that every recursive call moves toward it."
+        }
+      ]
+    }
+  ]
+}

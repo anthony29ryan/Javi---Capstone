@@ -1,0 +1,54 @@
+{
+  "id": "object-and-methods-1-constructors",
+  "moduleId": "object-and-methods",
+  "title": "Constructors",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**A constructor is a special method used to create and initialize an object.** Using the `new` keyword calls a constructor."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "MyClass mc = new MyClass();"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "`MyClass mc` declares the variable `mc` to be a name for an object of the class `MyClass`.",
+        "`new MyClass()` creates and initializes a new object, whose address is then assigned to `mc`.",
+        "`MyClass()` is a **call to the constructor** that Java provided for the class.",
+        "The parentheses are empty because this constructor takes no arguments."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Two rules define a constructor:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**A constructor does not have a return type**, not even `void`.",
+        "**Its name must exactly match the class name.**"
+      ]
+    },
+    {
+      "type": "text",
+      "value": "A constructor can also call methods within its class."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Your handout reads \"`MyClass()` is a **class to** the constructor\": a typo for \"a **call to** the constructor.\""
+        }
+      ]
+    }
+  ]
+}

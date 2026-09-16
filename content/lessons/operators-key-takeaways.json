@@ -1,0 +1,21 @@
+{
+  "id": "operators-key-takeaways",
+  "moduleId": "operators",
+  "title": "Key takeaways",
+  "order": 9,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "An **operand** is a value an operator acts on.",
+        "**Integer division truncates.** If either operand is a decimal type, the division is floating point.",
+        "**`%`** returns the remainder: the standard tool for even/odd tests and unit conversion.",
+        "**Relational operators** produce booleans, which can be stored in variables.",
+        "**`&&`** needs both true, **`||`** needs one, **`!`** flips, **`^`** needs exactly one.",
+        "`&&` and `||` **short-circuit**, which is what makes guarded null checks work.",
+        "`*` `/` `%` outrank `+` `-`, which outrank relational, which outrank logical. **Use parentheses anyway.**"
+      ]
+    }
+  ]
+}

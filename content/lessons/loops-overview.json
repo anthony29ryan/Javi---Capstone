@@ -1,0 +1,35 @@
+{
+  "id": "loops-overview",
+  "moduleId": "loops",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Suppose you need to print the numbers 1 to 10. You could write ten `println` statements. Now make it 1 to 1,000. Now make it 1 to however many the user asks for, a number you do not know when you write the code."
+    },
+    {
+      "type": "text",
+      "value": "Loops are the answer to all three, and they are the single biggest jump in what your programs can do. Almost everything ahead, arrays, strings, files, collections, depends on this lesson."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Write `while`, `for`, and `do...while` loops",
+        "Choose the right loop for a given problem",
+        "Control loop execution with `break` and `continue`",
+        "Recognise and avoid infinite loops and off-by-one errors",
+        "Build and trace nested control structures"
+      ]
+    }
+  ]
+}

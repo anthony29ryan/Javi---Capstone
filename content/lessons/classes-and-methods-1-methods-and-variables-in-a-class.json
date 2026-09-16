@@ -1,0 +1,67 @@
+{
+  "id": "classes-and-methods-1-methods-and-variables-in-a-class",
+  "moduleId": "classes-and-methods",
+  "title": "Methods and variables in a class",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **method is a collection of statements grouped together to perform an operation.**"
+    },
+    {
+      "type": "text",
+      "value": "Recalling the vocabulary from Lesson 10, now in a class context:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "The **`void`** keyword denotes that a method is not used to return a value.",
+        "A **parameter** is a variable in a method declaration; an **argument** is the actual value passed when the method is invoked.",
+        "**The data type of the return value must match the declared return type.** You cannot return an integer from a method declared to return a boolean."
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Instance variables vs. local variables"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Instance variables** are declared **outside** any method, constructor, or block. They belong to the object and last as long as it does.",
+        "**Local variables** are declared **within** a method definition. They are visible only inside the method that declares them and are not accessible from the rest of the class."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Rectangle {\n    private double length;      // instance variable, belongs to the object\n    private double width;       // instance variable\n\n    public double area() {\n        double result = length * width;   // local variable, exists only during this call\n        return result;\n    }\n\n    public void describe() {\n        // System.out.println(result);    // error: result does not exist here\n        System.out.println(\"Rectangle \" + length + \" x \" + width);\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Every `Rectangle` object has its own `length` and `width`. `result` is created fresh each time `area()` runs and disappears when it returns."
+    },
+    {
+      "type": "heading",
+      "value": "The this keyword"
+    },
+    {
+      "type": "text",
+      "value": "**The `this` keyword represents the object receiving the method call, within a method definition.**"
+    },
+    {
+      "type": "text",
+      "value": "It matters most when a parameter has the same name as an instance variable:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Student {\n    private String name;\n\n    public void setName(String name) {\n        this.name = name;      // this.name is the instance variable; name is the parameter\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Without `this`, the line `name = name;` assigns the parameter to itself and the instance variable never changes, a bug that compiles cleanly and silently does nothing. `this.name` removes the ambiguity."
+    }
+  ]
+}

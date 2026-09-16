@@ -1,0 +1,35 @@
+{
+  "id": "operators-overview",
+  "moduleId": "operators",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "You can store values now. Operators are how you *do* something with them, add a score, compare two grades, check whether a user is both logged in and an admin."
+    },
+    {
+      "type": "text",
+      "value": "Most of this lesson will feel like arithmetic you already know. Two things will not: how Java divides whole numbers, and the order it evaluates things in. Both cause real bugs, so slow down there."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Use arithmetic operators, including modulus",
+        "Explain the difference between integer and floating-point division",
+        "Compare values with relational operators",
+        "Combine conditions with logical operators",
+        "Apply precedence rules and use parentheses to override them"
+      ]
+    }
+  ]
+}

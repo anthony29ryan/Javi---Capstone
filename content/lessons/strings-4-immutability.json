@@ -1,0 +1,39 @@
+{
+  "id": "strings-4-immutability",
+  "moduleId": "strings",
+  "title": "Immutability",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Unlike primitive data types, **the `String` class is immutable**: once a String is created, its contents cannot be changed."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int num = 0;\nnum++;            // num changes from 0 to 1"
+    },
+    {
+      "type": "text",
+      "value": "A String variable's content cannot be changed by a method in the same way:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String str = \"Java\";\nstr.toUpperCase();\nSystem.out.println(str);       // still \"Java\". Nothing was changed"
+    },
+    {
+      "type": "text",
+      "value": "String methods **create and return a new string** containing the result of the operation. They never modify the original. To keep the result, you must assign it:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String str = \"Java\";\nstr = str.toUpperCase();\nSystem.out.println(str);       // \"JAVA\""
+    },
+    {
+      "type": "text",
+      "value": "Forgetting that assignment is one of the most common mistakes with strings. The compiler says nothing, calling a method and discarding its result is legal."
+    }
+  ]
+}

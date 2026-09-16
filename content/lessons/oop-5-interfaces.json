@@ -1,0 +1,41 @@
+{
+  "id": "oop-5-interfaces",
+  "moduleId": "oop",
+  "title": "Interfaces",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "An **interface** is a program component that contains the heading for a number of public methods.",
+        "Some interfaces describe all the public methods in a class; others specify only certain methods.",
+        "An interface is used by another class through the **`implements`** keyword."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "An interface is a **contract**: it lists method headings without bodies, and any class that implements it promises to supply them."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public interface Printable {\n    void print();           // heading only, no body\n}\n\npublic class Receipt implements Printable {\n    public void print() {   // the promise, kept\n        System.out.println(\"Receipt printed.\");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "The difference from inheritance in one line: **inheritance says what a class *is*; an interface says what a class *can do*.** A `Student` **is a** `Person`; a `Receipt` **can be** printed."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Also covered in Lesson 15."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "generics-4-what-generics-buy-you",
+  "moduleId": "generics",
+  "title": "What generics buy you",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Without generics, a container holds `Object` and every retrieval needs a cast:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "List rawList = new ArrayList();        // raw type\nrawList.add(\"hello\");\nrawList.add(42);                       // nothing stops this\n\nString s = (String) rawList.get(1);    // compiles, ClassCastException at run time"
+    },
+    {
+      "type": "text",
+      "value": "With generics, the mistake never reaches run time:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "List<String> list = new ArrayList<>();\nlist.add(\"hello\");\nlist.add(42);                          // compile error, caught immediately\n\nString s = list.get(0);                // no cast needed"
+    },
+    {
+      "type": "text",
+      "value": "**Generics move an entire category of error from run time to compile time**, which is the same argument as Lesson 18 made for enums, applied to types rather than values."
+    }
+  ]
+}

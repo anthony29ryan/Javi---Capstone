@@ -1,0 +1,35 @@
+{
+  "id": "strings-overview",
+  "moduleId": "strings",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Names, messages, passwords, file contents, anything a user types, all of it is text. `String` is the type you will use more than any other except `int`."
+    },
+    {
+      "type": "text",
+      "value": "It is also the first type you will meet that is **not a primitive**, and it behaves differently because of it. Two of those differences, how you compare strings, and the fact that you cannot change one, cause more beginner bugs than anything else in this tier. This lesson is mostly about those two."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Create strings as literals and with the `new` keyword",
+        "Explain why `==` and `equals()` give different answers",
+        "Describe what string immutability means in practice",
+        "Use the common `String` methods to inspect and transform text",
+        "Walk a string character by character with a loop"
+      ]
+    }
+  ]
+}

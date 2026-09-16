@@ -1,0 +1,20 @@
+{
+  "id": "strings-key-takeaways",
+  "moduleId": "strings",
+  "title": "Key takeaways",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "A String is a sequence of characters indexed from **0**, with the last at **`length() - 1`**.",
+        "**Use `equals()` to compare strings, never `==`.** `==` compares references and will pass your test with literals, then fail on real input.",
+        "Strings are **immutable**. Methods return new strings: **assign the result** or it is lost.",
+        "`charAt()`, `length()`, `substring()`, `indexOf()`, `trim()`, `toUpperCase()` cover most everyday text work.",
+        "`substring(start, end)` excludes `end`.",
+        "Building text in a long loop? Use **`StringBuilder`**."
+      ]
+    }
+  ]
+}

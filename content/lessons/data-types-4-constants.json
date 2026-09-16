@@ -1,0 +1,43 @@
+{
+  "id": "data-types-4-constants",
+  "moduleId": "data-types",
+  "title": "Constants",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **constant** is a memory location whose value cannot be changed during program execution."
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "final data_type variable_name = value;"
+    },
+    {
+      "type": "text",
+      "value": "**`final`** is a Java reserved word specifying that the stored value is fixed and cannot be changed:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "final double PI = 3.14159;\nfinal int SQUARE_SIDES = 4;\nfinal char BLANK_SPACE = ' ';\nfinal int HOURS_PER_DAY; HOURS_PER_DAY = 24;   // assigned once, later"
+    },
+    {
+      "type": "text",
+      "value": "A named constant can be assigned a value **only once**. Try again and the compiler stops you:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "final double PI = 3.14159;\nPI = 3.14;   // error: cannot assign a value to final variable PI"
+    },
+    {
+      "type": "text",
+      "value": "**Convention:** constants are written in `ALL_CAPS_WITH_UNDERSCORES`. This is not enforced, but every Java programmer reads `MAX_SIZE` as \"this never changes.\""
+    },
+    {
+      "type": "text",
+      "value": "Use constants for any value that has a fixed meaning. `final double VAT_RATE = 0.12;` used in ten places is one edit when the rate changes; `0.12` scattered in ten places is a bug waiting to happen."
+    }
+  ]
+}

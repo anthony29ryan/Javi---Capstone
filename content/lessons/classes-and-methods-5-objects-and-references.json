@@ -1,0 +1,51 @@
+{
+  "id": "classes-and-methods-5-objects-and-references",
+  "moduleId": "classes-and-methods",
+  "title": "Objects and references",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**A variable of a class type contains the memory address of the object** named by the variable. The object itself is not stored in the variable, but in some location in memory.",
+        "The address of the object's memory location is called a **reference** to the object.",
+        "**Class types are reference types**, whose variables hold references: memory addresses.",
+        "**Instead of using `==` for comparison, use the `equals()` method.**"
+      ]
+    },
+    {
+      "type": "text",
+      "value": "This is the `String` rule from Lesson 8, generalised to every object:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Student a = new Student(\"Ana\");\nStudent b = new Student(\"Ana\");\nStudent c = a;\n\nSystem.out.println(a == b);   // false, two separate objects\nSystem.out.println(a == c);   // true, c refers to the same object as a"
+    },
+    {
+      "type": "text",
+      "value": "And because `c` and `a` are the same object, changing one changes \"both\":"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "c.setName(\"Jess\");\nSystem.out.println(a.getName());   // Jess"
+    },
+    {
+      "type": "text",
+      "value": "There is only one object; `a` and `c` are two names for it. This is the array behaviour from Lesson 10's Exercise 2, applying to every object you will ever create."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "`equals()` deserves a caveat. Inherited from `Object`, it behaves exactly like `==`, comparing references. `String` works as expected because `String` **overrides** it. For your own classes you must override `equals()` yourself to make it compare contents. Overriding is Lesson 15."
+        }
+      ]
+    }
+  ]
+}

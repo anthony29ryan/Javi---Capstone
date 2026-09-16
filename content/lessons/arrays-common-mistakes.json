@@ -1,0 +1,51 @@
+{
+  "id": "arrays-common-mistakes",
+  "moduleId": "arrays",
+  "title": "Common mistakes",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Going one past the end.** An array of size `n` has valid indexes `0` to `n - 1`. `arr[arr.length]` always throws `ArrayIndexOutOfBoundsException`."
+    },
+    {
+      "type": "text",
+      "value": "**Writing `length()` on an array.** Arrays use `length` (a field, no parentheses); Strings use `length()` (a method)."
+    },
+    {
+      "type": "text",
+      "value": "**Printing an array directly.** `System.out.println(arr)` prints a reference. Use `Arrays.toString(arr)`, or `Arrays.deepToString(arr)` for 2-D."
+    },
+    {
+      "type": "text",
+      "value": "**Trying to resize an array.** The length is fixed at creation. To \"grow\" one, create a bigger array and copy. (This is what `ArrayList` exists to solve, see the note below.)"
+    },
+    {
+      "type": "text",
+      "value": "**Assuming elements start empty.** They start at type defaults: `0`, `false`, `'\u0000'`, or `null`. An array of `String` is full of `null`s, and calling a method on one throws `NullPointerException`."
+    },
+    {
+      "type": "text",
+      "value": "**Modifying the loop variable of an enhanced for.** It is a copy. The array is unchanged."
+    },
+    {
+      "type": "text",
+      "value": "**Calling `binarySearch` on unsorted data.** Undefined results, no error."
+    },
+    {
+      "type": "text",
+      "value": "**Mixing up `[row][column]`.** Row always comes first."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Looking ahead",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "a fixed size is the main limitation of arrays, and Java's answer is `ArrayList` from the Collections Framework, a resizable array. It is not covered in this course, but it is the natural next step once these lessons are behind you."
+        }
+      ]
+    }
+  ]
+}

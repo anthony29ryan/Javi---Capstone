@@ -1,0 +1,30 @@
+{
+  "id": "control-structures-2-one-way-selection-if",
+  "moduleId": "control-structures",
+  "title": "One-way selection: if",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "The `if` statement tells the program to execute a certain section of code **only if** a particular condition evaluates to true."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (expression) {\n    // statement(s)\n}"
+    },
+    {
+      "type": "text",
+      "value": "`if` is a reserved word, followed by an expression enclosed in parentheses. The expression can be a relational or logical expression returning `true` or `false`. If it evaluates to `true`, the statements between the curly braces execute. If `false`, they do not."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int score = 70;\n\nif (score >= 60) {\n    System.out.println(\"The student passed.\");\n}"
+    },
+    {
+      "type": "text",
+      "value": "The braces enclose the statements to be executed. Execution continues after the closing brace either way."
+    }
+  ]
+}

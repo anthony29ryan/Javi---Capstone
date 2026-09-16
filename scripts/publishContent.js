@@ -13,7 +13,14 @@ const path = require('path');
 
 const { initializeApp } = require('firebase/app');
 const { getAuth, signInWithEmailAndPassword } = require('firebase/auth');
-const { getFirestore, doc, setDoc } = require('firebase/firestore');
+const {
+  getFirestore,
+  doc,
+  setDoc,
+  collection,
+  getDocs,
+  deleteDoc,
+} = require('firebase/firestore');
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -67,15 +74,32 @@ async function main() {
     ? fs.readdirSync(lessonsDir).filter((f) => f.endsWith('.json'))
     : [];
 
+  const publishedLessonIds = new Set();
   for (const file of lessonFiles) {
     const lesson = readJson(path.join(lessonsDir, file));
     const { id, ...data } = lesson;
     await setDoc(doc(db, 'lessons', id), data);
+    publishedLessonIds.add(id);
     console.log('Wrote lesson:', id);
   }
 
+  // setDoc only ever adds or overwrites, so a lesson that was renamed or removed
+  // locally would linger in Firestore and still show up in getLessons(). Delete
+  // anything that is no longer in content/lessons so the two stay in step.
+  let removed = 0;
+  if (lessonFiles.length > 0) {
+    const existing = await getDocs(collection(db, 'lessons'));
+    for (const found of existing.docs) {
+      if (publishedLessonIds.has(found.id)) continue;
+      await deleteDoc(doc(db, 'lessons', found.id));
+      console.log('Removed stale lesson:', found.id);
+      removed++;
+    }
+  }
+
   console.log(
-    `Done. Published ${courses.length} courses, ${modules.length} modules, ${lessonFiles.length} lessons.`
+    `Done. Published ${courses.length} courses, ${modules.length} modules, ` +
+      `${lessonFiles.length} lessons${removed ? `, removed ${removed} stale` : ''}.`
   );
   process.exit(0);
 }

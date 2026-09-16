@@ -1,0 +1,17 @@
+{
+  "id": "oop-7-how-it-fits-together",
+  "moduleId": "oop",
+  "title": "How it fits together",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "code",
+      "language": "text",
+      "value": "package            a folder of related classes\n  └── class        a blueprint, attributes + behaviors\n        └── object a particular thing built from that blueprint, with its own state\n\ninheritance        one class IS A kind of another    (extends)\ninterface          one class CAN DO something        (implements)"
+    },
+    {
+      "type": "text",
+      "value": "The rest of this tier walks that list from the inside out: classes and encapsulation (13), objects and constructors (14), inheritance and interfaces (15)."
+    }
+  ]
+}

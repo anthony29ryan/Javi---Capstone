@@ -1,0 +1,35 @@
+{
+  "id": "input-output-overview",
+  "moduleId": "input-output",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Every program you have written so far knows its own answers in advance. The values are baked into the source, so it prints the same thing every run."
+    },
+    {
+      "type": "text",
+      "value": "A program becomes useful the moment someone else can put their values into it. This lesson is that step, and it is the one where your programs start to feel real."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Read values from the keyboard with the `Scanner` class",
+        "Choose the right `Scanner` method for each data type",
+        "Display output with `print` and `println`",
+        "Control the format of output with `printf` and format specifiers",
+        "Avoid the `nextInt`-then-`nextLine` trap"
+      ]
+    }
+  ]
+}

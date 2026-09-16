@@ -1,0 +1,87 @@
+{
+  "id": "regular-expressions-4-pattern-and-matcher",
+  "moduleId": "regular-expressions",
+  "title": "Pattern and Matcher",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**The `Pattern` class in `java.util.regex` stores the format of a regular expression.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.regex.Pattern;\nimport java.util.regex.Matcher;"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Pattern p = Pattern.compile(\"[A-F]{5,}.*\");"
+    },
+    {
+      "type": "text",
+      "value": "**The `compile` method compiles the given regular expression into a pattern. A compiled pattern can speed up your program when the pattern is used frequently**: the parsing work happens once instead of on every call."
+    },
+    {
+      "type": "text",
+      "value": "**The `Matcher` class stores a possible match between a pattern and a string:**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Matcher match = patternName.matcher(stringName);"
+    },
+    {
+      "type": "text",
+      "value": "The `matcher` method returns a `Matcher` object. Use `matches()` to check whether the regular expression given in the `Pattern` matches a string:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.regex.*;\n\npublic class PatternDemo {\n    public static void main(String[] args) {\n        Pattern p = Pattern.compile(\"[A-F]{5,}.*\");\n        String str = \"AAAAAhhh\";\n        Matcher match = p.matcher(str);\n        System.out.println(match.matches());   // true\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "`\"AAAAA\"` is five characters from `A-F`, satisfying `{5,}`, and `.*` absorbs `\"hhh\"`."
+    },
+    {
+      "type": "heading",
+      "value": "find()"
+    },
+    {
+      "type": "text",
+      "value": "**`Matcher`'s `find()` method scans the input sequence looking for the next subsequence that matches the pattern.** It returns `true` if the pattern exists as a **substring**."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.regex.*;\n\npublic class FindDemo {\n    public static void main(String[] args) {\n        Pattern p = Pattern.compile(\"[0-9]\");\n        String str = \"Passw0rd\";\n        Matcher match = p.matcher(str);\n        System.out.println(match.find());      // true\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "**`matches()` versus `find()`: the distinction that matters most:**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Pattern p = Pattern.compile(\"[0-9]\");\nMatcher m = p.matcher(\"Passw0rd\");\n\nSystem.out.println(m.matches());   // false, the whole string is not a single digit\nSystem.out.println(m.find());      // true, a digit exists somewhere inside"
+    },
+    {
+      "type": "text",
+      "value": "Use **`matches()`** to validate a whole value (is this a valid phone number?). Use **`find()`** to search inside text (does this password contain a digit?)."
+    },
+    {
+      "type": "text",
+      "value": "`find()` can also be called repeatedly to walk through every match:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Pattern p = Pattern.compile(\"\\\\d+\");\nMatcher m = p.matcher(\"Order 12 shipped 2024 units in 7 boxes\");\n\nwhile (m.find()) {\n    System.out.println(m.group());     // 12, then 2024, then 7\n}"
+    },
+    {
+      "type": "text",
+      "value": "`group()` returns the text that was actually matched."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "classes-and-methods-overview",
+  "moduleId": "classes-and-methods",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Lesson 12 said a class is a blueprint. This lesson is where you actually draw one."
+    },
+    {
+      "type": "text",
+      "value": "The central idea is **encapsulation**: an object keeps its data private and exposes only the operations it chooses to allow. That sounds bureaucratic until you see what it prevents, a `BankAccount` whose balance can be set to −5,000 from anywhere in the program."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Write a class with instance variables and methods",
+        "Distinguish instance variables from local variables",
+        "Use the `this` keyword correctly",
+        "Apply `public` and `private` to hide implementation details",
+        "Write accessor and mutator methods",
+        "Read a UML class diagram"
+      ]
+    }
+  ]
+}

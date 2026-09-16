@@ -1,0 +1,52 @@
+{
+  "id": "file-io-3-file-organization-streams-and-buffers",
+  "moduleId": "file-io",
+  "title": "File organization, streams, and buffers",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "The data hierarchy:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "The smallest useful piece of data is the **character**: any letter, number, or special symbol.",
+        "A **field** is a group of characters that has some meaning.",
+        "A **record** is a collection of fields containing data about an entity.",
+        "A **file** consists of related records."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "character  →  field       →  record                        →  file\n'A'           \"Ana Reyes\"    Ana Reyes,19,92.5                students.txt"
+    },
+    {
+      "type": "text",
+      "value": "When each record is accessed one after another in the order it was stored, the file is used as a **sequential access file**."
+    },
+    {
+      "type": "text",
+      "value": "A record's fields can be organized into a single line or separated by a character. Values separated by commas are **comma-separated values**."
+    },
+    {
+      "type": "heading",
+      "value": "Streams and buffers"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**A stream is a flow of data.** Data taken from a source (a file, the keyboard) into a program is an **input stream**. Data delivered from a program to a destination (a file, the screen) is an **output stream**.",
+        "**A buffer is a memory location into which you can write data and read it again later.**",
+        "**Flushing** clears any bytes sent to a buffer for output but not yet written out."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Buffering exists for speed: writing one character at a time to a disk is enormously slower than collecting a few thousand and writing them at once. The cost is that **data sitting in a buffer has not reached the file yet**, which is why closing a stream matters."
+    }
+  ]
+}

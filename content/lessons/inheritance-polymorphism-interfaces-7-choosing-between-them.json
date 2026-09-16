@@ -1,0 +1,42 @@
+{
+  "id": "inheritance-polymorphism-interfaces-7-choosing-between-them",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Choosing between them",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Abstract classes and interfaces are similar: **both cannot be instantiated, and both may contain a mix of methods declared with or without an implementation.**"
+    },
+    {
+      "type": "text",
+      "value": "**Consider an interface if:**"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "You expect **unrelated classes** to implement it.",
+        "You want to specify the behavior of a data type, but are not concerned about who implements it.",
+        "You want to take advantage of **multiple inheritance of type**."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**Consider an abstract class if:**"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "You want to **share code** among several closely related classes.",
+        "You expect subclasses to have many common methods or fields, or to require access modifiers other than public (such as `protected` and `private`).",
+        "You want to declare non-static or non-final **fields**, enabling methods that access and modify the state of the object they belong to."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "The deciding constraint: **a class can extend only one class, but implement any number of interfaces.** That is what \"multiple inheritance of type\" means."
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "id": "enums-nested-classes-6-nested-classes",
+  "moduleId": "enums-nested-classes",
+  "title": "Nested classes",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**In Java you can create a class within another class and store them together; such classes are called nested classes. The containing class is the top-level class.**"
+    },
+    {
+      "type": "text",
+      "value": "There are four types:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Static member class**: has access to all static methods of the top-level class.",
+        "**Non-static member class (inner class)**: requires an instance; has access to all data and methods of the top-level class.",
+        "**Local class**: defined within a method body.",
+        "**Anonymous class**: a special case of a local class that has **no** identifier."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**The most common reason for nesting a class inside another is that the inner class is used only by the top-level class.** Packaging them together makes their connection easier to understand and their code easier to maintain."
+    },
+    {
+      "type": "heading",
+      "value": "An example"
+    },
+    {
+      "type": "text",
+      "value": "A class describing houses sold by a real estate company might have fields for listing number, price, address, and area. The listing number and price belong to the listing; the address and area really belong to the house:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class RealEstateListing {\n    private int listingNumber;\n    private double price;\n    private HouseData hData;\n\n    public RealEstateListing(int num, double price, String address, int sqFt) {\n        listingNumber = num;\n        this.price = price;\n        hData = new HouseData(address, sqFt);\n    }\n\n    public void display() {\n        System.out.println(\"Listing number #\" + listingNumber\n                           + \" Selling for Php\" + price);\n        System.out.println(\"Address: \" + hData.streetAddress);\n        System.out.println(hData.squareFeet + \" square feet\");\n    }\n\n    private class HouseData {\n        private String streetAddress;\n        private int squareFeet;\n\n        public HouseData(String address, int sqFt) {\n            streetAddress = address;\n            squareFeet = sqFt;\n        }\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class RealEstateDemo {\n    public static void main(String[] args) {\n        new RealEstateListing(1024, 4500000.00, \"12 Mabini St, Quezon City\", 1450).display();\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Listing number #1024 Selling for Php4500000.0\nAddress: 12 Mabini St, Quezon City\n1450 square feet"
+    },
+    {
+      "type": "text",
+      "value": "`HouseData` is a **private** class. You do not have to make an inner class private, but doing so keeps its members hidden from outside classes. If you wanted a class's members to be accessible, you would not make it an inner class."
+    },
+    {
+      "type": "text",
+      "value": "**An inner class can access its top-level class's fields and methods even if they are private, and an outer class can access its inner class's members.** That is why `display()` can read `hData.streetAddress` despite it being private."
+    },
+    {
+      "type": "heading",
+      "value": "When not to nest"
+    },
+    {
+      "type": "text",
+      "value": "**You usually will not want to create inner classes.** If `HouseData` were a regular class in its own file, you could use it with **composition** in other classes. As it stands it is usable only within the class that contains it."
+    },
+    {
+      "type": "text",
+      "value": "You will not create nested classes frequently, but you will see them implemented in some built-in Java classes. Recognising them matters more than writing them."
+    }
+  ]
+}

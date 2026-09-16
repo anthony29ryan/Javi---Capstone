@@ -1,0 +1,82 @@
+{
+  "id": "introduction-to-java-1-the-java-environment",
+  "moduleId": "introduction-to-java",
+  "title": "The Java environment",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Java** is a high-level programming language developed by Sun Microsystems for general-purpose business applications and interactive, web-based applications. Java can be used to write programs that run on any operating system or device."
+    },
+    {
+      "type": "text",
+      "value": "That last part is the headline feature, and it works because of one piece of machinery:"
+    },
+    {
+      "type": "text",
+      "value": "**Java Virtual Machine (JVM)**: an environment that translates Java **bytecode** (the compiled format for Java programs) into machine language and executes it."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Note",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "your handout calls this the \"Java Environment Machine.\" The correct name is **Java Virtual Machine**. Every other source and every exam will use \"Virtual.\""
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "How your code becomes a running program"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**Source code**: programming statements written in a high-level language, created in a text editor or a development environment.",
+        "**The Java compiler (`javac`)** converts source code into a binary program of bytecode.",
+        "**The Java interpreter** checks the bytecode, communicates with the operating system, and executes the bytecode instructions line by line inside the JVM."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "   Hello.java  ──javac──▶  Hello.class  ──JVM──▶  runs on Windows\n   (source)                (bytecode)         ├─▶  runs on macOS\n                                              └─▶  runs on Linux"
+    },
+    {
+      "type": "text",
+      "value": "This is the trick. Most languages compile straight to machine code for one specific processor and operating system. Java compiles to bytecode, which is not tied to any machine, then each platform supplies its own JVM to run it. **Write once, run anywhere.**"
+    },
+    {
+      "type": "text",
+      "value": "A **development environment** is a set of tools that help you write programs easily, such as NetBeans, IntelliJ IDEA, or Eclipse."
+    },
+    {
+      "type": "heading",
+      "value": "Two types of Java program"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Application**: a stand-alone program. It can be either:",
+        "**Console application**. Supports character output to a computer screen in a terminal window.",
+        "**Windowed application**: creates a GUI with elements such as menus, buttons, and dialog boxes.",
+        "**Applet**: a program embedded in a web page, which runs in a browser."
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Historical note",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "applets are obsolete. Browsers dropped support for the Java plug-in, and applets were deprecated in Java 9 and **removed entirely in Java 11**. Your source material dates from 2014, when they were still taught. Learn the term so you recognize it in older code and exam questions, > but you will never write one. Everything in this course is a console application."
+        }
+      ]
+    }
+  ]
+}

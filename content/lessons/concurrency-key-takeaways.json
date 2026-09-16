@@ -1,0 +1,21 @@
+{
+  "id": "concurrency-key-takeaways",
+  "moduleId": "concurrency",
+  "title": "Key takeaways",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "A **thread** is the smallest schedulable unit; threads in a **process** share memory.",
+        "Create threads by extending **`Thread`** or implementing **`Runnable`**. Prefer `Runnable`.",
+        "**`start()` creates a thread; `run()` does not.** This is the mistake to watch for.",
+        "Thread output order is **not deterministic**, and **priority is only a hint**. Any printed \"expected output\" for concurrent code is one possibility among several.",
+        "**`join()`** waits for a thread to finish and is how you impose order.",
+        "Shared mutable data causes **race conditions**; protect it with **`synchronized`**.",
+        "Over-synchronizing can cause **deadlock**, so protect what is shared and no more."
+      ]
+    }
+  ]
+}

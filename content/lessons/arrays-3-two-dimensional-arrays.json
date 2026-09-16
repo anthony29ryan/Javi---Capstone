@@ -1,0 +1,118 @@
+{
+  "id": "arrays-3-two-dimensional-arrays",
+  "moduleId": "arrays",
+  "title": "Two-dimensional arrays",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **two-dimensional array** is a collection of a fixed number of elements arranged in **rows and columns**, all of the same data type."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "dataType[][] arrayName = new dataType[rowSize][columnSize];"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[][] scores = new int[4][5];     // 4 rows, 5 columns, every element 0"
+    },
+    {
+      "type": "text",
+      "value": "Store a value into row 2, column 3:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "scores[2][3] = 43;"
+    },
+    {
+      "type": "text",
+      "value": "**Row first, then column**: always."
+    },
+    {
+      "type": "heading",
+      "value": "Initializing at declaration"
+    },
+    {
+      "type": "text",
+      "value": "Enclose the elements of each row within braces, separate them with commas, and enclose all rows within braces:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[][] board = {\n    {2,  3,  1},\n    {15, 25, 13},\n    {20, 4,  7},\n    {11, 18, 14}\n};\n\nSystem.out.println(board.length);        // 4, the number of rows\nSystem.out.println(board[0].length);     // 3, the number of columns in row 0"
+    },
+    {
+      "type": "text",
+      "value": "`board.length` is the row count; `board[0].length` is the length of the first row. That is because a 2-D array is really **an array of arrays**: `board[0]` is itself a one-dimensional array."
+    },
+    {
+      "type": "heading",
+      "value": "Three ways to process"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Process the entire array.",
+        "Process a particular row, **row processing**.",
+        "Process a particular column, **column processing**."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "final int ROWS = 7, COLUMNS = 6;\nint[][] matrix = new int[ROWS][COLUMNS];\nint sum = 0;"
+    },
+    {
+      "type": "text",
+      "value": "**Row processing**: all elements of row index 5:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "for (int col = 0; col < matrix[5].length; col++) {\n    matrix[5][col] = col * 2;\n}\n\nfor (int col = 0; col < matrix[5].length; col++) {\n    System.out.print(matrix[5][col] + \"\\t\");\n}"
+    },
+    {
+      "type": "text",
+      "value": "The row is fixed at `5`; the column varies."
+    },
+    {
+      "type": "text",
+      "value": "**Column processing**: column index 2:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "for (int row = 0; row < matrix.length; row++) {\n    matrix[row][2] = row * 3;\n}\n\nfor (int row = 0; row < matrix.length; row++) {\n    sum = sum + matrix[row][2];\n}"
+    },
+    {
+      "type": "text",
+      "value": "The column is fixed at `2`; the row varies."
+    },
+    {
+      "type": "heading",
+      "value": "Processing the whole array"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class TableDemo {\n    public static void main(String[] args) {\n        int[][] table = {\n            {3,  4,  2,  5,  12},\n            {8,  11, 23, 2,  3},\n            {20, 1,  19, 7,  6},\n            {15, 10, 6,  17, 3}\n        };\n\n        System.out.println(\"Elements of array table:\");\n        for (int row = 0; row < table.length; row++) {\n            for (int col = 0; col < table[row].length; col++) {\n                System.out.print(table[row][col] + \"\\t\");\n            }\n            System.out.println();\n        }\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Elements of array table:\n3\t4\t2\t5\t12\n8\t11\t23\t2\t3\n20\t1\t19\t7\t6\n15\t10\t6\t17\t3"
+    },
+    {
+      "type": "text",
+      "value": "This is the nested-loop pattern from Lesson 7, applied to data: **outer loop walks rows, inner loop walks columns, `println()` ends each row.**"
+    },
+    {
+      "type": "text",
+      "value": "Note `table[row].length` rather than a fixed column count. Because each row is its own array, rows can differ in length, and using `table[row].length` keeps the code correct if they do."
+    }
+  ]
+}

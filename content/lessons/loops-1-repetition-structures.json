@@ -1,0 +1,16 @@
+{
+  "id": "loops-1-repetition-structures",
+  "moduleId": "loops",
+  "title": "Repetition structures",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Java provides three repetition (or looping) structures used to execute a block of statements repeatedly: `while`, `for`, and `do...while`. All three are reserved words."
+    },
+    {
+      "type": "text",
+      "value": "They differ in one thing only: **when the condition is checked**, and **how much bookkeeping the loop does for you**."
+    }
+  ]
+}

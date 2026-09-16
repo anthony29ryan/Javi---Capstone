@@ -1,0 +1,20 @@
+{
+  "id": "predefined-functions-key-takeaways",
+  "moduleId": "predefined-functions",
+  "title": "Key takeaways",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Predefined** methods come from class libraries; `java.lang` (including `Math`) is imported automatically.",
+        "`Math` methods are **static**: call them on the class name.",
+        "**Value-returning** methods declare a type and must `return` a value on every path; **void** methods return nothing and cannot be used in an expression.",
+        "A method heading is *modifiers · return type · name · parameter list*, and the parentheses are required even when empty.",
+        "**Java is pass-by-value.** Changing a parameter never changes the caller's variable: for objects and arrays, the *reference* is copied, so the shared object can still be modified.",
+        "Methods that do one thing each are easier to read, test, and reuse."
+      ]
+    }
+  ]
+}

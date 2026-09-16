@@ -1,0 +1,64 @@
+{
+  "id": "loops-2-the-while-loop",
+  "moduleId": "loops",
+  "title": "The while loop",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "The `while` loop repeats a block of statements while a given condition evaluates to true. It evaluates the condition **before** executing the loop body."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "while (expression) {\n    // statements\n}"
+    },
+    {
+      "type": "text",
+      "value": "The expression is the loop condition, enclosed in parentheses; it may be a relational or logical expression returning `true` or `false`. The statements in braces are the **loop body**, which may be a simple or compound statement."
+    },
+    {
+      "type": "text",
+      "value": "The expression provides an **entry condition**. If it evaluates to `true`, the body executes and the expression is re-evaluated. The body continues to execute until the expression evaluates to `false`."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "// this loop prints whole numbers from 0 to 10\nint num = 0;\n\nwhile (num <= 10) {\n    System.out.println(num);\n    num++;              // num = num + 1;\n}"
+    },
+    {
+      "type": "text",
+      "value": "`num` is the **loop control variable**: a variable whose value determines whether loop execution continues. Within the body, `num++` updates it until the condition evaluates to `false`."
+    },
+    {
+      "type": "heading",
+      "value": "Infinite loops"
+    },
+    {
+      "type": "text",
+      "value": "A loop that continues to execute endlessly is an **infinite loop**. To avoid one, ensure the loop body contains statements that guarantee the condition will eventually become false."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int num = 0;\nwhile (num <= 10) {\n    System.out.println(num);      // no num++, prints 0 forever\n}"
+    },
+    {
+      "type": "text",
+      "value": "Three things make a `while` loop terminate, and all three must be present:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "The control variable is **initialised** before the loop.",
+        "The condition **tests** it.",
+        "The body **changes** it, in the direction that makes the condition false."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Drop any one and the loop never ends. If a program hangs, press `Ctrl+C` and check those three."
+    }
+  ]
+}

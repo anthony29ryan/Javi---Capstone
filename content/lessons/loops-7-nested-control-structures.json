@@ -1,0 +1,51 @@
+{
+  "id": "loops-7-nested-control-structures",
+  "moduleId": "loops",
+  "title": "Nested control structures",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Nested control structures** are control statements placed within another. They can be nested to many levels. When nesting, make sure the start and end braces are placed correctly."
+    },
+    {
+      "type": "heading",
+      "value": "A for loop nested in an if...else"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.print(\"Enter a range of loop greater than 0: \");\nint range = console.nextInt();\n\nif (range > 0) {\n    System.out.println(\"The output of the loop is: \");\n    for (int i = 1; i <= range; i++) {\n        System.out.println(i);\n    } // end of for loop\n}\nelse {\n    System.out.println(\"The entered number is invalid.\");\n} // end of if...else statement"
+    },
+    {
+      "type": "heading",
+      "value": "Nested for loops"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int x, y;\nSystem.out.println(\"Multiplication Table of 1-10:\");\n\nfor (x = 1; x <= 10; x++) {\n    for (y = 1; y <= 10; y++) {\n        System.out.print(x * y + \"\\t\");\n    } // end of inner for loop\n    System.out.println();\n} // end of outer for loop"
+    },
+    {
+      "type": "text",
+      "value": "**The inner loop completes entirely for each single iteration of the outer loop.** The outer loop runs 10 times; the inner runs 10 times per outer iteration; the `print` executes 100 times. The `System.out.println()` after the inner loop ends the row, without it, all 100 numbers land on one line."
+    },
+    {
+      "type": "text",
+      "value": "That structure, outer loop for rows, inner loop for columns, a newline between, is the pattern for every grid, table, and shape you will ever print."
+    },
+    {
+      "type": "heading",
+      "value": "Three levels"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "char flag = 'y';\nint range;\n\nwhile (flag != 'n') {\n    System.out.print(\"Enter the range of loop greater than 0: \");\n    range = console.nextInt();\n\n    if (range > 0) {\n        for (int i = 1; i <= range; i++) {\n            System.out.print(i + \", \");\n        } // end of inner for loop\n    }\n    else {\n        System.out.println(\"Invalid number. Try again!\");\n        continue;\n    } // end of inner if...else statement\n\n    System.out.print(\"\\nRepeat the program? (y/n): \");\n    flag = console.next().charAt(0);\n} // end of outer while loop"
+    },
+    {
+      "type": "text",
+      "value": "Trace the `continue` carefully: on invalid input it jumps back to the `while` condition, skipping the \"Repeat the program?\" prompt entirely. The user is silently asked for the range again, which is the intent, but only because `continue` was placed deliberately."
+    }
+  ]
+}

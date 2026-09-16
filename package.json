@@ -25,7 +25,10 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "content:verify": "node scripts/verifyContent.js",
+    "content:import": "node scripts/importLessons.js",
+    "content:publish": "npm run content:verify && node --env-file=.env scripts/publishContent.js"
   },
   "private": true
 }

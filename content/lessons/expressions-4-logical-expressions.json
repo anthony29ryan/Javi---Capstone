@@ -1,0 +1,81 @@
+{
+  "id": "expressions-4-logical-expressions",
+  "moduleId": "expressions",
+  "title": "Logical expressions",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **logical expression** returns a boolean value when evaluated. It can consist of logical operators and relational expressions."
+    },
+    {
+      "type": "text",
+      "value": "Logical operators have **low precedence**: they are evaluated after other operations:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "14 >= 5 && 12 != 3     // true"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "14 >= 5 && 12 != 3\ntrue     && true         (relational operators first. They outrank &&)\ntrue"
+    },
+    {
+      "type": "heading",
+      "value": "Evaluation order"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "3 > 3 || 4 < 2 && 12 > 3 || 4 < 5     // true"
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Correction",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "your handout says that when two or more logical operators appear in an expression, it \"is evaluated from left to right.\" That is not accurate, and this very example disproves it. **`&&` has higher precedence than `||`**, so `&&` is grouped first regardless of position. Left-to-right ordering applies only between operators of *equal* precedence."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Trace it correctly:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "3 > 3 || 4 < 2 && 12 > 3 || 4 < 5\nfalse || false && true   || true      (relational operators first)\nfalse || (false && true) || true      (&& binds tighter than ||)\nfalse || false           || true\nfalse                    || true\ntrue"
+    },
+    {
+      "type": "text",
+      "value": "Evaluating strictly left to right would give `((((3>3) || (4<2)) && (12>3)) || (4<5))`, which happens to reach `true` as well, hiding the mistake. Change one value and the two methods diverge."
+    },
+    {
+      "type": "heading",
+      "value": "Parentheses override"
+    },
+    {
+      "type": "text",
+      "value": "Parentheses group expressions and control which operators apply to what:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "(3 > 3 || 4 < 2) && (12 > 3 || 4 < 5)     // false"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "(3 > 3 || 4 < 2) && (12 > 3 || 4 < 5)\n(false || false) && (true  || true)\nfalse            && true\nfalse"
+    },
+    {
+      "type": "text",
+      "value": "Same operands as before, opposite result, because the parentheses forced the `||` groups to be evaluated before the `&&`."
+    }
+  ]
+}

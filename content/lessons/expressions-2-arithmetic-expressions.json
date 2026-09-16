@@ -1,0 +1,56 @@
+{
+  "id": "expressions-2-arithmetic-expressions",
+  "moduleId": "expressions",
+  "title": "Arithmetic expressions",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "An **arithmetic expression** returns a numeric value. It consists of arithmetic operators, operands, and assignment operators. There are two kinds."
+    },
+    {
+      "type": "heading",
+      "value": "Integral expressions"
+    },
+    {
+      "type": "text",
+      "value": "If **all** operands are integers and the expression returns an integer type value, it is an **integral expression**:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "x = 11 + 3 * 24 - 5 / 4;   // the result is an integer, value 82"
+    },
+    {
+      "type": "text",
+      "value": "Trace it:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "11 + 3 * 24 - 5 / 4\n11 + 72     - 5 / 4      (* first)\n11 + 72     - 1          (/ next, integer division, 1.25 becomes 1)\n83          - 1\n82"
+    },
+    {
+      "type": "text",
+      "value": "Notice `5 / 4` producing `1`. Everything here is an `int`, so the division is integer division. That lost `0.25` is not recoverable later."
+    },
+    {
+      "type": "heading",
+      "value": "Floating-point expressions"
+    },
+    {
+      "type": "text",
+      "value": "If **all** operands are floating-point numbers and the expression returns a floating-point type value, it is a **floating-point expression**:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "y = 2.8 * 17.5 - 1.40;   // the result is floating point, value 47.6"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "2.8 * 17.5 - 1.40\n49.0       - 1.40\n47.6"
+    }
+  ]
+}

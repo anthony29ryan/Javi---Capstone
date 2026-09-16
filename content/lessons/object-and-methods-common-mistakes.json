@@ -1,0 +1,36 @@
+{
+  "id": "object-and-methods-common-mistakes",
+  "moduleId": "object-and-methods",
+  "title": "Common mistakes",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Giving a constructor a return type.** `public void Pet()` is not a constructor: it is an ordinary method that happens to be named `Pet`, and `new Pet()` will not find it. This compiles silently, which makes it nasty."
+    },
+    {
+      "type": "text",
+      "value": "**Calling `new ClassName()` after writing a parameterized constructor.** The free default constructor is gone. Write one explicitly if you need it."
+    },
+    {
+      "type": "text",
+      "value": "**Expecting overloads to differ by return type.** The signature is the name plus parameter types. Return type is not part of it."
+    },
+    {
+      "type": "text",
+      "value": "**Accessing an instance variable from a static method.** There is no object, so there is no such variable. This is the `main` problem in its usual disguise."
+    },
+    {
+      "type": "text",
+      "value": "**Making a counter non-static.** Each object would get its own copy and every one would read `1`."
+    },
+    {
+      "type": "text",
+      "value": "**Writing `(int) (Math.random() * 6 + 1)`.** Works here by luck, but the habit breaks for other ranges. Keep the `+ min` outside the cast."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting `this` in a constructor parameter with a matching field name.** Same shadowing bug as Lesson 13, now at construction time."
+    }
+  ]
+}

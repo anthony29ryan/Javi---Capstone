@@ -1,0 +1,40 @@
+{
+  "id": "predefined-functions-common-mistakes",
+  "moduleId": "predefined-functions",
+  "title": "Common mistakes",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Forgetting `return` in a value-returning method.** \"Missing return statement\": every path through the method must return a value, including the branches of an `if`."
+    },
+    {
+      "type": "text",
+      "value": "**Declaring a return type on a void method, or vice versa.** A `void` method cannot `return` a value; a typed method must."
+    },
+    {
+      "type": "text",
+      "value": "**Calling a non-static method from `main` without an object.** `main` is static. Either make the method static, or create an object first."
+    },
+    {
+      "type": "text",
+      "value": "**Expecting a method to change its argument.** Java is pass-by-value. Return the new value instead."
+    },
+    {
+      "type": "text",
+      "value": "**Mismatching argument types or order.** `displayInfo(19, \"Jess\", \"Diaz\")` will not compile: the order must match the formal parameters."
+    },
+    {
+      "type": "text",
+      "value": "**Omitting the parentheses on an empty parameter list.** `displayMessage` is not a call; `displayMessage()` is."
+    },
+    {
+      "type": "text",
+      "value": "**Passing degrees to `sin`, `cos`, or `tan`.** They take radians. Use `Math.toRadians()`."
+    },
+    {
+      "type": "text",
+      "value": "**Expecting `Math.pow` to return an `int`.** It always returns a `double`. `int n = Math.pow(2, 3);` will not compile, cast it: `(int) Math.pow(2, 3)`."
+    }
+  ]
+}

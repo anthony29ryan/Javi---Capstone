@@ -1,0 +1,82 @@
+{
+  "id": "recursion-4-designing-a-recursive-method",
+  "moduleId": "recursion",
+  "title": "Designing a recursive method",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "When designing recursive methods, make sure **every recursive call eventually reduces to a base case**."
+    },
+    {
+      "type": "text",
+      "value": "The four steps:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Understand the problem requirements.",
+        "Determine the limiting conditions.",
+        "Identify the base cases and provide a direct solution to each.",
+        "Identify the general cases and provide a solution to each in terms of a smaller version of itself."
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Example 1: Largest element in an array"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[] intArray = {5, 10, 12, 8};"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static int largest(int[] list, int startIndex, int lastIndex) {\n    int max;\n\n    if (startIndex == lastIndex) {\n        return list[startIndex];                          // base case: one element\n    } else {\n        max = largest(list, startIndex + 1, lastIndex);   // largest of the rest\n        if (list[startIndex] >= max) {\n            return list[startIndex];\n        } else {\n            return max;\n        }\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int num = largest(intArray, 0, 3);\nSystem.out.println(\"The largest element in the array is \" + num);   // 12"
+    },
+    {
+      "type": "text",
+      "value": "The reasoning: *the largest element is either the first one, or the largest of everything after it.* The base case is a single element, which is trivially the largest of itself. The general case shrinks the problem by advancing `startIndex`."
+    },
+    {
+      "type": "heading",
+      "value": "Example 2: Decimal to binary"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static void decToBin(int num) {\n    if (num == 0) {\n        System.out.print(0);\n    } else if (num > 0) {\n        decToBin(num / 2);\n        System.out.print(num % 2);\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "`decToBin(13);` produces:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "01101"
+    },
+    {
+      "type": "text",
+      "value": "Each level divides by 2 and prints the remainder, but **after** recursing, so the digits emerge in the correct order rather than reversed."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Note the leading zero",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "13 in binary is `1101`, not `01101`. The extra `0` comes from the base case printing `0` when `num` reaches `0`. It is harmless for demonstration, but if you want exact output, the base case should print nothing and simply `return`, with a separate check so that `decToBin(0)` still prints `0`."
+        }
+      ]
+    }
+  ]
+}

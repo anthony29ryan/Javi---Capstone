@@ -1,0 +1,48 @@
+{
+  "id": "classes-and-methods-3-encapsulation",
+  "moduleId": "classes-and-methods",
+  "title": "Encapsulation",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Encapsulation** is:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "the process of combining data and actions into a single item;",
+        "grouping instance variables and methods into a class;",
+        "hiding implementation details."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "The standard recipe: **make instance variables `private`, and expose `public` methods.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class BankAccount {\n    private String accountNumber;\n    private String owner;\n    private double balance;\n\n    public BankAccount(String accountNumber, String owner, double balance) {\n        this.accountNumber = accountNumber;\n        this.owner = owner;\n        this.balance = balance;\n    }\n\n    // accessors\n    public String getAccountNumber() { return accountNumber; }\n    public String getOwner()         { return owner; }\n    public double getBalance()       { return balance; }\n\n    // behaviors, the only ways the balance can change\n    public void deposit(double amount) {\n        if (amount <= 0) {\n            System.out.println(\"Deposit must be positive.\");\n            return;\n        }\n        balance += amount;\n        logTransaction(\"Deposit\", amount);\n    }\n\n    public void withdraw(double amount) {\n        if (amount <= 0) {\n            System.out.println(\"Withdrawal must be positive.\");\n            return;\n        }\n        if (amount > balance) {\n            System.out.println(\"Insufficient funds.\");\n            return;\n        }\n        balance -= amount;\n        logTransaction(\"Withdrawal\", amount);\n    }\n\n    // helper, internal, so it is private\n    private void logTransaction(String type, double amount) {\n        System.out.printf(\"%s of %.2f, new balance %.2f%n\", type, amount, balance);\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class BankDemo {\n    public static void main(String[] args) {\n        BankAccount account = new BankAccount(\"0012345\", \"Ana Reyes\", 5000.00);\n\n        account.deposit(1500);\n        account.withdraw(2000);\n        account.withdraw(99999);\n        account.deposit(-50);\n\n        System.out.printf(\"Final balance: %.2f%n\", account.getBalance());\n\n        // account.balance = 1000000;   // error: balance has private access\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Deposit of 1500.00, new balance 6500.00\nWithdrawal of 2000.00, new balance 4500.00\nInsufficient funds.\nDeposit must be positive.\nFinal balance: 4500.00"
+    },
+    {
+      "type": "text",
+      "value": "Note there is **no `setBalance`**. The balance changes only through `deposit` and `withdraw`, which enforce the rules. That is encapsulation doing its actual job: not hiding data for its own sake, but making invalid states unreachable."
+    },
+    {
+      "type": "text",
+      "value": "Notice too that `logTransaction` is `private` and gets called from inside `deposit` and `withdraw`, the rule the handout stated backwards, in practice."
+    }
+  ]
+}

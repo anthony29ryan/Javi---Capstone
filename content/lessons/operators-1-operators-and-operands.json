@@ -1,0 +1,16 @@
+{
+  "id": "operators-1-operators-and-operands",
+  "moduleId": "operators",
+  "title": "Operators and operands",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Operators** are specific symbols in a programming language. They tell the compiler or interpreter to perform a specific mathematical, relational, or logical operation and produce a result."
+    },
+    {
+      "type": "text",
+      "value": "A value used on either side of an operator is an **operand**. In the expression `45 + 2`, the numbers `45` and `2` are operands."
+    }
+  ]
+}

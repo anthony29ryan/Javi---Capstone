@@ -1,0 +1,20 @@
+{
+  "id": "exception-handling-key-takeaways",
+  "moduleId": "exception-handling",
+  "title": "Key takeaways",
+  "order": 9,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "An exception disrupts normal flow; uncaught, it crashes the program.",
+        "**Checked** exceptions are enforced by the compiler; **unchecked** ones usually mean a bug in your code.",
+        "`try` holds risky code, `catch` handles the failure, `finally` always cleans up.",
+        "Multiple catch blocks run most-specific first, `Exception` last.",
+        "Extend `Exception` to define your own; raise it with `throw`, declare it with `throws`.",
+        "Prefer **try-with-resources** for anything that must be closed."
+      ]
+    }
+  ]
+}

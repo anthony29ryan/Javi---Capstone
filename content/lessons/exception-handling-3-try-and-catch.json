@@ -1,0 +1,47 @@
+{
+  "id": "exception-handling-3-try-and-catch",
+  "moduleId": "exception-handling",
+  "title": "try and catch",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **try block** holds code that might throw an exception. A **catch block** follows it and handles the exception if one is thrown."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class SafeDivision {\n    public static void main(String[] args) {\n        int numerator = 10;\n        int denominator = 0;\n\n        try {\n            int result = numerator / denominator;\n            System.out.println(\"Result: \" + result);\n        } catch (ArithmeticException e) {\n            System.out.println(\"Cannot divide by zero.\");\n        }\n\n        System.out.println(\"Program continues normally.\");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Output:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Cannot divide by zero.\nProgram continues normally."
+    },
+    {
+      "type": "text",
+      "value": "The program survived instead of crashing."
+    },
+    {
+      "type": "text",
+      "value": "**Control flow:** when the exception is thrown, the rest of the `try` block is abandoned immediately, `System.out.println(\"Result: ...\")` never runs, and control jumps to the matching `catch`."
+    },
+    {
+      "type": "heading",
+      "value": "Getting the exception's own message"
+    },
+    {
+      "type": "text",
+      "value": "The `getMessage()` method returns Java's description of what went wrong:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "try {\n    int result = 10 / 0;\n} catch (ArithmeticException e) {\n    System.out.println(\"Error: \" + e.getMessage());   // Error: / by zero\n}"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "enums-nested-classes-overview",
+  "moduleId": "enums-nested-classes",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Two smaller features, one shared theme: **making invalid states impossible**."
+    },
+    {
+      "type": "text",
+      "value": "An enum turns \"the grading period is a String, and I hope nobody types `Prilim`\" into a value the compiler itself polices. That is the same instinct as encapsulation in Lesson 13, applied to the values themselves rather than to access."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Declare an enumeration and use its constants",
+        "Use the built-in enum methods, instance and static",
+        "Control a `switch` structure with an enum",
+        "Explain what type safety means and why enums provide it",
+        "Identify the four kinds of nested class and when to use one"
+      ]
+    }
+  ]
+}

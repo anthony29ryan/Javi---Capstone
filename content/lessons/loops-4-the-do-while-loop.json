@@ -1,0 +1,43 @@
+{
+  "id": "loops-4-the-do-while-loop",
+  "moduleId": "loops",
+  "title": "The do...while loop",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A `do...while` loop is similar to a `while` loop, except that it executes the loop body **first**, before evaluating the expression."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "do {\n    // statements\n} while (expression);"
+    },
+    {
+      "type": "text",
+      "value": "The expression appears at the end, so the statements execute **once** before it is evaluated. If the expression is `true`, control jumps back to `do` and the body executes again, repeating until the expression is `false`."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int num = 0;\ndo {\n    System.out.println(num);\n    num++;\n} while (num <= 10);"
+    },
+    {
+      "type": "text",
+      "value": "Note the **semicolon** after the closing `while(...)`. It is required, and easy to forget."
+    },
+    {
+      "type": "text",
+      "value": "The difference that matters:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int n = 100;\n\nwhile (n <= 10) {          // condition false immediately\n    System.out.println(n); //   → body never runs\n}\n\ndo {\n    System.out.println(n); //   → body runs once, printing 100\n} while (n <= 10);"
+    },
+    {
+      "type": "text",
+      "value": "A `do...while` body **always executes at least once**. That makes it the natural choice for input validation and menus. You have to show the menu before you can know whether the user wants to see it again."
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "loops-common-mistakes",
+  "moduleId": "loops",
+  "title": "Common mistakes",
+  "order": 9,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Forgetting to update the control variable.** The most common infinite loop there is."
+    },
+    {
+      "type": "text",
+      "value": "**Off-by-one errors.** `<` and `<=` differ by one full iteration:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "for (int i = 1; i < 10; i++)    // runs 9 times: 1..9\nfor (int i = 1; i <= 10; i++)   // runs 10 times: 1..10\nfor (int i = 0; i < 10; i++)    // runs 10 times: 0..9"
+    },
+    {
+      "type": "text",
+      "value": "The last form is the standard one for arrays, where indexes start at `0`."
+    },
+    {
+      "type": "text",
+      "value": "**A semicolon after the loop header.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "for (int i = 0; i < 5; i++);      // ← empty body, loops 5 times doing nothing\n{ System.out.println(i); }        // runs once, and does not compile. I is out of scope"
+    },
+    {
+      "type": "text",
+      "value": "**Missing the semicolon after `do...while`.** `} while (x < 5)` without `;` will not compile."
+    },
+    {
+      "type": "text",
+      "value": "**Modifying the control variable inside the body of a `for` loop.** It fights the update expression and produces behaviour nobody can predict by reading."
+    },
+    {
+      "type": "text",
+      "value": "**Using `continue` in a `while` loop whose update sits at the bottom.** Skips the update, loops forever."
+    },
+    {
+      "type": "text",
+      "value": "**Expecting `break` to exit all nested loops.** It exits one level only."
+    },
+    {
+      "type": "text",
+      "value": "**Declaring the control variable inside the loop when you need it afterwards.** `for (int i = ...)` ends `i`'s life with the loop. Declare it before the loop if you need the final value."
+    }
+  ]
+}

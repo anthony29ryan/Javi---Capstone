@@ -1,0 +1,47 @@
+{
+  "id": "introduction-to-java-6-compiling-and-running",
+  "moduleId": "introduction-to-java",
+  "title": "Compiling and running",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "To write, compile, and execute Java programs you need the **Java Development Kit (JDK)**: a complete set of tools for developing, debugging, and monitoring Java applications."
+    },
+    {
+      "type": "text",
+      "value": "The **Java Runtime Environment (JRE)** covers most end-user needs. It contains everything required to *run* Java applications, but not to compile them. If you only want to run Java programs, the JRE is enough. To write them, you need the JDK."
+    },
+    {
+      "type": "heading",
+      "value": "The command-line steps"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Write a Java program in a text editor.",
+        "Save the file with **the same name as the class**, with the extension `.java`. (`FirstJavaProgram` must be saved as `FirstJavaProgram.java`, this is required, not a convention.)",
+        "Open a terminal and change to the directory where the file is saved.",
+        "Set the path to the JDK so the operating system can find the compiler: `set path=%path%;[JDK bin directory]`",
+        "Compile: `javac FirstJavaProgram.java`",
+        "Run: `java FirstJavaProgram`"
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Note step 6 takes the class name with **no `.java` and no `.class`**: a common stumble."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Modern setup note",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "step 4 is rarely needed today. Current JDK installers configure the path for you, and since Java 11 you can run a single file directly with `java FirstJavaProgram.java`, skipping the separate compile step. If you use an IDE such as IntelliJ IDEA or VS Code, the whole sequence becomes one button. The steps above still describe what happens underneath."
+        }
+      ]
+    }
+  ]
+}

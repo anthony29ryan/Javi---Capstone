@@ -1,0 +1,35 @@
+{
+  "id": "control-structures-overview",
+  "moduleId": "control-structures",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Every program you have written so far runs top to bottom, every line, every time. That is a **sequential structure**, and it can only ever do one thing."
+    },
+    {
+      "type": "text",
+      "value": "Real programs decide. Passed or failed. Discount or full price. Valid input or try again. This lesson is where your programs stop being a fixed recipe and start responding to what is actually in front of them."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Distinguish sequential, selection, and repetition structures",
+        "Write one-way and two-way selections with `if` and `if...else`",
+        "Group statements into compound statements",
+        "Build multiple selections with nested `if` and `else if`",
+        "Test a single variable against many values with `switch`"
+      ]
+    }
+  ]
+}

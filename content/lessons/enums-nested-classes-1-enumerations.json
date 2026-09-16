@@ -1,0 +1,68 @@
+{
+  "id": "enums-nested-classes-1-enumerations",
+  "moduleId": "enums-nested-classes",
+  "title": "Enumerations",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**An enumeration (enum) is a data type that contains a fixed set of constants.**"
+    },
+    {
+      "type": "text",
+      "value": "Enums are good to use when you already know all possible values or instances of the class. They can be declared on their own or within another class."
+    },
+    {
+      "type": "text",
+      "value": "**With numeric or String constants, you can pass an invalid value and not find out until run time. With enums, it is impossible to create an invalid enum value without introducing a compiler error.**"
+    },
+    {
+      "type": "text",
+      "value": "That sentence is the whole argument. Compare:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String period = \"Midterm\";\nString period = \"midterm\";\nString period = \"Mid-term\";\nString period = \"Pizza\";      // all four compile; three are wrong"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Period period = Period.MIDTERM;\nPeriod period = Period.PIZZA;   // error: cannot find symbol"
+    },
+    {
+      "type": "text",
+      "value": "Enumerations show up whenever you have a set of items whose types are known at compile time. Common examples: **compass directions**, **months of the year**, **cards in a deck**."
+    },
+    {
+      "type": "heading",
+      "value": "Declaring an enum"
+    },
+    {
+      "type": "text",
+      "value": "Declare a type with the `enum` keyword, an identifier, and a list of values called **enum constants**: the only allowed values for the type:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public enum Period {\n    PRELIM, MIDTERM, PREFINAL, FINAL;\n}"
+    },
+    {
+      "type": "text",
+      "value": "Then declare variables of that type and assign constants to them:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Period p;\np = Period.MIDTERM;"
+    },
+    {
+      "type": "text",
+      "value": "**An enumeration type such as `Period` is a class.** Its enum constants act like objects instantiated from the class, including having access to its methods."
+    },
+    {
+      "type": "text",
+      "value": "By convention, enum constants are written in `ALL_CAPS`, like other constants."
+    }
+  ]
+}

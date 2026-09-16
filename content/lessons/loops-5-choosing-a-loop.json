@@ -1,0 +1,33 @@
+{
+  "id": "loops-5-choosing-a-loop",
+  "moduleId": "loops",
+  "title": "Choosing a loop",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "table",
+      "headers": [
+        "Use",
+        "When"
+      ],
+      "rows": [
+        [
+          "`for`",
+          "You know how many iterations, counting, or walking an array"
+        ],
+        [
+          "`while`",
+          "Repeat until something happens, and it may not happen at all"
+        ],
+        [
+          "`do...while`",
+          "Same, but the body must run at least once, menus, input validation"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "They are interchangeable in principle; any loop can be written with any of the three. Picking the natural one makes your intent obvious to whoever reads it next."
+    }
+  ]
+}

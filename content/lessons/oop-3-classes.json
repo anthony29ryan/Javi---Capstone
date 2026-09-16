@@ -1,0 +1,59 @@
+{
+  "id": "oop-3-classes",
+  "moduleId": "oop",
+  "title": "Classes",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "Objects of the same kind are said to have the same data type and belong to the same **class**.",
+        "**A class defines a kind of object; it is a blueprint for defining objects.**",
+        "The data type of an object is the name of its class."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "The blueprint analogy is worth taking literally. A blueprint for a house is not a house. You cannot live in it. But from one blueprint you can build many houses, each with its own address and paint colour."
+    },
+    {
+      "type": "text",
+      "value": "**One class, many objects.** The class says *what a Student is*; each object is *a particular student*."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Student {\n    // attributes, what every Student has\n    String name;\n    int age;\n    double grade;\n\n    // behavior, what every Student can do\n    void display() {\n        System.out.println(name + \" (\" + age + \"), grade: \" + grade);\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class SchoolDemo {\n    public static void main(String[] args) {\n        Student ana = new Student();      // one object\n        ana.name = \"Ana Reyes\";\n        ana.age = 19;\n        ana.grade = 92.5;\n\n        Student jess = new Student();     // a second, entirely separate object\n        jess.name = \"Jess Diaz\";\n        jess.age = 20;\n        jess.grade = 88.0;\n\n        ana.display();\n        jess.display();\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Ana Reyes (19), grade: 92.5\nJess Diaz (20), grade: 88.0"
+    },
+    {
+      "type": "text",
+      "value": "`Student` is written once. `ana` and `jess` are two objects of that class, each with its own state. Changing `ana.grade` does nothing to `jess`."
+    },
+    {
+      "type": "text",
+      "value": "You have been using this all along without naming it. `Scanner input = new Scanner(System.in);` creates an **object** of the **class** `Scanner`, and `input.nextInt()` invokes one of its **behaviors**."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Lessons 13 and 14 build this properly, with `private` fields, constructors, and accessor methods. The version above is deliberately simplified."
+        }
+      ]
+    }
+  ]
+}

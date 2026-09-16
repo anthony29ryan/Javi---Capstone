@@ -1,0 +1,58 @@
+{
+  "id": "object-and-methods-4-static-variables-and-static-methods",
+  "moduleId": "object-and-methods",
+  "title": "Static variables and static methods",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Static variables and methods belong to a class as a whole, not to an individual object.**"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**A static variable is shared by all the objects of its class.**",
+        "A static variable can be `public` or `private`.",
+        "Static variables that are not constants should normally be **private**, and accessed or changed only by accessor and mutator methods.",
+        "**A static method can be invoked without using any object.** It is invoked using the class name instead of an object name.",
+        "A static method is written with the `static` keyword in its heading."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "inches = UnitConverter.convertFeetToInches(2.6);"
+    },
+    {
+      "type": "text",
+      "value": "`UnitConverter` is the class name; `convertFeetToInches()` is the static method."
+    },
+    {
+      "type": "text",
+      "value": "**A static method cannot reference an instance variable of the class. It cannot invoke a non-static method of the class, unless it has an object of the class and uses that object in the invocation.**"
+    },
+    {
+      "type": "text",
+      "value": "That restriction has a simple reason: a static method may run when **no object exists**, so there is no instance variable for it to refer to."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Student {\n    private static int studentCount = 0;    // shared by every Student\n    private String name;                    // one per object\n\n    public Student(String name) {\n        this.name = name;\n        studentCount++;                     // every construction increments the shared counter\n    }\n\n    public String getName() { return name; }\n\n    public static int getStudentCount() {   // static: called on the class\n        return studentCount;\n        // return name;   // error, which object's name would that be?\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class EnrollmentDemo {\n    public static void main(String[] args) {\n        System.out.println(Student.getStudentCount());   // 0, no objects yet\n\n        Student a = new Student(\"Ana\");\n        Student b = new Student(\"Jess\");\n        Student c = new Student(\"Marie\");\n\n        System.out.println(a.getName());                 // Ana\n        System.out.println(Student.getStudentCount());   // 3\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "`name` is per-object: each student has their own. `studentCount` is per-class: there is exactly one, and all three constructors incremented the same one. `getStudentCount()` is called on `Student` itself, before any object exists."
+    },
+    {
+      "type": "text",
+      "value": "This also finally explains `public static void main`. `main` is static so the JVM can call it **without creating an object first**, and it is why calling an instance method directly from `main` produces `non-static method cannot be referenced from a static context`."
+    }
+  ]
+}

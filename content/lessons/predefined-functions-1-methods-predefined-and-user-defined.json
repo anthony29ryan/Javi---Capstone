@@ -1,0 +1,37 @@
+{
+  "id": "predefined-functions-1-methods-predefined-and-user-defined",
+  "moduleId": "predefined-functions",
+  "title": "Methods, predefined and user-defined",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **function** or **method** is a block of statements grouped together to perform an operation. Methods are **reusable** and are used to enhance a program's readability."
+    },
+    {
+      "type": "text",
+      "value": "There are two types:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Predefined functions**: already written and provided by the programming language.",
+        "**User-defined functions**: created by programmers."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "In Java, predefined functions are organized as a collection of classes called **class libraries**. To use them, you must import the class from its package:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Scanner;"
+    },
+    {
+      "type": "text",
+      "value": "**All classes in the `java.lang` package are imported by default**, which is why `String`, `System`, and `Math` need no import."
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "id": "file-io-5-writing-and-reading-a-file",
+  "moduleId": "file-io",
+  "title": "Writing and reading a file",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**The `newOutputStream()` method of `Files` creates a writeable file.** A `Path` and a `StandardOpenOption` argument are passed to it. It creates the file if it does not exist, opens it for writing, and returns an `OutputStream`."
+    },
+    {
+      "type": "heading",
+      "value": "StandardOpenOption arguments"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Option",
+        "Description"
+      ],
+      "rows": [
+        [
+          "`WRITE`",
+          "Opens the file for writing"
+        ],
+        [
+          "`APPEND`",
+          "Appends new data to the end of the file; use with `WRITE` or `CREATE`"
+        ],
+        [
+          "`TRUNCATE_EXISTING`",
+          "Truncates the existing file to 0 bytes so contents are replaced; use with `WRITE`"
+        ],
+        [
+          "`CREATE_NEW`",
+          "Creates a new file only if it does not exist; throws an exception if it does"
+        ],
+        [
+          "`CREATE`",
+          "Opens the file if it exists, or creates it if it does not"
+        ],
+        [
+          "`DELETE_ON_CLOSE`",
+          "Deletes the file when the stream is closed; used for temporary files"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**The `newInputStream()` method** opens a file for reading, accepting a `Path` and returning a stream that can read bytes."
+    },
+    {
+      "type": "heading",
+      "value": "Writing"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.io.*;\nimport java.nio.file.*;\n\npublic class WriteFile {\n    public static void main(String[] args) {\n        Path file = Paths.get(\"students.txt\");\n\n        try (BufferedWriter writer = Files.newBufferedWriter(\n                 file, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {\n\n            writer.write(\"Ana Reyes,19,92.5\");\n            writer.newLine();\n            writer.write(\"Jess Diaz,20,88.0\");\n            writer.newLine();\n            writer.write(\"Marie Mendoza,21,95.25\");\n            writer.newLine();\n\n            System.out.println(\"Written to \" + file.toAbsolutePath());\n\n        } catch (IOException e) {\n            System.out.println(\"Could not write: \" + e.getMessage());\n        }\n    }\n}"
+    },
+    {
+      "type": "heading",
+      "value": "Reading it back"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.io.*;\nimport java.nio.file.*;\n\npublic class ReadFile {\n    public static void main(String[] args) {\n        Path file = Paths.get(\"students.txt\");\n\n        try (BufferedReader reader = Files.newBufferedReader(file)) {\n            String line;\n            int count = 0;\n            double totalGrade = 0;\n\n            while ((line = reader.readLine()) != null) {\n                String[] fields = line.split(\",\");     // split the record into fields\n\n                String name  = fields[0];\n                int    age   = Integer.parseInt(fields[1]);\n                double grade = Double.parseDouble(fields[2]);\n\n                System.out.printf(\"%-16s %3d %8.2f%n\", name, age, grade);\n\n                count++;\n                totalGrade += grade;\n            }\n\n            System.out.printf(\"%-16s %3s %8.2f%n\", \"AVERAGE\", \"\", totalGrade / count);\n\n        } catch (IOException e) {\n            System.out.println(\"Could not read: \" + e.getMessage());\n        }\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Ana Reyes         19    92.50\nJess Diaz         20    88.00\nMarie Mendoza     21    95.25\nAVERAGE                 91.92"
+    },
+    {
+      "type": "text",
+      "value": "Three things to notice."
+    },
+    {
+      "type": "text",
+      "value": "**`while ((line = reader.readLine()) != null)`** is the standard idiom for reading a file line by line. `readLine()` returns `null` at end of file, the assignment and the test happen in one expression."
+    },
+    {
+      "type": "text",
+      "value": "**`split(\",\")`** turns one record back into its fields: the data hierarchy from Section 3 in code."
+    },
+    {
+      "type": "text",
+      "value": "**`try (...)`** is **try-with-resources**, introduced in Lesson 16. The reader is closed automatically, even if an exception is thrown midway. Without it you would need a `finally` block, and forgetting to close a `BufferedWriter` can leave your last lines sitting in a buffer that never reaches the disk."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "A shorter route",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "For small files, `Files` can do the whole job in one line:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "List<String> lines = Files.readAllLines(Paths.get(\"students.txt\"));\nFiles.write(Paths.get(\"out.txt\"), lines);"
+        },
+        {
+          "type": "text",
+          "value": "Use the stream classes when files are large enough that you do not want them entirely in memory, or when you need fine control. Use these for everything else."
+        }
+      ]
+    }
+  ]
+}

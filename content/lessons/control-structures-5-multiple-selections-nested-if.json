@@ -1,0 +1,47 @@
+{
+  "id": "control-structures-5-multiple-selections-nested-if",
+  "moduleId": "control-structures",
+  "title": "Multiple selections: nested if",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "When one control statement, selection or repetition, is located within another, it is **nested**. An `if` can be nested inside another `if` or inside an `if...else`. A nested `if` allows a program to perform multiple selections."
+    },
+    {
+      "type": "heading",
+      "value": "The else-if chain"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (score >= 90) {\n    System.out.println(\"The grade is A\");\n}\nelse if (score >= 80) {\n    System.out.println(\"The grade is B\");\n}\nelse if (score >= 70) {\n    System.out.println(\"The grade is C\");\n}\nelse if (score >= 60) {\n    System.out.println(\"The grade is D\");\n}\nelse {\n    System.out.println(\"The grade is F\");\n}"
+    },
+    {
+      "type": "text",
+      "value": "Conditions are tested **top to bottom**, and the **first** one that is true wins: the rest are skipped entirely. That is why each condition only needs a lower bound: reaching `score >= 80` already proves the score is below 90."
+    },
+    {
+      "type": "text",
+      "value": "**Order matters enormously here.** Reverse the chain and every passing score reports as `D`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (score >= 60)      { System.out.println(\"D\"); }   // 95 matches this first\nelse if (score >= 70) { System.out.println(\"C\"); }   // unreachable for any score"
+    },
+    {
+      "type": "heading",
+      "value": "Fully nested ifs"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (temperature >= 50) {\n    if (temperature >= 110) {\n        System.out.println(\"hot\");\n    }\n    else {\n        System.out.println(\"warm\");\n    }\n}\nelse {\n    System.out.println(\"cold\");\n}"
+    },
+    {
+      "type": "text",
+      "value": "The inner `if` is only reached when the outer condition is already true, so \"warm\" means *at least 50 but under 110*. Nesting expresses \"given that X, now decide Y.\""
+    }
+  ]
+}

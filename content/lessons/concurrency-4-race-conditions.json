@@ -1,0 +1,69 @@
+{
+  "id": "concurrency-4-race-conditions",
+  "moduleId": "concurrency",
+  "title": "Race conditions",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "This section is not in your handout. It is the central problem in concurrent programming, and a concurrency lesson without it teaches only how to start threads, not how to write correct ones."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Remember that threads **share the same memory space**. Watch what that costs:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Counter implements Runnable {\n    private static int count = 0;      // shared by every thread\n\n    public void run() {\n        for (int i = 0; i < 100000; i++) {\n            count++;\n        }\n    }\n\n    public static void main(String[] args) throws InterruptedException {\n        Thread t1 = new Thread(new Counter());\n        Thread t2 = new Thread(new Counter());\n\n        t1.start();\n        t2.start();\n        t1.join();\n        t2.join();\n\n        System.out.println(\"Expected: 200000\");\n        System.out.println(\"Actual:   \" + count);\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Expected: 200000\nActual:   137482          ← and a different number every run"
+    },
+    {
+      "type": "text",
+      "value": "The count is wrong, and wrong differently each time. `count++` looks like one step but is three: **read** the value, **add** one, **write** it back. If both threads read `5` before either writes, both write `6`, and one increment vanishes."
+    },
+    {
+      "type": "text",
+      "value": "This is a **race condition**: the result depends on the unpredictable order in which threads reach shared data. It is the defining bug of concurrent programming, and it is invisible in small tests."
+    },
+    {
+      "type": "heading",
+      "value": "synchronized"
+    },
+    {
+      "type": "text",
+      "value": "The `synchronized` keyword ensures only one thread at a time executes a block or method:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Counter implements Runnable {\n    private static int count = 0;\n\n    private static synchronized void increment() {    // only one thread at a time\n        count++;\n    }\n\n    public void run() {\n        for (int i = 0; i < 100000; i++) {\n            increment();\n        }\n    }\n\n    public static void main(String[] args) throws InterruptedException {\n        Thread t1 = new Thread(new Counter());\n        Thread t2 = new Thread(new Counter());\n\n        t1.start();\n        t2.start();\n        t1.join();\n        t2.join();\n\n        System.out.println(\"Actual: \" + count);       // 200000, every time\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "**The rule: any mutable data shared between threads must be protected.** If two threads can touch the same variable and at least one writes to it, you need synchronization."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Modern Java offers better tools for this, `AtomicInteger`, `ExecutorService`, and the `java.util.concurrent` package, which are outside this course but are what production code uses. `synchronized` is the mechanism to understand first."
+        }
+      ]
+    }
+  ]
+}

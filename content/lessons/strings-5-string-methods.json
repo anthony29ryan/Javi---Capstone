@@ -1,0 +1,171 @@
+{
+  "id": "strings-5-string-methods",
+  "moduleId": "strings",
+  "title": "String methods",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "The `String` class provides methods to perform operations on strings. **These methods can only create and return a new string containing the result**: they never alter the original."
+    },
+    {
+      "type": "text",
+      "value": "All examples assume `String str = \"Java\";`"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Method",
+        "Description",
+        "Example"
+      ],
+      "rows": [
+        [
+          "`charAt(index)`",
+          "Returns the character at the specified index",
+          "`str.charAt(2)` → `'v'`"
+        ],
+        [
+          "`compareTo(string)`",
+          "Compares two strings in dictionary order. Returns `0` if equal, a negative value if this string comes first, a positive value if it comes later",
+          "`str.compareTo(\"Java's\")` → negative"
+        ],
+        [
+          "`concat(string)`",
+          "Returns a new string concatenated with the parameter",
+          "`str.concat(\" program\")` → `\"Java program\"`"
+        ],
+        [
+          "`equals(string)`",
+          "Returns `true` if this string and the specified string are equal",
+          "`str.equals(\"Java\")` → `true`"
+        ],
+        [
+          "`equalsIgnoreCase(string)`",
+          "Same, treating uppercase and lowercase as identical",
+          "`str.equalsIgnoreCase(\"java\")` → `true`"
+        ],
+        [
+          "`indexOf(string)`",
+          "Returns the index of the first occurrence, or `-1` if not found",
+          "`str.indexOf(\"a\")` → `1`"
+        ],
+        [
+          "`lastIndexOf(string)`",
+          "Returns the index of the last occurrence, or `-1` if not found",
+          "`str.lastIndexOf(\"a\")` → `3`"
+        ],
+        [
+          "`length()`",
+          "Returns the length of the string as an `int`",
+          "`str.length()` → `4`"
+        ],
+        [
+          "`toLowerCase()`",
+          "Returns a new string with uppercase letters converted to lowercase",
+          "`str.toLowerCase()` → `\"java\"`"
+        ],
+        [
+          "`toUpperCase()`",
+          "Returns a new string with lowercase letters converted to uppercase",
+          "`str.toUpperCase()` → `\"JAVA\"`"
+        ],
+        [
+          "`replace(oldChar, newChar)`",
+          "Returns a new string with each occurrence of `oldChar` replaced by `newChar`",
+          "`str.replace('a', 'o')` → `\"Jovo\"`"
+        ],
+        [
+          "`substring(start)`",
+          "Returns the substring from `start` through the end",
+          "`str.substring(2)` → `\"va\"`"
+        ],
+        [
+          "`substring(start, end)`",
+          "Returns the substring from `start` up to **but not including** `end`",
+          "`str.substring(1, 3)` → `\"av\"`"
+        ],
+        [
+          "`trim()`",
+          "Returns a new string with leading and trailing whitespace removed",
+          "`\"  Java Java  \".trim()` → `\"Java Java\"`"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "In every case, the content of the original `String` object is unchanged."
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Three corrections to your handout's table",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "**1.** The `equalsIgnoreCase` row gives the example as `str.equals(\"java\")` and claims it returns `true`. It calls the wrong method. `\"Java\".equals(\"java\")` is **`false`**, because `equals` is case-sensitive. The example should be `str.equalsIgnoreCase(\"java\")`."
+        },
+        {
+          "type": "text",
+          "value": "**2.** The `toUpperCase` description reads \"with any uppercase letters converted to uppercase.\" It converts **lowercase** letters to uppercase."
+        },
+        {
+          "type": "text",
+          "value": "**3.** The `compareTo` description explains the result by **number of characters**: \"less than 0 … (less characters)\". That is not how `compareTo` works. It compares **lexicographically**, character by character, like dictionary order:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "\"apple\".compareTo(\"banana\");   // negative, 'a' before 'b', despite being shorter\n\"zoo\".compareTo(\"aardvark\");   // positive, 'z' after 'a', despite being shorter"
+        },
+        {
+          "type": "text",
+          "value": "Length only decides the result when one string is a **prefix** of the other, which is why `\"Java\".compareTo(\"Java's\")` happens to be negative. In practice, use `compareTo` for **sorting** and `equals` for checking equality."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Using variables as parameters"
+    },
+    {
+      "type": "text",
+      "value": "You can use a variable to specify a method's parameters:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String str1 = \"Java\", str2 = \" program\";\nSystem.out.println(str1.concat(str2));      // Java program"
+    },
+    {
+      "type": "text",
+      "value": "In practice, `+` is used far more often than `concat`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(str1 + str2);            // same result, easier to read"
+    },
+    {
+      "type": "heading",
+      "value": "Walking a string"
+    },
+    {
+      "type": "text",
+      "value": "`length()` and `charAt()` together let a loop visit every character, the pattern behind most text processing:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class VowelCounter {\n    public static void main(String[] args) {\n        String text = \"Programming in Java\";\n        int vowels = 0;\n\n        for (int i = 0; i < text.length(); i++) {\n            char c = Character.toLowerCase(text.charAt(i));\n            if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {\n                vowels++;\n            }\n        }\n\n        System.out.println(\"Vowels: \" + vowels);   // Vowels: 6\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Note `i < text.length()`, not `<=`. The last index is `length() - 1`, so `<=` would run one step past the end and throw `StringIndexOutOfBoundsException`, the off-by-one error from Lesson 7, in its most common disguise."
+    },
+    {
+      "type": "text",
+      "value": "Note too that `c == 'a'` uses `==`, correct here, because `char` is a **primitive**. The `equals` rule applies to `String`, not `char`."
+    }
+  ]
+}

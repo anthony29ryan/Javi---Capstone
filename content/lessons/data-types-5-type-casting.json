@@ -1,0 +1,164 @@
+{
+  "id": "data-types-5-type-casting",
+  "moduleId": "data-types",
+  "title": "Type casting",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Type casting** converts a value from one type to a variable of another type. (Booleans cannot be converted to numeric types, `true` is not `1` in Java.)"
+    },
+    {
+      "type": "text",
+      "value": "There are two kinds."
+    },
+    {
+      "type": "heading",
+      "value": "Widening conversion (implicit casting)"
+    },
+    {
+      "type": "text",
+      "value": "Converting a **lower precision** type to a **higher precision** type. This causes no loss of information, and the JVM performs it automatically:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "byte → short → int → long → float → double\n         char ↗"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int x = 4;\ndouble a = x;   // the value of a is 4.0, no cast needed"
+    },
+    {
+      "type": "text",
+      "value": "The following widening conversions are possible:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "From",
+        "To"
+      ],
+      "rows": [
+        [
+          "`byte`",
+          "`short`, `int`, `long`, `float`, `double`"
+        ],
+        [
+          "`short`",
+          "`int`, `long`, `float`, `double`"
+        ],
+        [
+          "`char`",
+          "`int`, `long`, `float`, `double`"
+        ],
+        [
+          "`int`",
+          "`long`, `float`, `double`"
+        ],
+        [
+          "`long`",
+          "`float`, `double`"
+        ],
+        [
+          "`float`",
+          "`double`"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Narrowing conversion (explicit casting)"
+    },
+    {
+      "type": "text",
+      "value": "Converting a **higher precision** type into a **lower precision** type. This typically involves loss of information, so Java refuses to do it silently. Its strict type checking rejects this outright:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "float x = 6.82f;\nint a = x;    // error: incompatible types, possible lossy conversion"
+    },
+    {
+      "type": "text",
+      "value": "You must make the conversion explicit with a **cast operator**:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "(data_type_name) expression"
+    },
+    {
+      "type": "text",
+      "value": "The expression is evaluated first, then its value is treated as a value of the specified type:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "float x = 6.82f;\nint a = (int) x;   // the value of a is 6"
+    },
+    {
+      "type": "text",
+      "value": "The cast is you telling the compiler: *I know this loses information, and I mean it.*"
+    },
+    {
+      "type": "text",
+      "value": "The following narrowing conversions are possible:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "From",
+        "To"
+      ],
+      "rows": [
+        [
+          "`byte`",
+          "`char`"
+        ],
+        [
+          "`short`",
+          "`byte`, `char`"
+        ],
+        [
+          "`char`",
+          "`byte`, `short`"
+        ],
+        [
+          "`int`",
+          "`byte`, `short`, `char`"
+        ],
+        [
+          "`long`",
+          "`byte`, `short`, `char`, `int`"
+        ],
+        [
+          "`float`",
+          "`byte`, `short`, `char`, `int`, `long`"
+        ],
+        [
+          "`double`",
+          "`byte`, `short`, `char`, `int`, `long`, `float`"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "What casting actually does to decimals"
+    },
+    {
+      "type": "text",
+      "value": "When a cast treats a floating-point number as an integer, **the decimal part is dropped**: it is *truncated*, not rounded:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int a = (int) 7.9;           // 7, not 8\nint b = (int) 3.3;           // 3\ndouble c = (double) 25;      // 25.0\ndouble d = (double) (5 + 3); // 8.0"
+    },
+    {
+      "type": "text",
+      "value": "`(int) 7.9` giving `7` surprises people. Casting chops; it does not round. To round, use `Math.round(7.9)`, which gives `8`."
+    }
+  ]
+}

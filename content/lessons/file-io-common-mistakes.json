@@ -1,0 +1,40 @@
+{
+  "id": "file-io-common-mistakes",
+  "moduleId": "file-io",
+  "title": "Common mistakes",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Single backslashes in a path literal.** `\"C:\\Java\\new.txt\"`: `\\n` becomes a newline. Double them, or use forward slashes."
+    },
+    {
+      "type": "text",
+      "value": "**Not closing the stream.** Buffered output may never reach the disk. Use try-with-resources."
+    },
+    {
+      "type": "text",
+      "value": "**Ignoring checked exceptions.** Almost everything here throws `IOException`. The code will not compile without a `try...catch` or a `throws` declaration."
+    },
+    {
+      "type": "text",
+      "value": "**Using `CREATE_NEW` for a file that may exist.** It throws. Use `CREATE`."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting `TRUNCATE_EXISTING` when rewriting.** Without it, a shorter new content can leave the tail of the old file behind."
+    },
+    {
+      "type": "text",
+      "value": "**Assuming a relative path resolves where the source file lives.** It resolves against the **current working directory**, which depends on how the program was launched. Print `toAbsolutePath()` when a file mysteriously is not found."
+    },
+    {
+      "type": "text",
+      "value": "**Not checking for `null` from `readLine()`.** It signals end of file; using it unchecked throws `NullPointerException`."
+    },
+    {
+      "type": "text",
+      "value": "**Assuming every line has the fields you expect.** A blank or malformed line makes `fields[2]` throw `ArrayIndexOutOfBoundsException`. Check `fields.length` first."
+    }
+  ]
+}

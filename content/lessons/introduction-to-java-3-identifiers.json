@@ -1,0 +1,66 @@
+{
+  "id": "introduction-to-java-3-identifiers",
+  "moduleId": "introduction-to-java",
+  "title": "Identifiers",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "An **identifier** is the name of a program component, such as a class, object, or variable."
+    },
+    {
+      "type": "text",
+      "value": "The rules for naming identifiers:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "It must begin with a letter of the English alphabet, an underscore, or a dollar sign. **An identifier cannot begin with a digit.**",
+        "It can contain any combination of letters, digits, underscores, or dollar signs. **White space is not allowed.**",
+        "It cannot be a reserved keyword.",
+        "**Identifiers are case sensitive.** `NUMBER`, `number`, and `Number` are three different identifiers.",
+        "It cannot be `true`, `false`, or `null`. These are not keywords. They are primitive values, but they are reserved and cannot be used."
+      ]
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Valid",
+        "Invalid",
+        "Why invalid"
+      ],
+      "rows": [
+        [
+          "`studentAge`",
+          "`2ndPlace`",
+          "Begins with a digit"
+        ],
+        [
+          "`_count`",
+          "`student age`",
+          "Contains a space"
+        ],
+        [
+          "`$price`",
+          "`class`",
+          "Reserved keyword"
+        ],
+        [
+          "`totalScore2`",
+          "`my-total`",
+          "Hyphen not allowed"
+        ],
+        [
+          "`MAX_SIZE`",
+          "`null`",
+          "Reserved value"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**Convention:** begin class identifiers with a capital letter (`FirstJavaProgram`). Begin variable and method names with a lowercase letter, capitalizing each word after the first (`studentAge`). The compiler does not enforce this, but every Java programmer expects it."
+    }
+  ]
+}

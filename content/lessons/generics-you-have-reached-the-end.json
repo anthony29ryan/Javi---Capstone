@@ -1,0 +1,30 @@
+{
+  "id": "generics-you-have-reached-the-end",
+  "moduleId": "generics",
+  "title": "You have reached the end",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "That is all 21 modules. You began with `System.out.println(\"First Java Application\")` and finished with bounded type parameters and thread synchronization."
+    },
+    {
+      "type": "text",
+      "value": "**Where to go next**, in the order that will help most:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**The Collections Framework**: `ArrayList`, `HashMap`, `List`, `Set`, `Map`. The single biggest gap in this course, and what generics were built for.",
+        "**Lambdas and the Streams API**: the modern way to process collections.",
+        "**JUnit**: writing tests instead of checking output by eye.",
+        "**A build tool**: Maven or Gradle, for anything with more than a handful of files."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Then build something. Nothing on that list teaches as much as finishing a program you actually wanted to exist."
+    }
+  ]
+}

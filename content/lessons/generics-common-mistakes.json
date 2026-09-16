@@ -1,0 +1,36 @@
+{
+  "id": "generics-common-mistakes",
+  "moduleId": "generics",
+  "title": "Common mistakes",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Using a primitive as a type argument.** `Gen<int>` will not compile. Use `Gen<Integer>`."
+    },
+    {
+      "type": "text",
+      "value": "**Getting the diamond backwards.** The type on the **left** is required; the right may be `<>`."
+    },
+    {
+      "type": "text",
+      "value": "**Using a raw type.** `Gen g = new Gen();` compiles with unchecked warnings and abandons every guarantee generics provide."
+    },
+    {
+      "type": "text",
+      "value": "**Expecting `List<Object>` to accept a `List<String>`.** It will not. Use `List<?>` or `List<? extends Object>`."
+    },
+    {
+      "type": "text",
+      "value": "**Trying to add to an `extends` wildcard.** `List<? extends Number>` is read-only for its elements: the compiler cannot know which subtype it actually holds. That is PECS enforcing itself."
+    },
+    {
+      "type": "text",
+      "value": "**Expecting the type parameter to exist at run time.** Generic type information is erased during compilation (*type erasure*), so `new T()` and `T[] arr = new T[10]` are not allowed."
+    },
+    {
+      "type": "text",
+      "value": "**Naming type parameters like classes.** `Gen<MyType>` reads as a concrete class. Stick to `T`, `E`, `K`, `V`, `N`."
+    }
+  ]
+}

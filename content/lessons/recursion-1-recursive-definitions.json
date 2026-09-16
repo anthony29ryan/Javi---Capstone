@@ -1,0 +1,51 @@
+{
+  "id": "recursion-1-recursive-definitions",
+  "moduleId": "recursion",
+  "title": "Recursive definitions",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Recursion is the process of solving a problem by reducing it to successively smaller versions of itself.** Java uses this technique, in which a method calls itself to solve a problem. A method that does so is called **recursive**."
+    },
+    {
+      "type": "text",
+      "value": "A recursive method is one whose definition or body contains an invocation of itself. Some problems are far more naturally solved by recursion than by other techniques."
+    },
+    {
+      "type": "text",
+      "value": "Here is factorial, implemented recursively instead of with a `for` loop:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static int factorial(int num) {\n    if (num == 0) {\n        return 1;\n    } else {\n        return num * factorial(num - 1);   // recursive call\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int x = factorial(4);\nSystem.out.println(x);      // 24"
+    },
+    {
+      "type": "heading",
+      "value": "Tracing factorial(4)"
+    },
+    {
+      "type": "text",
+      "value": "Each call suspends itself, waiting for the answer from the call below:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "factorial(4) → 4 * factorial(3)\n                   factorial(3) → 3 * factorial(2)\n                                      factorial(2) → 2 * factorial(1)\n                                                         factorial(1) → 1 * factorial(0)\n                                                                            factorial(0) → 1\n                                                         1 * 1 = 1\n                                      2 * 1 = 2\n                   3 * 2 = 6\n               4 * 6 = 24"
+    },
+    {
+      "type": "text",
+      "value": "Five calls go **down**, then five values come back **up**. Nothing is multiplied until the bottom is reached."
+    },
+    {
+      "type": "text",
+      "value": "Recursion works because **every call to `factorial` results in a distinct variable `num`, local to that invocation.** Java does nothing special to handle this: the argument values are copied to parameters, and the code executes. In `factorial(3)`, the value of the argument is copied into that call's own `num` parameter."
+    }
+  ]
+}

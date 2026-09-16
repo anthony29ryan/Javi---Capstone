@@ -1,0 +1,20 @@
+{
+  "id": "classes-and-methods-key-takeaways",
+  "moduleId": "classes-and-methods",
+  "title": "Key takeaways",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Instance variables** belong to the object; **local variables** live and die inside a method.",
+        "**`this`** names the current object and resolves parameter/field shadowing, `this.name = name;`",
+        "**`private`** members are usable only inside the class; **`public`** members are usable anywhere.",
+        "**Encapsulation** = private data + public methods. It exists to make invalid states unreachable, not to add ceremony.",
+        "Provide accessors and mutators **deliberately**: omitting a setter is often the right design.",
+        "Class-type variables hold **references**, so compare objects with **`equals()`**, not `==`."
+      ]
+    }
+  ]
+}

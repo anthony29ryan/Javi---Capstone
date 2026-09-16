@@ -1,0 +1,120 @@
+{
+  "id": "operators-6-order-of-precedence",
+  "moduleId": "operators",
+  "title": "Order of precedence",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Order of precedence** is the set of rules specifying which operations are performed first in an expression containing more than one operator."
+    },
+    {
+      "type": "text",
+      "value": "Some operators bind more tightly than others. Multiplication has higher precedence than addition:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int x = 10 + 3 * 8;   // x is 34, not 104"
+    },
+    {
+      "type": "text",
+      "value": "`3` is multiplied by `8` first, then `10` is added to the product."
+    },
+    {
+      "type": "text",
+      "value": "From highest to lowest:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Precedence",
+        "Operation",
+        "Symbol"
+      ],
+      "rows": [
+        [
+          "**Highest**",
+          "Unary NOT",
+          "`!`"
+        ],
+        [
+          "",
+          "Multiplication, division, modulus",
+          "`*` `/` `%`"
+        ],
+        [
+          "",
+          "Addition, subtraction",
+          "`+` `-`"
+        ],
+        [
+          "",
+          "Relational",
+          "`>` `<` `>=` `<=`"
+        ],
+        [
+          "",
+          "Equality",
+          "`==` `!=`"
+        ],
+        [
+          "",
+          "Logical XOR",
+          "`^`"
+        ],
+        [
+          "",
+          "Logical AND",
+          "`&&`"
+        ],
+        [
+          "",
+          "Logical OR",
+          "`||`"
+        ],
+        [
+          "**Lowest**",
+          "Assignment",
+          "`=` `+=` `-=` `*=` `/=` `%=`"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Note",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "your handout's precedence table omits `^`, though it appears in the logical operators table. XOR binds more tightly than `&&`, which is where it sits above."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "value": "When operators of **equal** precedence appear in the same expression, all binary operators except assignment are evaluated **left to right**."
+    },
+    {
+      "type": "heading",
+      "value": "Parentheses beat everything"
+    },
+    {
+      "type": "text",
+      "value": "Precedence rules can be overridden with explicit parentheses, which group items and tell the computer which operations to perform first:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int a = 10, b = 3, c = 8, ex1, ex2;\n\nex1 = (a + b) * c;   // 104, adds a and b first, then multiplies by c\nex2 = a + (b * c);   // 34, multiplies b and c first, then adds a"
+    },
+    {
+      "type": "text",
+      "value": "Same numbers, same operators, different results."
+    },
+    {
+      "type": "text",
+      "value": "**Use parentheses even when you do not need them.** `(age >= 18) && (hasAccount || isAdmin)` is unambiguous to every reader. Relying on a reader to recall that `&&` outranks `||` is how bugs survive code review."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "oop-6-packages",
+  "moduleId": "oop",
+  "title": "Packages",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "A **package** is a collection of related classes and interfaces grouped together into a folder.",
+        "The name of the folder is the name of the package.",
+        "The classes in the package are each placed in a separate file, and the file name begins with the name of the class.",
+        "You can use all the classes in a package within any program or class definition by placing an **`import`** statement.",
+        "The class does not need to be in the same folder as the classes in the package."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import package_name.class_name_or_asterisk;"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Scanner;\nimport java.util.*;"
+    },
+    {
+      "type": "text",
+      "value": "You met this in Lesson 1. It matters more now: as your programs grow into many classes, packages are how they stay organised."
+    }
+  ]
+}

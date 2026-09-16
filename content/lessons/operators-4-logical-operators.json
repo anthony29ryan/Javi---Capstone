@@ -1,0 +1,151 @@
+{
+  "id": "operators-4-logical-operators",
+  "moduleId": "operators",
+  "title": "Logical operators",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Logical operators** return a boolean value based on the boolean results of the given expressions. They are evaluated from left to right. In `(3 > 2) && (2 < 3)`, the relational expressions are evaluated first, and their boolean results feed the `&&`."
+    },
+    {
+      "type": "text",
+      "value": "Assume `boolean A = 3 > 2;` and `boolean B = 2 < 1;`, so **A is `true` and B is `false`**."
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Operator",
+        "Description",
+        "Example",
+        "Result"
+      ],
+      "rows": [
+        [
+          "`&&`",
+          "Logical AND: if **both** operands are true, the condition becomes true",
+          "`A && B`",
+          "`false`"
+        ],
+        [
+          "`||`",
+          "Logical OR: if **at least one** operand is true, the condition becomes true",
+          "`A || B`",
+          "`true`"
+        ],
+        [
+          "`^`",
+          "Logical XOR: if **only one** operand is true, the condition becomes true",
+          "`A ^ B`",
+          "`true`"
+        ],
+        [
+          "`!`",
+          "Unary NOT: reverses the logical state of its operand",
+          "`!A`",
+          "`false`"
+        ],
+        [
+          "",
+          "",
+          "`!(A && B)`",
+          "`true`"
+        ],
+        [
+          "",
+          "",
+          "`A && !B`",
+          "`true`"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Correction",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "your handout lists `A && B` as `true`. With A true and B false, AND must be **`false`**: that is the definition of AND. The other rows are correct as printed. Worth checking carefully if this table has been used for revision."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Truth tables"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "A",
+        "B",
+        "`A && B`",
+        "`A || B`",
+        "`A ^ B`"
+      ],
+      "rows": [
+        [
+          "`true`",
+          "`true`",
+          "`true`",
+          "`true`",
+          "`false`"
+        ],
+        [
+          "`true`",
+          "`false`",
+          "`false`",
+          "`true`",
+          "`true`"
+        ],
+        [
+          "`false`",
+          "`true`",
+          "`false`",
+          "`true`",
+          "`true`"
+        ],
+        [
+          "`false`",
+          "`false`",
+          "`false`",
+          "`false`",
+          "`false`"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "In words: **AND** needs everything true. **OR** needs anything true. **XOR** needs exactly one true."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class LoginCheck {\n    public static void main(String[] args) {\n        boolean hasAccount = true;\n        boolean isVerified = false;\n        int age = 20;\n\n        System.out.println(hasAccount && isVerified);          // false\n        System.out.println(hasAccount || isVerified);          // true\n        System.out.println(hasAccount && !isVerified);         // true\n        System.out.println(age >= 18 && hasAccount);           // true\n        System.out.println(!(age >= 18 && isVerified));        // true\n    }\n}"
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Added: short-circuit evaluation (not in the source handout)",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "`&&` and `||` stop early. If the left side of `&&` is `false`, the result is already decided, so the right side is **never evaluated**. Likewise `||` stops if the left side is `true`."
+        },
+        {
+          "type": "text",
+          "value": "This is not a performance footnote. It is how you write safe conditions:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "if (name != null && name.length() > 0) { ... }"
+        },
+        {
+          "type": "text",
+          "value": "If `name` is `null`, the left side is `false`, so `name.length()` never runs and never crashes. Reverse the order and the program throws a `NullPointerException`. Order your conditions so the cheap, protective test comes first."
+        }
+      ]
+    }
+  ]
+}

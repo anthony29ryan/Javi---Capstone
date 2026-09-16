@@ -1,0 +1,63 @@
+{
+  "id": "data-types-common-mistakes",
+  "moduleId": "data-types",
+  "title": "Common mistakes",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Assuming a cast rounds.** `(int) 9.99` is `9`. Every time."
+    },
+    {
+      "type": "text",
+      "value": "**Integer division, silently.** Both operands are `int`, so the result is an `int`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int total = 7, count = 2;\ndouble average = total / count;   // 3.0, not 3.5, the division happened before the assignment\ndouble fixed = (double) total / count;   // 3.5"
+    },
+    {
+      "type": "text",
+      "value": "This is the single most common beginner arithmetic bug in Java. Lesson 3 covers it in depth."
+    },
+    {
+      "type": "text",
+      "value": "**Integer overflow.** `int` silently wraps around when it exceeds its range:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int big = 2147483647;        // int's maximum\nSystem.out.println(big + 1); // -2147483648, no error, no warning"
+    },
+    {
+      "type": "text",
+      "value": "Use `long` when values might get large."
+    },
+    {
+      "type": "text",
+      "value": "**Expecting exact decimal arithmetic.** `double` cannot represent every decimal exactly:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(0.1 + 0.2);   // 0.30000000000000004"
+    },
+    {
+      "type": "text",
+      "value": "This is how binary floating point works in every language, not a Java bug. For money, use `int` cents or `BigDecimal`, never `double`."
+    },
+    {
+      "type": "text",
+      "value": "**Mixing up quote marks.** `'A'` is a `char`. `\"A\"` is a `String`. `'Ana'` is a compile error."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting the `L` or `f` suffix.** `long n = 8000000000;` fails: the literal is treated as an `int` before it is ever assigned."
+    },
+    {
+      "type": "text",
+      "value": "**Reassigning a `final`.** Allowed exactly once."
+    }
+  ]
+}

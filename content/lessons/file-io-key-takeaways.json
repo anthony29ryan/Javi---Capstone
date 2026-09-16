@@ -1,0 +1,21 @@
+{
+  "id": "file-io-key-takeaways",
+  "moduleId": "file-io",
+  "title": "Key takeaways",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Non-volatile** storage survives power loss; files live there.",
+        "Build paths with **`Paths.get()`**; double your backslashes or use forward slashes.",
+        "`Files` gives you **`exists`**, **`isReadable`**, **`delete`**, **`readAttributes`**, and stream factories, but **not** `checkAccess`.",
+        "A **stream** is a flow of data; a **buffer** holds it temporarily, so **closing matters**.",
+        "The data hierarchy is **character → field → record → file**.",
+        "Read with `readLine()` until it returns `null`; split records into fields.",
+        "Wrap every stream in **try-with-resources**: every operation here throws a checked exception."
+      ]
+    }
+  ]
+}

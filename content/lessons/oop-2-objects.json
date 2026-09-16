@@ -1,0 +1,46 @@
+{
+  "id": "oop-2-objects",
+  "moduleId": "oop",
+  "title": "Objects",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "An object has **characteristics** or **attributes**.",
+        "The values of an object's attributes give the object a **state**.",
+        "The actions that an object can take are called **behaviors**. Each behavior is defined by a piece of Java code called a **method**."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Think of a specific car:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Concept",
+        "For a car"
+      ],
+      "rows": [
+        [
+          "**Attributes**",
+          "colour, brand, fuel level, speed"
+        ],
+        [
+          "**State**",
+          "red, Toyota, 40 litres, 60 km/h: the *values* right now"
+        ],
+        [
+          "**Behaviors**",
+          "accelerate, brake, refuel"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**Attributes** are the questions you can ask; **state** is the current answers; **behaviors** are what it can do. Two cars can share attributes while having completely different states."
+    }
+  ]
+}

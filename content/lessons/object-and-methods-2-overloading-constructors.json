@@ -1,0 +1,51 @@
+{
+  "id": "object-and-methods-2-overloading-constructors",
+  "moduleId": "object-and-methods",
+  "title": "Overloading constructors",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A class can have several constructors, each taking different parameters. Here is `Pet`, with the field declarations the handout omits:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Pet {\n    private String petName;\n    private int petAge;\n    private double petWeight;\n\n    // default constructor, has no parameters\n    public Pet() {\n        petName = \"No name yet\";\n        petAge = 0;\n        petWeight = 0;\n    }\n\n    // initializes name of pet only\n    public Pet(String initialName) {\n        petName = initialName;\n        petAge = 0;\n        petWeight = 0;\n    }\n\n    // initializes age of pet only\n    public Pet(int initialAge) {\n        petName = \"No name yet\";\n        petAge = initialAge;\n        petWeight = 0;\n    }\n\n    // initializes weight of pet only\n    public Pet(double initialWeight) {\n        petName = \"No name yet\";\n        petAge = 0;\n        petWeight = initialWeight;\n    }\n\n    // initializes name, age, and weight of pet\n    public Pet(String initialName, int initialAge, double initialWeight) {\n        petName = initialName;\n        petAge = initialAge;\n        petWeight = initialWeight;\n    }\n\n    public void display() {\n        System.out.printf(\"%s, age %d, weight %.1f kg%n\", petName, petAge, petWeight);\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class PetDemo {\n    public static void main(String[] args) {\n        new Pet().display();\n        new Pet(\"Bantay\").display();\n        new Pet(3).display();\n        new Pet(12.5).display();\n        new Pet(\"Muning\", 2, 4.3).display();\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "No name yet, age 0, weight 0.0\nBantay, age 0, weight 0.0\nNo name yet, age 3, weight 0.0\nNo name yet, age 0, weight 12.5\nMuning, age 2, weight 4.3"
+    },
+    {
+      "type": "text",
+      "value": "Java picks the right constructor from the **arguments you supply**. Note that `Pet(3)` and `Pet(12.5)` are distinguished purely by type, `int` versus `double`. This is why `new Pet(12)` would set the *age*, not the weight."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "The disappearing default constructor",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "If you write **no** constructors at all, Java supplies a no-argument one automatically. The moment you write **any** constructor, that free one vanishes:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "public class Point {\n    private int x, y;\n    public Point(int x, int y) { this.x = x; this.y = y; }\n}\n\nPoint p = new Point();     // error: constructor Point in class Point\n                           //        cannot be applied to given types"
+        },
+        {
+          "type": "text",
+          "value": "If you want both, write both. Your handout does not mention this, and it causes a confusing error."
+        }
+      ]
+    }
+  ]
+}

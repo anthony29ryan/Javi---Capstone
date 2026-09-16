@@ -1,0 +1,97 @@
+{
+  "id": "classes-and-methods-2-information-hiding",
+  "moduleId": "classes-and-methods",
+  "title": "Information hiding",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Information hiding is the mechanism for restricting access to some of an object's components.**"
+    },
+    {
+      "type": "text",
+      "value": "Its advantages:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "Makes components easier to understand and use",
+        "Simplifies modification and repair",
+        "Facilitates re-use"
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "The access rules"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "If an instance variable is **`public`**, there are no restrictions on where you can use its name.",
+        "If an instance variable is **`private`**, its name cannot be used to access it **outside** the class definition.",
+        "If a method is **`public`**, you can invoke it anywhere without restriction.",
+        "If a method is **`private`**, it can be invoked **only within the definitions of methods in its own class**."
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Correction",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "your handout states that a private method \"**cannot** be invoked within the definitions of methods in its class.\" That is inverted. It is *inside* its own class that a private method **can** be invoked. What it cannot do is be called from outside. A private method that could not be called anywhere would be useless."
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "public class Report {\n    public void print() {\n        formatHeader();      // fine, called from inside the class\n    }\n\n    private void formatHeader() {\n        System.out.println(\"=== REPORT ===\");\n    }\n}\n\n// elsewhere:\nnew Report().print();          // fine\nnew Report().formatHeader();   // error: formatHeader() has private access"
+        },
+        {
+          "type": "text",
+          "value": "Private methods are **helper methods**: internal steps the outside world has no business calling."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Accessors and mutators"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "The **accessor** is a public method that **returns** data from a private instance variable.",
+        "The **mutator** is a public method that **changes** the data stored in one or more private instance variables."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Conventionally named `getX()` and `setX()`, and so also called **getters** and **setters**:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Student {\n    private String name;      // private. Nobody outside can touch it directly\n\n    public String getName() { // accessor\n        return name;\n    }\n\n    public void setName(String name) {   // mutator\n        this.name = name;\n    }\n}"
+    },
+    {
+      "type": "heading",
+      "value": "Why bother?"
+    },
+    {
+      "type": "text",
+      "value": "At first glance a getter and setter pair looks like a pointless detour around a public field. The payoff is **control**:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Student {\n    private double grade;\n\n    public void setGrade(double grade) {\n        if (grade < 0 || grade > 100) {\n            System.out.println(\"Invalid grade: \" + grade + \". Ignored.\");\n            return;\n        }\n        this.grade = grade;\n    }\n\n    public double getGrade() {\n        return grade;\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "With a `public double grade;`, any line in any file could write `student.grade = -500;` and nothing would stop it. With the field private, **every** change goes through one method, so the rule is written once and cannot be bypassed. When the rule changes, you edit one method."
+    }
+  ]
+}

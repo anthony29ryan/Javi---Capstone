@@ -1,0 +1,124 @@
+{
+  "id": "concurrency-3-thread-methods",
+  "moduleId": "concurrency",
+  "title": "Thread methods",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "table",
+      "headers": [
+        "Method",
+        "Description"
+      ],
+      "rows": [
+        [
+          "`start`",
+          "Starts a thread by calling its `run` method"
+        ],
+        [
+          "`run`",
+          "The entry point for the thread"
+        ],
+        [
+          "`setName`",
+          "Sets a thread's name"
+        ],
+        [
+          "`getName`",
+          "Obtains a thread's name"
+        ],
+        [
+          "`setPriority`",
+          "Sets a thread's priority"
+        ],
+        [
+          "`getPriority`",
+          "Obtains a thread's priority"
+        ],
+        [
+          "`isAlive`",
+          "Determines if a thread is still running"
+        ],
+        [
+          "`join`",
+          "Waits for a thread to terminate"
+        ],
+        [
+          "`sleep`",
+          "Suspends a thread for a period of time"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Thread priority"
+    },
+    {
+      "type": "text",
+      "value": "**A thread priority is a numeric value associated with a thread that is taken into consideration by the thread scheduler when determining which threads should currently be executing.**"
+    },
+    {
+      "type": "text",
+      "value": "The priority level must be within the range `MIN_PRIORITY` and `MAX_PRIORITY`, **1 and 10** respectively. To return a thread to default priority, specify `NORM_PRIORITY`, which is **5**."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class PriorityDemo extends Thread {\n    public static void main(String[] args) {\n        PriorityDemo t1 = new PriorityDemo();\n        PriorityDemo t2 = new PriorityDemo();\n        PriorityDemo t3 = new PriorityDemo();\n\n        t1.setName(\"One\");\n        t2.setName(\"Two\");\n        t3.setName(\"Three\");\n\n        t1.setPriority(4);\n        t2.setPriority(Thread.MAX_PRIORITY);\n        t3.setPriority(8);\n\n        t1.start();\n        t2.start();\n        t3.start();\n    }\n\n    public void run() {\n        System.out.println(Thread.currentThread().getName() + \" is running.\");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Possible output:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Two is running.\nThree is running.\nOne is running."
+    },
+    {
+      "type": "text",
+      "value": "**`Thread.currentThread()` returns a reference to the `Thread` instance executing it**, giving you access to the Thread object representing the thread running a given block of code."
+    },
+    {
+      "type": "text",
+      "value": "**A thread with higher priority does not necessarily run faster or more often than others; it only has greater potential access to the CPU.**"
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "The handout contradicts itself here, and the second statement is the correct one",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "It prints the output above as though priority determined the order, highest first, while also stating that priority guarantees nothing. **Priority is a hint to the scheduler, not an instruction.** Some JVMs and operating systems largely ignore it. Run this program repeatedly and you will see orders that do not follow priority at all."
+        },
+        {
+          "type": "text",
+          "value": "Its description of priority is also garbled: \"A thread can interrupt or supersede another thread with a higher thread priority than the other thread.\" What is meant is that a **higher**-priority thread may supersede a **lower**-priority one."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "sleep, join, and isAlive"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class JoinDemo extends Thread {\n    public static void main(String[] args) {\n        JoinDemo t1 = new JoinDemo();\n        JoinDemo t2 = new JoinDemo();\n        t1.start();\n\n        // start the 2nd thread after 2 seconds, or sooner if t1 finishes\n        try {\n            t1.join(2000);\n        } catch (InterruptedException e) {\n            e.printStackTrace();\n        }\n        t2.start();\n\n        // wait for both threads to terminate\n        try {\n            t1.join();\n            t2.join();\n        } catch (InterruptedException e) {\n            e.printStackTrace();\n        }\n\n        System.out.println(\"Thread-0 is alive: \" + t1.isAlive());\n        System.out.println(\"Thread-1 is alive: \" + t2.isAlive());\n    }\n\n    public void run() {\n        System.out.println(Thread.currentThread().getName() + \" is running.\");\n        try {\n            Thread.sleep(3000);          // suspends this thread for 3 seconds\n        } catch (InterruptedException e) {\n            e.printStackTrace();\n        }\n        System.out.println(Thread.currentThread().getName() + \" has ended.\");\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Thread-0 is running.\nThread-1 is running.\nThread-0 has ended.\nThread-1 has ended.\nThread-0 is alive: false\nThread-1 is alive: false"
+    },
+    {
+      "type": "text",
+      "value": "Here the ordering **is** reliable, and for a good reason: the two `join()` calls **block the main thread until both have terminated**, so by the time `isAlive()` is called, both must be `false`. `join()` is how you impose order on concurrent work."
+    },
+    {
+      "type": "text",
+      "value": "Note that `sleep()` and `join()` both throw **`InterruptedException`**, a checked exception: the `try...catch` is required to compile."
+    }
+  ]
+}

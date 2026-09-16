@@ -1,0 +1,21 @@
+{
+  "id": "regular-expressions-key-takeaways",
+  "moduleId": "regular-expressions",
+  "title": "Key takeaways",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "A regex describes a **set of strings**; `java.util.regex` provides `Pattern` and `Matcher`.",
+        "**`matches()` tests the whole string; `find()` searches inside it.** This is the distinction to remember.",
+        "`[abc]` is a character class, `[a-z]` a range, `[^abc]` a negation, `.` any character.",
+        "Repetition: `*` zero or more, `+` one or more, `?` zero or one, `{x}`, `{x,y}`, `{x,}`.",
+        "Shorthands `\\d \\w \\s` need **double backslashes** in Java string literals.",
+        "`split()` and `replaceAll()` take **regexes**, so metacharacters must be escaped.",
+        "Compile a `Pattern` **once** when reusing it."
+      ]
+    }
+  ]
+}

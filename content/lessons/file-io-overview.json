@@ -1,0 +1,35 @@
+{
+  "id": "file-io-overview",
+  "moduleId": "file-io",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Everything your programs have produced so far vanished the moment they ended. Files are how a program remembers."
+    },
+    {
+      "type": "text",
+      "value": "This is also the lesson where Lesson 16 stops being theoretical. Nearly every operation here throws a **checked** exception: the compiler will not let you ignore it, so exception handling is no longer good practice, it is a requirement to compile."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Distinguish volatile from non-volatile storage, and text from binary files",
+        "Build and inspect file paths with the `Path` and `Files` classes",
+        "Explain streams, buffers, and flushing",
+        "Write text to a file and read it back",
+        "Choose the right `StandardOpenOption` for a task"
+      ]
+    }
+  ]
+}

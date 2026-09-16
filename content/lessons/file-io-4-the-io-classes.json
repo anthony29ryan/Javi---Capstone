@@ -1,0 +1,178 @@
+{
+  "id": "file-io-4-the-io-classes",
+  "moduleId": "file-io",
+  "title": "The IO classes",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "table",
+      "headers": [
+        "Class",
+        "Description"
+      ],
+      "rows": [
+        [
+          "`InputStream`",
+          "Abstract class containing methods for performing input"
+        ],
+        [
+          "`FileInputStream`",
+          "Provides the capability to read from disk files"
+        ],
+        [
+          "`BufferedInputStream`",
+          "Adds buffering to an input stream for more efficient reading"
+        ],
+        [
+          "`OutputStream`",
+          "Abstract class containing methods for performing output"
+        ],
+        [
+          "`FileOutputStream`",
+          "Provides the capability to write to disk files"
+        ],
+        [
+          "`BufferedOutputStream`",
+          "Adds buffering to an **output** stream for more efficient writing"
+        ],
+        [
+          "`PrintStream`",
+          "Contains methods for output that never throw an exception (`System.out` is a `PrintStream`)"
+        ],
+        [
+          "`Reader`",
+          "Abstract class for reading character streams; a subclass must implement `read(char[], int, int)` and `close()`"
+        ],
+        [
+          "`BufferedReader`",
+          "Reads text from a character-input stream, buffering characters for efficient reading of characters, arrays, and lines"
+        ],
+        [
+          "`BufferedWriter`",
+          "Writes text to a character-output stream, buffering characters for efficient writing"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Correction",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "your handout describes `BufferedOutputStream` as \"**Handles input** from a system's standard or default output device.\" An output stream does not handle input, the row was copied from the `BufferedInputStream` entry above it."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "OutputStream methods"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Method",
+        "Description"
+      ],
+      "rows": [
+        [
+          "`void close()`",
+          "Closes the output stream and releases associated system resources"
+        ],
+        [
+          "`void flush()`",
+          "Flushes the stream; any buffered bytes are written"
+        ],
+        [
+          "`void write(byte[] b)`",
+          "Writes all bytes from the specified byte array"
+        ],
+        [
+          "`void write(byte[] b, int off, int len)`",
+          "Writes bytes starting at offset `off` for a length of `len`"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "BufferedReader methods"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Method",
+        "Description"
+      ],
+      "rows": [
+        [
+          "`close()`",
+          "Closes the stream and any associated resources"
+        ],
+        [
+          "`read()`",
+          "Reads a single character"
+        ],
+        [
+          "`read(char[] buffer, int off, int len)`",
+          "Reads characters into part of an array"
+        ],
+        [
+          "`readLine()`",
+          "Reads a line of text"
+        ],
+        [
+          "`skip(long n)`",
+          "Skips the specified number of characters"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "BufferedWriter methods"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Method",
+        "Description"
+      ],
+      "rows": [
+        [
+          "`close()`",
+          "Closes the stream, flushing it first"
+        ],
+        [
+          "`flush()`",
+          "Flushes the stream"
+        ],
+        [
+          "`newLine()`",
+          "Writes a line separator"
+        ],
+        [
+          "`write(String s, int off, int len)`",
+          "Writes a String from position `off` for length `len`"
+        ],
+        [
+          "`write(char[] array, int off, int len)`",
+          "Writes a character array from position `off` for length `len`"
+        ],
+        [
+          "`write(int c)`",
+          "Writes a single character"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Correction",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "the handout spells this method `newline()`. The actual name is **`newLine()`** with a capital L, and Java is case-sensitive, `newline()` will not compile."
+        }
+      ]
+    }
+  ]
+}

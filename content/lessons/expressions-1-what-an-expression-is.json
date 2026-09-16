@@ -1,0 +1,25 @@
+{
+  "id": "expressions-1-what-an-expression-is",
+  "moduleId": "expressions",
+  "title": "What an expression is",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "An **expression** is a construct made up of variables and operators that evaluates to a single value."
+    },
+    {
+      "type": "text",
+      "value": "`11 + 13` is an expression. So is `x = 12`. Expressions can also return other types of value, such as boolean or String."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "11 + 13              // evaluates to 24\nx = 12               // evaluates to 12 (and assigns it)\nscore > 50           // evaluates to true or false\n\"Hi \" + name         // evaluates to a String"
+    },
+    {
+      "type": "text",
+      "value": "The key idea: an expression **is** its value. Anywhere Java expects a value, you can write an expression that produces one."
+    }
+  ]
+}

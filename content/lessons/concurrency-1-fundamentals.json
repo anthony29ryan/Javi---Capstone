@@ -1,0 +1,33 @@
+{
+  "id": "concurrency-1-fundamentals",
+  "moduleId": "concurrency",
+  "title": "Fundamentals",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**A multithreaded program contains two or more parts that can run concurrently.** Multithreading allows tasks waiting for other resources to give way to other processing requests."
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**A thread is the smallest unit of execution that can be scheduled by the operating system.**",
+        "**A process is a group of associated threads executed in the same shared environment.**",
+        "A **single-threaded process** contains exactly one thread; a **multithreaded process** supports more than one."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**In a shared environment, threads in the same process share the same memory space and can communicate directly with one another.** That sharing is what makes threads useful, and what makes them dangerous, as Section 5 shows."
+    },
+    {
+      "type": "text",
+      "value": "**Concurrency** is the property of executing multiple threads and processes simultaneously. Operating systems use a **thread scheduler** to determine which threads should currently be executing. When a thread's allotted time is complete but it has not finished processing, a **context switch** occurs: **the process of storing a thread's current state and later restoring it to continue execution.**"
+    },
+    {
+      "type": "text",
+      "value": "**When a Java application starts, its `main()` method is executed by the main thread**: a special thread created by the JVM to run your application. You can create and start more threads that execute parts of your code in parallel with it."
+    }
+  ]
+}

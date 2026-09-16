@@ -1,0 +1,38 @@
+{
+  "id": "introduction-to-java-8-comments",
+  "moduleId": "introduction-to-java",
+  "title": "Comments",
+  "order": 9,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Comments** explain the details in a program. They are notes a programmer writes to help another person understand the code. **Comments are ignored by the compiler**: they are not executed when the program runs."
+    },
+    {
+      "type": "text",
+      "value": "Java has two common types:"
+    },
+    {
+      "type": "text",
+      "value": "**Single-line comments** begin with `//` and can be placed anywhere in the line."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"Welcome to Java.\");   // prints Welcome to Java."
+    },
+    {
+      "type": "text",
+      "value": "**Multiple-line comments** are enclosed between `/*` and `*/`."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "/*\nProgram that converts Kilogram to Gram\n*/\npublic class KiloToGram {\n    public static void main(String[] args) {\n        double kilograms = 2.5;\n        System.out.println(kilograms + \" kg = \" + (kilograms * 1000) + \" g\");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Write comments that explain **why**, not **what**. `i = i + 1; // add one to i` tells the reader nothing they could not see."
+    }
+  ]
+}

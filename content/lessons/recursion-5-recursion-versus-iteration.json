@@ -1,0 +1,94 @@
+{
+  "id": "recursion-5-recursion-versus-iteration",
+  "moduleId": "recursion",
+  "title": "Recursion versus iteration",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "There are often two ways to solve a problem: recursion or iteration. A method that implements iteration is an **iterative method**."
+    },
+    {
+      "type": "text",
+      "value": "Here is factorial written iteratively:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static int factorial(int num) {\n    int fact = 1;\n    for (int i = 1; i <= num; i++) {\n        fact = fact * i;\n    }\n    return fact;\n}"
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Correction: your handout's version of this method is broken",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "It reads:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "int fact = 1;\nfor (int i = 0; i < num; i++) {   // starts at 0\n    fact = fact * i;\n}"
+        },
+        {
+          "type": "text",
+          "value": "Starting at `i = 0` multiplies `fact` by zero on the very first pass, so **it returns `0` for every input**. The loop must start at `1` and run to `num` inclusive, as in the corrected version above."
+        },
+        {
+          "type": "text",
+          "value": "The handout also captions it as \"an iterative version of the function `factorial()` **to find the largest element in an array**\": two unrelated examples merged by a copy-paste slip. It computes a factorial; it has nothing to do with arrays."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "The trade-off"
+    },
+    {
+      "type": "text",
+      "value": "A recursive method **uses more storage space** than an iterative version, because of the overhead of tracking recursive calls and suspended computations. That overhead can make recursion run slower."
+    },
+    {
+      "type": "text",
+      "value": "When a non-recursive method is called, memory space for its formal parameters and local variables is allocated, and deallocated when the method terminates. In a recursive method, **every call has its own set of parameters and local variables**, each requiring allocation and deallocation. So overhead is associated with recursion in both memory space and computer time."
+    },
+    {
+      "type": "text",
+      "value": "In other situations recursion is perfectly acceptable, and can make a program **easier to understand**. There are times when recursion is a significant aid to program clarity."
+    },
+    {
+      "type": "text",
+      "value": "**The choice depends on the nature of the problem.** For systems where efficiency is critical: control systems, for instance, the efficiency factor dictates the method."
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Prefer iteration",
+        "Prefer recursion"
+      ],
+      "rows": [
+        [
+          "Simple counting and accumulating",
+          "Tree and nested structures"
+        ],
+        [
+          "Walking an array or string",
+          "Divide and conquer"
+        ],
+        [
+          "Performance or memory is critical",
+          "The recursive definition *is* the specification"
+        ],
+        [
+          "Depth could be large",
+          "Depth stays modest"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "For factorial and countdown, iteration is the better choice, the loop is simpler and cheaper. These appear in every textbook because they are easy to **trace**, not because they are good uses of recursion. Recursion earns its keep on problems whose shape is nested."
+    }
+  ]
+}

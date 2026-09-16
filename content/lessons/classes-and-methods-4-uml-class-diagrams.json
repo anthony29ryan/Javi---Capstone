@@ -1,0 +1,21 @@
+{
+  "id": "classes-and-methods-4-uml-class-diagrams",
+  "moduleId": "classes-and-methods",
+  "title": "UML class diagrams",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**The UML class diagram describes the structure of a class by displaying the class name (first row), variables (second row), and methods (third row).**"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "┌─────────────────────────────────┐\n│ BankAccount                     │   ← class name\n├─────────────────────────────────┤\n│ - accountNumber : String        │   ← variables\n│ - owner : String                │\n│ - balance : double              │\n├─────────────────────────────────┤\n│ + getBalance() : double         │   ← methods\n│ + deposit(amount : double)      │\n│ + withdraw(amount : double)     │\n│ - logTransaction(...)           │\n└─────────────────────────────────┘"
+    },
+    {
+      "type": "text",
+      "value": "`-` marks private, `+` marks public. A well-encapsulated class shows mostly `-` in the middle row and mostly `+` in the bottom one."
+    }
+  ]
+}

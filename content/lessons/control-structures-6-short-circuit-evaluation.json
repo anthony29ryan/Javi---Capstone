@@ -1,0 +1,42 @@
+{
+  "id": "control-structures-6-short-circuit-evaluation",
+  "moduleId": "control-structures",
+  "title": "Short-circuit evaluation",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Logical expressions in Java are evaluated using an efficient algorithm: **short-circuit evaluation**. The computer evaluates a logical expression from left to right and stops as soon as the value of the expression is determined. `&&` and `||` are short-circuit operators, and do not necessarily evaluate all of their operands."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int a = 0, b = 1, c = 4, d = 4;\n\nif (a == b && c == d) {\n    System.out.println(\"Example statement.\");\n}"
+    },
+    {
+      "type": "text",
+      "value": "Java evaluates left to right:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "Evaluates `a == b` to `false`.",
+        "Evaluation **stops**. The entire expression returns `false` without ever evaluating `c == d`, because `&&` requires both operands to be true."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "The same happens with `||` when the left operand is `true`, evaluation stops and the expression returns `true` without evaluating the right operand:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int a = 0, b = 1, c = 4, d = 4;\n\nif (c == d || a == b) {        // c == d is true, so a == b is never checked\n    System.out.println(\"Example statement.\");\n}"
+    },
+    {
+      "type": "text",
+      "value": "Short-circuit evaluation makes the operation faster, and, as shown in Lesson 3, is what makes guarded checks like `if (name != null && name.length() > 0)` safe."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "concurrency-overview",
+  "moduleId": "concurrency",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Every program so far did one thing at a time. Concurrency lets a program do several, keep a user interface responsive while loading a file, handle many requests at once, use more than one CPU core."
+    },
+    {
+      "type": "text",
+      "value": "It is also the hardest topic in this course, for a specific reason: **concurrent programs are not deterministic.** The same code with the same input can produce different results on different runs. Bugs appear once in a thousand executions and vanish when you look for them. Approach this lesson knowing that \"it worked when I ran it\" proves very little."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Define thread, process, concurrency, and context switch",
+        "Create threads by extending `Thread` and by implementing `Runnable`",
+        "Use the `Thread` management methods",
+        "Explain why thread output order is not guaranteed",
+        "Recognise a race condition and fix it with `synchronized`"
+      ]
+    }
+  ]
+}

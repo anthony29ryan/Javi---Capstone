@@ -1,0 +1,76 @@
+{
+  "id": "control-structures-7-the-switch-statement",
+  "moduleId": "control-structures",
+  "title": "The switch statement",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A `switch` statement allows a single variable to be tested for equality against a list of values and, depending on its value, executes a certain block of statements. Each value is a **case**, and the variable being switched on is checked against each one."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "switch (expression) {\n    case value1:\n        // statements\n        break;\n    case value2:\n        // statements\n        break;\n    default:\n        // statements\n}"
+    },
+    {
+      "type": "text",
+      "value": "`switch`, `case`, `break`, and `default` are all reserved words."
+    },
+    {
+      "type": "heading",
+      "value": "The rules"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "The variable used in a `switch` can only be of type `int`, `byte`, `short`, `char`, or `String`. *(Also `enum`, and the wrapper classes, your handout omits these. Enums are covered in Lesson 18.)*",
+        "There can be any number of `case` statements. Each `case` is followed by the value to compare against and a colon.",
+        "The value in a `case` must be the **same data type** as the switch variable, and must be a constant.",
+        "When the switch variable equals a case, the statements following that case execute **until a `break` is reached**.",
+        "When `break` is reached, the switch terminates and control jumps to the next line following the switch. *(A `break` can only terminate an enclosing `switch` or a repetition structure.)*",
+        "**Not every case needs a `break`.** If none appears, control **falls through** to subsequent cases until a `break` is reached.",
+        "A switch may or may not have a `default`, which must appear at the end. It performs a task when none of the cases match. No `break` is needed in `default`."
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "A worked example"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class GradeDescription {\n    public static void main(String[] args) {\n        char grade = 'A';\n\n        switch (grade) {\n            case 'A':\n                System.out.println(\"Excellent\");\n                break;\n            case 'B':\n                System.out.println(\"Very Good\");\n                break;\n            case 'C':\n                System.out.println(\"Good\");\n                break;\n            case 'D':\n                System.out.println(\"Satisfactory\");\n                break;\n            case 'F':\n                System.out.println(\"Failed\");\n                break;\n            default:\n                System.out.println(\"Invalid letter of grade.\");\n        }\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "The expression is a variable identifier of `char` type. The valid values of `grade` are listed as cases, and each specifies different statements depending on the value."
+    },
+    {
+      "type": "heading",
+      "value": "Fall-through, used deliberately"
+    },
+    {
+      "type": "text",
+      "value": "Your handout mentions fall-through but never shows it. It is useful when several cases share an outcome:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class DaysInMonth {\n    public static void main(String[] args) {\n        int month = 4;\n        int days;\n\n        switch (month) {\n            case 1: case 3: case 5: case 7:\n            case 8: case 10: case 12:\n                days = 31;\n                break;\n            case 4: case 6: case 9: case 11:\n                days = 30;\n                break;\n            case 2:\n                days = 28;\n                break;\n            default:\n                days = 0;\n                System.out.println(\"Invalid month.\");\n        }\n\n        System.out.println(\"Days: \" + days);   // Days: 30\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Cases 1, 3, 5, 7, 8, 10, and 12 have no statements between them, so control falls straight through to `days = 31`. This is intentional. An **accidental** fall-through: forgetting a `break`, is a different story, and one of the most common switch bugs."
+    },
+    {
+      "type": "heading",
+      "value": "switch vs. else-if"
+    },
+    {
+      "type": "text",
+      "value": "Use `switch` when testing **one variable** against **several fixed values**. Use an `else-if` chain for **ranges** or **conditions involving more than one variable**. The grade-from-score example cannot be a switch, because `score >= 90` is a range, not a single value."
+    }
+  ]
+}

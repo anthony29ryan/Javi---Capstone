@@ -1,0 +1,35 @@
+{
+  "id": "predefined-functions-overview",
+  "moduleId": "predefined-functions",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Every program you have written lives entirely inside `main`. That works until it doesn't, around fifty lines, `main` becomes something nobody can read, including you next week."
+    },
+    {
+      "type": "text",
+      "value": "Methods fix that, and they are also the bridge to everything in the Intermediate tier. A class is mostly a collection of methods, so this lesson is where object-oriented Java quietly begins."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Distinguish predefined from user-defined methods",
+        "Use the `Math` class for common calculations",
+        "Write value-returning methods and void methods",
+        "Explain the parts of a method heading",
+        "Describe how Java passes arguments by value"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "id": "inheritance-polymorphism-interfaces-6-abstract-classes",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Abstract classes",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**An abstract class cannot be instantiated but can be subclassed:**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public abstract class ClassName { }"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "An abstract class serves as a base for subclasses. It **may or may not** include abstract methods.",
+        "**An abstract method is declared abstract and has no implementation**: written without braces, followed by a semicolon:"
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public abstract void methodName();"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public abstract class Employee {\n    private String name;\n\n    public Employee(String name) { this.name = name; }\n\n    public String getName() { return name; }\n\n    public abstract double calculatePay();      // every Employee pays differently\n\n    public void printPayslip() {                // shared by all employees\n        System.out.printf(\"%-12s %10.2f%n\", name, calculatePay());\n    }\n}\n\npublic class SalariedEmployee extends Employee {\n    private double monthlySalary;\n\n    public SalariedEmployee(String name, double monthlySalary) {\n        super(name);\n        this.monthlySalary = monthlySalary;\n    }\n\n    @Override\n    public double calculatePay() { return monthlySalary; }\n}\n\npublic class HourlyEmployee extends Employee {\n    private double rate;\n    private int hours;\n\n    public HourlyEmployee(String name, double rate, int hours) {\n        super(name);\n        this.rate = rate;\n        this.hours = hours;\n    }\n\n    @Override\n    public double calculatePay() { return rate * hours; }\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Employee[] staff = {\n    new SalariedEmployee(\"Ana\", 45000),\n    new HourlyEmployee(\"Jess\", 250, 160)\n};\n\nfor (Employee e : staff) {\n    e.printPayslip();\n}\n// new Employee(\"Nobody\");   // error: Employee is abstract; cannot be instantiated"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Ana           45000.00\nJess          40000.00"
+    },
+    {
+      "type": "text",
+      "value": "`printPayslip()` is written once and inherited. `calculatePay()` is abstract, so every subclass **must** supply it, the compiler enforces the contract."
+    }
+  ]
+}

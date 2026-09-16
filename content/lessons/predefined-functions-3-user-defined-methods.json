@@ -1,0 +1,133 @@
+{
+  "id": "predefined-functions-3-user-defined-methods",
+  "moduleId": "predefined-functions",
+  "title": "User-defined methods",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "User-defined functions fall into two categories:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Value-returning functions**: return a value of a specific data type using the `return` statement. Used to save the value for further calculations.",
+        "**Void functions**: do not return a value and do not use a `return` statement."
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Value-returning methods"
+    },
+    {
+      "type": "text",
+      "value": "Methods are written inside a class, in any order:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "modifiers returnType methodName(formal parameter list) {\n    statement(s);\n    return expression;\n}"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**`modifiers`** indicate the visibility of the method: where in a program it can be used. The most common are `public`, `private`, and `static`. **`public`** specifies the method can be invoked outside the class; **`private`** specifies it cannot. **`static`** specifies the method can be invoked using the name of the class, and can be called within `main` or another method of the class.",
+        "**`returnType`** is the type of value the method returns.",
+        "**`methodName`** is a Java identifier naming the method.",
+        "**`formal parameter list`** is the type, order, and number of parameters, separated by commas. It is optional, the list may be empty, but **the parentheses are still required**: `methodName()`. Parameters provide a communication link between the calling method and the called method, enabling methods to manipulate different data each time they are called.",
+        "The statements between braces form the **body**. The **`return`** statement passes a value back when the method is invoked. Its type must be compatible with the method's return type."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static int sumOfTwoInt(int x, int y) {\n    int sum = x + y;\n    return sum;\n}"
+    },
+    {
+      "type": "text",
+      "value": "`public static int sumOfTwoInt(int x, int y)` is the **method heading**; the statements within the braces are the **method body**."
+    },
+    {
+      "type": "text",
+      "value": "To call it, use its name with the **actual parameters** in parentheses:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "sumOfTwoInt(3, 7);\nint num = sumOfTwoInt(10, 5);   // returns 15 and stores it in num"
+    },
+    {
+      "type": "text",
+      "value": "**When calling a method, the number of actual parameters and their data types must match the formal parameters, in the order given.**"
+    },
+    {
+      "type": "text",
+      "value": "When a program invokes a method, program control transfers to the called method; the called method then returns control to the caller."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class SumCalculator {\n    public static void main(String[] args) {\n        int a = 3, b = 7;\n        int num;\n\n        num = sumOfTwoInt(a, b);\n        System.out.println(\"The sum of 3 and 7 is \" + num);\n    }\n\n    // a static method that sums two integers\n    public static int sumOfTwoInt(int x, int y) {\n        int sum;\n        sum = x + y;\n        return sum;\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "The sum of 3 and 7 is 10"
+    },
+    {
+      "type": "text",
+      "value": "The names `a` and `b` in `main` and `x` and `y` in the method are **unrelated**. The *values* are copied across; the names are local to each method."
+    },
+    {
+      "type": "heading",
+      "value": "Void methods"
+    },
+    {
+      "type": "text",
+      "value": "The `void` keyword creates void methods:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "modifiers void methodName(formal parameter list) {\n    statement(s);\n}"
+    },
+    {
+      "type": "text",
+      "value": "With an empty parameter list:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static void displayMessage() {\n    System.out.println(\"This is an example void function that will display when invoked.\");\n}"
+    },
+    {
+      "type": "text",
+      "value": "With parameters:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static void displayInfo(String fname, String lname, int age) {\n    System.out.println(\"Student Information:\");\n    System.out.println(\"First Name: \" + fname);\n    System.out.println(\"Last Name: \" + lname);\n    System.out.println(\"Age: \" + age);\n}"
+    },
+    {
+      "type": "text",
+      "value": "**Because void methods do not return a value, they are not used in an expression.** They are called as statements in their own right:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class VoidExamples {\n    public static void main(String[] args) {\n        // a non-static method must be called on an object\n        VoidExamples msg = new VoidExamples();\n        msg.displayMessage();\n\n        // a static method is called directly\n        displayInfo(\"Jess\", \"Diaz\", 19);\n    }\n\n    // a non-static method with an empty parameter list\n    public void displayMessage() {\n        System.out.println(\"This is an example void function that will display when invoked.\");\n    }\n\n    // a static method with a parameter list\n    public static void displayInfo(String fname, String lname, int age) {\n        System.out.println(\"Student Information:\");\n        System.out.println(\"First Name: \" + fname);\n        System.out.println(\"Last Name: \" + lname);\n        System.out.println(\"Age: \" + age);\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "This is an example void function that will display when invoked.\nStudent Information:\nFirst Name: Jess\nLast Name: Diaz\nAge: 19"
+    },
+    {
+      "type": "text",
+      "value": "Notice the difference. `displayMessage()` is **not** static, so it needs an object: `new VoidExamples().displayMessage()`. `displayInfo()` **is** static, so it is called directly by name. `main` is itself static, which is why it can only call static methods without first creating an object. That rule is the source of the error message `non-static method cannot be referenced from a static context`, probably the most-searched Java error there is. Lessons 12–14 explain why."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "exception-handling-common-mistakes",
+  "moduleId": "exception-handling",
+  "title": "Common mistakes",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Swallowing the exception.** An empty catch block hides the bug instead of handling it:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "catch (Exception e) { }   // the error vanishes silently"
+    },
+    {
+      "type": "text",
+      "value": "**Catching `Exception` when you mean something specific.** It also catches the `NullPointerException` from the typo you just made, disguising a real bug as a handled error."
+    },
+    {
+      "type": "text",
+      "value": "**Ordering catch blocks general-to-specific.** `catch (Exception e)` first makes every later block unreachable, a compile error."
+    },
+    {
+      "type": "text",
+      "value": "**Using exceptions for ordinary control flow.** Exceptions are for *exceptional* conditions. Checking `if (index < array.length)` is faster and clearer than catching the out-of-bounds exception."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting that `finally` still runs after `return`.** It does. Every time."
+    }
+  ]
+}

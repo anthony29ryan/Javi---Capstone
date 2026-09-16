@@ -1,0 +1,98 @@
+{
+  "id": "enums-nested-classes-2-enum-methods",
+  "moduleId": "enums-nested-classes",
+  "title": "Enum methods",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "heading",
+      "value": "Instance methods (non-static)"
+    },
+    {
+      "type": "text",
+      "value": "Assuming `p = Period.MIDTERM;`"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Method",
+        "Description",
+        "Example"
+      ],
+      "rows": [
+        [
+          "`toString()`",
+          "Returns the name of the calling constant object",
+          "`p.toString()` is `\"MIDTERM\"`"
+        ],
+        [
+          "`ordinal()`",
+          "Returns an integer representing the constant's position in the list; the first is `0`",
+          "`p.ordinal()` is `1`"
+        ],
+        [
+          "`equals()`",
+          "Returns `true` if the argument equals the calling object's value",
+          "`p.equals(Period.PRELIM)` is `false`"
+        ],
+        [
+          "`compareTo()`",
+          "Returns a negative integer if the calling object's ordinal is less than the argument's, `0` if the same, positive if greater",
+          "`p.compareTo(Period.FINAL)` is negative<br>`p.compareTo(Period.PRELIM)` is positive<br>`p.compareTo(Period.MIDTERM)` is `0`"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Clarification",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Your handout says \"You can also use comparison operators with enumeration constants instead of using the `compareTo()` method.\" That needs splitting in two:"
+        },
+        {
+          "type": "text",
+          "value": "**`==` works and is the preferred way to compare enums for equality**: unlike Strings, where `==` is a bug. Enum constants are single shared objects, so reference comparison is reliable, and `==` additionally guards against `null`:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "if (p == Period.MIDTERM) { ... }     // correct and idiomatic"
+        },
+        {
+          "type": "text",
+          "value": "**Relational operators do not work.** `p < Period.FINAL` will not compile: enums are objects, not numbers. Ordering requires `compareTo()` or `ordinal()`."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Static methods"
+    },
+    {
+      "type": "text",
+      "value": "These are used with the **type**, not with individual constants:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Method",
+        "Description",
+        "Example"
+      ],
+      "rows": [
+        [
+          "`valueOf()`",
+          "Accepts a String parameter and returns an enumeration constant",
+          "`Period.valueOf(\"PRELIM\")` returns the `PRELIM` constant"
+        ],
+        [
+          "`values()`",
+          "Returns an array of the enumerated constants",
+          "`Period.values()` returns an array with 4 elements"
+        ]
+      ]
+    }
+  ]
+}

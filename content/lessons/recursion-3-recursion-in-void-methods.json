@@ -1,0 +1,60 @@
+{
+  "id": "recursion-3-recursion-in-void-methods",
+  "moduleId": "recursion",
+  "title": "Recursion in void methods",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Recursion is not limited to methods that return a value. This prints the numbers from *n* down to 1:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static void countDown(int num) {\n    if (num <= 0) {\n        System.out.println(\"End\");\n    } else {\n        System.out.print(num + \" \");\n        countDown(num - 1);          // recursive call\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "`countDown(4);` produces:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "4 3 2 1 End"
+    },
+    {
+      "type": "heading",
+      "value": "The same method, reversed"
+    },
+    {
+      "type": "text",
+      "value": "Now look at what happens when the recursive call comes **before** the printing:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static void counting(int num) {\n    if (num <= 0) {\n        System.out.println(\"Start\");\n    } else {\n        counting(num - 1);           // recurse first, then print\n        System.out.print(num + \" \");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "`counting(4);` produces:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Start\n1 2 3 4"
+    },
+    {
+      "type": "text",
+      "value": "**The only change is the order of two statements, and the output comes out backwards.**"
+    },
+    {
+      "type": "text",
+      "value": "The reason: in `countDown`, each call prints *on the way down*, so the largest number prints first. In `counting`, each call must finish its recursive call *before* it prints, so the deepest call prints first, and the deepest call holds the smallest number."
+    },
+    {
+      "type": "text",
+      "value": "This is worth internalising. Work done **before** the recursive call happens in descending order; work done **after** it happens in ascending order. That single distinction solves a surprising number of problems."
+    }
+  ]
+}

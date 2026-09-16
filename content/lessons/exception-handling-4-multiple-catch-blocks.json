@@ -1,0 +1,37 @@
+{
+  "id": "exception-handling-4-multiple-catch-blocks",
+  "moduleId": "exception-handling",
+  "title": "Multiple catch blocks",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "One `try` block can be followed by several `catch` blocks. Java uses the **first one that matches**."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Scanner;\n\npublic class MultiCatch {\n    public static void main(String[] args) {\n        int[] values = {10, 20, 30};\n        Scanner input = new Scanner(System.in);\n\n        try {\n            System.out.print(\"Enter an index (0-2): \");\n            int index = input.nextInt();\n\n            System.out.print(\"Enter a divisor: \");\n            int divisor = input.nextInt();\n\n            System.out.println(\"Result: \" + (values[index] / divisor));\n\n        } catch (ArrayIndexOutOfBoundsException e) {\n            System.out.println(\"That index is outside the array.\");\n        } catch (ArithmeticException e) {\n            System.out.println(\"You cannot divide by zero.\");\n        } catch (Exception e) {\n            System.out.println(\"Something else went wrong: \" + e.getMessage());\n        }\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "**Order matters, and the compiler enforces it.** Catch blocks must go from most specific to most general. `Exception` is the parent of all of them, so it goes last, put it first and the compiler rejects the code, because no later block could ever be reached."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Added (Java 7+, not in the source handout)",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "when two exceptions need identical handling, combine them with `|` instead of duplicating the block:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "catch (ArrayIndexOutOfBoundsException | ArithmeticException e) {\n    System.out.println(\"Bad input: \" + e.getMessage());\n}"
+        }
+      ]
+    }
+  ]
+}

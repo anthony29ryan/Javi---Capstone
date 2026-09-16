@@ -1,0 +1,65 @@
+{
+  "id": "regular-expressions-1-fundamentals",
+  "moduleId": "regular-expressions",
+  "title": "Fundamentals",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**A regular expression (or regex) is a character or sequence of characters that represents a string or multiple strings.**"
+    },
+    {
+      "type": "text",
+      "value": "Regular expressions are part of the **`java.util.regex`** package, which has classes to help form and use them. They allow quicker, easier **searching, parsing, and replacing** of characters in a string."
+    },
+    {
+      "type": "text",
+      "value": "They are used to ensure that strings contain specific contents, and appear often in form validation, where checking for correct email format means checking that an `@` sign is included."
+    },
+    {
+      "type": "heading",
+      "value": "matches()"
+    },
+    {
+      "type": "text",
+      "value": "**The `String` class contains a method `matches(String regex)` that returns `true` if a string matches the given regular expression.** It is similar to `equals(String str)`; the difference is that comparing a string to a regular expression **allows variability**."
+    },
+    {
+      "type": "text",
+      "value": "Suppose you must return `true` if a String `animal` is `\"cat\"` or `\"dog\"`."
+    },
+    {
+      "type": "text",
+      "value": "With `equals()`, comparing one string at a time:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (animal.equals(\"cat\"))\n    return true;\nelse if (animal.equals(\"dog\"))\n    return true;\nreturn false;"
+    },
+    {
+      "type": "text",
+      "value": "With `matches()`, specifying multiple values at once:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "return animal.matches(\"cat|dog\");"
+    },
+    {
+      "type": "text",
+      "value": "The regex symbol **`|`** (alternation) allows `matches` to check whether `animal` equals `\"cat\"` **or** `\"dog\"`."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "**The single most important rule in this lesson: `matches()` tests the *entire* string.** Not part of it, all of it, start to finish. `\"my cat\".matches(\"cat\")` is **`false`**. This is different from most other languages' regex functions, and it is the first thing that confuses people. To search *within* a string, use `find()`, covered in Section 4."
+        }
+      ]
+    }
+  ]
+}

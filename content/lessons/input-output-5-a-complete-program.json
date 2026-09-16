@@ -1,0 +1,22 @@
+{
+  "id": "input-output-5-a-complete-program",
+  "moduleId": "input-output",
+  "title": "A complete program",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Scanner;\n\npublic class PayrollCalculator {\n    public static void main(String[] args) {\n        Scanner input = new Scanner(System.in);\n\n        System.out.print(\"Employee name: \");\n        String name = input.nextLine();\n\n        System.out.print(\"Hours worked: \");\n        int hours = input.nextInt();\n\n        System.out.print(\"Hourly rate: \");\n        double rate = input.nextDouble();\n\n        double gross = hours * rate;\n        double tax = gross * 0.12;\n        double net = gross - tax;\n\n        System.out.println();\n        System.out.printf(\"%-14s %s%n\",    \"Employee:\", name);\n        System.out.printf(\"%-14s %d%n\",    \"Hours:\",    hours);\n        System.out.printf(\"%-14s %.2f%n\",  \"Rate:\",     rate);\n        System.out.printf(\"%-14s %.2f%n\",  \"Gross pay:\", gross);\n        System.out.printf(\"%-14s %.2f%n\",  \"Tax (12%%):\", tax);\n        System.out.printf(\"%-14s %.2f%n\",  \"Net pay:\",  net);\n\n        input.close();\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Employee name: Jess Diaz\nHours worked: 160\nHourly rate: 125.50\n\nEmployee:      Jess Diaz\nHours:         160\nRate:          125.50\nGross pay:     20080.00\nTax (12%):     2409.60\nNet pay:       17670.40"
+    },
+    {
+      "type": "text",
+      "value": "Note `%%` in the tax label, inside a `printf` format string, that is how you print a literal percent sign."
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "expressions-3-mixed-expressions",
+  "moduleId": "expressions",
+  "title": "Mixed expressions",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **mixed expression** has operands of different data types: both integers and floating-point numbers. It returns a floating-point number."
+    },
+    {
+      "type": "text",
+      "value": "`11.5 + 3 * 2.25` and `6 / 4 + 3.9` are both mixed."
+    },
+    {
+      "type": "text",
+      "value": "Two rules govern how they evaluate."
+    },
+    {
+      "type": "text",
+      "value": "**Rule 1: If an operator has operands of the same type, it is evaluated according to that type.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "25 / 2 * 2.0      // 25 / 2 is int ÷ int = 12, then 12 * 2.0 = 24.0\n25.0 / 2.0 * 2    // 25.0 / 2.0 = 12.5, then 12.5 * 2 = 25.0"
+    },
+    {
+      "type": "text",
+      "value": "**Rule 2: If an operator has both types of operand, the integer is temporarily treated as a floating-point number, and the result is floating point.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "25.0 / 2 * 2      // 2 is promoted to 2.0, so 25.0 / 2.0 = 12.5, then 12.5 * 2 = 25.0"
+    },
+    {
+      "type": "text",
+      "value": "Put the first and third examples side by side:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(25 / 2 * 2.0);   // 24.0\nSystem.out.println(25.0 / 2 * 2);   // 25.0"
+    },
+    {
+      "type": "text",
+      "value": "Same numbers, same operators, same order, and different answers. The only difference is *where* the decimal point sits. In the first, `25 / 2` is evaluated as integers **before** `2.0` is ever involved, so the `.5` is already gone. In the second, the very first operation is mixed, so nothing is lost."
+    },
+    {
+      "type": "text",
+      "value": "**This is the whole lesson.** Rules apply operator by operator, left to right through the precedence order, not to the expression as a whole. A single `double` at the end cannot rescue an integer division that already happened."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class MixedDemo {\n    public static void main(String[] args) {\n        System.out.println(25 / 2 * 2.0);      // 24.0\n        System.out.println(25.0 / 2.0 * 2);    // 25.0\n        System.out.println(25.0 / 2 * 2);      // 25.0\n        System.out.println(6 / 4 + 3.9);       // 4.9, 6/4 is 1, not 1.5\n        System.out.println(11.5 + 3 * 2.25);   // 18.25\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "`6 / 4 + 3.9` giving `4.9` rather than `5.4` is the trap. Check it against Rule 1."
+    }
+  ]
+}

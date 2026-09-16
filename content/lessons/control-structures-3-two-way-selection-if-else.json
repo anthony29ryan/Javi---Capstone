@@ -1,0 +1,46 @@
+{
+  "id": "control-structures-3-two-way-selection-if-else",
+  "moduleId": "control-structures",
+  "title": "Two-way selection: if...else",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Two-way selections choose between two alternatives."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (expression) {\n    // statement 1\n}\nelse {\n    // statement 2\n}"
+    },
+    {
+      "type": "text",
+      "value": "`else` is a reserved word whose block executes when the `if` expression evaluates to `false`. If the expression is `true`, statement 1 executes; if `false`, statement 2 executes. **Exactly one of the two blocks always runs.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (score >= 60) {\n    System.out.println(\"The student passed.\");\n}\nelse {\n    System.out.println(\"The student failed.\");\n}"
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Added: the conditional operator",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "For a two-way selection that simply chooses between two *values*, Java offers a compact form:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "String result = (score >= 60) ? \"passed\" : \"failed\";"
+        },
+        {
+          "type": "text",
+          "value": "Read it as: *if the condition, then the first value, otherwise the second.* Use it for short value choices; use `if...else` whenever either branch does real work."
+        }
+      ]
+    }
+  ]
+}

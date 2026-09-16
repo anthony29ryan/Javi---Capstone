@@ -1,0 +1,46 @@
+{
+  "id": "operators-common-mistakes",
+  "moduleId": "operators",
+  "title": "Common mistakes",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Integer division where you wanted a decimal.** The number one arithmetic bug in Java:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "double pct = correct / total * 100;                // 0.0\ndouble pct = (double) correct / total * 100;       // correct"
+    },
+    {
+      "type": "text",
+      "value": "**Using `==` to compare strings.** `==` compares whether two variables point to the same object, not whether the text matches:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String a = \"hello\";\nString b = new String(\"hello\");\nSystem.out.println(a == b);        // false\nSystem.out.println(a.equals(b));   // true  ← what you meant"
+    },
+    {
+      "type": "text",
+      "value": "For objects, always use `.equals()`. Lesson 8 covers this properly. For primitives (`int`, `char`, `double`), `==` is correct."
+    },
+    {
+      "type": "text",
+      "value": "**Confusing `=` with `==` in a condition.** `if (found = true)` assigns instead of comparing, and compiles without complaint because the result is a boolean."
+    },
+    {
+      "type": "text",
+      "value": "**Assuming `&&` and `||` evaluate both sides.** They do not, and correct null checks depend on that."
+    },
+    {
+      "type": "text",
+      "value": "**Relying on remembered precedence.** Add the parentheses."
+    },
+    {
+      "type": "text",
+      "value": "**Comparing doubles with `==`.** `0.1 + 0.2 == 0.3` is `false`, because of floating-point representation. Compare with a tolerance instead: `Math.abs(a - b) < 0.0001`."
+    }
+  ]
+}

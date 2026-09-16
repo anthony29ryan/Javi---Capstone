@@ -1,0 +1,46 @@
+{
+  "id": "control-structures-common-mistakes",
+  "moduleId": "control-structures",
+  "title": "Common mistakes",
+  "order": 9,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Omitting braces on a single-statement branch.** Only the first statement is conditional, whatever your indentation suggests."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting `break`, causing accidental fall-through.** The switch keeps running into the next case:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "case 'A':\n    System.out.println(\"Excellent\");\n    // no break!\ncase 'B':\n    System.out.println(\"Very Good\");   // also prints"
+    },
+    {
+      "type": "text",
+      "value": "**Ordering an else-if chain from least to most restrictive.** The first match wins, so the loosest condition swallows everything below it."
+    },
+    {
+      "type": "text",
+      "value": "**Using `=` instead of `==`.** `if (found = true)` assigns and then tests the result. It compiles when the variable is a boolean."
+    },
+    {
+      "type": "text",
+      "value": "**Comparing Strings with `==` in an `if`.** Use `.equals()`. (`switch` on a String is fine: it compares contents internally.)"
+    },
+    {
+      "type": "text",
+      "value": "**Putting a semicolon after the condition.** `if (x > 5);` is a complete, empty `if`. The block that follows always runs:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (score >= 60);                              // ← empty statement\n{ System.out.println(\"Passed\"); }              // always executes"
+    },
+    {
+      "type": "text",
+      "value": "**Comparing doubles with `==`.** Floating-point values rarely match exactly. Compare with a tolerance."
+    }
+  ]
+}
