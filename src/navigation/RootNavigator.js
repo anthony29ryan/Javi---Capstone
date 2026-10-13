@@ -1,11 +1,12 @@
-import { ActivityIndicator, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 
 import { useAuth } from '../context/AuthContext';
 import { ProgressProvider } from '../context/ProgressContext';
-import { colors } from '../theme/colors';
+import { colors, fonts } from '../theme/colors';
 import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_500Medium,
@@ -16,12 +17,19 @@ import {
   JetBrainsMono_500Medium,
 } from '../theme/authTheme';
 import MainTabs from './MainTabs';
+import { getPreferences } from '../services/preferences';
+import ChangePasswordScreen from '../screens/ChangePasswordScreen';
+import DeleteAccountScreen from '../screens/DeleteAccountScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
+import ProfileDetailsScreen from '../screens/ProfileDetailsScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import SetupScreen from '../screens/SetupScreen';
 import LessonDetailScreen from '../screens/LessonDetailScreen';
 import LessonsScreen from '../screens/LessonsScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModulesScreen from '../screens/ModulesScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import ProgressScreen from '../screens/ProgressScreen';
 import QuizScreen from '../screens/QuizScreen';
 import SignupScreen from '../screens/SignupScreen';
 import VerifyEmailScreen from '../screens/VerifyEmailScreen';
@@ -35,48 +43,112 @@ const Stack = createNativeStackNavigator();
 const headerScreenOptions = {
   headerStyle: { backgroundColor: colors.background },
   headerTintColor: colors.primary,
-  headerTitleStyle: { fontWeight: '600', fontSize: 17, color: colors.text },
+  headerTitleStyle: { fontFamily: fonts.semiBold, fontSize: 17, color: colors.text },
   headerShadowVisible: false,
   headerBackTitle: '',
   contentStyle: { backgroundColor: colors.background },
 };
 
-function AuthStack() {
+function AuthStack({ afterAccountDeletion }) {
   return (
     // AuthStack remounts fresh every time RootNavigator switches into it —
     // on first launch (no user yet) and right after logOut() (user goes back
-    // to null) — so starting it at Welcome each time covers both cases
-    // without any extra state.
-    <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }}>
+    // to null) — so choosing the first screen here covers every case. The
+    // one exception to Welcome is straight after scheduling an account's
+    // deletion, which lands on Sign up and says when the deletion happens.
+    <Stack.Navigator
+      initialRouteName={afterAccountDeletion ? 'Signup' : 'Welcome'}
+      screenOptions={{ headerShown: false }}
+    >
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
     </Stack.Navigator>
   );
 }
 
-function AppStack() {
+function AppStack({ needsSetup }) {
   return (
-    <Stack.Navigator screenOptions={headerScreenOptions}>
+    <Stack.Navigator
+      // A first-run user lands on Setup instead of the tabs. It is the initial
+      // route rather than a redirect so there is no flash of the app behind it.
+      initialRouteName={needsSetup ? 'Setup' : 'MainTabs'}
+      screenOptions={headerScreenOptions}
+    >
       {/* The tab bar is the app's home; everything below is pushed over it. */}
       <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
+      <Stack.Screen name="Setup" component={SetupScreen} options={{ headerShown: false }} />
 
-      <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
+      {/* Profile is a tab now, so it is not registered here too — a name in
+          both places makes navigate('Profile') ambiguous. */}
+      <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="ProfileDetails"
+        component={ProfileDetailsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChangePassword"
+        component={ChangePasswordScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DeleteAccount"
+        component={DeleteAccountScreen}
+        options={{ headerShown: false }}
+      />
+
       <Stack.Screen
         name="EditProfile"
         component={EditProfileScreen}
         options={{ title: 'Edit Name' }}
       />
-      <Stack.Screen name="Modules" component={ModulesScreen} />
+      <Stack.Screen name="Progress" component={ProgressScreen} options={{ title: 'My Progress' }} />
+      {/* Modules draws its own back button and level tag, per the design. */}
+      <Stack.Screen name="Modules" component={ModulesScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Lessons" component={LessonsScreen} />
-      <Stack.Screen name="LessonDetail" component={LessonDetailScreen} options={{ title: 'Lesson' }} />
+      {/* LessonDetail draws its own back button and breadcrumb, per the design. */}
+      <Stack.Screen
+        name="LessonDetail"
+        component={LessonDetailScreen}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'Quiz' }} />
     </Stack.Navigator>
   );
 }
 
 export default function RootNavigator() {
-  const { user, initializing } = useAuth();
+  const { user, initializing, scheduledDeletion } = useAuth();
+
+  // Whether this account has been through the setup screen. Held as
+  // undefined until known so the app stays on the loader rather than
+  // guessing and showing the wrong first screen.
+  const [needsSetup, setNeedsSetup] = useState(undefined);
+  const verified = Boolean(user?.emailVerified);
+
+  useEffect(() => {
+    if (!verified) {
+      setNeedsSetup(undefined);
+      return undefined;
+    }
+
+    let cancelled = false;
+    getPreferences()
+      .then((preferences) => {
+        if (!cancelled) setNeedsSetup(!preferences.setupComplete);
+      })
+      .catch(() => {
+        // If preferences cannot be read, send them to the app rather than
+        // trapping them on setup — the screen can be reached again later.
+        if (!cancelled) setNeedsSetup(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [verified, user?.uid]);
 
   // The auth screens (Log in, Sign up, Check your email) use their own type-
   // face per the design handoff, separate from the rest of the app. Loading
@@ -94,14 +166,7 @@ export default function RootNavigator() {
 
   if (initializing || !authFontsLoaded) {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: colors.background,
-        }}
-      >
+      <View style={styles.loader}>
         <ActivityIndicator color={colors.primary} />
       </View>
     );
@@ -113,14 +178,27 @@ export default function RootNavigator() {
           in. ProgressProvider sits inside the last branch so it never loads
           progress for a user that does not exist yet. */}
       {!user ? (
-        <AuthStack />
+        <AuthStack afterAccountDeletion={Boolean(scheduledDeletion)} />
       ) : !user.emailVerified ? (
         <VerifyEmailScreen />
+      ) : needsSetup === undefined ? (
+        <View style={styles.loader}>
+          <ActivityIndicator color={colors.primary} />
+        </View>
       ) : (
         <ProgressProvider>
-          <AppStack />
+          <AppStack needsSetup={needsSetup} />
         </ProgressProvider>
       )}
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  loader: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.background,
+  },
+});

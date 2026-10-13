@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius } from '../theme/colors';
+import { colors, fonts, radius } from '../theme/colors';
 
 function initialFor(user) {
   const source = user?.displayName || user?.email || '?';
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   initial: {
     color: colors.white,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
   },
   pressed: {
     opacity: 0.7,

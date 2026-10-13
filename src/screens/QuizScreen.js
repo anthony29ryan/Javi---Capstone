@@ -4,9 +4,9 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Button from '../components/Button';
 import ScreenState from '../components/ScreenState';
 import { useProgress } from '../context/ProgressContext';
-import { getLessonQuestions, getModuleQuestions, recordAttempt } from '../services/quizzes';
-import { recordLessonQuizCompletion, recordModuleQuizCompletion } from '../services/progress';
-import { colors, radius, spacing, type } from '../theme/colors';
+import { getModuleQuestions, recordAttempt } from '../services/quizzes';
+import { recordModuleQuizCompletion } from '../services/progress';
+import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 const CHOICE_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
@@ -44,8 +44,8 @@ function Choice({ label, letter, state, onPress, disabled }) {
 }
 
 export default function QuizScreen({ route, navigation }) {
-  const { mode, refId, title } = route.params;
-  const { refresh: refreshProgress } = useProgress();
+  const { moduleId, title } = route.params;
+  const { lessons, refresh: refreshProgress } = useProgress();
 
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,15 +63,27 @@ export default function QuizScreen({ route, navigation }) {
   }, [title]);
 
   useEffect(() => {
-    const fetchQuestions = mode === 'lesson' ? getLessonQuestions(refId) : getModuleQuestions(refId);
-    fetchQuestions
+    // A module quiz is every lesson's questions put together, so they have to
+    // be ordered by which lesson they came from first — a question's own
+    // `order` only ranks it within its own lesson. Anything written at module
+    // level rather than against a lesson sits at the end.
+    const lessonOrder = new Map(lessons.map((lesson) => [lesson.id, lesson.order ?? 0]));
+
+    getModuleQuestions(moduleId)
       .then((qs) => {
-        setQuestions(qs);
+        const ordered = [...qs].sort((a, b) => {
+          const lessonDelta =
+            (a.lessonId ? (lessonOrder.get(a.lessonId) ?? 0) : Number.MAX_SAFE_INTEGER) -
+            (b.lessonId ? (lessonOrder.get(b.lessonId) ?? 0) : Number.MAX_SAFE_INTEGER);
+          return lessonDelta !== 0 ? lessonDelta : (a.order ?? 0) - (b.order ?? 0);
+        });
+
+        setQuestions(ordered);
         setQuestionStart(Date.now());
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [mode, refId]);
+  }, [moduleId, lessons]);
 
   if (loading) return <ScreenState loading />;
   if (error) return <ScreenState error={error} />;
@@ -126,11 +138,7 @@ export default function QuizScreen({ route, navigation }) {
   async function handleNext() {
     if (isLast) {
       try {
-        if (mode === 'lesson') {
-          await recordLessonQuizCompletion(refId);
-        } else {
-          await recordModuleQuizCompletion(refId, score, questions.length);
-        }
+        await recordModuleQuizCompletion(moduleId, score, questions.length);
         // Completion just changed the numbers behind every progress ring, so
         // reload them before the user navigates back to a screen showing one.
         await refreshProgress();
@@ -185,7 +193,11 @@ export default function QuizScreen({ route, navigation }) {
 
       {answered ? (
         <View style={styles.footer}>
-          <Button label={isLast ? 'Finish' : 'Next question'} onPress={handleNext} />
+          <Button
+            label={isLast ? 'Finish' : 'Next question'}
+            onPress={handleNext}
+            style={styles.footerButton}
+          />
         </View>
       ) : null}
     </View>
@@ -220,15 +232,16 @@ const styles = StyleSheet.create({
   progressText: {
     ...type.small,
     color: colors.textMuted,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   content: {
+    ...centeredColumn(contentWidth.content),
     padding: spacing.lg,
     paddingBottom: spacing.xxl,
   },
   prompt: {
     fontSize: 20,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     lineHeight: 28,
     color: colors.text,
     marginBottom: spacing.xl,
@@ -280,7 +293,7 @@ const styles = StyleSheet.create({
   },
   letterText: {
     fontSize: 13,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.textMuted,
   },
   letterTextRevealed: {
@@ -291,6 +304,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.border,
     backgroundColor: colors.surface,
+  },
+  // The bar spans the screen; the button inside lines up with the answers.
+  footerButton: {
+    ...centeredColumn(contentWidth.content),
   },
   resultContainer: {
     flex: 1,
@@ -305,14 +322,14 @@ const styles = StyleSheet.create({
   },
   resultScore: {
     fontSize: 64,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.primary,
     marginTop: spacing.sm,
   },
   resultScoreTotal: {
     fontSize: 32,
     color: colors.textMuted,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   resultPercent: {
     ...type.body,

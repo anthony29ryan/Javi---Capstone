@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { getAllLessonProgressRefs, getAllModules, getCourses } from '../services/content';
-import { getProgress } from '../services/progress';
+import { getProgress, recordLessonOpened } from '../services/progress';
 
 const ProgressContext = createContext(undefined);
 
@@ -55,6 +55,24 @@ export function ProgressProvider({ children }) {
     refresh();
   }, [refresh]);
 
+  /**
+   * Records the lesson being opened and moves the local pointer straight away.
+   *
+   * This updates state itself instead of calling `refresh()` afterwards
+   * because a refresh re-reads courses, modules and every lesson — far too
+   * much for something that happens on each lesson open, when the only thing
+   * that changed is one id.
+   */
+  const markLessonOpened = useCallback(async (lessonId) => {
+    setProgress((current) => (current ? { ...current, lastLessonId: lessonId } : current));
+    try {
+      await recordLessonOpened(lessonId);
+    } catch {
+      // Losing the bookmark is not worth interrupting a lesson over; the
+      // pointer falls back to the first unfinished lesson.
+    }
+  }, []);
+
   const value = useMemo(() => {
     const completedList = progress?.completedLessons ?? [];
     const completedSet = new Set(completedList);
@@ -93,9 +111,12 @@ export function ProgressProvider({ children }) {
       loading,
       error,
       refresh,
+      markLessonOpened,
+      lastLessonId: progress?.lastLessonId ?? null,
       progress,
       courses,
       modules,
+      lessons: lessonRefs,
       totalLessons,
       completedCount,
       percent: toPercent(completedCount, totalLessons),
@@ -105,7 +126,7 @@ export function ProgressProvider({ children }) {
       courseProgress,
       isLessonComplete: (lessonId) => completedSet.has(lessonId),
     };
-  }, [progress, courses, modules, lessonRefs, loading, error, refresh]);
+  }, [progress, courses, modules, lessonRefs, loading, error, refresh, markLessonOpened]);
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
 }

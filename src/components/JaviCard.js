@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import Button from './Button';
-import { colors, radius, spacing, type } from '../theme/colors';
+import { colors, fonts, radius, spacing, type } from '../theme/colors';
 
 /**
  * Javi is the app's learning companion. The card reads as Javi talking to the
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 19,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.text,
     letterSpacing: -0.2,
   },

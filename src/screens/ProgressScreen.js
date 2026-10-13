@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import ProgressRing from '../components/ProgressRing';
 import ScreenState from '../components/ScreenState';
 import { useProgress } from '../context/ProgressContext';
-import { colors, radius, spacing, type } from '../theme/colors';
+import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 function StatCard({ value, unit, label }) {
   return (
@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   content: {
+    ...centeredColumn(contentWidth.content),
     padding: spacing.lg,
     paddingBottom: spacing.xxl,
   },
@@ -157,14 +158,14 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 30,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.primary,
     letterSpacing: -0.5,
   },
   statUnit: {
     fontSize: 17,
     color: colors.textMuted,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   statLabel: {
     ...type.small,
@@ -222,7 +223,7 @@ const styles = StyleSheet.create({
   },
   rowTitle: {
     fontSize: 15,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     color: colors.text,
   },
   rowMeta: {
@@ -232,12 +233,12 @@ const styles = StyleSheet.create({
   },
   ringText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.primary,
   },
   ringTextSmall: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.primary,
   },
   scorePill: {
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     ...type.small,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.primary,
   },
   notAttempted: {

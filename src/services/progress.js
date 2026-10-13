@@ -6,6 +6,7 @@ const EMPTY_PROGRESS = {
   completedLessons: [],
   moduleScores: {},
   streak: { current: 0, longest: 0, lastActiveDate: null },
+  lastLessonId: null,
 };
 
 function todayString() {
@@ -37,19 +38,46 @@ export async function getProgress() {
   return readProgress(auth.currentUser.uid);
 }
 
-export async function recordLessonQuizCompletion(lessonId) {
+/**
+ * Remembers which lesson was opened last, so "Continue learning" can point at
+ * where the learner actually was rather than at the first thing they have not
+ * finished.
+ *
+ * Deliberately does not touch the streak: opening a lesson is not the same as
+ * studying one, and a streak you can extend by tapping into a page and out
+ * again is not measuring anything.
+ */
+export async function recordLessonOpened(lessonId) {
+  await setDoc(
+    doc(db, 'progress', auth.currentUser.uid),
+    { lastLessonId: lessonId, updatedAt: serverTimestamp() },
+    { merge: true }
+  );
+}
+
+/**
+ * Marks a lesson done, or undoes that.
+ *
+ * Lessons are completed by the learner saying so on the lesson screen; there
+ * are no per-lesson quizzes, so nothing else decides this. Only completing
+ * counts as activity — un-marking must not extend a streak, or the streak
+ * becomes something you can farm by toggling a checkbox.
+ */
+export async function setLessonComplete(lessonId, complete) {
   const userId = auth.currentUser.uid;
   const existing = await readProgress(userId);
 
-  const completedLessons = existing.completedLessons.includes(lessonId)
-    ? existing.completedLessons
-    : [...existing.completedLessons, lessonId];
+  if (existing.completedLessons.includes(lessonId) === complete) return;
+
+  const completedLessons = complete
+    ? [...existing.completedLessons, lessonId]
+    : existing.completedLessons.filter((id) => id !== lessonId);
 
   await setDoc(
     doc(db, 'progress', userId),
     {
       completedLessons,
-      streak: advanceStreak(existing.streak),
+      ...(complete ? { streak: advanceStreak(existing.streak) } : {}),
       updatedAt: serverTimestamp(),
     },
     { merge: true }

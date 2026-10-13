@@ -8,7 +8,7 @@ import ProgressRing from '../components/ProgressRing';
 import ScreenState from '../components/ScreenState';
 import { useProgress } from '../context/ProgressContext';
 import { getLessons } from '../services/content';
-import { colors, radius, spacing, type } from '../theme/colors';
+import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 export default function LessonsScreen({ route, navigation }) {
   const { moduleId, moduleTitle } = route.params;
@@ -92,11 +92,7 @@ export default function LessonsScreen({ route, navigation }) {
             label="Take Module Quiz"
             variant="secondary"
             onPress={() =>
-              navigation.navigate('Quiz', {
-                mode: 'module',
-                refId: moduleId,
-                title: `${moduleTitle} Quiz`,
-              })
+              navigation.navigate('Quiz', { moduleId, title: `${moduleTitle} Quiz` })
             }
             style={styles.quizButton}
           />
@@ -112,6 +108,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   list: {
+    ...centeredColumn(contentWidth.content),
     padding: spacing.lg,
     gap: spacing.md,
   },
@@ -123,7 +120,7 @@ const styles = StyleSheet.create({
   },
   headerRingText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.primary,
   },
   headerText: {
@@ -131,7 +128,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.text,
   },
   headerHint: {
@@ -141,7 +138,7 @@ const styles = StyleSheet.create({
   },
   lessonIndex: {
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.textMuted,
   },
   quizCard: {
@@ -159,7 +156,7 @@ const styles = StyleSheet.create({
   },
   quizTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.text,
     marginTop: spacing.xs,
   },
