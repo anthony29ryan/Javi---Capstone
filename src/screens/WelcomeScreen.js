@@ -1,9 +1,10 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle, Defs, Pattern, Rect } from 'react-native-svg';
 
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthButton from '../components/auth/AuthButton';
-import { authColors, authType } from '../theme/authTheme';
+import { authColors, authType, centeredColumn, contentWidth } from '../theme/authTheme';
 
 const MASCOT_SIZE = 210;
 
@@ -37,29 +38,41 @@ function MascotPlaceholder() {
 }
 
 export default function WelcomeScreen({ navigation }) {
+  const insets = useSafeAreaInsets();
+
   return (
     <View style={styles.container}>
-      <AuthAnimatedScreen style={styles.animated}>
-        <Text style={styles.wordmark}>JAVI</Text>
-
-        <View style={styles.mascotArea}>
-          <MascotPlaceholder />
-        </View>
-
-        <Text style={styles.headline}>Learn Java at your own pace</Text>
-        <Text style={styles.body}>Ten minutes a day is enough. Start with one lesson today.</Text>
-
-        <AuthButton label="Sign Up" onPress={() => navigation.navigate('Signup')} />
-
-        <Pressable
-          onPress={() => navigation.navigate('Login')}
-          hitSlop={6}
-          style={({ pressed }) => [styles.footer, pressed && styles.footerPressed]}
+      <AuthAnimatedScreen>
+        {/* flexGrow lets the mascot area stretch to fill a tall screen, while
+            the scroll view lets a short screen scroll instead of squashing
+            the mascot into the headline. */}
+        <ScrollView
+          contentContainerStyle={[
+            styles.content,
+            { paddingTop: insets.top + 28, paddingBottom: insets.bottom + 32 },
+          ]}
         >
-          <Text style={styles.footerText}>
-            ALREADY HAVE AN ACCOUNT? <Text style={styles.footerAccent}>LOG IN</Text>
-          </Text>
-        </Pressable>
+          <Text style={styles.wordmark}>JAVI</Text>
+
+          <View style={styles.mascotArea}>
+            <MascotPlaceholder />
+          </View>
+
+          <Text style={styles.headline}>Learn Java at your own pace</Text>
+          <Text style={styles.body}>Ten minutes a day is enough. Start with one lesson today.</Text>
+
+          <AuthButton label="Sign Up" onPress={() => navigation.navigate('Signup')} />
+
+          <Pressable
+            onPress={() => navigation.navigate('Login')}
+            hitSlop={6}
+            style={({ pressed }) => [styles.footer, pressed && styles.footerPressed]}
+          >
+            <Text style={styles.footerText}>
+              ALREADY HAVE AN ACCOUNT? <Text style={styles.footerAccent}>LOG IN</Text>
+            </Text>
+          </Pressable>
+        </ScrollView>
       </AuthAnimatedScreen>
     </View>
   );
@@ -70,10 +83,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: authColors.bg,
   },
-  animated: {
-    paddingTop: 28,
+  content: {
+    ...centeredColumn(contentWidth.form),
+    flexGrow: 1,
     paddingHorizontal: 24,
-    paddingBottom: 32,
     // Only the wordmark, mascot, and footer are centered per the design —
     // the headline/body/button are a left-aligned, full-width block, so this
     // wrapper stays at the default stretch alignment rather than centering

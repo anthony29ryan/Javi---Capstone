@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthBackButton from '../components/auth/AuthBackButton';
@@ -15,12 +16,13 @@ import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
 import PasswordRules, { passwordMeetsAllRules } from '../components/auth/PasswordRules';
 import { useAuth } from '../context/AuthContext';
-import { authColors, authRadius, authSpacing, authType } from '../theme/authTheme';
+import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth } from '../theme/authTheme';
 
 const EMAIL_PATTERN = /.+@.+\..+/;
 
 export default function SignupScreen({ navigation }) {
   const { signUp } = useAuth();
+  const insets = useSafeAreaInsets();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -63,7 +65,13 @@ export default function SignupScreen({ navigation }) {
     try {
       await signUp(email.trim(), password, displayName.trim());
     } catch (err) {
-      setError(err.message);
+      // Firebase's own message here is a raw error code, so replace it with
+      // something a learner can act on.
+      setError(
+        err.code === 'auth/email-already-in-use'
+          ? 'This email already has an account. Log in instead.'
+          : err.message
+      );
     } finally {
       setSubmitting(false);
     }
@@ -76,12 +84,22 @@ export default function SignupScreen({ navigation }) {
     >
       <AuthAnimatedScreen>
         <ScrollView
-          contentContainerStyle={styles.content}
+          contentContainerStyle={[
+            styles.content,
+            { paddingTop: insets.top + authSpacing.screenTop, paddingBottom: insets.bottom + authSpacing.screenBottom },
+          ]}
           keyboardShouldPersistTaps="handled"
         >
-          <AuthBackButton onPress={() => navigation.goBack()} />
+          <AuthBackButton
+            // After an account deletion this is the first screen, so there is
+            // nothing to go back to — fall back to Welcome instead.
+            onPress={() =>
+              navigation.canGoBack() ? navigation.goBack() : navigation.replace('Welcome')
+            }
+          />
 
           <Text style={styles.title}>Create your account</Text>
+
 
           <View style={styles.form}>
             <AuthTextField
@@ -168,10 +186,9 @@ const styles = StyleSheet.create({
     backgroundColor: authColors.bg,
   },
   content: {
+    ...centeredColumn(contentWidth.form),
     flexGrow: 1,
     paddingHorizontal: authSpacing.screenH,
-    paddingTop: authSpacing.screenTop,
-    paddingBottom: authSpacing.screenBottom,
   },
   title: {
     ...authType.screenTitle,

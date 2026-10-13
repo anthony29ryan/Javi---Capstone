@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthButton from '../components/auth/AuthButton';
 import AuthToast from '../components/auth/AuthToast';
 import { useAuth } from '../context/AuthContext';
-import { authColors, authRadius, authSpacing, authType } from '../theme/authTheme';
+import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth } from '../theme/authTheme';
 
 const RESEND_COOLDOWN_SECONDS = 30;
 
 export default function VerifyEmailScreen() {
   const { user, logOut, refreshUser, resendVerification } = useAuth();
+  const insets = useSafeAreaInsets();
 
   const [checking, setChecking] = useState(false);
   const [sending, setSending] = useState(false);
@@ -72,47 +74,59 @@ export default function VerifyEmailScreen() {
 
   return (
     <View style={styles.container}>
-      <AuthAnimatedScreen style={styles.animated}>
-        <View style={styles.iconTile}>
-          <Ionicons name="mail-unread-outline" size={38} color={authColors.accentDeep} />
-        </View>
+      <AuthAnimatedScreen>
+        {/* Scrolls so the buttons stay reachable on short screens; flexGrow
+            plus the spacer below keeps them pinned to the bottom otherwise. */}
+        <ScrollView
+          contentContainerStyle={[
+            styles.content,
+            {
+              paddingTop: insets.top + authSpacing.screenTop,
+              paddingBottom: insets.bottom + authSpacing.screenH,
+            },
+          ]}
+        >
+          <View style={styles.iconTile}>
+            <Ionicons name="mail-unread-outline" size={38} color={authColors.accentDeep} />
+          </View>
 
-        <Text style={styles.title}>Check your email</Text>
-        <Text style={styles.body}>Tap the verification link we sent to</Text>
-        <Text style={styles.email}>{user?.email}</Text>
+          <Text style={styles.title}>Check your email</Text>
+          <Text style={styles.body}>Tap the verification link we sent to</Text>
+          <Text style={styles.email}>{user?.email}</Text>
 
-        <View style={styles.card}>
-          <Text style={styles.cardEyebrow}>GOOD TO KNOW</Text>
-          <Text style={styles.cardBody}>
-            The link works once and expires in 30 minutes. Open it on this phone so the app can
-            pick it up. Check spam if it has not arrived in a minute.
-          </Text>
-        </View>
+          <View style={styles.card}>
+            <Text style={styles.cardEyebrow}>GOOD TO KNOW</Text>
+            <Text style={styles.cardBody}>
+              The link works once and expires in 30 minutes. Open it on this phone so the app can
+              pick it up. Check spam if it has not arrived in a minute.
+            </Text>
+          </View>
 
-        {error ? (
-          <Text style={styles.notice}>{error}</Text>
-        ) : stillUnverified ? (
-          <Text style={styles.notice}>
-            That email is still not verified. Open the link first, then try again.
-          </Text>
-        ) : null}
+          {error ? (
+            <Text style={styles.notice}>{error}</Text>
+          ) : stillUnverified ? (
+            <Text style={styles.notice}>
+              That email is still not verified. Open the link first, then try again.
+            </Text>
+          ) : null}
 
-        <View style={styles.spacer} />
+          <View style={styles.spacer} />
 
-        <View style={styles.actions}>
-          <AuthButton label="I Opened the Link" onPress={handleCheck} loading={checking} />
-          <AuthButton
-            label={counting ? `Resend Link in ${cooldown}s` : 'Resend Link'}
-            variant="secondary"
-            onPress={handleResend}
-            loading={sending}
-            disabled={counting}
-            labelStyle={counting ? styles.resendMuted : styles.resendActive}
-          />
-          <Text onPress={logOut} suppressHighlighting style={styles.tertiary}>
-            Wrong address? Go back and edit it.
-          </Text>
-        </View>
+          <View style={styles.actions}>
+            <AuthButton label="I Opened the Link" onPress={handleCheck} loading={checking} />
+            <AuthButton
+              label={counting ? `Resend Link in ${cooldown}s` : 'Resend Link'}
+              variant="secondary"
+              onPress={handleResend}
+              loading={sending}
+              disabled={counting}
+              labelStyle={counting ? styles.resendMuted : styles.resendActive}
+            />
+            <Text onPress={logOut} suppressHighlighting style={styles.tertiary}>
+              Wrong address? Go back and edit it.
+            </Text>
+          </View>
+        </ScrollView>
       </AuthAnimatedScreen>
 
       <AuthToast message={toast} onHide={() => setToast('')} />
@@ -125,10 +139,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: authColors.bg,
   },
-  animated: {
+  content: {
+    ...centeredColumn(contentWidth.form),
+    flexGrow: 1,
     paddingHorizontal: authSpacing.screenH,
-    paddingTop: authSpacing.screenTop,
-    paddingBottom: authSpacing.screenH,
     alignItems: 'center',
   },
   iconTile: {

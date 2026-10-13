@@ -1,18 +1,19 @@
-// Design tokens for the pre-authentication flow (Welcome, Log in, Sign up,
-// Check your email, Forgot password, Set a new password), taken from the
-// "Javi — Authentication flow" design handoff.
+// Design tokens from the Javi design handoff.
 //
-// This is intentionally a SEPARATE palette from `theme/colors.js` (the coffee
-// theme used everywhere past sign-in) rather than a replacement for it. The
-// handoff only covers the pre-auth screens, so merging the two here would
-// either overwrite the coffee theme the rest of the app already depends on,
-// or silently blend two unrelated designs. Once the rest of the app is
-// redesigned to match, these two files should be reconciled into one.
+// This is the app's one palette. `theme/colors.js` imports `authColors` from
+// here and re-exports it under the names the post-sign-in screens already
+// use, so there is a single source of truth for colour rather than two
+// themes drifting apart. Edit a colour here and it changes everywhere.
+//
+// The type scale and radii below are still specific to the auth flow, whose
+// screens were built directly against the handoff's specs. The rest of the
+// app has its own (coarser) scale in `theme/colors.js`; those two have not
+// been reconciled yet.
 //
 // Only the light theme is implemented for now — the handoff also defines a
 // "Night study mode" dark theme, but wiring an app-wide theme toggle is a
 // separate feature (Settings screen, persisted preference, everything else
-// in the app re-themed too) and out of scope for just these three screens.
+// in the app re-themed too).
 export const authColors = {
   bg: '#F7F5F0',
   surface: '#FFFFFF',
@@ -51,6 +52,21 @@ export const authSpacing = {
   screenBottom: 32,
   fieldGap: 12,
 };
+
+// The widest a screen's column of content is allowed to get. Phones are
+// narrower than both, so nothing changes there; on a tablet, or any screen in
+// landscape, the column stops growing and sits in the middle instead of
+// stretching text fields and cards from edge to edge.
+export const contentWidth = {
+  form: 480, // sign-in, sign-up, account and settings screens
+  content: 720, // home, lists, lessons, quizzes
+};
+
+// Spread into a screen's content style: `...centeredColumn(contentWidth.form)`.
+// Full width until the cap, then centered.
+export function centeredColumn(width) {
+  return { width: '100%', maxWidth: width, alignSelf: 'center' };
+}
 
 // Font family keys, once loaded via useFonts() in the auth navigator.
 export const authFonts = {

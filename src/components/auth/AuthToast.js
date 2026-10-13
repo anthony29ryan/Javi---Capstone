@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { authColors, authRadius } from '../../theme/authTheme';
 
@@ -13,6 +14,7 @@ const POP_MS = 200;
  */
 export default function AuthToast({ message, onHide }) {
   const progress = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     if (!message) return undefined;
@@ -42,6 +44,8 @@ export default function AuthToast({ message, onHide }) {
       style={[
         styles.toast,
         {
+          // Sits above the Android navigation bar, whose height varies by phone.
+          bottom: insets.bottom + 32,
           opacity: progress,
           transform: [{ scale: progress.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }],
         },
@@ -57,7 +61,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 24,
     right: 24,
-    bottom: 32,
     alignSelf: 'center',
     backgroundColor: authColors.toastBg,
     borderRadius: authRadius.toast,
