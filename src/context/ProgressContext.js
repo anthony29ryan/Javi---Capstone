@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 import { getAllLessonProgressRefs, getAllModules, getCourses } from '../services/content';
 import { getProgress, recordLessonOpened } from '../services/progress';
+import { liveStreak } from '../services/streak';
 
 const ProgressContext = createContext(undefined);
 
@@ -135,7 +136,7 @@ export function ProgressProvider({ children }) {
       totalLessons,
       completedCount,
       percent: toPercent(completedCount, totalLessons),
-      streak: progress?.streak ?? { current: 0, longest: 0 },
+      streak: progress?.streak ? liveStreak(progress.streak) : { current: 0, longest: 0 },
       moduleScores: progress?.moduleScores ?? {},
       moduleProgress,
       courseProgress,

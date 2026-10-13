@@ -1,6 +1,7 @@
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 import { auth, db } from './firebase';
+import { advanceStreak } from './streak';
 
 const EMPTY_PROGRESS = {
   completedLessons: [],
@@ -8,26 +9,6 @@ const EMPTY_PROGRESS = {
   streak: { current: 0, longest: 0, lastActiveDate: null },
   lastLessonId: null,
 };
-
-function todayString() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function yesterdayString() {
-  return new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-}
-
-function advanceStreak(streak) {
-  const today = todayString();
-  if (streak.lastActiveDate === today) return streak;
-
-  const current = streak.lastActiveDate === yesterdayString() ? streak.current + 1 : 1;
-  return {
-    current,
-    longest: Math.max(streak.longest || 0, current),
-    lastActiveDate: today,
-  };
-}
 
 async function readProgress(userId) {
   const snapshot = await getDoc(doc(db, 'progress', userId));
