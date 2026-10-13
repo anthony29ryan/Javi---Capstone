@@ -119,7 +119,7 @@ for (const m of modules) {
 const QUESTIONS_DIR = path.join(CONTENT_DIR, 'questions');
 const QUESTION_TYPES = new Set(['mcq', 'output', 'truefalse']);
 const MAX_CHOICES = 6; // QuizScreen letters them A-F
-const QUIZ_LENGTH = 20; // keep in step with functions/index.js
+const QUIZ_LENGTH = 20; // keep in step with src/screens/QuizScreen.js
 
 const lessonModule = new Map();
 for (const file of files) {

@@ -248,55 +248,31 @@ describe('progress', () => {
 });
 
 describe('attempts', () => {
-  // Exactly what src/services/quizzes.js recordAttempt() writes. This is the
-  // trained model's feature source, so its shape is enforced strictly.
+  // What functions/index.js gradeAnswer writes. Only it may: the app grading
+  // its own answers is exactly what attempts must be protected from.
   function validAttempt(overrides = {}) {
     return {
       userId: 'alice',
       questionId: 'q1',
-      topic: 'Objects',
+      topic: 'm1',
       correct: true,
       timeTakenMs: 5400,
       attemptNumber: 1,
-      createdAt: serverTimestamp(),
+      createdAt: Timestamp.now(),
       ...overrides,
     };
   }
 
-  test('recording an attempt and counting earlier ones works', async () => {
-    const db = dbAs('alice');
-    await assertSucceeds(addDoc(collection(db, 'attempts'), validAttempt()));
-    await assertSucceeds(
-      getDocs(
-        query(collection(db, 'attempts'), where('userId', '==', 'alice'), where('questionId', '==', 'q1'))
-      )
-    );
-  });
-
-  test('an attempt cannot be recorded for someone else', async () => {
-    await assertFails(addDoc(collection(dbAs('alice'), 'attempts'), validAttempt({ userId: 'bob' })));
-  });
-
-  test('malformed attempts are rejected', async () => {
+  test('the app cannot record attempts, even its own well-formed ones', async () => {
     const attempts = collection(dbAs('alice'), 'attempts');
-    const { topic, ...missingTopic } = validAttempt();
-    await assertFails(addDoc(attempts, missingTopic));
-    await assertFails(addDoc(attempts, validAttempt({ extra: 'field' })));
-    await assertFails(addDoc(attempts, validAttempt({ correct: 'yes' })));
-    await assertFails(addDoc(attempts, validAttempt({ timeTakenMs: -1 })));
-    await assertFails(addDoc(attempts, validAttempt({ attemptNumber: 0 })));
-    await assertFails(
-      addDoc(attempts, validAttempt({ createdAt: Timestamp.fromDate(new Date('2020-01-01')) }))
-    );
+    await assertFails(addDoc(attempts, { ...validAttempt(), createdAt: serverTimestamp() }));
+    await assertFails(addDoc(attempts, validAttempt({ userId: 'bob' })));
   });
 
   test('attempt history can be read by its owner only, and never edited or deleted', async () => {
     await seed(async (admin) => {
-      await setDoc(doc(admin, 'attempts/a1'), { ...validAttempt(), createdAt: Timestamp.now() });
-      await setDoc(doc(admin, 'attempts/b1'), {
-        ...validAttempt({ userId: 'bob' }),
-        createdAt: Timestamp.now(),
-      });
+      await setDoc(doc(admin, 'attempts/a1'), validAttempt());
+      await setDoc(doc(admin, 'attempts/b1'), validAttempt({ userId: 'bob' }));
     });
     const db = dbAs('alice');
     await assertSucceeds(getDoc(doc(db, 'attempts/a1')));
@@ -311,5 +287,11 @@ describe('everything else', () => {
   test('collections without rules are closed', async () => {
     await assertFails(setDoc(doc(dbAs('alice'), 'admins/alice'), { role: 'admin' }));
     await assertFails(getDoc(doc(dbAs('alice'), 'secrets/anything')));
+  });
+
+  test('quiz answer keys cannot be read, so answers never reach the app', async () => {
+    await seed((db) => setDoc(doc(db, 'answerKeys/q1'), { moduleId: 'm1', answer: 2 }));
+    await assertFails(getDoc(doc(dbAs('alice'), 'answerKeys/q1')));
+    await assertFails(getDocs(collection(dbAs('alice'), 'answerKeys')));
   });
 });

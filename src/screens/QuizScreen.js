@@ -2,13 +2,17 @@ import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import Button from '../components/Button';
+import Blocks from '../components/LessonBlocks';
 import ScreenState from '../components/ScreenState';
 import { useProgress } from '../context/ProgressContext';
-import { getModuleQuestions, recordAttempt } from '../services/quizzes';
+import { getModuleQuestions, gradeAnswer } from '../services/quizzes';
 import { recordModuleQuizCompletion } from '../services/progress';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 const CHOICE_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+// Questions asked per attempt, drawn at random from the module's pool (about
+// 25) so retakes differ. scripts/verifyContent.js warns below this many.
+const QUIZ_LENGTH = 20;
 
 function Choice({ label, letter, state, onPress, disabled }) {
   return (
@@ -19,7 +23,8 @@ function Choice({ label, letter, state, onPress, disabled }) {
         styles.choice,
         state === 'correct' && styles.choiceCorrect,
         state === 'wrong' && styles.choiceWrong,
-        pressed && !disabled && styles.choicePressed,
+        // Chosen and waiting for the server's verdict.
+        (state === 'pending' || (pressed && !disabled)) && styles.choicePressed,
       ]}
     >
       <View
@@ -45,7 +50,7 @@ function Choice({ label, letter, state, onPress, disabled }) {
 
 export default function QuizScreen({ route, navigation }) {
   const { moduleId, title } = route.params;
-  const { lessons, refresh: refreshProgress } = useProgress();
+  const { lessons, reloadProgress } = useProgress();
 
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +58,9 @@ export default function QuizScreen({ route, navigation }) {
 
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState(null);
-  const [answered, setAnswered] = useState(false);
+  // The server's verdict on the selected choice: { correct, answer }.
+  const [result, setResult] = useState(null);
+  const [gradeError, setGradeError] = useState('');
   const [score, setScore] = useState(0);
   const [questionStart, setQuestionStart] = useState(Date.now());
   const [finished, setFinished] = useState(false);
@@ -71,7 +78,13 @@ export default function QuizScreen({ route, navigation }) {
 
     getModuleQuestions(moduleId)
       .then((qs) => {
-        const ordered = [...qs].sort((a, b) => {
+        const picked = qs
+          .map((question) => ({ question, key: Math.random() }))
+          .sort((a, b) => a.key - b.key)
+          .slice(0, QUIZ_LENGTH)
+          .map(({ question }) => question);
+
+        const ordered = picked.sort((a, b) => {
           const lessonDelta =
             (a.lessonId ? (lessonOrder.get(a.lessonId) ?? 0) : Number.MAX_SAFE_INTEGER) -
             (b.lessonId ? (lessonOrder.get(b.lessonId) ?? 0) : Number.MAX_SAFE_INTEGER);
@@ -113,25 +126,27 @@ export default function QuizScreen({ route, navigation }) {
 
   const question = questions[index];
   const isLast = index === questions.length - 1;
+  const answered = result !== null;
   const progress = ((index + (answered ? 1 : 0)) / questions.length) * 100;
 
   async function handleSelect(choiceIndex) {
-    if (answered) return;
+    if (selected !== null) return;
     setSelected(choiceIndex);
-    setAnswered(true);
-
-    const correct = choiceIndex === question.correctIndex;
-    if (correct) setScore((s) => s + 1);
+    setGradeError('');
 
     try {
-      await recordAttempt({
+      const graded = await gradeAnswer({
         questionId: question.id,
-        topic: title,
-        correct,
+        choice: choiceIndex,
         timeTakenMs: Date.now() - questionStart,
       });
-    } catch (err) {
-      setError(err.message);
+      if (graded.correct) setScore((s) => s + 1);
+      setResult(graded);
+    } catch {
+      // No verdict came back, so free the choices and let them try again
+      // rather than ending the whole quiz over one dropped request.
+      setSelected(null);
+      setGradeError('Could not check that answer. Check your connection and try again.');
     }
   }
 
@@ -141,7 +156,7 @@ export default function QuizScreen({ route, navigation }) {
         await recordModuleQuizCompletion(moduleId, score, questions.length);
         // Completion just changed the numbers behind every progress ring, so
         // reload them before the user navigates back to a screen showing one.
-        await refreshProgress();
+        await reloadProgress();
       } catch (err) {
         setError(err.message);
       }
@@ -150,7 +165,7 @@ export default function QuizScreen({ route, navigation }) {
     }
     setIndex((i) => i + 1);
     setSelected(null);
-    setAnswered(false);
+    setResult(null);
     setQuestionStart(Date.now());
   }
 
@@ -168,14 +183,22 @@ export default function QuizScreen({ route, navigation }) {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.prompt}>{question.prompt}</Text>
 
+        {/* "What does this print?" questions carry the code to read in `code`;
+            reuse the lesson code block so it looks the same as in a lesson. */}
+        {question.code ? (
+          <View style={styles.codeWrap}>
+            <Blocks blocks={[{ type: 'code', language: 'java', value: question.code }]} />
+          </View>
+        ) : null}
+
         <View style={styles.choices}>
           {question.choices.map((choice, choiceIndex) => {
             const isSelected = selected === choiceIndex;
-            const isCorrectChoice = choiceIndex === question.correctIndex;
 
             let state = 'default';
-            if (answered && isCorrectChoice) state = 'correct';
+            if (answered && choiceIndex === result.answer) state = 'correct';
             else if (answered && isSelected) state = 'wrong';
+            else if (isSelected) state = 'pending';
 
             return (
               <Choice
@@ -183,12 +206,14 @@ export default function QuizScreen({ route, navigation }) {
                 letter={CHOICE_LETTERS[choiceIndex] ?? String(choiceIndex + 1)}
                 label={choice}
                 state={state}
-                disabled={answered}
+                disabled={selected !== null}
                 onPress={() => handleSelect(choiceIndex)}
               />
             );
           })}
         </View>
+
+        {gradeError ? <Text style={styles.gradeError}>{gradeError}</Text> : null}
       </ScrollView>
 
       {answered ? (
@@ -246,6 +271,9 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: spacing.xl,
   },
+  codeWrap: {
+    marginBottom: spacing.xl,
+  },
   choices: {
     gap: spacing.md,
   },
@@ -298,6 +326,11 @@ const styles = StyleSheet.create({
   },
   letterTextRevealed: {
     color: colors.white,
+  },
+  gradeError: {
+    ...type.small,
+    color: colors.error,
+    marginTop: spacing.lg,
   },
   footer: {
     padding: spacing.lg,

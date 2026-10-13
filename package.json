@@ -35,7 +35,7 @@
     "content:verify": "node scripts/verifyContent.js",
     "content:import": "node scripts/importLessons.js",
     "content:publish": "npm run content:verify && node --env-file=.env scripts/publishContent.js",
-    "test:rules": "firebase emulators:exec --only firestore,storage \"node --test tests/rules/*.test.js\"",
+    "test:rules": "firebase emulators:exec --only firestore,storage \"node --test tests/rules/*.test.js functions/*.test.js\"",
     "rules:deploy": "firebase deploy --only firestore:rules,storage",
     "accounts:purge": "node --env-file=.env scripts/purgeDeletedAccounts.js"
   },

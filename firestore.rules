@@ -115,26 +115,12 @@ service cloud.firestore {
     }
 
     // --------------------------------------------------------------- attempts
-    // One document per quiz answer, written by services/quizzes.js. This is
-    // the trained model's feature source, so the shape is enforced exactly:
-    // every field present, nothing extra, and never edited afterwards.
-
-    function validAttempt() {
-      let data = request.resource.data;
-      let fields = ['userId', 'questionId', 'topic', 'correct', 'timeTakenMs', 'attemptNumber', 'createdAt'];
-      return data.keys().hasOnly(fields)
-        && data.keys().hasAll(fields)
-        && data.userId == request.auth.uid
-        && data.questionId is string
-        && data.topic is string
-        && data.correct is bool
-        && data.timeTakenMs is number && data.timeTakenMs >= 0
-        && data.attemptNumber is int && data.attemptNumber >= 1
-        && data.createdAt == request.time;
-    }
+    // One document per quiz answer. Only the gradeAnswer Cloud Function writes
+    // them (admin access): it alone can see the answer key, so `correct` is
+    // its verdict. This is the trained model's feature source, so the app
+    // cannot create, edit or delete one — only read its own.
 
     match /attempts/{attemptId} {
-      allow create: if signedIn() && validAttempt();
       allow read: if signedIn() && resource.data.userId == request.auth.uid;
     }
 

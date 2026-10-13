@@ -1,6 +1,7 @@
-import { addDoc, collection, getDocs, query, serverTimestamp, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
 
-import { auth, db } from './firebase';
+import { db, functions } from './firebase';
 
 /**
  * Every question belonging to a module, including the ones attached to its
@@ -22,26 +23,16 @@ export async function getModuleQuestions(moduleId) {
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-async function getAttemptNumber(questionId) {
-  const snapshot = await getDocs(
-    query(
-      collection(db, 'attempts'),
-      where('userId', '==', auth.currentUser.uid),
-      where('questionId', '==', questionId)
-    )
-  );
-  return snapshot.size + 1;
-}
+const gradeAnswerFunction = httpsCallable(functions, 'gradeAnswer');
 
-export async function recordAttempt({ questionId, topic, correct, timeTakenMs }) {
-  const attemptNumber = await getAttemptNumber(questionId);
-  await addDoc(collection(db, 'attempts'), {
-    userId: auth.currentUser.uid,
-    questionId,
-    topic,
-    correct,
-    timeTakenMs,
-    attemptNumber,
-    createdAt: serverTimestamp(),
-  });
+/**
+ * Grades one answer on the server, which also records the attempt.
+ *
+ * The app cannot grade by itself: the correct answers live in `answerKeys`,
+ * which it is not allowed to read. Resolves to { correct, answer }, where
+ * `answer` is the index of the correct choice.
+ */
+export async function gradeAnswer({ questionId, choice, timeTakenMs }) {
+  const { data } = await gradeAnswerFunction({ questionId, choice, timeTakenMs });
+  return data;
 }
