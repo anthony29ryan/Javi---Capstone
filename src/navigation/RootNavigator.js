@@ -17,6 +17,7 @@ import {
   JetBrainsMono_500Medium,
 } from '../theme/authTheme';
 import MainTabs from './MainTabs';
+import { syncDailyReminder } from '../services/notifications';
 import { getPreferences } from '../services/preferences';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import DeleteAccountScreen from '../screens/DeleteAccountScreen';
@@ -138,6 +139,9 @@ export default function RootNavigator() {
     getPreferences()
       .then((preferences) => {
         if (!cancelled) setNeedsSetup(!preferences.setupComplete);
+        // Logging out clears the phone's reminder, so put the account's back.
+        // Not before setup, which is where the permission prompt belongs.
+        if (preferences.setupComplete) syncDailyReminder(preferences).catch(() => {});
       })
       .catch(() => {
         // If preferences cannot be read, send them to the app rather than

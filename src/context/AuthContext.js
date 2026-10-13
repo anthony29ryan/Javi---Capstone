@@ -15,6 +15,7 @@ import { deleteField, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'fi
 
 import { permanentDeletionDate } from '../constants/accountDeletion';
 import { auth, db } from '../services/firebase';
+import { cancelDailyReminder } from '../services/notifications';
 
 const AuthContext = createContext(undefined);
 
@@ -42,6 +43,7 @@ export function AuthProvider({ children }) {
         // on another one. Only typing the password restores an account, so
         // end the session rather than quietly cancelling the deletion. The
         // sign-out calls this listener again with no user.
+        await cancelDailyReminder();
         await signOut(auth);
         return;
       }
@@ -140,8 +142,11 @@ export function AuthProvider({ children }) {
     }
   }
 
-  function logOut() {
-    return signOut(auth);
+  // The reminder is scheduled on the phone, not the account, so it has to be
+  // cleared here or it keeps firing for whoever is (or is not) signed in next.
+  async function logOut() {
+    await cancelDailyReminder();
+    await signOut(auth);
   }
 
   /**
@@ -177,6 +182,7 @@ export function AuthProvider({ children }) {
       { merge: true }
     );
     setScheduledDeletion(permanentDeletionDate(new Date()));
+    await cancelDailyReminder();
     await signOut(auth);
   }
 
