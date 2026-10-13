@@ -79,10 +79,11 @@ export default function ProgressScreen() {
     courseProgress,
     loading,
     error,
+    refresh,
   } = useProgress();
 
   if (loading) return <ScreenState loading />;
-  if (error) return <ScreenState error={error} />;
+  if (error) return <ScreenState error={error} onRetry={refresh} />;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>

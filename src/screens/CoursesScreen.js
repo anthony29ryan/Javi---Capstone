@@ -38,12 +38,12 @@ function LevelCard({ course, index, moduleCount, stats, onPress }) {
 }
 
 export default function CoursesScreen({ navigation }) {
-  const { courses, modules, courseProgress, loading, error } = useProgress();
+  const { courses, modules, courseProgress, loading, error, refresh } = useProgress();
   // This is a tab screen with no nav header, so it owns its top inset.
   const insets = useSafeAreaInsets();
 
   if (loading) return <ScreenState loading />;
-  if (error) return <ScreenState error={error} />;
+  if (error) return <ScreenState error={error} onRetry={refresh} />;
   if (courses.length === 0) {
     return <ScreenState message="No courses yet." hint="Content has not been published." />;
   }

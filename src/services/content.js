@@ -11,22 +11,6 @@ export async function getCourses() {
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byOrder);
 }
 
-export async function getModules(courseId) {
-  const snapshot = await getDocs(collection(db, 'modules'));
-  return snapshot.docs
-    .map((d) => ({ id: d.id, ...d.data() }))
-    .filter((module) => module.courseId === courseId)
-    .sort(byOrder);
-}
-
-export async function getLessons(moduleId) {
-  const snapshot = await getDocs(collection(db, 'lessons'));
-  return snapshot.docs
-    .map((d) => ({ id: d.id, ...d.data() }))
-    .filter((lesson) => lesson.moduleId === moduleId)
-    .sort(byOrder);
-}
-
 export async function getLesson(lessonId) {
   const snapshot = await getDoc(doc(db, 'lessons', lessonId));
   return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;

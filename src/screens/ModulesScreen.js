@@ -13,7 +13,7 @@ import {
 
 import ScreenState from '../components/ScreenState';
 import { levelLabel } from '../constants/levels';
-import { useProgress } from '../context/ProgressContext';
+import { scorePercent, useProgress } from '../context/ProgressContext';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 // Old-architecture Android needs this switched on before LayoutAnimation does
@@ -25,7 +25,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 function scoreNote(score) {
   if (!score || !score.total) return 'Not taken';
-  return `Best ${Math.round((score.correct / score.total) * 100)}%`;
+  return `Last ${scorePercent(score)}%`;
 }
 
 function LessonRow({ lesson, done, onPress }) {
@@ -70,6 +70,7 @@ export default function ModulesScreen({ route, navigation }) {
     isLessonComplete,
     loading,
     error,
+    refresh,
   } = useProgress();
 
   // null until the first render with data, then the id of whichever module the
@@ -80,7 +81,7 @@ export default function ModulesScreen({ route, navigation }) {
   const [touched, setTouched] = useState(false);
 
   if (loading) return <ScreenState loading />;
-  if (error) return <ScreenState error={error} />;
+  if (error) return <ScreenState error={error} onRetry={refresh} />;
 
   const courseIndex = courses.findIndex((item) => item.id === courseId);
   const course = courses[courseIndex];

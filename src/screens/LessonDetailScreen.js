@@ -24,7 +24,7 @@ export default function LessonDetailScreen({ route, navigation }) {
     moduleProgress,
     isLessonComplete,
     markLessonOpened,
-    refresh,
+    reloadProgress,
   } = useProgress();
 
   const [lesson, setLesson] = useState(null);
@@ -71,7 +71,7 @@ export default function LessonDetailScreen({ route, navigation }) {
     setSaving(true);
     try {
       await setLessonComplete(lesson.id, !done);
-      await refresh();
+      await reloadProgress();
     } catch (err) {
       setError(err.message);
     } finally {

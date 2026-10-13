@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -7,29 +7,20 @@ import ListCard from '../components/ListCard';
 import ProgressRing from '../components/ProgressRing';
 import ScreenState from '../components/ScreenState';
 import { useProgress } from '../context/ProgressContext';
-import { getLessons } from '../services/content';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 export default function LessonsScreen({ route, navigation }) {
   const { moduleId, moduleTitle } = route.params;
-  const [lessons, setLessons] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const { isLessonComplete, moduleProgress, loading: progressLoading } = useProgress();
+  const { lessons: allLessons, isLessonComplete, moduleProgress, loading, error, refresh } = useProgress();
+  // Already in order: the context sorts every lesson by its `order`.
+  const lessons = allLessons.filter((lesson) => lesson.moduleId === moduleId);
 
   useEffect(() => {
     navigation.setOptions({ title: moduleTitle });
   }, [moduleTitle]);
 
-  useEffect(() => {
-    getLessons(moduleId)
-      .then(setLessons)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [moduleId]);
-
-  if (loading || progressLoading) return <ScreenState loading />;
-  if (error) return <ScreenState error={error} />;
+  if (loading) return <ScreenState loading />;
+  if (error) return <ScreenState error={error} onRetry={refresh} />;
   if (lessons.length === 0) {
     return <ScreenState message="No lessons yet." hint="This module has no published lessons." />;
   }
@@ -52,7 +43,7 @@ export default function LessonsScreen({ route, navigation }) {
               {stats.completed} of {stats.total} lessons done
             </Text>
             <Text style={styles.headerHint}>
-              A lesson counts as done once you finish its quiz.
+              Mark each lesson complete when you finish reading it.
             </Text>
           </View>
         </View>

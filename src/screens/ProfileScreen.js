@@ -4,14 +4,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Avatar from '../components/Avatar';
 import ScreenState from '../components/ScreenState';
 import { useAuth } from '../context/AuthContext';
-import { useProgress } from '../context/ProgressContext';
+import { scorePercent, useProgress } from '../context/ProgressContext';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 const WEAK_SCORE = 80;
-
-function toPercent(score) {
-  return score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0;
-}
 
 function masteryLabel(percent) {
   if (percent >= 60) return 'Advanced';
@@ -27,7 +23,7 @@ function masteryLabel(percent) {
  */
 function earnedBadges({ completedCount, percent, streak, moduleScores }) {
   const scores = Object.values(moduleScores);
-  const best = scores.length > 0 ? Math.max(...scores.map(toPercent)) : 0;
+  const best = scores.length > 0 ? Math.max(...scores.map(scorePercent)) : 0;
 
   return [
     { key: 'first', title: 'First steps', sub: 'One lesson done', earned: completedCount >= 1 },
@@ -54,10 +50,11 @@ export default function ProfileScreen({ navigation }) {
     streak,
     loading,
     error,
+    refresh,
   } = useProgress();
 
   if (loading) return <ScreenState loading />;
-  if (error) return <ScreenState error={error} />;
+  if (error) return <ScreenState error={error} onRetry={refresh} />;
 
   const name = user?.displayName || user?.email?.split('@')[0] || 'there';
 
@@ -68,7 +65,7 @@ export default function ProfileScreen({ navigation }) {
     .map(([moduleId, score]) => ({
       id: moduleId,
       name: moduleTitles[moduleId] ?? 'Module',
-      score: toPercent(score),
+      score: scorePercent(score),
     }))
     .filter((item) => item.score < WEAK_SCORE)
     .sort((a, b) => a.score - b.score)

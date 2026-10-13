@@ -68,10 +68,11 @@ export default function HomeScreen({ navigation }) {
     lastLessonId,
     loading,
     error,
+    refresh,
   } = useProgress();
 
   if (loading) return <ScreenState loading />;
-  if (error) return <ScreenState error={error} />;
+  if (error) return <ScreenState error={error} onRetry={refresh} />;
 
   const name = user?.displayName || user?.email?.split('@')[0] || 'there';
 

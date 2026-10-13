@@ -13,6 +13,11 @@ function toPercent(completed, total) {
   return total > 0 ? Math.round((completed / total) * 100) : 0;
 }
 
+/** A saved quiz score ({ correct, total }) as a whole percentage. */
+export function scorePercent(score) {
+  return toPercent(score.correct, score.total);
+}
+
 /**
  * Holds the learner's progress plus the module and lesson lists needed to break
  * it down per course and per module.
@@ -32,6 +37,8 @@ export function ProgressProvider({ children }) {
   const [error, setError] = useState('');
 
   const refresh = useCallback(async () => {
+    // Screens show the spinner, not the old error, while a retry is in flight.
+    setLoading(true);
     try {
       const [progressData, courseData, moduleData, lessonData] = await Promise.all([
         getProgress(),
@@ -55,6 +62,12 @@ export function ProgressProvider({ children }) {
     refresh();
   }, [refresh]);
 
+  // For after a write that only touched the progress document: one read,
+  // where refresh() would re-read every course, module and lesson too.
+  const reloadProgress = useCallback(async () => {
+    setProgress(await getProgress());
+  }, []);
+
   /**
    * Records the lesson being opened and moves the local pointer straight away.
    *
@@ -74,8 +87,7 @@ export function ProgressProvider({ children }) {
   }, []);
 
   const value = useMemo(() => {
-    const completedList = progress?.completedLessons ?? [];
-    const completedSet = new Set(completedList);
+    const completedSet = new Set(progress?.completedLessons ?? []);
 
     const lessonsByModule = {};
     for (const lesson of lessonRefs) {
@@ -105,12 +117,15 @@ export function ProgressProvider({ children }) {
     }
 
     const totalLessons = lessonRefs.length;
-    const completedCount = completedList.length;
+    // Counted against the lessons that exist now: completedLessons keeps the
+    // ids of lessons a content publish has since renamed or removed.
+    const completedCount = lessonRefs.filter((lesson) => completedSet.has(lesson.id)).length;
 
     return {
       loading,
       error,
       refresh,
+      reloadProgress,
       markLessonOpened,
       lastLessonId: progress?.lastLessonId ?? null,
       progress,
@@ -126,7 +141,7 @@ export function ProgressProvider({ children }) {
       courseProgress,
       isLessonComplete: (lessonId) => completedSet.has(lessonId),
     };
-  }, [progress, courses, modules, lessonRefs, loading, error, refresh, markLessonOpened]);
+  }, [progress, courses, modules, lessonRefs, loading, error, refresh, reloadProgress, markLessonOpened]);
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
 }

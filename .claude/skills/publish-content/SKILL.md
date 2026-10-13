@@ -136,8 +136,8 @@ Then verify and publish as above.
 
 ## Known rough edge
 
-`src/services/content.js` `getLessons(moduleId)` fetches the **entire** `lessons`
-collection and filters client-side, so opening one module costs one read per lesson
-in the whole course. `getModules` and `getAllLessonProgressRefs` do the same. A
-`where('moduleId', '==', moduleId)` query fixes it. Not urgent, but it gets worse
-as content grows — raise it if the user is looking at Firestore costs or load times.
+`src/services/content.js` `getAllLessonProgressRefs()` fetches the **entire** `lessons`
+collection, bodies included, once per app session (in `ProgressContext`) and again on
+each `refresh()`. Screens reuse that list rather than fetching their own, so the cost
+is one read per lesson per session. It grows with content — raise it if the user is
+looking at Firestore costs or load times.

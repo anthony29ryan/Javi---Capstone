@@ -2,14 +2,10 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ScreenState from '../components/ScreenState';
-import { useProgress } from '../context/ProgressContext';
+import { scorePercent, useProgress } from '../context/ProgressContext';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 const STRONG_SCORE = 80;
-
-function toPercent(score) {
-  return score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0;
-}
 
 function StatCard({ label, value }) {
   return (
@@ -21,7 +17,7 @@ function StatCard({ label, value }) {
 }
 
 function QuizRow({ module, courseTitle, score, onPress }) {
-  const percent = score ? toPercent(score) : null;
+  const percent = score ? scorePercent(score) : null;
   const strong = percent !== null && percent >= STRONG_SCORE;
 
   return (
@@ -44,7 +40,7 @@ function QuizRow({ module, courseTitle, score, onPress }) {
           {percent === null ? '—' : `${percent}%`}
         </Text>
         <Text style={[styles.badgeLabel, strong && styles.badgeValueStrong]}>
-          {percent === null ? 'New' : 'Best'}
+          {percent === null ? 'New' : 'Last'}
         </Text>
       </View>
     </Pressable>
@@ -52,12 +48,12 @@ function QuizRow({ module, courseTitle, score, onPress }) {
 }
 
 export default function PracticeScreen({ navigation }) {
-  const { modules, courses, moduleScores, loading, error } = useProgress();
+  const { modules, courses, moduleScores, loading, error, refresh } = useProgress();
   // Tab screen with no nav header, so it owns its top inset.
   const insets = useSafeAreaInsets();
 
   if (loading) return <ScreenState loading />;
-  if (error) return <ScreenState error={error} />;
+  if (error) return <ScreenState error={error} onRetry={refresh} />;
   if (modules.length === 0) {
     return <ScreenState message="No quizzes yet." hint="Content has not been published." />;
   }
@@ -69,7 +65,7 @@ export default function PracticeScreen({ navigation }) {
   const attempted = Object.values(moduleScores);
   const average =
     attempted.length > 0
-      ? Math.round(attempted.reduce((sum, score) => sum + toPercent(score), 0) / attempted.length)
+      ? Math.round(attempted.reduce((sum, score) => sum + scorePercent(score), 0) / attempted.length)
       : null;
 
   return (

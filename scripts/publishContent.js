@@ -67,7 +67,7 @@ async function main() {
   }
 
   // set() only ever adds or overwrites, so a lesson that was renamed or removed
-  // locally would linger in Firestore and still show up in getLessons(). Delete
+  // locally would linger in Firestore and still show up in the app. Delete
   // anything that is no longer in content/lessons so the two stay in step.
   let removed = 0;
   if (lessonFiles.length > 0) {
