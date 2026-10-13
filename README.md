@@ -11,7 +11,7 @@ Solo capstone project, built incrementally over one semester.
 - **Client:** Expo (React Native), JavaScript
 - **Backend:** Firebase (Auth, Firestore, Cloud Functions)
 - **Navigation:** React Navigation
-- **AI tutor:** Claude or OpenAI API, called from a Cloud Function (never from the client)
+- **AI tutor:** Gemini 3.5 Flash Lite (Google AI Studio free-tier key), called from a Cloud Function (never from the client)
 - **Code execution:** Piston or Judge0 API, called from a Cloud Function
 - **Trained model:** TensorFlow.js (tfjs-node), run inside a Cloud Function
 

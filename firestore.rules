@@ -124,6 +124,19 @@ service cloud.firestore {
       allow read: if signedIn() && resource.data.userId == request.auth.uid;
     }
 
+    // ------------------------------------------------------------------ chats
+    // One tutor thread per user per module, written only by the askTutor Cloud
+    // Function (admin access). The app can read its own and nothing else.
+    // tutorUsage, which counts each user's daily questions, has no rule at all
+    // and so stays closed to the app.
+
+    // `resource == null` lets the app read its own thread before the first
+    // question creates it; otherwise that read would be refused. It only
+    // reveals that a thread does not exist, never anyone's messages.
+    match /chats/{chatId} {
+      allow read: if signedIn() && (resource == null || resource.data.userId == request.auth.uid);
+    }
+
     // Everything else is denied by default.
   }
 }

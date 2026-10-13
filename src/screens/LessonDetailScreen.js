@@ -4,15 +4,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import LessonBlocks from '../components/LessonBlocks';
 import ScreenState from '../components/ScreenState';
+import TutorChat from '../components/TutorChat';
 import { levelLabel } from '../constants/levels';
 import { useProgress } from '../context/ProgressContext';
 import { getLesson } from '../services/content';
 import { setLessonComplete } from '../services/progress';
-import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
-
-// Prompts the tutor would open with. Static because the tutor itself is not
-// wired up — they show the intended shape without pretending to work.
-const ASK_CHIPS = ['Explain this', 'Give me an example', 'Give me a hint'];
+import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 export default function LessonDetailScreen({ route, navigation }) {
   const { lessonId } = route.params;
@@ -87,6 +84,8 @@ export default function LessonDetailScreen({ route, navigation }) {
     <View style={styles.screen}>
       <ScrollView
         style={styles.container}
+        // So tapping Send or a suggestion works while the keyboard is open.
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={[
           styles.content,
           { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xxl },
@@ -116,38 +115,7 @@ export default function LessonDetailScreen({ route, navigation }) {
           />
         </View>
 
-        <View style={styles.tutorCard}>
-        <View style={styles.tutorHead}>
-          <View style={styles.tutorAvatar} />
-          <View style={styles.tutorHeadText}>
-            <Text style={styles.tutorTitle}>Ask about this lesson</Text>
-            <Text style={styles.tutorSubtitle} numberOfLines={2}>
-              The tutor only answers on {lesson.title}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.chips}>
-          {ASK_CHIPS.map((label) => (
-            <View key={label} style={styles.chip}>
-              <Text style={styles.chipLabel}>{label}</Text>
-            </View>
-          ))}
-        </View>
-
-        {/* Inert on purpose: the tutor needs a Cloud Function holding the AI
-            key, which this build does not have. Showing a live-looking box
-            that silently swallowed questions would be worse than saying so. */}
-        <View style={styles.composer}>
-          <View style={styles.input}>
-            <Text style={styles.inputPlaceholder}>Type your question…</Text>
-          </View>
-          <View style={styles.send}>
-            <Text style={styles.sendGlyph}>↑</Text>
-            </View>
-          </View>
-          <Text style={styles.tutorNote}>The tutor is not set up in this build yet.</Text>
-        </View>
+        <TutorChat moduleId={lesson.moduleId} lessonTitle={lesson.title} />
 
         <Pressable
           onPress={toggleComplete}
@@ -280,105 +248,6 @@ const styles = StyleSheet.create({
   },
   body: {
     marginTop: 18,
-  },
-  tutorCard: {
-    marginTop: 22,
-    padding: spacing.lg,
-    borderRadius: 20,
-    backgroundColor: colors.primarySoft,
-    borderWidth: 1,
-    borderColor: colors.primary,
-  },
-  tutorHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  tutorAvatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: colors.primary,
-  },
-  tutorHeadText: {
-    flex: 1,
-    minWidth: 0,
-  },
-  tutorTitle: {
-    fontFamily: fonts.bold,
-    fontSize: 13.5,
-    lineHeight: 13.5 * 1.2,
-    color: colors.primaryDark,
-  },
-  tutorSubtitle: {
-    fontFamily: fonts.medium,
-    fontSize: 11,
-    lineHeight: 11 * 1.3,
-    color: colors.primaryDark,
-    marginTop: 3,
-  },
-  chips: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-    marginTop: 14,
-    marginBottom: 10,
-    opacity: 0.55,
-  },
-  chip: {
-    paddingVertical: 9,
-    paddingHorizontal: 13,
-    borderRadius: radius.lg,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.primary,
-  },
-  chipLabel: {
-    fontFamily: fonts.semiBold,
-    fontSize: 11.5,
-    color: colors.primaryDark,
-  },
-  composer: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    opacity: 0.55,
-  },
-  input: {
-    flex: 1,
-    height: 48,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    backgroundColor: colors.surface,
-    paddingHorizontal: spacing.lg,
-    justifyContent: 'center',
-  },
-  inputPlaceholder: {
-    fontFamily: fonts.medium,
-    fontSize: 13.5,
-    color: colors.borderStrong,
-  },
-  send: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sendGlyph: {
-    fontFamily: fonts.mono,
-    fontSize: 16,
-    color: colors.white,
-  },
-  tutorNote: {
-    fontFamily: fonts.medium,
-    fontSize: 11,
-    color: colors.primaryDark,
-    marginTop: 10,
   },
   complete: {
     marginTop: 22,

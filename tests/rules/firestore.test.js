@@ -283,6 +283,40 @@ describe('attempts', () => {
   });
 });
 
+describe('chats', () => {
+  const thread = (userId) => ({ userId, moduleId: 'm1', messages: [{ role: 'learner', text: 'hi', at: 1 }] });
+
+  test('a user can read their own tutor thread but nobody else’s', async () => {
+    await seed(async (admin) => {
+      await setDoc(doc(admin, 'chats/alice_m1'), thread('alice'));
+      await setDoc(doc(admin, 'chats/bob_m1'), thread('bob'));
+    });
+    const db = dbAs('alice');
+    await assertSucceeds(getDoc(doc(db, 'chats/alice_m1')));
+    await assertFails(getDoc(doc(db, 'chats/bob_m1')));
+    await assertFails(getDocs(collection(db, 'chats')));
+    await assertFails(getDoc(doc(dbAs(null), 'chats/alice_m1')));
+  });
+
+  test('a user can read their thread before it exists, which the tutor box does on first open', async () => {
+    await assertSucceeds(getDoc(doc(dbAs('alice'), 'chats/alice_m1')));
+  });
+
+  test('the app cannot write a thread, so the tutor’s replies cannot be forged', async () => {
+    await seed((admin) => setDoc(doc(admin, 'chats/alice_m1'), thread('alice')));
+    const db = dbAs('alice');
+    await assertFails(setDoc(doc(db, 'chats/alice_m2'), thread('alice')));
+    await assertFails(updateDoc(doc(db, 'chats/alice_m1'), { messages: [] }));
+    await assertFails(deleteDoc(doc(db, 'chats/alice_m1')));
+  });
+
+  test('the daily question counter is closed to the app', async () => {
+    await seed((admin) => setDoc(doc(admin, 'tutorUsage/alice'), { askedAt: [1] }));
+    await assertFails(getDoc(doc(dbAs('alice'), 'tutorUsage/alice')));
+    await assertFails(setDoc(doc(dbAs('alice'), 'tutorUsage/alice'), { askedAt: [] }));
+  });
+});
+
 describe('everything else', () => {
   test('collections without rules are closed', async () => {
     await assertFails(setDoc(doc(dbAs('alice'), 'admins/alice'), { role: 'admin' }));

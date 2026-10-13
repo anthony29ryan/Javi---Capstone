@@ -51,10 +51,15 @@ async function purgeAccount({ db, auth }, userId) {
   const attempts = await db.collection('attempts').where('userId', '==', userId).get();
   await deleteInBatches(db, attempts.docs.map((attempt) => attempt.ref));
 
+  // Tutor conversations are personal, so they go with the account.
+  const chats = await db.collection('chats').where('userId', '==', userId).get();
+  await deleteInBatches(db, chats.docs.map((chat) => chat.ref));
+  await db.collection('tutorUsage').doc(userId).delete();
+
   await db.collection('progress').doc(userId).delete();
   await db.collection('users').doc(userId).delete();
 
-  return attempts.size;
+  return { attempts: attempts.size, chats: chats.size };
 }
 
 async function main() {
@@ -84,8 +89,8 @@ async function main() {
   let failed = 0;
   for (const profile of due.docs) {
     try {
-      const attemptCount = await purgeAccount(admin, profile.id);
-      console.log(`Deleted ${profile.id} (${attemptCount} quiz attempts).`);
+      const counts = await purgeAccount(admin, profile.id);
+      console.log(`Deleted ${profile.id} (${counts.attempts} quiz attempts, ${counts.chats} tutor chats).`);
     } catch (err) {
       // Carry on with the others. This one keeps its marker and is retried
       // on the next run.
