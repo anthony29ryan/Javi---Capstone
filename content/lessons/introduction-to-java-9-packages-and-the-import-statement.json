@@ -52,6 +52,10 @@
     {
       "type": "text",
       "value": "You will use `import java.util.Scanner;` constantly starting in Lesson 5."
+    },
+    {
+      "type": "text",
+      "value": "The package `java.lang` is imported automatically in every program. That is why you can use `System`, `String` and `Math` with no `import`, but need `import java.util.Scanner;` for `Scanner`."
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "id": "introduction-to-java-7-two-kinds-of-error",
   "moduleId": "introduction-to-java",
-  "title": "Two kinds of error",
+  "title": "Kinds of error",
   "order": 8,
   "blocks": [
     {
@@ -57,6 +57,28 @@
           "value": "the program will not build. **Logical error:** the program builds and lies to you."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "A third kind: runtime errors"
+    },
+    {
+      "type": "text",
+      "value": "A program can compile, start, and still crash. A **runtime error** happens while the program is running, when it is asked to do something impossible. Java stops and prints an **exception**:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int total = 10;\nint count = 0;\nSystem.out.println(total / count);"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Exception in thread \"main\" java.lang.ArithmeticException: / by zero\n\tat Divide.main(Divide.java:5)"
+    },
+    {
+      "type": "text",
+      "value": "The last line says which file and line to look at. You will learn to handle these errors in the Advanced tier."
     }
   ]
 }

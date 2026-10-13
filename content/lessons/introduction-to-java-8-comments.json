@@ -33,6 +33,19 @@
     {
       "type": "text",
       "value": "Write comments that explain **why**, not **what**. `i = i + 1; // add one to i` tells the reader nothing they could not see."
+    },
+    {
+      "type": "heading",
+      "value": "Documentation comments"
+    },
+    {
+      "type": "text",
+      "value": "A comment that starts with a slash and two asterisks and ends with `*/` is a **documentation comment**. Tools such as Javadoc read it to build documentation, so it is written just above a class or method and describes what it does:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "/**\n * Converts kilograms to grams.\n */\npublic class KiloToGram {"
     }
   ]
 }

@@ -67,6 +67,19 @@
     {
       "type": "text",
       "value": "Note what that means: the **last valid index is always `length() - 1`**, here `10`. Asking for index 11 throws `StringIndexOutOfBoundsException`. The space at index 5 is a character like any other."
+    },
+    {
+      "type": "heading",
+      "value": "Empty versus null"
+    },
+    {
+      "type": "text",
+      "value": "An **empty string** `\"\"` is a real string with no characters, so its length is `0` and you can call methods on it. A `null` string is no string at all: the variable points to nothing, and calling any method on it throws `NullPointerException`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String empty = \"\";\nSystem.out.println(empty.length());   // 0\nSystem.out.println(empty.isEmpty());   // true\n\nString none = null;\nnone.length();                         // NullPointerException"
     }
   ]
 }

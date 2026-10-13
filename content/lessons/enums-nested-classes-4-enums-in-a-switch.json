@@ -36,6 +36,19 @@
           "value": "A switch over an enum is one of the few places where omitting `default` is reasonable, the compiler can see every possible value. Add one anyway if constants might be added later."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "The arrow form"
+    },
+    {
+      "type": "text",
+      "value": "Since Java 14 a `switch` over an enum can use arrows and produce a value. There is no `break`, and the compiler checks that every constant is covered:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Size s = Size.LARGE;\ndouble price = switch (s) {\n    case REGULAR -> 381.00;\n    case LARGE -> 602.00;\n    case PARTY -> 799.00;\n};\nSystem.out.println(price);   // 602.0"
     }
   ]
 }

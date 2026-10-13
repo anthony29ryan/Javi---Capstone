@@ -32,6 +32,24 @@
           "value": "catch (ArrayIndexOutOfBoundsException | ArithmeticException e) {\n    System.out.println(\"Bad input: \" + e.getMessage());\n}"
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Exceptions travel up the call stack"
+    },
+    {
+      "type": "text",
+      "value": "If a method does not catch an exception, it ends immediately and the exception passes to the method that called it, and then to that method's caller, until some `catch` handles it. If none does, the program crashes. The statements skipped along the way never run:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "static void level3() {\n    System.out.println(\"level3 start\");\n    int x = 10 / 0;                 // throws here\n    System.out.println(\"level3 end\");   // never runs\n}\n\nstatic void level2() {\n    System.out.println(\"level2 start\");\n    level3();\n    System.out.println(\"level2 end\");   // never runs\n}\n\n// main: try { level2(); } catch (ArithmeticException e) { ... }"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "level2 start\nlevel3 start\ncaught in main: / by zero"
     }
   ]
 }

@@ -103,6 +103,19 @@
     {
       "type": "text",
       "value": "`next()` returns the token as a String, and `charAt(0)` returns the first character of that String, at index `0`."
+    },
+    {
+      "type": "heading",
+      "value": "Several values on one line"
+    },
+    {
+      "type": "text",
+      "value": "Because `nextInt()` and `nextDouble()` work token by token, the user can type several values on one line separated by spaces. Each call takes the next token:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "// user types: 10 20\nint a = input.nextInt();    // 10\nint b = input.nextInt();    // 20\nSystem.out.println(a + b);  // 30"
     }
   ]
 }

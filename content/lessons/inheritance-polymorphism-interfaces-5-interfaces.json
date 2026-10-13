@@ -69,6 +69,19 @@
           "value": "This was added so interfaces could gain new methods without breaking every existing implementer. Exam questions will likely follow the older definition; real code you meet will use both."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "A built-in interface: Comparable"
+    },
+    {
+      "type": "text",
+      "value": "Java's library uses interfaces for contracts like ordering. A class that implements `Comparable` supplies a `compareTo` method that returns a negative number if this object comes first, zero if they are equal, and a positive number if it comes later. Methods such as `Arrays.sort` then work on your class without knowing anything else about it:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Student extends Person implements Comparable<Student> {\n    // ...\n    public int compareTo(Student other) {\n        return Integer.compare(studentNumber, other.studentNumber);\n    }\n}\n\n// Arrays.sort(roster) now orders students by studentNumber"
     }
   ]
 }

@@ -25,6 +25,19 @@
     {
       "type": "text",
       "value": "**This is why value-returning methods matter.** If a method must give something back, it has to `return` it, modifying a parameter accomplishes nothing."
+    },
+    {
+      "type": "heading",
+      "value": "What about arrays?"
+    },
+    {
+      "type": "text",
+      "value": "The rule is the same: a copy of the value is passed. For an array, the value is the **reference**, so the method and the caller both point at one array. The method can change the elements, but pointing its own parameter at a new array does not affect the caller:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static void zeroFirst(int[] values) {\n    values[0] = 0;               // changes the shared array\n}\n\npublic static void reassign(int[] values) {\n    values = new int[] {9, 9};   // changes only the local copy of the reference\n}\n\n// int[] a = {5, 6};\n// reassign(a);   a[0] is still 5\n// zeroFirst(a);  a[0] is now 0"
     }
   ]
 }

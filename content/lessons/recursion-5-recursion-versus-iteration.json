@@ -89,6 +89,19 @@
     {
       "type": "text",
       "value": "For factorial and countdown, iteration is the better choice, the loop is simpler and cheaper. These appear in every textbook because they are easy to **trace**, not because they are good uses of recursion. Recursion earns its keep on problems whose shape is nested."
+    },
+    {
+      "type": "heading",
+      "value": "When recursion is costly: Fibonacci"
+    },
+    {
+      "type": "text",
+      "value": "The recursive `fib` calls itself twice per call, so it recomputes the same values again and again and takes exponentially long as `n` grows. A loop does the same job in one pass:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static int fibIter(int n) {\n    int a = 0, b = 1;\n    for (int i = 0; i < n; i++) {\n        int next = a + b;\n        a = b;\n        b = next;\n    }\n    return a;\n}\n\n// fibIter(10) returns 55, and fibIter(40) returns 102334155 at once"
     }
   ]
 }

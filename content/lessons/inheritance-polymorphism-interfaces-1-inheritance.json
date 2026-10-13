@@ -43,6 +43,19 @@
     {
       "type": "text",
       "value": "`Student` never declares `name`, yet every `Student` has one. Note also that `Student` must call `getName()` rather than using `name` directly, `name` is `private` in `Person`, and **private members are not accessible even to subclasses**. (`protected` would allow it, at the cost of some encapsulation.)"
+    },
+    {
+      "type": "heading",
+      "value": "Every class extends Object"
+    },
+    {
+      "type": "text",
+      "value": "A class that does not say `extends` still has a parent: Java makes it extend the built-in class `Object`. That is the top of every inheritance chain, which is why every object already has methods such as `toString()` and `equals()`, even in a class that never wrote them:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Student s = new Student(\"Ana\", 7);\nSystem.out.println(s instanceof Object);              // true\nSystem.out.println(s.getClass().getSimpleName());     // Student"
     }
   ]
 }

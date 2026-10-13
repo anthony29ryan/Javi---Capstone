@@ -1,0 +1,330 @@
+[
+  {
+    "id": "classes-and-methods-01",
+    "lessonId": "classes-and-methods-1-methods-and-variables-in-a-class",
+    "type": "mcq",
+    "prompt": "Where is an instance variable declared?",
+    "choices": [
+      "Outside any method, constructor or block",
+      "Inside a method",
+      "Inside a loop only",
+      "In the `main` method"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "classes-and-methods-02",
+    "lessonId": "classes-and-methods-1-methods-and-variables-in-a-class",
+    "type": "mcq",
+    "prompt": "Where can a local variable be used?",
+    "choices": [
+      "In every class in the package",
+      "Only inside the method that declares it",
+      "Anywhere in the class",
+      "Only in `main`"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "classes-and-methods-03",
+    "lessonId": "classes-and-methods-1-methods-and-variables-in-a-class",
+    "type": "mcq",
+    "prompt": "What does `this` represent in a method?",
+    "choices": [
+      "The parameter list",
+      "The class itself",
+      "The object receiving the method call",
+      "The next object created"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "classes-and-methods-04",
+    "lessonId": "classes-and-methods-1-methods-and-variables-in-a-class",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public class Broken {\n    private String name;\n\n    public void setName(String name) {\n        name = name;\n    }\n\n    public String getName() {\n        return name;\n    }\n}\n\nBroken b = new Broken();\nb.setName(\"Ana\");\nSystem.out.println(b.getName());",
+    "choices": [
+      "Compile error",
+      "Ana",
+      "name",
+      "null"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "classes-and-methods-05",
+    "lessonId": "classes-and-methods-1-methods-and-variables-in-a-class",
+    "type": "mcq",
+    "prompt": "Which statement about a return value is true?",
+    "choices": [
+      "Its type must match the declared return type",
+      "It can be any type",
+      "It is optional in a non-void method",
+      "It must be a `String`"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "classes-and-methods-06",
+    "lessonId": "classes-and-methods-1-methods-and-variables-in-a-class",
+    "type": "output",
+    "prompt": "What does this print, if the `Rectangle` class defines `toString()` to return `\"Rectangle \" + length + \" x \" + width`?",
+    "code": "Rectangle r = new Rectangle(4.0, 3.0);\nSystem.out.println(r);",
+    "choices": [
+      "4.0 x 3.0",
+      "Rectangle 4.0 x 3.0",
+      "Rectangle@1b6d3586",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "classes-and-methods-07",
+    "lessonId": "classes-and-methods-1-methods-and-variables-in-a-class",
+    "type": "mcq",
+    "prompt": "Why define a `toString()` method in your own class?",
+    "choices": [
+      "To compare two objects",
+      "To make the class public",
+      "So printing an object shows readable text",
+      "To create a constructor"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "classes-and-methods-08",
+    "lessonId": "classes-and-methods-2-information-hiding",
+    "type": "mcq",
+    "prompt": "What happens if another class tries to use a `private` instance variable directly?",
+    "choices": [
+      "It works normally",
+      "A runtime exception",
+      "It returns null",
+      "A compile error"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "classes-and-methods-09",
+    "lessonId": "classes-and-methods-2-information-hiding",
+    "type": "mcq",
+    "prompt": "By convention, what is an accessor for a field `name` called?",
+    "choices": [
+      "getName()",
+      "setName()",
+      "name()",
+      "readName()"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "classes-and-methods-10",
+    "lessonId": "classes-and-methods-2-information-hiding",
+    "type": "mcq",
+    "prompt": "What does a mutator do?",
+    "choices": [
+      "Returns a private value",
+      "Changes the data in private instance variables",
+      "Creates the object",
+      "Prints the object"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "classes-and-methods-11",
+    "lessonId": "classes-and-methods-2-information-hiding",
+    "type": "output",
+    "prompt": "What does this print, if `setGrade` ignores values below 0 or above 100?",
+    "code": "Student s = new Student();\ns.setGrade(-5);\nSystem.out.println(s.getGrade());",
+    "choices": [
+      "-5.0",
+      "100.0",
+      "0.0",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "classes-and-methods-12",
+    "lessonId": "classes-and-methods-2-information-hiding",
+    "type": "mcq",
+    "prompt": "Which is an advantage of information hiding?",
+    "choices": [
+      "It makes fields public",
+      "It makes programs shorter",
+      "It removes the need for methods",
+      "It simplifies modification and repair"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "classes-and-methods-13",
+    "lessonId": "classes-and-methods-2-information-hiding",
+    "type": "truefalse",
+    "prompt": "A `private` method can be called from other methods in the same class.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "classes-and-methods-14",
+    "lessonId": "classes-and-methods-2-information-hiding",
+    "type": "mcq",
+    "prompt": "Which classes can see a member declared with neither `public` nor `private`?",
+    "choices": [
+      "Classes in the same package",
+      "Every class everywhere",
+      "Only its own class",
+      "Only subclasses"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "classes-and-methods-15",
+    "lessonId": "classes-and-methods-3-encapsulation",
+    "type": "mcq",
+    "prompt": "What is the standard recipe for encapsulation?",
+    "choices": [
+      "All members public",
+      "Private instance variables and public methods",
+      "Public instance variables and private methods",
+      "All members static"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "classes-and-methods-16",
+    "lessonId": "classes-and-methods-3-encapsulation",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "Account acct = new Account(5000);\nacct.deposit(1500);\nacct.withdraw(2000);\nSystem.out.println(acct.getBalance());",
+    "choices": [
+      "4500.0",
+      "6500.0",
+      "5000.0",
+      "3500.0"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "classes-and-methods-17",
+    "lessonId": "classes-and-methods-3-encapsulation",
+    "type": "mcq",
+    "prompt": "Why does `BankAccount` have no `setBalance` method?",
+    "choices": [
+      "Because the balance is public",
+      "Because balances cannot change",
+      "So the balance changes only through methods that enforce the rules",
+      "Because setters are not allowed in Java"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "classes-and-methods-18",
+    "lessonId": "classes-and-methods-3-encapsulation",
+    "type": "mcq",
+    "prompt": "Can `deposit` call a `private` helper method in the same class?",
+    "choices": [
+      "No",
+      "Only from `main`",
+      "Only if it is static",
+      "Yes"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "classes-and-methods-19",
+    "lessonId": "classes-and-methods-4-uml-class-diagrams",
+    "type": "mcq",
+    "prompt": "In a UML class diagram, what does a `-` in front of a member mean?",
+    "choices": [
+      "Private",
+      "Public",
+      "Static",
+      "Protected"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "classes-and-methods-20",
+    "lessonId": "classes-and-methods-4-uml-class-diagrams",
+    "type": "mcq",
+    "prompt": "What does the first row of a UML class diagram show?",
+    "choices": [
+      "The methods",
+      "The class name",
+      "The variables",
+      "The package"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "classes-and-methods-21",
+    "lessonId": "classes-and-methods-5-objects-and-references",
+    "type": "output",
+    "prompt": "What does this print, using a `Student` class with a constructor taking the name?",
+    "code": "Student a = new Student(\"Ana\");\nStudent b = new Student(\"Ana\");\nSystem.out.println(a == b);",
+    "choices": [
+      "Ana",
+      "true",
+      "false",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "classes-and-methods-22",
+    "lessonId": "classes-and-methods-5-objects-and-references",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "Student a = new Student(\"Ana\");\nStudent c = a;\nc.setName(\"Jess\");\nSystem.out.println(a.getName());",
+    "choices": [
+      "Compile error",
+      "Ana",
+      "null",
+      "Jess"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "classes-and-methods-23",
+    "lessonId": "classes-and-methods-5-objects-and-references",
+    "type": "output",
+    "prompt": "What does this print, if `Student` overrides `equals` to compare names?",
+    "code": "Student a = new Student(\"Ana\");\nStudent b = new Student(\"Ana\");\nSystem.out.println(a.equals(b));",
+    "choices": [
+      "true",
+      "false",
+      "Ana",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "classes-and-methods-24",
+    "lessonId": "classes-and-methods-common-mistakes",
+    "type": "mcq",
+    "prompt": "What does `name = name;` do inside a setter whose parameter is also called `name`?",
+    "choices": [
+      "Deletes the field",
+      "Assigns the parameter to itself and changes nothing",
+      "Causes a compile error",
+      "Sets the instance variable"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "classes-and-methods-25",
+    "lessonId": "classes-and-methods-common-mistakes",
+    "type": "truefalse",
+    "prompt": "A `static` method such as `main` can use instance variables directly without creating an object.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  }
+]

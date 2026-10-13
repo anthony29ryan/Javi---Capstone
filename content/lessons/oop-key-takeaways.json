@@ -13,7 +13,7 @@
         "A **class is a blueprint**; objects are instances built from it, each with **its own state**.",
         "**Inheritance** (`extends`) means *is a* and removes repetition. **Interfaces** (`implements`) mean *can do*.",
         "**Packages** group related classes; `import` brings them in.",
-        "This lesson is the map. Lessons 13–15 are the territory."
+        "This lesson is the map. Lessons 13 to 15 are the territory."
       ]
     }
   ]

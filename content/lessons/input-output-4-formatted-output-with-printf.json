@@ -124,6 +124,19 @@
     {
       "type": "text",
       "value": "The `-` in `%-12s` left-aligns within a 12-space field; without it, text is right-aligned. Try producing that table with `println` and concatenation to see why `printf` exists."
+    },
+    {
+      "type": "heading",
+      "value": "Formatting without printing"
+    },
+    {
+      "type": "text",
+      "value": "`String.format()` takes the same format string as `printf()` but returns the result as a `String` instead of displaying it, so you can store it or use it later. The `,` flag adds thousands separators; it follows your computer's regional settings, and English-language settings give commas:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String text = String.format(\"%.2f\", 3.14159);\nSystem.out.println(text);                 // 3.14\nSystem.out.printf(\"%,d%n\", 1234567);      // 1,234,567"
     }
   ]
 }

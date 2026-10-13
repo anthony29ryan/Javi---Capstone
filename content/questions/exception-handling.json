@@ -1,0 +1,325 @@
+[
+  {
+    "id": "exception-handling-01",
+    "lessonId": "exception-handling-1-what-is-an-exception",
+    "type": "mcq",
+    "prompt": "What is an exception?",
+    "choices": [
+      "An event during execution that disrupts the normal flow of instructions",
+      "A syntax error the compiler finds",
+      "A kind of loop",
+      "A type of comment"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "exception-handling-02",
+    "lessonId": "exception-handling-1-what-is-an-exception",
+    "type": "mcq",
+    "prompt": "What happens to the rest of the program when an exception is thrown and never caught?",
+    "choices": [
+      "It restarts from the top",
+      "It stops immediately",
+      "It continues as normal",
+      "Only the current line is skipped"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "exception-handling-03",
+    "lessonId": "exception-handling-1-what-is-an-exception",
+    "type": "mcq",
+    "prompt": "Which part of an uncaught exception message tells you the exact file and line?",
+    "choices": [
+      "The import list",
+      "The exception type",
+      "The stack trace",
+      "The first word"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "exception-handling-04",
+    "lessonId": "exception-handling-2-checked-vs-unchecked-exceptions",
+    "type": "mcq",
+    "prompt": "Which kind of exception does the compiler force you to handle?",
+    "choices": [
+      "Unchecked exceptions",
+      "Neither kind",
+      "Both kinds",
+      "Checked exceptions"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "exception-handling-05",
+    "lessonId": "exception-handling-2-checked-vs-unchecked-exceptions",
+    "type": "mcq",
+    "prompt": "Which of these is an unchecked exception?",
+    "choices": [
+      "ArithmeticException",
+      "IOException",
+      "ClassNotFoundException",
+      "FileNotFoundException"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "exception-handling-06",
+    "lessonId": "exception-handling-2-checked-vs-unchecked-exceptions",
+    "type": "mcq",
+    "prompt": "You call `new FileReader(\"data.txt\")` with no `try` and no `throws`. What happens?",
+    "choices": [
+      "Nothing special",
+      "A compile error about an unreported exception",
+      "A runtime crash only if the file is missing",
+      "It runs and returns null"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "exception-handling-07",
+    "lessonId": "exception-handling-2-checked-vs-unchecked-exceptions",
+    "type": "mcq",
+    "prompt": "An unchecked exception usually signals:",
+    "choices": [
+      "A missing library",
+      "A slow network",
+      "A bug in your own code",
+      "A compile warning"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "exception-handling-08",
+    "lessonId": "exception-handling-3-try-and-catch",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "try {\n    int result = 10 / 0;\n    System.out.println(\"Result: \" + result);\n} catch (ArithmeticException e) {\n    System.out.println(\"Cannot divide by zero.\");\n}\nSystem.out.println(\"Program continues normally.\");",
+    "choices": [
+      "Cannot divide by zero.",
+      "Result: 0\nProgram continues normally.",
+      "Program continues normally.",
+      "Cannot divide by zero.\nProgram continues normally."
+    ],
+    "answer": 3
+  },
+  {
+    "id": "exception-handling-09",
+    "lessonId": "exception-handling-3-try-and-catch",
+    "type": "mcq",
+    "prompt": "What does `e.getMessage()` return for `10 / 0`?",
+    "choices": [
+      "/ by zero",
+      "Division error",
+      "null",
+      "0"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "exception-handling-10",
+    "lessonId": "exception-handling-3-try-and-catch",
+    "type": "mcq",
+    "prompt": "Once an exception is thrown inside a `try` block, what happens to the rest of that block?",
+    "choices": [
+      "It still runs",
+      "It is abandoned and control jumps to the matching `catch`",
+      "It runs twice",
+      "It runs before the `catch`"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "exception-handling-11",
+    "lessonId": "exception-handling-3-try-and-catch",
+    "type": "mcq",
+    "prompt": "In a retry loop using `nextInt()`, why does the `catch` block call `input.next()`?",
+    "choices": [
+      "To close the Scanner",
+      "To read the next valid number",
+      "To discard the bad text so the loop does not fail on it forever",
+      "To print the error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "exception-handling-12",
+    "lessonId": "exception-handling-4-multiple-catch-blocks",
+    "type": "mcq",
+    "prompt": "In what order should multiple `catch` blocks be written?",
+    "choices": [
+      "Most general first",
+      "It does not matter",
+      "Alphabetical",
+      "Most specific first, most general last"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "exception-handling-13",
+    "lessonId": "exception-handling-4-multiple-catch-blocks",
+    "type": "mcq",
+    "prompt": "What happens if `catch (Exception e)` comes before `catch (ArithmeticException e)`?",
+    "choices": [
+      "A compile error, because the later block can never be reached",
+      "It works normally",
+      "Only the second block runs",
+      "A runtime error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "exception-handling-14",
+    "lessonId": "exception-handling-4-multiple-catch-blocks",
+    "type": "mcq",
+    "prompt": "An exception is thrown in a method that does not catch it. Where does it go?",
+    "choices": [
+      "To the first method in the file",
+      "To the method that called it",
+      "It is ignored",
+      "It restarts the program"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "exception-handling-15",
+    "lessonId": "exception-handling-4-multiple-catch-blocks",
+    "type": "output",
+    "prompt": "What does this print, if `level3()` divides by zero and `main` catches `ArithmeticException`?",
+    "code": "static void level3() {\n    System.out.println(\"level3 start\");\n    int x = 10 / 0;\n    System.out.println(\"level3 end\");\n}\n\nstatic void level2() {\n    System.out.println(\"level2 start\");\n    level3();\n    System.out.println(\"level2 end\");\n}\n\n// main: try { level2(); } catch (ArithmeticException e) { System.out.println(\"caught in main\"); }",
+    "choices": [
+      "level2 start\nlevel3 start\nlevel3 end\ncaught in main",
+      "level3 start\ncaught in main",
+      "level2 start\nlevel3 start\ncaught in main",
+      "caught in main"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "exception-handling-16",
+    "lessonId": "exception-handling-5-finally",
+    "type": "mcq",
+    "prompt": "When does a `finally` block run?",
+    "choices": [
+      "Only if there is no `catch`",
+      "Only when an exception is thrown",
+      "Only when no exception is thrown",
+      "Whether or not an exception was thrown"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "exception-handling-17",
+    "lessonId": "exception-handling-5-finally",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "try {\n    int[] numbers = {1, 2, 3};\n    System.out.println(numbers[10]);\n} catch (ArrayIndexOutOfBoundsException e) {\n    System.out.println(\"Caught: invalid index.\");\n} finally {\n    System.out.println(\"This always runs.\");\n}",
+    "choices": [
+      "Caught: invalid index.\nThis always runs.",
+      "Caught: invalid index.",
+      "This always runs.",
+      "Nothing is printed"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "exception-handling-18",
+    "lessonId": "exception-handling-5-finally",
+    "type": "output",
+    "prompt": "What does this print, where the method is `static int withFinally()` with `try { return 1; } finally { System.out.println(\"cleanup\"); }`?",
+    "code": "System.out.println(withFinally());",
+    "choices": [
+      "1",
+      "cleanup\n1",
+      "1\ncleanup",
+      "cleanup"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "exception-handling-19",
+    "lessonId": "exception-handling-5-finally",
+    "type": "truefalse",
+    "prompt": "A `try` statement may have more than one `finally` block.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "exception-handling-20",
+    "lessonId": "exception-handling-6-user-defined-exceptions",
+    "type": "mcq",
+    "prompt": "How do you create a custom checked exception?",
+    "choices": [
+      "Extend `Object` only",
+      "Use the `throws` keyword on a class",
+      "Extend `Exception`",
+      "Implement `Runnable`"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "exception-handling-21",
+    "lessonId": "exception-handling-6-user-defined-exceptions",
+    "type": "mcq",
+    "prompt": "What is the difference between `throw` and `throws`?",
+    "choices": [
+      "They are identical",
+      "`throws` raises an exception; `throw` declares it",
+      "`throw` is only for unchecked exceptions",
+      "`throw` raises an exception; `throws` declares that a method may raise one"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "exception-handling-22",
+    "lessonId": "exception-handling-6-user-defined-exceptions",
+    "type": "mcq",
+    "prompt": "A custom exception extends `RuntimeException`. What does that mean for callers?",
+    "choices": [
+      "They are not forced to catch it",
+      "They must always catch it",
+      "It cannot be thrown",
+      "It is a checked exception"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "exception-handling-23",
+    "lessonId": "exception-handling-common-mistakes",
+    "type": "mcq",
+    "prompt": "What is wrong with an empty `catch (Exception e) { }` block?",
+    "choices": [
+      "It does not compile",
+      "It hides the error instead of handling it",
+      "It runs forever",
+      "It closes the program"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "exception-handling-24",
+    "lessonId": "exception-handling-common-mistakes",
+    "type": "truefalse",
+    "prompt": "Exceptions are the best way to control ordinary program flow, such as checking an array index.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "exception-handling-25",
+    "lessonId": "exception-handling-common-mistakes",
+    "type": "truefalse",
+    "prompt": "A `finally` block still runs after a `return` statement in the `try` block.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  }
+]

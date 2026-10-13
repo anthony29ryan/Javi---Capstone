@@ -11,6 +11,19 @@
     {
       "type": "text",
       "value": "A value used on either side of an operator is an **operand**. In the expression `45 + 2`, the numbers `45` and `2` are operands."
+    },
+    {
+      "type": "heading",
+      "value": "Unary, binary and ternary"
+    },
+    {
+      "type": "text",
+      "value": "Operators are also grouped by how many operands they take. A **unary** operator takes one operand, as in `-x`. A **binary** operator takes two, as in `a + b`. Java has one **ternary** operator that takes three, `condition ? valueIfTrue : valueIfFalse`, which you will meet later."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int x = 5;\nint y = -x;                  // unary minus\nSystem.out.println(y);       // -5"
     }
   ]
 }

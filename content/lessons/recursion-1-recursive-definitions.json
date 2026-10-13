@@ -46,6 +46,19 @@
     {
       "type": "text",
       "value": "Recursion works because **every call to `factorial` results in a distinct variable `num`, local to that invocation.** Java does nothing special to handle this: the argument values are copied to parameters, and the code executes. In `factorial(3)`, the value of the argument is copied into that call's own `num` parameter."
+    },
+    {
+      "type": "heading",
+      "value": "Another example: powers"
+    },
+    {
+      "type": "text",
+      "value": "A power is a repeated multiplication, so `base` to the power `exp` is `base` times `base` to the power `exp - 1`. The smallest case is any number to the power 0, which is 1:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static int power(int base, int exp) {\n    if (exp == 0) {\n        return 1;                        // base case\n    }\n    return base * power(base, exp - 1);  // general case\n}\n\n// power(2, 5) returns 32"
     }
   ]
 }

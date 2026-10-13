@@ -77,6 +77,14 @@
           "value": "applets are obsolete. Browsers dropped support for the Java plug-in, and applets were deprecated in Java 9 and **removed entirely in Java 11**. Your source material dates from 2014, when they were still taught. Learn the term so you recognize it in older code and exam questions, > but you will never write one. Everything in this course is a console application."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "JDK, JRE and JVM"
+    },
+    {
+      "type": "text",
+      "value": "These three names nest inside each other. The **JVM** runs bytecode. The **JRE** is the JVM plus the standard libraries a program needs to run. The **JDK** is the JRE plus the developer tools, such as the compiler `javac`. When you install the JDK, you get all three."
     }
   ]
 }

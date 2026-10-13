@@ -71,6 +71,23 @@
     {
       "type": "text",
       "value": "Use `switch` when testing **one variable** against **several fixed values**. Use an `else-if` chain for **ranges** or **conditions involving more than one variable**. The grade-from-score example cannot be a switch, because `score >= 90` is a range, not a single value."
+    },
+    {
+      "type": "heading",
+      "value": "The arrow form"
+    },
+    {
+      "type": "text",
+      "value": "From Java 14, a `switch` can use an arrow (`->`) instead of a colon. Each case runs only its own statement, so there is no fall-through and no `break`. Several values share a case by listing them with commas, and the `switch` can produce a value directly:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int month = 4;\nint days = switch (month) {\n    case 1, 3, 5, 7, 8, 10, 12 -> 31;\n    case 4, 6, 9, 11 -> 30;\n    default -> 28;\n};\nSystem.out.println(\"Days: \" + days);   // Days: 30"
+    },
+    {
+      "type": "text",
+      "value": "Both forms are common in real code. The colon-and-`break` form is the one in the lessons above and in older programs; the arrow form needs Java 14 or later."
     }
   ]
 }

@@ -137,6 +137,36 @@
     {
       "type": "text",
       "value": "The last line deserves a second look. `Math.sin(30)` does **not** give the sine of 30 degrees: it treats 30 as radians. And the answer is `0.49999999999999994` rather than `0.5`, which is the floating-point imprecision from Lesson 2 showing up again."
+    },
+    {
+      "type": "heading",
+      "value": "Random numbers"
+    },
+    {
+      "type": "text",
+      "value": "`Math.random()` returns a `double` from `0.0` up to, but not including, `1.0`. Multiply to widen the range, cast to `int` to drop the decimal, then add to shift the start. This gives a whole number from 1 to 6, like a die:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int roll = (int) (Math.random() * 6) + 1;   // 1, 2, 3, 4, 5 or 6"
+    },
+    {
+      "type": "text",
+      "value": "`Math.random() * 6` is from `0.0` up to just under `6.0`. The cast turns it into `0` to `5`, and `+ 1` makes it `1` to `6`."
+    },
+    {
+      "type": "heading",
+      "value": "round returns a long"
+    },
+    {
+      "type": "text",
+      "value": "`Math.round` gives back a whole number but not an `int`, so cast it when you store the result in one:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int r = (int) Math.round(4.6);   // 5"
     }
   ]
 }

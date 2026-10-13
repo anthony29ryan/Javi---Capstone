@@ -1,0 +1,314 @@
+[
+  {
+    "id": "file-io-01",
+    "lessonId": "file-io-1-computer-files",
+    "type": "mcq",
+    "prompt": "Which storage is volatile?",
+    "choices": [
+      "RAM",
+      "A hard disk",
+      "A USB drive",
+      "A saved `.java` file"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "file-io-02",
+    "lessonId": "file-io-1-computer-files",
+    "type": "mcq",
+    "prompt": "Which is an example of a binary file?",
+    "choices": [
+      "A `.txt` file",
+      "A compiled `.class` file",
+      "A `.java` source file",
+      "A `.csv` file"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "file-io-03",
+    "lessonId": "file-io-1-computer-files",
+    "type": "mcq",
+    "prompt": "What is the path delimiter in Windows?",
+    "choices": [
+      "The comma",
+      "The forward slash only",
+      "The backslash",
+      "The colon"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "file-io-04",
+    "lessonId": "file-io-1-computer-files",
+    "type": "mcq",
+    "prompt": "Which Java string literal correctly names `C:\\Java\\data.txt`?",
+    "choices": [
+      "\"C:\\Java\\data.txt\"",
+      "\"C:\\\\Java\\data.txt\"",
+      "\"C:Javadata.txt\"",
+      "\"C:\\\\Java\\\\data.txt\""
+    ],
+    "answer": 3
+  },
+  {
+    "id": "file-io-05",
+    "lessonId": "file-io-2-the-path-and-files-classes",
+    "type": "mcq",
+    "prompt": "Which call creates a `Path` object?",
+    "choices": [
+      "Paths.get(\"sample.txt\")",
+      "new Path(\"sample.txt\")",
+      "Files.path(\"sample.txt\")",
+      "Path.open(\"sample.txt\")"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "file-io-06",
+    "lessonId": "file-io-2-the-path-and-files-classes",
+    "type": "mcq",
+    "prompt": "Which of these is a relative path?",
+    "choices": [
+      "C:\\Java\\Chapter8\\sample.txt",
+      "sample.txt",
+      "C:\\sample.txt",
+      "D:\\data\\sample.txt"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "file-io-07",
+    "lessonId": "file-io-2-the-path-and-files-classes",
+    "type": "mcq",
+    "prompt": "On Windows, how many name elements does `Paths.get(\"C:\\\\Java\\\\Chapter8\\\\sample.txt\").getNameCount()` return?",
+    "choices": [
+      "2",
+      "3",
+      "4",
+      "1"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "file-io-08",
+    "lessonId": "file-io-2-the-path-and-files-classes",
+    "type": "output",
+    "prompt": "What does this print, if no file named `nope.txt` exists?",
+    "code": "System.out.println(Files.exists(Paths.get(\"nope.txt\")));",
+    "choices": [
+      "NoSuchFileException",
+      "true",
+      "false",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "file-io-09",
+    "lessonId": "file-io-2-the-path-and-files-classes",
+    "type": "mcq",
+    "prompt": "What does `Files.deleteIfExists()` do when the file is missing?",
+    "choices": [
+      "Returns null",
+      "Throws NoSuchFileException",
+      "Creates the file",
+      "Returns false without throwing an exception"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "file-io-10",
+    "lessonId": "file-io-2-the-path-and-files-classes",
+    "type": "mcq",
+    "prompt": "What does `Files.delete()` throw for a file that does not exist?",
+    "choices": [
+      "NoSuchFileException",
+      "SecurityException",
+      "DirectoryNotEmptyException",
+      "Nothing"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "file-io-11",
+    "lessonId": "file-io-2-the-path-and-files-classes",
+    "type": "mcq",
+    "prompt": "Which method returns the size of a file in bytes?",
+    "choices": [
+      "Path.size()",
+      "attr.size() on BasicFileAttributes",
+      "Files.length()",
+      "attr.bytes()"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "file-io-12",
+    "lessonId": "file-io-2-the-path-and-files-classes",
+    "type": "mcq",
+    "prompt": "Does `Files.checkAccess(path)` compile?",
+    "choices": [
+      "Yes, if it is inside a `try`",
+      "Yes, it returns a boolean",
+      "No, the method does not exist on `Files`",
+      "Yes, but only on Windows"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "file-io-13",
+    "lessonId": "file-io-3-file-organization-streams-and-buffers",
+    "type": "mcq",
+    "prompt": "What is the correct order of the data hierarchy?",
+    "choices": [
+      "File, record, field, character",
+      "Record, character, file, field",
+      "Field, character, file, record",
+      "Character, field, record, file"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "file-io-14",
+    "lessonId": "file-io-3-file-organization-streams-and-buffers",
+    "type": "mcq",
+    "prompt": "Why do output streams use buffers?",
+    "choices": [
+      "Writing in large chunks is much faster than one character at a time",
+      "To encrypt the data",
+      "To make files smaller",
+      "To avoid exceptions"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "file-io-15",
+    "lessonId": "file-io-3-file-organization-streams-and-buffers",
+    "type": "mcq",
+    "prompt": "What does flushing a stream do?",
+    "choices": [
+      "Closes the program",
+      "Writes out bytes that are held in the buffer",
+      "Reads the next line",
+      "Deletes the file"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "file-io-16",
+    "lessonId": "file-io-3-file-organization-streams-and-buffers",
+    "type": "truefalse",
+    "prompt": "Data that is still in a buffer has already been written to the file.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "file-io-17",
+    "lessonId": "file-io-3-file-organization-streams-and-buffers",
+    "type": "mcq",
+    "prompt": "Why can a comma-separated record break if a value contains a comma?",
+    "choices": [
+      "The file becomes binary",
+      "The comma is a reserved word",
+      "`split(\",\")` would cut the value in the wrong place",
+      "The record is deleted"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "file-io-18",
+    "lessonId": "file-io-4-the-io-classes",
+    "type": "mcq",
+    "prompt": "What is the correct name of the `BufferedWriter` method that writes a line separator?",
+    "choices": [
+      "lineBreak()",
+      "newline()",
+      "endLine()",
+      "newLine()"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "file-io-19",
+    "lessonId": "file-io-4-the-io-classes",
+    "type": "mcq",
+    "prompt": "Which class provides a `readLine()` method?",
+    "choices": [
+      "BufferedReader",
+      "BufferedWriter",
+      "OutputStream",
+      "Path"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "file-io-20",
+    "lessonId": "file-io-5-writing-and-reading-a-file",
+    "type": "mcq",
+    "prompt": "Which option replaces the existing contents of a file when writing?",
+    "choices": [
+      "APPEND",
+      "TRUNCATE_EXISTING",
+      "READ",
+      "CREATE_NEW"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "file-io-21",
+    "lessonId": "file-io-5-writing-and-reading-a-file",
+    "type": "mcq",
+    "prompt": "What does `StandardOpenOption.APPEND` do?",
+    "choices": [
+      "Opens the file read-only",
+      "Erases the file first",
+      "Adds new data after the existing contents",
+      "Deletes the file"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "file-io-22",
+    "lessonId": "file-io-5-writing-and-reading-a-file",
+    "type": "mcq",
+    "prompt": "What does `readLine()` return at the end of a file?",
+    "choices": [
+      "It throws EOFException",
+      "An empty string",
+      "-1",
+      "null"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "file-io-23",
+    "lessonId": "file-io-5-writing-and-reading-a-file",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"Ana Reyes,19,92.5\".split(\",\")[1]);",
+    "choices": [
+      "19",
+      "92.5",
+      "Ana Reyes",
+      "Ana Reyes,19,92.5"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "file-io-24",
+    "lessonId": "file-io-common-mistakes",
+    "type": "mcq",
+    "prompt": "What is the main benefit of try-with-resources when working with files?",
+    "choices": [
+      "It avoids checked exceptions",
+      "The stream is closed automatically, even if an exception occurs",
+      "The file is created faster",
+      "It encrypts the file"
+    ],
+    "answer": 1
+  }
+]

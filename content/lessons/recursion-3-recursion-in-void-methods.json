@@ -54,7 +54,7 @@
     },
     {
       "type": "text",
-      "value": "This is worth internalising. Work done **before** the recursive call happens in descending order; work done **after** it happens in ascending order. That single distinction solves a surprising number of problems."
+      "value": "Work done **before** the recursive call happens in descending order; work done **after** it happens in ascending order. That single distinction solves a surprising number of problems."
     }
   ]
 }

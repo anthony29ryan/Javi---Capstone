@@ -54,6 +54,32 @@
           "value": "Lessons 13 and 14 build this properly, with `private` fields, constructors, and accessor methods. The version above is deliberately simplified."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "What a new object contains"
+    },
+    {
+      "type": "text",
+      "value": "A new object is not empty. Its fields start with default values, the same defaults that array elements get: `0` for numbers, `false` for `boolean`, and `null` for objects such as `String`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Student s = new Student();\nSystem.out.println(s.name + \" \" + s.age + \" \" + s.grade);   // null 0 0.0"
+    },
+    {
+      "type": "heading",
+      "value": "A variable holds a reference"
+    },
+    {
+      "type": "text",
+      "value": "A variable of a class type does not contain the object itself. It holds a **reference** to it, just as an array variable does. Copying the variable gives you a second name for the **same** object, not a second object:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Student ana = new Student();\nana.grade = 70;\n\nStudent same = ana;      // same refers to the one existing object\nsame.grade = 50.0;\nSystem.out.println(ana.grade);   // 50.0"
     }
   ]
 }

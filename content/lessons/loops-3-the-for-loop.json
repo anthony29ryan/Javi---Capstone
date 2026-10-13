@@ -58,6 +58,19 @@
           "value": "Convention, inherited from mathematics: `i` for index. Nested loops use `i`, `j`, `k`. For anything non-obvious, name it properly: `for (int studentNumber = 1; ...)`."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Counting down and in steps"
+    },
+    {
+      "type": "text",
+      "value": "The update does not have to be `i++`. Start high and subtract to count down, or add or subtract a larger step to skip values:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "for (int d = 10; d >= 0; d -= 2) {\n    System.out.print(d + \" \");\n}\n// prints: 10 8 6 4 2 0"
     }
   ]
 }

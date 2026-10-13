@@ -81,6 +81,49 @@
           "value": "`println` prints and moves to the next line. `print` prints without the newline. You will use both."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Escape sequences"
+    },
+    {
+      "type": "text",
+      "value": "Some characters can't be typed directly inside a string. A backslash followed by a letter, called an **escape sequence**, stands for one of them:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Sequence",
+        "Meaning"
+      ],
+      "rows": [
+        [
+          "`\\n`",
+          "New line"
+        ],
+        [
+          "`\\t`",
+          "Tab"
+        ],
+        [
+          "`\\\"`",
+          "A double quotation mark"
+        ],
+        [
+          "`\\\\`",
+          "A backslash"
+        ]
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"Name:\\tAna\\nQuote: \\\"Hi\\\"\\nPath: C:\\\\temp\");"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Name:\tAna\nQuote: \"Hi\"\nPath: C:\\temp"
     }
   ]
 }

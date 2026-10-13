@@ -38,6 +38,19 @@
     {
       "type": "text",
       "value": "Without polymorphism, the loop would need a chain of `if` tests naming every subclass, and every new subclass would mean editing every such chain in the program."
+    },
+    {
+      "type": "heading",
+      "value": "Reaching subclass-only methods"
+    },
+    {
+      "type": "text",
+      "value": "A `Person` variable can only call methods that `Person` declares, even when it refers to a `Student`. To call a subclass method, test the object with `instanceof` and then **cast** it. A cast to the wrong class throws `ClassCastException`, so always test first:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Person p = new Student(\"Ana\", 7);\n\nif (p instanceof Student) {\n    Student s = (Student) p;\n    System.out.println(s.getStudentNumber());   // 7\n}"
     }
   ]
 }

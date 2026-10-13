@@ -92,6 +92,10 @@
     {
       "type": "text",
       "value": "With a `public double grade;`, any line in any file could write `student.grade = -500;` and nothing would stop it. With the field private, **every** change goes through one method, so the rule is written once and cannot be bypassed. When the rule changes, you edit one method."
+    },
+    {
+      "type": "text",
+      "value": "A member declared with neither `public` nor `private` is visible to every class in the **same package** but not outside it. For now, write `private` for instance variables and `public` for the methods other classes need to call, so every member's visibility is a deliberate choice."
     }
   ]
 }

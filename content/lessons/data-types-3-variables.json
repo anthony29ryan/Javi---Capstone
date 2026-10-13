@@ -58,6 +58,19 @@
           "value": "`int size;` *declares*. `size = 30;` *initializes*. Java will not let you read a local variable before it has been initialized. That is a compile error, not a crash."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "The = sign is assignment"
+    },
+    {
+      "type": "text",
+      "value": "In Java, `=` does not say \"is equal to.\" It means **evaluate the right side, then store the result in the variable on the left**. That is why this is valid, even though it would be nonsense as algebra:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int count = 5;\ncount = count + 1;       // read count (5), add 1, store 6 back in count\nSystem.out.println(count);   // 6"
     }
   ]
 }

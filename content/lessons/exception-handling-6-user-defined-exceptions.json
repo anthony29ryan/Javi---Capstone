@@ -50,6 +50,19 @@
         "`throw` is a *statement*. It actually raises the exception, right now.",
         "`throws` is a *declaration* in the method heading. It warns callers this method might raise one."
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Unchecked custom exceptions"
+    },
+    {
+      "type": "text",
+      "value": "Extending `RuntimeException` instead of `Exception` makes your exception unchecked, so callers are not forced to catch it and methods do not need `throws`. Use that for programming errors such as a bad argument, and a checked exception for problems callers can reasonably recover from:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class InvalidAgeException extends RuntimeException {\n    public InvalidAgeException(String message) {\n        super(message);\n    }\n}\n\nstatic void checkAge(int age) {          // no throws clause needed\n    if (age < 0) {\n        throw new InvalidAgeException(\"Age cannot be negative: \" + age);\n    }\n}"
     }
   ]
 }

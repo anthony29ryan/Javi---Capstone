@@ -49,6 +49,19 @@
           "value": "Your handout reads \"`MyClass()` is a **class to** the constructor\": a typo for \"a **call to** the constructor.\""
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "A constructor with parameters"
+    },
+    {
+      "type": "text",
+      "value": "A constructor can take parameters so that an object starts out fully set up. The caller supplies the values at the moment of creation, and no field is left holding a default by accident:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Point {\n    private int x;\n    private int y;\n\n    public Point(int x, int y) {\n        this.x = x;\n        this.y = y;\n    }\n\n    public int getX() { return x; }\n    public int getY() { return y; }\n}\n\nPoint p = new Point(3, 4);\nSystem.out.println(p.getX() + p.getY());   // 7"
     }
   ]
 }

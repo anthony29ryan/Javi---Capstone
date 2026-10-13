@@ -166,6 +166,32 @@
     {
       "type": "text",
       "value": "Note too that `c == 'a'` uses `==`, correct here, because `char` is a **primitive**. The `equals` rule applies to `String`, not `char`."
+    },
+    {
+      "type": "heading",
+      "value": "More useful methods"
+    },
+    {
+      "type": "text",
+      "value": "A few more you will meet quickly. `contains`, `startsWith`, `endsWith` and `isEmpty` return a `boolean`. `split` breaks a string into an array of pieces around a separator:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String text = \"Programming in Java\";\nSystem.out.println(text.contains(\"gram\"));     // true\nSystem.out.println(text.startsWith(\"Pro\"));    // true\nSystem.out.println(text.endsWith(\"Java\"));     // true\n\nString[] words = \"red,green,blue\".split(\",\");\nSystem.out.println(words.length);              // 3\nSystem.out.println(words[1]);                  // green"
+    },
+    {
+      "type": "heading",
+      "value": "Converting between text and numbers"
+    },
+    {
+      "type": "text",
+      "value": "Text that looks like a number is still a `String` until you convert it. `Integer.parseInt` and `Double.parseDouble` turn text into numbers, and `String.valueOf` goes the other way. Text that is not a valid number throws `NumberFormatException`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int n = Integer.parseInt(\"42\");\nSystem.out.println(n + 1);                     // 43\ndouble d = Double.parseDouble(\"3.5\");\nSystem.out.println(d * 2);                     // 7.0\nSystem.out.println(String.valueOf(42) + \"!\");  // 42!\nInteger.parseInt(\"abc\");                       // NumberFormatException"
     }
   ]
 }

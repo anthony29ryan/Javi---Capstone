@@ -146,6 +146,23 @@
           "value": "If `name` is `null`, the left side is `false`, so `name.length()` never runs and never crashes. Reverse the order and the program throws a `NullPointerException`. Order your conditions so the cheap, protective test comes first."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "De Morgan's laws"
+    },
+    {
+      "type": "text",
+      "value": "Negating a combined condition flips the operator and negates each part. These pairs are always equal:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "boolean A = true;\nboolean B = false;\n\nSystem.out.println(!(A && B));    // true\nSystem.out.println(!A || !B);     // true, same result\nSystem.out.println(!(A || B));    // false\nSystem.out.println(!A && !B);     // false, same result"
+    },
+    {
+      "type": "text",
+      "value": "Use them to rewrite a condition that is hard to read, such as turning `!(age >= 18 && hasAccount)` into `age < 18 || !hasAccount`."
     }
   ]
 }

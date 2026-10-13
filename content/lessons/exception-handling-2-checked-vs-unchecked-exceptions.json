@@ -100,6 +100,28 @@
           "value": "if a *user* or the *environment* can cause it, it is probably checked, handle it. If *your own code* caused it, it is probably unchecked, fix the code."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "What the compiler says"
+    },
+    {
+      "type": "text",
+      "value": "Using a method that can throw a checked exception without handling it is a compile error, not a crash. For example, opening a file with `FileReader`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "FileReader reader = new FileReader(\"data.txt\");"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "error: unreported exception FileNotFoundException; must be caught or declared to be thrown"
+    },
+    {
+      "type": "text",
+      "value": "You have two choices: wrap the call in `try` and `catch`, or add `throws` to the heading of the method that contains it, passing the responsibility to the caller."
     }
   ]
 }

@@ -76,6 +76,19 @@
     {
       "type": "text",
       "value": "Same operands as before, opposite result, because the parentheses forced the `||` groups to be evaluated before the `&&`."
+    },
+    {
+      "type": "heading",
+      "value": "Testing a range"
+    },
+    {
+      "type": "text",
+      "value": "To check that a value lies between two limits, write one comparison for each limit and join them with `&&`. Chaining the comparisons as you would on paper does not compile, because `1 <= x` produces a `boolean`, which cannot be compared with `10`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int n = 7;\nSystem.out.println(n >= 1 && n <= 10);   // true\n// System.out.println(1 <= n <= 10);    // error: bad operand types"
     }
   ]
 }

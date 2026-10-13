@@ -63,6 +63,19 @@
           "value": "Worth noticing: a regex does exactly what you asked, which is rarely quite what you meant."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Removing everything except digits"
+    },
+    {
+      "type": "text",
+      "value": "The regex `\\D`, written `\"\\\\D\"` in Java source, means \"any character that is not a digit\", so replacing it with an empty string strips a phone number down to its digits:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String phone = \"(991) 978-6452\";\nSystem.out.println(phone.replaceAll(\"\\\\D\", \"\"));   // 9919786452"
     }
   ]
 }

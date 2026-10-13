@@ -57,6 +57,20 @@
           "value": "Once one operand is a String, every `+` after it concatenates."
         }
       ]
+    },
+    {
+      "type": "text",
+      "value": "`println()` with nothing between the parentheses prints only a line break, which gives you a blank line:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"A\");\nSystem.out.println();      // blank line\nSystem.out.println(\"B\");"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "A\n\nB"
     }
   ]
 }

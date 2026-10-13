@@ -46,6 +46,24 @@
     {
       "type": "text",
       "value": "Trace the `continue` carefully: on invalid input it jumps back to the `while` condition, skipping the \"Repeat the program?\" prompt entirely. The user is silently asked for the range again, which is the intent, but only because `continue` was placed deliberately."
+    },
+    {
+      "type": "heading",
+      "value": "Printing a shape"
+    },
+    {
+      "type": "text",
+      "value": "When the inner loop's limit depends on the outer loop's variable, each row is a different length. This prints a triangle, one more star on each row:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "for (int row = 1; row <= 3; row++) {\n    for (int col = 1; col <= row; col++) {\n        System.out.print(\"*\");\n    }\n    System.out.println();\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "*\n**\n***"
     }
   ]
 }

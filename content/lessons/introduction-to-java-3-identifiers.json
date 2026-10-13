@@ -61,6 +61,10 @@
     {
       "type": "text",
       "value": "**Convention:** begin class identifiers with a capital letter (`FirstJavaProgram`). Begin variable and method names with a lowercase letter, capitalizing each word after the first (`studentAge`). The compiler does not enforce this, but every Java programmer expects it."
+    },
+    {
+      "type": "text",
+      "value": "Pick names that say what the value is for. `studentAge` explains itself, while `a` makes every reader work it out. Two more conventions: constants are written in capital letters with underscores (`MAX_SCORE`), and package names are all lowercase (`java.util`). Like the capital-letter rule, the compiler does not enforce these."
     }
   ]
 }

@@ -1,0 +1,330 @@
+[
+  {
+    "id": "loops-01",
+    "lessonId": "loops-1-repetition-structures",
+    "type": "mcq",
+    "prompt": "Which loop checks its condition after running the body?",
+    "choices": [
+      "do...while",
+      "while",
+      "for",
+      "None of them"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "loops-02",
+    "lessonId": "loops-1-repetition-structures",
+    "type": "mcq",
+    "prompt": "The three loop structures differ in:",
+    "choices": [
+      "What data type they can print",
+      "When the condition is checked and how much bookkeeping the loop does for you",
+      "How fast they run",
+      "Whether they can use `break`"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "loops-03",
+    "lessonId": "loops-2-the-while-loop",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int sum = 0;\nint i = 1;\nwhile (i <= 5) {\n    sum += i;\n    i++;\n}\nSystem.out.println(sum);",
+    "choices": [
+      "15",
+      "10",
+      "5",
+      "16"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "loops-04",
+    "lessonId": "loops-2-the-while-loop",
+    "type": "mcq",
+    "prompt": "A `while` loop never ends. What is the most likely cause?",
+    "choices": [
+      "`println` is used in the body",
+      "The condition uses `<=`",
+      "The body never changes the control variable",
+      "The variable is an `int`"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "loops-05",
+    "lessonId": "loops-2-the-while-loop",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int n = 0;\nwhile (n < 3) {\n    System.out.print(n);\n    n++;\n}",
+    "choices": [
+      "012",
+      "0123",
+      "123",
+      "12"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "loops-06",
+    "lessonId": "loops-3-the-for-loop",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "for (int i = 1; i <= 3; i++) {\n    System.out.print(i * 2);\n}",
+    "choices": [
+      "2 4 6",
+      "123",
+      "369",
+      "246"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "loops-07",
+    "lessonId": "loops-3-the-for-loop",
+    "type": "mcq",
+    "prompt": "How many times does the body of `for (int i = 10; i >= 0; i -= 2)` run?",
+    "choices": [
+      "5",
+      "6",
+      "10",
+      "11"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "loops-08",
+    "lessonId": "loops-3-the-for-loop",
+    "type": "mcq",
+    "prompt": "How many times does the initialization part of a `for` loop execute?",
+    "choices": [
+      "Once",
+      "Every iteration",
+      "Never",
+      "Twice"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "loops-09",
+    "lessonId": "loops-3-the-for-loop",
+    "type": "truefalse",
+    "prompt": "A variable declared in the header, as in `for (int i = 0; ...)`, can still be used after the loop ends.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "loops-10",
+    "lessonId": "loops-4-the-do-while-loop",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int n = 100;\ndo {\n    System.out.println(n);\n} while (n <= 10);",
+    "choices": [
+      "Nothing is printed",
+      "100",
+      "100 repeated forever",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "loops-11",
+    "lessonId": "loops-4-the-do-while-loop",
+    "type": "mcq",
+    "prompt": "What is easy to forget at the end of a `do...while` loop?",
+    "choices": [
+      "A comma",
+      "A colon",
+      "A semicolon after the closing condition",
+      "The opening brace"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "loops-12",
+    "lessonId": "loops-4-the-do-while-loop",
+    "type": "mcq",
+    "prompt": "Why is `do...while` natural for asking until the input is valid?",
+    "choices": [
+      "It runs faster",
+      "It works without braces",
+      "It needs no condition",
+      "The body must run once before you can check the answer"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "loops-13",
+    "lessonId": "loops-5-choosing-a-loop",
+    "type": "mcq",
+    "prompt": "Which loop fits \"repeat until the user types quit, possibly zero times\"?",
+    "choices": [
+      "while",
+      "for",
+      "do...while",
+      "switch"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "loops-14",
+    "lessonId": "loops-5-choosing-a-loop",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int n = 4821;\nint digits = 0;\nwhile (n > 0) {\n    n /= 10;\n    digits++;\n}\nSystem.out.println(digits);",
+    "choices": [
+      "1",
+      "3",
+      "4",
+      "4821"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "loops-15",
+    "lessonId": "loops-5-choosing-a-loop",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int n = 4821;\nint sum = 0;\nwhile (n > 0) {\n    sum += n % 10;\n    n /= 10;\n}\nSystem.out.println(sum);",
+    "choices": [
+      "4821",
+      "1284",
+      "14",
+      "15"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "loops-16",
+    "lessonId": "loops-6-break-and-continue",
+    "type": "mcq",
+    "prompt": "A `break` inside a nested loop ends:",
+    "choices": [
+      "The whole method",
+      "Only the innermost loop",
+      "All of the loops",
+      "Nothing"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "loops-17",
+    "lessonId": "loops-6-break-and-continue",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "for (int i = 1; i <= 5; i++) {\n    if (i == 3) {\n        continue;\n    }\n    System.out.print(i);\n}",
+    "choices": [
+      "1245",
+      "12345",
+      "12",
+      "345"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "loops-18",
+    "lessonId": "loops-6-break-and-continue",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "for (int i = 1; i <= 5; i++) {\n    if (i == 3) {\n        break;\n    }\n    System.out.print(i);\n}",
+    "choices": [
+      "12345",
+      "12",
+      "1245",
+      "345"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "loops-19",
+    "lessonId": "loops-6-break-and-continue",
+    "type": "truefalse",
+    "prompt": "In a `for` loop, `continue` jumps straight to the update statement.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "loops-20",
+    "lessonId": "loops-7-nested-control-structures",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "for (int row = 1; row <= 3; row++) {\n    for (int col = 1; col <= row; col++) {\n        System.out.print(\"*\");\n    }\n    System.out.println();\n}",
+    "choices": [
+      "***\n***\n***",
+      "***\n**\n*",
+      "*\n**\n***",
+      "*\n*\n*"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "loops-21",
+    "lessonId": "loops-7-nested-control-structures",
+    "type": "mcq",
+    "prompt": "An outer loop runs 3 times and the inner loop runs 4 times for each outer pass. How many times does the inner body run in total?",
+    "choices": [
+      "7",
+      "12",
+      "3",
+      "4"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "loops-22",
+    "lessonId": "loops-7-nested-control-structures",
+    "type": "mcq",
+    "prompt": "In the nested-loop table pattern, what is the `System.out.println()` after the inner loop for?",
+    "choices": [
+      "To start the outer loop",
+      "To end the program",
+      "To repeat the inner loop",
+      "To end the current row"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "loops-23",
+    "lessonId": "loops-common-mistakes",
+    "type": "mcq",
+    "prompt": "How many times does the body of `for (int i = 1; i < 10; i++)` run?",
+    "choices": [
+      "10",
+      "9",
+      "11",
+      "1"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "loops-24",
+    "lessonId": "loops-common-mistakes",
+    "type": "mcq",
+    "prompt": "What does `for (int i = 0; i < 5; i++);` do?",
+    "choices": [
+      "Loops 5 times with an empty body",
+      "Does not compile",
+      "Prints 5 times",
+      "Loops forever"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "loops-25",
+    "lessonId": "loops-common-mistakes",
+    "type": "truefalse",
+    "prompt": "Using `continue` in a `while` loop whose update is at the bottom of the body can skip the update and loop forever.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  }
+]

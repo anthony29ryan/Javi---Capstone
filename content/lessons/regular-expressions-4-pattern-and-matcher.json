@@ -82,6 +82,19 @@
     {
       "type": "text",
       "value": "`group()` returns the text that was actually matched."
+    },
+    {
+      "type": "heading",
+      "value": "Capturing groups"
+    },
+    {
+      "type": "text",
+      "value": "Parentheses also **capture** the text they match. After `find()` succeeds, `group(1)` returns what the first pair of parentheses matched, `group(2)` the second, and `group()` the whole match. This pulls the two halves out of a phone number:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Pattern p = Pattern.compile(\"(\\\\d{3})-(\\\\d{4})\");\nMatcher m = p.matcher(\"Call 555-1234 now\");\n\nif (m.find()) {\n    System.out.println(m.group());    // 555-1234\n    System.out.println(m.group(1));   // 555\n    System.out.println(m.group(2));   // 1234\n}"
     }
   ]
 }

@@ -61,6 +61,23 @@
     {
       "type": "text",
       "value": "You will write this line in every program for a long time before you need to think about it. That is fine. Copy it now; `static` will make full sense in the Intermediate tier."
+    },
+    {
+      "type": "heading",
+      "value": "What is `args`?"
+    },
+    {
+      "type": "text",
+      "value": "`String[] args` holds any words typed after the class name when the program is run. This program greets whoever is named on the command line:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Greet {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, \" + args[0] + \"!\");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Running `java Greet Ana` prints `Hello, Ana!`. If you run `java Greet` with no words, `args[0]` does not exist and the program stops with an error, which is a third kind of error described in Lesson 7."
     }
   ]
 }

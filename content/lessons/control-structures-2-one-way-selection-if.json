@@ -25,6 +25,19 @@
     {
       "type": "text",
       "value": "The braces enclose the statements to be executed. Execution continues after the closing brace either way."
+    },
+    {
+      "type": "heading",
+      "value": "Conditions are just boolean values"
+    },
+    {
+      "type": "text",
+      "value": "The condition in an `if` is any expression that produces a `boolean`, including a `boolean` variable. Store a test in a well-named variable and the `if` reads like a sentence. There is no need to write `passed == true`; the variable already is the answer:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int score = 70;\nboolean passed = score >= 60;\n\nif (passed) {                 // not: if (passed == true)\n    System.out.println(\"Passed\");\n}"
     }
   ]
 }

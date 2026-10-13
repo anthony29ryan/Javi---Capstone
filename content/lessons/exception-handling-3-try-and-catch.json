@@ -42,6 +42,19 @@
       "type": "code",
       "language": "java",
       "value": "try {\n    int result = 10 / 0;\n} catch (ArithmeticException e) {\n    System.out.println(\"Error: \" + e.getMessage());   // Error: / by zero\n}"
+    },
+    {
+      "type": "heading",
+      "value": "Asking again after bad input"
+    },
+    {
+      "type": "text",
+      "value": "Combining `catch` with a loop lets a program recover instead of ending. `nextInt()` throws `InputMismatchException` when the user types something that is not a whole number, and it leaves the bad text waiting in the input. The `catch` block has to read and discard that text with `next()`, or the loop would fail on it forever:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Scanner input = new Scanner(System.in);\nint number = 0;\nboolean valid = false;\n\nwhile (!valid) {\n    System.out.print(\"Enter a whole number: \");\n    try {\n        number = input.nextInt();\n        valid = true;\n    } catch (InputMismatchException e) {\n        System.out.println(\"That is not a whole number.\");\n        input.next();   // discard the bad token\n    }\n}\nSystem.out.println(\"You entered \" + number);"
     }
   ]
 }

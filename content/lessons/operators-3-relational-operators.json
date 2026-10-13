@@ -70,7 +70,7 @@
     },
     {
       "type": "text",
-      "value": "That is worth pausing on. `10 > 2` is not a question. It is an expression whose *value* is `true`, and values can be stored. This is how conditions get passed around."
+      "value": "`10 > 2` is not a question. It is an expression whose *value* is `true`, and values can be stored. This is how conditions get passed around."
     },
     {
       "type": "note",

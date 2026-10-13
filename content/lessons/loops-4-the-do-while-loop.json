@@ -38,6 +38,24 @@
     {
       "type": "text",
       "value": "A `do...while` body **always executes at least once**. That makes it the natural choice for input validation and menus. You have to show the menu before you can know whether the user wants to see it again."
+    },
+    {
+      "type": "heading",
+      "value": "Asking until the answer is valid"
+    },
+    {
+      "type": "text",
+      "value": "Input validation is the classic use. The prompt has to appear once before you can know whether the answer was acceptable, and the loop repeats while the answer is outside the allowed range:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Scanner input = new Scanner(System.in);\nint choice;\ndo {\n    System.out.print(\"Enter 1-5: \");\n    choice = input.nextInt();\n} while (choice < 1 || choice > 5);\nSystem.out.println(\"You chose \" + choice);"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Enter 1-5: 9\nEnter 1-5: 0\nEnter 1-5: 3\nYou chose 3"
     }
   ]
 }

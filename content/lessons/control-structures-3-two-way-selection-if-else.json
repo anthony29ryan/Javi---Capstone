@@ -41,6 +41,19 @@
           "value": "Read it as: *if the condition, then the first value, otherwise the second.* Use it for short value choices; use `if...else` whenever either branch does real work."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "A familiar example: even or odd"
+    },
+    {
+      "type": "text",
+      "value": "The remainder operator makes a natural two-way test. A number is even when dividing it by 2 leaves nothing over:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int n = 7;\nif (n % 2 == 0) {\n    System.out.println(n + \" is even\");\n}\nelse {\n    System.out.println(n + \" is odd\");   // 7 is odd\n}"
     }
   ]
 }

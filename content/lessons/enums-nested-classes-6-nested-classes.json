@@ -68,6 +68,19 @@
     {
       "type": "text",
       "value": "You will not create nested classes frequently, but you will see them implemented in some built-in Java classes. Recognising them matters more than writing them."
+    },
+    {
+      "type": "heading",
+      "value": "Creating nested objects"
+    },
+    {
+      "type": "text",
+      "value": "A **static** nested class does not need an object of the outer class. A non-static (inner) class does, because each inner object belongs to one particular outer object and can see its fields:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Outer {\n    private int x = 5;\n\n    static class Nested {\n        String hi() { return \"nested\"; }\n    }\n\n    class Inner {\n        int getX() { return x; }   // reads the outer object's private field\n    }\n}\n\nOuter.Nested n = new Outer.Nested();      // no Outer object needed\nOuter outer = new Outer();\nOuter.Inner in = outer.new Inner();       // needs an Outer object\nSystem.out.println(in.getX());            // 5"
     }
   ]
 }

@@ -34,6 +34,19 @@
     {
       "type": "text",
       "value": "Forgetting that assignment is one of the most common mistakes with strings. The compiler says nothing, calling a method and discarding its result is legal."
+    },
+    {
+      "type": "heading",
+      "value": "Chaining methods"
+    },
+    {
+      "type": "text",
+      "value": "Because each method returns a new string, you can call another method on the result straight away. Methods run left to right:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String raw = \"  Java  \";\nSystem.out.println(raw.trim().toUpperCase());   // JAVA"
     }
   ]
 }

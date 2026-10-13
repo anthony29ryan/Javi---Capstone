@@ -37,6 +37,19 @@
           "value": "Full treatment in Lesson 15."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Using what is inherited"
+    },
+    {
+      "type": "text",
+      "value": "A subclass object can use the fields it inherits as if it had declared them itself:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Student pupil = new Student();     // Student extends Person\npupil.name = \"Ana\";                 // inherited from Person\npupil.studentNumber = 7;            // declared in Student\nSystem.out.println(pupil.name + \" \" + pupil.studentNumber);   // Ana 7"
     }
   ]
 }

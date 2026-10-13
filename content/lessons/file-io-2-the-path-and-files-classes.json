@@ -211,6 +211,19 @@
     {
       "type": "text",
       "value": "The `try...catch` is not optional, `readAttributes` declares `IOException`, a **checked** exception, so the code will not compile without it."
+    },
+    {
+      "type": "heading",
+      "value": "Does it exist?"
+    },
+    {
+      "type": "text",
+      "value": "`Files.exists()` answers the question without throwing, and `Files.deleteIfExists()` returns `true` if it removed the file and `false` if there was nothing to remove. Plain `Files.delete()` throws `NoSuchFileException` for a missing file instead:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Path missing = Paths.get(\"nope.txt\");\nSystem.out.println(Files.exists(missing));            // false\nSystem.out.println(Files.deleteIfExists(missing));    // false, no exception"
     }
   ]
 }

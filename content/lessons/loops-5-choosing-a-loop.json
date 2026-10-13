@@ -28,6 +28,19 @@
     {
       "type": "text",
       "value": "They are interchangeable in principle; any loop can be written with any of the three. Picking the natural one makes your intent obvious to whoever reads it next."
+    },
+    {
+      "type": "heading",
+      "value": "When the count is not known: digits of a number"
+    },
+    {
+      "type": "text",
+      "value": "If you cannot say in advance how many times a loop must run, use `while`. Dividing an integer by 10 drops its last digit, and `% 10` reads it, so a loop can count or add up the digits of any number:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int n = 4821;\nint sum = 0;\nwhile (n > 0) {\n    sum += n % 10;   // the last digit\n    n /= 10;         // drop the last digit\n}\nSystem.out.println(sum);   // 15  (4 + 8 + 2 + 1)"
     }
   ]
 }

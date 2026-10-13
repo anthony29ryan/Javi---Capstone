@@ -141,6 +141,19 @@
           "value": "Forgetting the second backslash is the most common Java-specific regex error there is."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Matching a real dot"
+    },
+    {
+      "type": "text",
+      "value": "A bare `.` matches any character, so to match an actual full stop you must escape it with a backslash, written `\"\\\\.\"` in Java. The difference shows up as soon as the text contains something other than a dot:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"3.5\".matches(\"\\\\d\\\\.\\\\d\"));   // true\nSystem.out.println(\"3x5\".matches(\"\\\\d\\\\.\\\\d\"));   // false, x is not a dot\nSystem.out.println(\"3x5\".matches(\"\\\\d.\\\\d\"));     // true, the wildcard accepts x"
     }
   ]
 }

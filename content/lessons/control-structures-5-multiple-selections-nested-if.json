@@ -42,6 +42,23 @@
     {
       "type": "text",
       "value": "The inner `if` is only reached when the outer condition is already true, so \"warm\" means *at least 50 but under 110*. Nesting expresses \"given that X, now decide Y.\""
+    },
+    {
+      "type": "heading",
+      "value": "Which if does an else belong to?"
+    },
+    {
+      "type": "text",
+      "value": "An `else` always belongs to the **nearest** `if` before it that does not already have one. Indentation does not change this, so a missing brace can attach the `else` to the wrong `if`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int a = 5, b = 1;\nif (a > 3)\n    if (b > 3)\n        System.out.println(\"both\");\nelse\n    System.out.println(\"belongs to inner if\");   // this one prints"
+    },
+    {
+      "type": "text",
+      "value": "Although the `else` is lined up with the outer `if`, Java pairs it with `if (b > 3)`. Braces make the intent explicit and fix it: `if (a > 3) { if (b > 3) { ... } } else { ... }`."
     }
   ]
 }

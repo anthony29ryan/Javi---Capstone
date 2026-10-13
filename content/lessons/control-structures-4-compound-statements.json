@@ -37,6 +37,19 @@
           "value": "The indentation says both lines are conditional. Only the first one is. Always use braces, even for a single statement, this bug is invisible during review and has caused real security incidents."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Variables belong to their braces"
+    },
+    {
+      "type": "text",
+      "value": "A variable declared inside a block exists only inside that block. This is its **scope**. Using it after the closing brace is a compile error, so declare a variable *before* the block if you need it afterwards:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (true) {\n    int inside = 5;\n}\nSystem.out.println(inside);   // error: cannot find symbol"
     }
   ]
 }

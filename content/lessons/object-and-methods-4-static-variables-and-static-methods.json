@@ -53,6 +53,19 @@
     {
       "type": "text",
       "value": "This also finally explains `public static void main`. `main` is static so the JVM can call it **without creating an object first**, and it is why calling an instance method directly from `main` produces `non-static method cannot be referenced from a static context`."
+    },
+    {
+      "type": "heading",
+      "value": "Static constants"
+    },
+    {
+      "type": "text",
+      "value": "A `static` variable that is also `final` is a constant shared by the whole class. Because it cannot change, it is safe to make `public`, and it is read through the class name, as with `Math.PI`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Shop {\n    public static final double TAX_RATE = 0.12;\n}\n\nSystem.out.println(100 * Shop.TAX_RATE);   // 12.0"
     }
   ]
 }

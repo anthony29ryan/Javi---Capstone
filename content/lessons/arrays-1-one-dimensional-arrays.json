@@ -106,6 +106,28 @@
     {
       "type": "text",
       "value": "An index can be any expression that evaluates to an `int`, `index + 1` is `4`, so this prints the last element."
+    },
+    {
+      "type": "heading",
+      "value": "Arrays are references"
+    },
+    {
+      "type": "text",
+      "value": "An array variable doesn't hold the elements. It holds a **reference** to them. Assigning one array variable to another copies the reference, so both names point to the **same** array:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[] a = {1, 2, 3};\nint[] b = a;          // b is another name for the same array\nb[0] = 99;\nSystem.out.println(a[0]);   // 99"
+    },
+    {
+      "type": "text",
+      "value": "To get an independent copy, build a new array with `Arrays.copyOf` (see Lesson 5; it needs `import java.util.Arrays;`). Changing the copy then leaves the original alone, and `a == c` is `false` because they are different arrays:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[] c = Arrays.copyOf(a, a.length);\nc[1] = 50;\nSystem.out.println(Arrays.toString(a));   // [99, 2, 3]\nSystem.out.println(Arrays.toString(c));   // [99, 50, 3]"
     }
   ]
 }

@@ -115,6 +115,19 @@
     },
     {
       "type": "heading",
+      "value": "Finding the limits in code"
+    },
+    {
+      "type": "text",
+      "value": "You do not need to memorize the ranges. Each numeric type has constants that hold its limits, so you can print them:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(Integer.MAX_VALUE);   // 2147483647\nSystem.out.println(Integer.MIN_VALUE);   // -2147483648\nSystem.out.println(Long.MAX_VALUE);      // 9223372036854775807"
+    },
+    {
+      "type": "heading",
       "value": "A note on String"
     },
     {

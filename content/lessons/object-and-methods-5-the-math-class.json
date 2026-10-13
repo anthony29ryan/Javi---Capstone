@@ -128,7 +128,20 @@
     },
     {
       "type": "text",
-      "value": "Trace the dice line: `Math.random()` gives `[0.0, 1.0)`, times 6 gives `[0.0, 6.0)`, cast to `int` truncates to `0`–`5`, plus 1 gives `1`–`6`. The `+ 1` is **outside** the cast: inside it, you would round the wrong thing."
+      "value": "Trace the dice line: `Math.random()` gives `[0.0, 1.0)`, times 6 gives `[0.0, 6.0)`, cast to `int` truncates to `0` to `5`, plus 1 gives `1`–`6`. The `+ 1` is **outside** the cast: inside it, you would round the wrong thing."
+    },
+    {
+      "type": "heading",
+      "value": "The Random class"
+    },
+    {
+      "type": "text",
+      "value": "`java.util.Random` is an alternative to `Math.random()`. Its `nextInt(bound)` method returns a whole number from `0` up to, but not including, `bound`, with no scaling or casting. Creating it with a **seed**, as in `new Random(42)`, makes it produce the same sequence every run, which is useful when testing:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Random;\n\nRandom random = new Random();\nint roll = random.nextInt(6) + 1;   // 1 to 6\n\nRandom seeded = new Random(42);     // the same numbers on every run"
     }
   ]
 }

@@ -77,6 +77,27 @@
           "value": "13 in binary is `1101`, not `01101`. The extra `0` comes from the base case printing `0` when `num` reaches `0`. It is harmless for demonstration, but if you want exact output, the base case should print nothing and simply `return`, with a separate check so that `decToBin(0)` still prints `0`."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "The leap of faith"
+    },
+    {
+      "type": "text",
+      "value": "When you write the general case, do not trace every call in your head. Assume the recursive call already returns the right answer for the smaller problem, and ask only whether your method turns that answer into the right answer for this one. For `largest`, if the call returns the largest of the rest, the answer is either that or the first element. Then check that the base case is correct and that every call gets closer to it."
+    },
+    {
+      "type": "heading",
+      "value": "Recursion on strings"
+    },
+    {
+      "type": "text",
+      "value": "A string can be reduced by one character at a time with `substring(1)`. To reverse a string, reverse everything after the first character, then put the first character on the end. The empty string is the base case:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static String reverse(String s) {\n    if (s.isEmpty()) {\n        return \"\";\n    }\n    return reverse(s.substring(1)) + s.charAt(0);\n}\n\n// reverse(\"abc\") returns \"cba\""
     }
   ]
 }

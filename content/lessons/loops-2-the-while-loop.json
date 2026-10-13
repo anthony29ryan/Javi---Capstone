@@ -59,6 +59,19 @@
     {
       "type": "text",
       "value": "Drop any one and the loop never ends. If a program hangs, press `Ctrl+C` and check those three."
+    },
+    {
+      "type": "heading",
+      "value": "Keeping a running total"
+    },
+    {
+      "type": "text",
+      "value": "A very common job for a loop is an **accumulator**: a variable that starts at a known value and has something added to it on every pass. Here the loop adds 1 + 2 + 3 + 4 + 5:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int sum = 0;        // the accumulator starts at 0\nint i = 1;\nwhile (i <= 5) {\n    sum += i;\n    i++;\n}\nSystem.out.println(sum);   // 15"
     }
   ]
 }

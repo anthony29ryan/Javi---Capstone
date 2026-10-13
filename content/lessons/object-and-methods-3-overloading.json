@@ -38,6 +38,19 @@
     {
       "type": "text",
       "value": "You have been relying on overloading since Lesson 1. `System.out.println` is overloaded for `int`, `double`, `char`, `String`, `boolean`, and more, which is why it prints anything you hand it."
+    },
+    {
+      "type": "heading",
+      "value": "Which version is called?"
+    },
+    {
+      "type": "text",
+      "value": "Java picks the overload whose parameters match the arguments best. If there is no exact match, it widens the arguments (for example `int` to `double`) and uses the version that then fits. With the `add` methods above, `add(3, 7.5)` has no `(int, double)` version, so the `int` is widened and `add(double, double)` runs:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(add(3, 7.5));   // 10.5, the double version"
     }
   ]
 }

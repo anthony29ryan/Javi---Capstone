@@ -42,6 +42,19 @@
           "value": "step 4 is rarely needed today. Current JDK installers configure the path for you, and since Java 11 you can run a single file directly with `java FirstJavaProgram.java`, skipping the separate compile step. If you use an IDE such as IntelliJ IDEA or VS Code, the whole sequence becomes one button. The steps above still describe what happens underneath."
         }
       ]
+    },
+    {
+      "type": "text",
+      "value": "If you skip the compile step, or run from the wrong folder, `java` cannot find the class and prints this instead of running your program:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Error: Could not find or load main class FirstJavaProgram\nCaused by: java.lang.ClassNotFoundException: FirstJavaProgram"
+    },
+    {
+      "type": "text",
+      "value": "That message is about finding the compiled `.class` file, not about a mistake in your code. Check that you compiled first and that you are in the folder containing the `.class` file."
     }
   ]
 }

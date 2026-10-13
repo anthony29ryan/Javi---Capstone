@@ -64,6 +64,19 @@
           "value": "Modern Java offers better tools for this, `AtomicInteger`, `ExecutorService`, and the `java.util.concurrent` package, which are outside this course but are what production code uses. `synchronized` is the mechanism to understand first."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Atomic variables"
+    },
+    {
+      "type": "text",
+      "value": "For a simple counter there is a lighter fix than `synchronized`. `AtomicInteger`, from `java.util.concurrent.atomic`, performs the read, add and write as one indivisible step, so no increment can be lost:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.concurrent.atomic.AtomicInteger;\n\nAtomicInteger count = new AtomicInteger(0);\n\nRunnable task = () -> {\n    for (int i = 0; i < 100000; i++) {\n        count.incrementAndGet();   // one atomic step\n    }\n};\n\n// two threads running task, then join() on both: count.get() is 200000, every time"
     }
   ]
 }

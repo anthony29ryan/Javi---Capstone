@@ -63,6 +63,19 @@
     {
       "type": "text",
       "value": "By convention, enum constants are written in `ALL_CAPS`, like other constants."
+    },
+    {
+      "type": "heading",
+      "value": "Enums as parameters"
+    },
+    {
+      "type": "text",
+      "value": "An enum is a type like any other, so a method can take one as a parameter or return one. A caller can then pass only the constants that exist, which is the type safety described above. Constants are compared with `==`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static boolean isFinalExam(Period p) {\n    return p == Period.FINAL;\n}\n\nSystem.out.println(isFinalExam(Period.FINAL));     // true\nSystem.out.println(isFinalExam(Period.MIDTERM));   // false"
     }
   ]
 }

@@ -1,0 +1,335 @@
+[
+  {
+    "id": "operators-01",
+    "lessonId": "operators-1-operators-and-operands",
+    "type": "mcq",
+    "prompt": "In the expression `45 + 2`, what are `45` and `2` called?",
+    "choices": [
+      "Operands",
+      "Operators",
+      "Literals only",
+      "Arguments"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "operators-02",
+    "lessonId": "operators-1-operators-and-operands",
+    "type": "mcq",
+    "prompt": "Which expression uses a unary operator?",
+    "choices": [
+      "a + b",
+      "-x",
+      "a * b",
+      "a % b"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "operators-03",
+    "lessonId": "operators-2-arithmetic-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(11 / 3);",
+    "choices": [
+      "3",
+      "4",
+      "3.67",
+      "3.6666666666666665"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "operators-04",
+    "lessonId": "operators-2-arithmetic-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(11 % 3);",
+    "choices": [
+      "0",
+      "2",
+      "3",
+      "3.66"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "operators-05",
+    "lessonId": "operators-2-arithmetic-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int x = 11;\ndouble y = 3;\nSystem.out.println(x / y);",
+    "choices": [
+      "3",
+      "3.0",
+      "3.6666666666666665",
+      "3.67"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "operators-06",
+    "lessonId": "operators-2-arithmetic-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int correct = 7;\nint total = 10;\nSystem.out.println(correct / total * 100);",
+    "choices": [
+      "70",
+      "7",
+      "70.0",
+      "0"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "operators-07",
+    "lessonId": "operators-2-arithmetic-operators",
+    "type": "mcq",
+    "prompt": "Which condition is the standard test for \"n is even\"?",
+    "choices": [
+      "n / 2 == 0",
+      "n * 2 == 0",
+      "n % 2 == 0",
+      "n % 2 == 1"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "operators-08",
+    "lessonId": "operators-2-arithmetic-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"Total: \" + 1 + 2);",
+    "choices": [
+      "Compile error",
+      "Total: 3",
+      "Total: 1 2",
+      "Total: 12"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "operators-09",
+    "lessonId": "operators-2-arithmetic-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(1 + 2 + \" total\");",
+    "choices": [
+      "3 total",
+      "12 total",
+      "1 2 total",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "operators-10",
+    "lessonId": "operators-3-relational-operators",
+    "type": "truefalse",
+    "prompt": "In Java, a single `=` compares two values and a double `==` assigns one.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "operators-11",
+    "lessonId": "operators-3-relational-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "boolean b = 10 > 2;\nSystem.out.println(b);",
+    "choices": [
+      "10",
+      "true",
+      "2",
+      "false"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "operators-12",
+    "lessonId": "operators-4-logical-operators",
+    "type": "mcq",
+    "prompt": "If `A` is `true` and `B` is `false`, what is `A && B`?",
+    "choices": [
+      "null",
+      "true",
+      "false",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "operators-13",
+    "lessonId": "operators-4-logical-operators",
+    "type": "mcq",
+    "prompt": "If `A` is `true` and `B` is `false`, what is `A ^ B`?",
+    "choices": [
+      "null",
+      "false",
+      "Compile error",
+      "true"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "operators-14",
+    "lessonId": "operators-4-logical-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int x = 0;\nSystem.out.println(x != 0 && 10 / x > 1);",
+    "choices": [
+      "false",
+      "true",
+      "ArithmeticException",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "operators-15",
+    "lessonId": "operators-4-logical-operators",
+    "type": "truefalse",
+    "prompt": "By De Morgan's laws, `!(A && B)` always has the same value as `!A || !B`.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "operators-16",
+    "lessonId": "operators-5-assignment-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int score = 10;\nscore *= 2;\nscore -= 5;\nSystem.out.println(score);",
+    "choices": [
+      "20",
+      "15",
+      "10",
+      "25"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "operators-17",
+    "lessonId": "operators-5-assignment-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int a = 5;\nint b = a++;\nSystem.out.println(a + \" \" + b);",
+    "choices": [
+      "5 5",
+      "6 5",
+      "6 6",
+      "5 6"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "operators-18",
+    "lessonId": "operators-5-assignment-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int a = 5;\nint c = ++a;\nSystem.out.println(a + \" \" + c);",
+    "choices": [
+      "7 7",
+      "6 7",
+      "6 6",
+      "7 6"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "operators-19",
+    "lessonId": "operators-6-order-of-precedence",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(10 + 3 * 8);",
+    "choices": [
+      "104",
+      "80",
+      "21",
+      "34"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "operators-20",
+    "lessonId": "operators-6-order-of-precedence",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int a = 10, b = 3, c = 8;\nSystem.out.println((a + b) * c);",
+    "choices": [
+      "104",
+      "80",
+      "21",
+      "34"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "operators-21",
+    "lessonId": "operators-6-order-of-precedence",
+    "type": "mcq",
+    "prompt": "Which of these operators has higher precedence?",
+    "choices": [
+      "`||` over `&&`",
+      "They are equal",
+      "`+` over `*`",
+      "`&&` over `||`"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "operators-22",
+    "lessonId": "operators-6-order-of-precedence",
+    "type": "truefalse",
+    "prompt": "Parentheses can be used to override the normal order of precedence.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "operators-23",
+    "lessonId": "operators-common-mistakes",
+    "type": "mcq",
+    "prompt": "Which expression correctly compares the text of two `String` variables `a` and `b`?",
+    "choices": [
+      "a.equals(b)",
+      "a == b",
+      "a = b",
+      "a != b"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "operators-24",
+    "lessonId": "operators-common-mistakes",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "String a = \"hello\";\nString b = new String(\"hello\");\nSystem.out.println(a == b);",
+    "choices": [
+      "true",
+      "false",
+      "Compile error",
+      "null"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "operators-25",
+    "lessonId": "operators-common-mistakes",
+    "type": "mcq",
+    "prompt": "What is the value of `0.1 + 0.2 == 0.3`?",
+    "choices": [
+      "true",
+      "Compile error",
+      "false",
+      "0.3"
+    ],
+    "answer": 2
+  }
+]

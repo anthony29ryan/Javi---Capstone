@@ -51,6 +51,23 @@
       "type": "code",
       "language": "text",
       "value": "2.8 * 17.5 - 1.40\n49.0       - 1.40\n47.6"
+    },
+    {
+      "type": "heading",
+      "value": "The type is decided before the result is stored"
+    },
+    {
+      "type": "text",
+      "value": "An `int` expression stays an `int` all the way through, even if you plan to store the answer in something bigger. If an intermediate result is too large, it wraps around before the assignment happens:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int big = 1000000 * 1000000;\nSystem.out.println(big);          // -727379968, overflowed as an int\n\nlong fixed = 1000000L * 1000000;\nSystem.out.println(fixed);        // 1000000000000"
+    },
+    {
+      "type": "text",
+      "value": "Making one operand a `long` with the `L` suffix turns the whole multiplication into a `long` multiplication."
     }
   ]
 }

@@ -1,0 +1,327 @@
+[
+  {
+    "id": "data-types-01",
+    "lessonId": "data-types-1-what-a-data-type-is",
+    "type": "truefalse",
+    "prompt": "A data type specifies a set of values and the operations that can be performed on them.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "data-types-02",
+    "lessonId": "data-types-1-what-a-data-type-is",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"5\" + \"5\");",
+    "choices": [
+      "55",
+      "10",
+      "5",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "data-types-03",
+    "lessonId": "data-types-2-the-eight-primitive-types",
+    "type": "mcq",
+    "prompt": "How many primitive data types does Java have?",
+    "choices": [
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "data-types-04",
+    "lessonId": "data-types-2-the-eight-primitive-types",
+    "type": "mcq",
+    "prompt": "What is the type of the literal `19.99`?",
+    "choices": [
+      "float",
+      "double",
+      "decimal",
+      "String"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "data-types-05",
+    "lessonId": "data-types-2-the-eight-primitive-types",
+    "type": "mcq",
+    "prompt": "What must be added to the literal in `long population = 8000000000;` to make it compile?",
+    "choices": [
+      "The suffix `f`",
+      "A cast to `int`",
+      "The suffix `L`",
+      "Nothing, it already compiles"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "data-types-06",
+    "lessonId": "data-types-2-the-eight-primitive-types",
+    "type": "mcq",
+    "prompt": "Which of these is NOT a primitive type?",
+    "choices": [
+      "char",
+      "boolean",
+      "long",
+      "String"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "data-types-07",
+    "lessonId": "data-types-2-the-eight-primitive-types",
+    "type": "mcq",
+    "prompt": "Which type suits a simple yes/no flag?",
+    "choices": [
+      "boolean",
+      "int",
+      "char",
+      "double"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "data-types-08",
+    "lessonId": "data-types-2-the-eight-primitive-types",
+    "type": "mcq",
+    "prompt": "Which expression gives the largest value an `int` can hold?",
+    "choices": [
+      "int.max",
+      "Integer.MAX_VALUE",
+      "Integer.MAX",
+      "Long.MAX_VALUE"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "data-types-09",
+    "lessonId": "data-types-3-variables",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int count = 5;\ncount = count + 1;\nSystem.out.println(count);",
+    "choices": [
+      "5",
+      "Compile error",
+      "6",
+      "count + 1"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "data-types-10",
+    "lessonId": "data-types-3-variables",
+    "type": "truefalse",
+    "prompt": "A variable can hold only one value at a time, but that value may change while the program runs.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "data-types-11",
+    "lessonId": "data-types-3-variables",
+    "type": "mcq",
+    "prompt": "Which declaration is valid Java?",
+    "choices": [
+      "int 2x = 3;",
+      "int x = 3.5;",
+      "char c = \"A\";",
+      "double grade = 2.75;"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "data-types-12",
+    "lessonId": "data-types-3-variables",
+    "type": "mcq",
+    "prompt": "What happens if you declare a local variable with `int size;` and print it before assigning it?",
+    "choices": [
+      "It does not compile",
+      "It throws an exception while running",
+      "It prints null",
+      "It prints 0"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "data-types-13",
+    "lessonId": "data-types-3-variables",
+    "type": "mcq",
+    "prompt": "In `count = count + 1;`, what does the `=` sign do?",
+    "choices": [
+      "Tests whether the two sides are equal",
+      "Evaluates the right side and stores the result in the left variable",
+      "Declares a new variable",
+      "Copies the name `count`"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "data-types-14",
+    "lessonId": "data-types-4-constants",
+    "type": "mcq",
+    "prompt": "Which keyword creates a constant?",
+    "choices": [
+      "const",
+      "static",
+      "final",
+      "fixed"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "data-types-15",
+    "lessonId": "data-types-4-constants",
+    "type": "truefalse",
+    "prompt": "A named constant declared with `final` can be assigned a new value as many times as you like.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "data-types-16",
+    "lessonId": "data-types-4-constants",
+    "type": "mcq",
+    "prompt": "Which name follows the convention for a constant?",
+    "choices": [
+      "maxSize",
+      "MaxSize",
+      "max_size",
+      "MAX_SIZE"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "data-types-17",
+    "lessonId": "data-types-4-constants",
+    "type": "mcq",
+    "prompt": "Which expression gives the value of pi that Java already provides?",
+    "choices": [
+      "Math.PI",
+      "Math.pi",
+      "PI",
+      "Double.PI"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "data-types-18",
+    "lessonId": "data-types-5-type-casting",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int a = (int) 7.9;\nSystem.out.println(a);",
+    "choices": [
+      "8",
+      "7",
+      "7.9",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "data-types-19",
+    "lessonId": "data-types-5-type-casting",
+    "type": "mcq",
+    "prompt": "Why does `float x = 6.82f; int a = x;` not compile?",
+    "choices": [
+      "A semicolon is missing",
+      "A float cannot hold 6.82",
+      "Narrowing needs an explicit cast",
+      "int is not a valid type"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "data-types-20",
+    "lessonId": "data-types-5-type-casting",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println((double) 7 / 2);",
+    "choices": [
+      "3.0",
+      "3.5",
+      "3",
+      "4"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "data-types-21",
+    "lessonId": "data-types-5-type-casting",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println((double) (7 / 2));",
+    "choices": [
+      "3.5",
+      "3",
+      "3.0",
+      "4.0"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "data-types-22",
+    "lessonId": "data-types-5-type-casting",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "char letter = 'A';\nSystem.out.println((char) (letter + 2));",
+    "choices": [
+      "B",
+      "A2",
+      "67",
+      "C"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "data-types-23",
+    "lessonId": "data-types-5-type-casting",
+    "type": "truefalse",
+    "prompt": "Casting a `double` to an `int` rounds the value to the nearest whole number.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "data-types-24",
+    "lessonId": "data-types-common-mistakes",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int big = 2147483647;\nSystem.out.println(big + 1);",
+    "choices": [
+      "-2147483648",
+      "2147483648",
+      "0",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "data-types-25",
+    "lessonId": "data-types-common-mistakes",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(0.1 + 0.2);",
+    "choices": [
+      "0.3",
+      "0.2",
+      "0.30000000000000004",
+      "0.30000001"
+    ],
+    "answer": 2
+  }
+]

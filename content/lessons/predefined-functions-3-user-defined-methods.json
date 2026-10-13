@@ -127,7 +127,33 @@
     },
     {
       "type": "text",
-      "value": "Notice the difference. `displayMessage()` is **not** static, so it needs an object: `new VoidExamples().displayMessage()`. `displayInfo()` **is** static, so it is called directly by name. `main` is itself static, which is why it can only call static methods without first creating an object. That rule is the source of the error message `non-static method cannot be referenced from a static context`, probably the most-searched Java error there is. Lessons 12–14 explain why."
+      "value": "Notice the difference. `displayMessage()` is **not** static, so it needs an object: `new VoidExamples().displayMessage()`. `displayInfo()` **is** static, so it is called directly by name. `main` is itself static, which is why it can only call static methods without first creating an object. That rule is the source of the error message `non-static method cannot be referenced from a static context`, probably the most-searched Java error there is. Lessons 12 to 14 explain why."
+    },
+    {
+      "type": "heading",
+      "value": "Methods can call methods"
+    },
+    {
+      "type": "text",
+      "value": "A method can call any other method, so small methods can be combined into bigger ones. Each method does one job:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static int square(int n) {\n    return n * n;\n}\n\npublic static int sumOfSquares(int a, int b) {\n    return square(a) + square(b);\n}\n\n// sumOfSquares(3, 4) returns 25"
+    },
+    {
+      "type": "heading",
+      "value": "Overloading"
+    },
+    {
+      "type": "text",
+      "value": "Several methods can share one name as long as their parameter lists differ in number or type. Java chooses the version that matches the arguments you pass:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static int add(int a, int b) {\n    return a + b;\n}\n\npublic static double add(double a, double b) {\n    return a + b;\n}\n\nSystem.out.println(add(2, 3));       // 5\nSystem.out.println(add(2.5, 3.5));   // 6.0"
     }
   ]
 }

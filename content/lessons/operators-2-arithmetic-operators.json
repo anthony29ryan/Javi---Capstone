@@ -108,6 +108,23 @@
     {
       "type": "text",
       "value": "`n % 2 == 0` is the standard test for \"is this even.\" You will use it constantly once you reach loops."
+    },
+    {
+      "type": "heading",
+      "value": "The + operator with text"
+    },
+    {
+      "type": "text",
+      "value": "When either side of `+` is a `String`, it joins instead of adding. Java works left to right, so the order decides which `+` adds and which joins:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"Total: \" + 1 + 2);       // Total: 12\nSystem.out.println(1 + 2 + \" total\");       // 3 total\nSystem.out.println(\"Total: \" + (1 + 2));     // Total: 3"
+    },
+    {
+      "type": "text",
+      "value": "In the first line, `\"Total: \" + 1` is already a `String` by the time `+ 2` runs, so the `2` is joined, not added. Use parentheses to add first."
     }
   ]
 }

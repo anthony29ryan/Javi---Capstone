@@ -84,6 +84,19 @@
     {
       "type": "text",
       "value": "`Arrays.toString()` is invaluable for debugging, printing an array directly gives you something like `[I@6d06d69c`, which is its memory reference, not its contents."
+    },
+    {
+      "type": "text",
+      "value": "`Arrays.copyOf(array, newLength)` returns a new array. A longer length pads with defaults, and a shorter one cuts the array off. `Arrays.copyOfRange(array, from, to)` copies a slice, where `to` is **not** included:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[] data = {10, 20, 30};\nSystem.out.println(Arrays.toString(Arrays.copyOf(data, 5)));         // [10, 20, 30, 0, 0]\nSystem.out.println(Arrays.toString(Arrays.copyOfRange(data, 1, 3))); // [20, 30]"
+    },
+    {
+      "type": "text",
+      "value": "This also answers the \"Trying to resize an array\" mistake: \"growing\" an array means copying it into a larger one."
     }
   ]
 }

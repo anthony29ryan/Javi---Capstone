@@ -1,0 +1,323 @@
+[
+  {
+    "id": "oop-01",
+    "lessonId": "oop-1-what-object-oriented-programming-is",
+    "type": "mcq",
+    "prompt": "Object-oriented programming bundles together:",
+    "choices": [
+      "Data and the code that acts on it",
+      "Only variables",
+      "Only methods",
+      "Packages and imports"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "oop-02",
+    "lessonId": "oop-1-what-object-oriented-programming-is",
+    "type": "mcq",
+    "prompt": "What is the main advantage of the object-oriented `Student` over separate variables for each student?",
+    "choices": [
+      "It always needs fewer lines",
+      "Each `Student` carries its own data and knows how to display itself",
+      "It removes the need for classes",
+      "It needs no methods"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "oop-03",
+    "lessonId": "oop-2-objects",
+    "type": "mcq",
+    "prompt": "For a car, which of these describes its state?",
+    "choices": [
+      "A blueprint",
+      "Colour, brand, fuel level, speed",
+      "Red, Toyota, 40 litres, 60 km/h",
+      "Accelerate, brake, refuel"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "oop-04",
+    "lessonId": "oop-2-objects",
+    "type": "mcq",
+    "prompt": "In Java, the behaviors of an object are written as:",
+    "choices": [
+      "Fields",
+      "Comments",
+      "Packages",
+      "Methods"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "oop-05",
+    "lessonId": "oop-2-objects",
+    "type": "mcq",
+    "prompt": "In Java code, an object's attributes are usually stored in:",
+    "choices": [
+      "Fields",
+      "Packages",
+      "Imports",
+      "Comments"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "oop-06",
+    "lessonId": "oop-2-objects",
+    "type": "truefalse",
+    "prompt": "Two objects of the same class can have different states.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "oop-07",
+    "lessonId": "oop-3-classes",
+    "type": "mcq",
+    "prompt": "What is a class?",
+    "choices": [
+      "A single object",
+      "A blueprint for defining objects",
+      "A method",
+      "A variable"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "oop-08",
+    "lessonId": "oop-3-classes",
+    "type": "mcq",
+    "prompt": "What is the data type of an object?",
+    "choices": [
+      "Its package",
+      "Always `Object`",
+      "The name of its class",
+      "Always `int`"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "oop-09",
+    "lessonId": "oop-3-classes",
+    "type": "output",
+    "prompt": "What does this print, where `Student` has fields `String name`, `int age` and `double grade`?",
+    "code": "Student s = new Student();\nSystem.out.println(s.name + \" \" + s.age + \" \" + s.grade);",
+    "choices": [
+      "null null null",
+      " 0 0",
+      "Compile error",
+      "null 0 0.0"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "oop-10",
+    "lessonId": "oop-3-classes",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "Student ana = new Student();\nana.grade = 92.5;\nStudent jess = new Student();\njess.grade = 88.0;\nana.grade = 70;\nSystem.out.println(jess.grade);",
+    "choices": [
+      "88.0",
+      "92.5",
+      "70.0",
+      "0.0"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "oop-11",
+    "lessonId": "oop-3-classes",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "Student ana = new Student();\nana.grade = 70;\nStudent same = ana;\nsame.grade = 50.0;\nSystem.out.println(ana.grade);",
+    "choices": [
+      "50.0",
+      "Compile error",
+      "0.0",
+      "70.0"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "oop-12",
+    "lessonId": "oop-3-classes",
+    "type": "mcq",
+    "prompt": "In `Scanner input = new Scanner(System.in);`, which is the class and which is the object?",
+    "choices": [
+      "`input` is the class and `Scanner` is the object",
+      "`Scanner` is the class and `input` is the object",
+      "Both are classes",
+      "Both are objects"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "oop-13",
+    "lessonId": "oop-3-classes",
+    "type": "mcq",
+    "prompt": "How many objects can be created from one class?",
+    "choices": [
+      "At most ten",
+      "Only one",
+      "As many as you need",
+      "None until it is imported"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "oop-14",
+    "lessonId": "oop-4-inheritance",
+    "type": "mcq",
+    "prompt": "Which keyword makes one class inherit from another?",
+    "choices": [
+      "implements",
+      "inherits",
+      "import",
+      "extends"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "oop-15",
+    "lessonId": "oop-4-inheritance",
+    "type": "mcq",
+    "prompt": "If `Student extends Person`, a `Student` is a:",
+    "choices": [
+      "Person",
+      "Package",
+      "Method",
+      "Interface"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "oop-16",
+    "lessonId": "oop-4-inheritance",
+    "type": "output",
+    "prompt": "What does this print, if `Student extends Person` and `Person` declares `name`?",
+    "code": "Student pupil = new Student();\npupil.name = \"Ana\";\npupil.studentNumber = 7;\nSystem.out.println(pupil.name + \" \" + pupil.studentNumber);",
+    "choices": [
+      "7 Ana",
+      "Ana 7",
+      "null 7",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "oop-17",
+    "lessonId": "oop-4-inheritance",
+    "type": "mcq",
+    "prompt": "What is inheritance used for?",
+    "choices": [
+      "Formatting output",
+      "Reading input",
+      "Avoiding repetition of instructions across classes",
+      "Compiling code"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "oop-18",
+    "lessonId": "oop-5-interfaces",
+    "type": "mcq",
+    "prompt": "Which keyword does a class use to adopt an interface?",
+    "choices": [
+      "extends",
+      "interface",
+      "import",
+      "implements"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "oop-19",
+    "lessonId": "oop-5-interfaces",
+    "type": "mcq",
+    "prompt": "Which phrase fits an interface?",
+    "choices": [
+      "Can do",
+      "Is a",
+      "Has a number",
+      "Is imported"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "oop-20",
+    "lessonId": "oop-5-interfaces",
+    "type": "truefalse",
+    "prompt": "The methods listed in an interface have bodies.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "oop-21",
+    "lessonId": "oop-5-interfaces",
+    "type": "truefalse",
+    "prompt": "A class may implement several interfaces.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "oop-22",
+    "lessonId": "oop-6-packages",
+    "type": "mcq",
+    "prompt": "What is a package?",
+    "choices": [
+      "A type of loop",
+      "A collection of related classes and interfaces",
+      "A kind of variable",
+      "A single method"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "oop-23",
+    "lessonId": "oop-7-how-it-fits-together",
+    "type": "mcq",
+    "prompt": "What is built from a class?",
+    "choices": [
+      "Packages",
+      "Interfaces",
+      "Objects",
+      "Imports"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "oop-24",
+    "lessonId": "oop-common-mistakes",
+    "type": "mcq",
+    "prompt": "`Student` and `ana` in `Student ana = new Student();` are respectively:",
+    "choices": [
+      "A package and a class",
+      "An object and a class",
+      "A method and an object",
+      "A class and an object"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "oop-25",
+    "lessonId": "oop-common-mistakes",
+    "type": "truefalse",
+    "prompt": "Changing an attribute of one object changes it in every other object of the same class.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  }
+]

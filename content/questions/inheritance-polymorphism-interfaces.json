@@ -1,0 +1,328 @@
+[
+  {
+    "id": "inheritance-polymorphism-interfaces-01",
+    "lessonId": "inheritance-polymorphism-interfaces-1-inheritance",
+    "type": "mcq",
+    "prompt": "Another name for a derived class is:",
+    "choices": [
+      "Subclass",
+      "Superclass",
+      "Base class",
+      "Parent class"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-02",
+    "lessonId": "inheritance-polymorphism-interfaces-1-inheritance",
+    "type": "mcq",
+    "prompt": "Which keyword makes `Student` a derived class of `Person`?",
+    "choices": [
+      "inherits",
+      "extends",
+      "implements",
+      "super"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-03",
+    "lessonId": "inheritance-polymorphism-interfaces-1-inheritance",
+    "type": "mcq",
+    "prompt": "What does a derived class NOT inherit from its base class?",
+    "choices": [
+      "Nothing at all",
+      "Public methods",
+      "Constructors",
+      "Instance variables"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-04",
+    "lessonId": "inheritance-polymorphism-interfaces-1-inheritance",
+    "type": "mcq",
+    "prompt": "`name` is `private` in `Person`. How can code in `Student` read it?",
+    "choices": [
+      "Directly, as `name`",
+      "It cannot be read at all",
+      "With `super.name`",
+      "Through the public `getName()` accessor"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-05",
+    "lessonId": "inheritance-polymorphism-interfaces-1-inheritance",
+    "type": "output",
+    "prompt": "What does this print, where `Student` extends `Person`?",
+    "code": "Student s = new Student(\"Ana\", 7);\nSystem.out.println(s instanceof Object);",
+    "choices": [
+      "true",
+      "false",
+      "Student",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-06",
+    "lessonId": "inheritance-polymorphism-interfaces-1-inheritance",
+    "type": "mcq",
+    "prompt": "Which class does every Java class ultimately extend?",
+    "choices": [
+      "Base",
+      "Object",
+      "Main",
+      "Class"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-07",
+    "lessonId": "inheritance-polymorphism-interfaces-2-overriding",
+    "type": "mcq",
+    "prompt": "A method in a subclass overrides a base class method when it has:",
+    "choices": [
+      "The same name but different parameters",
+      "A different name",
+      "The same name, parameters and return type",
+      "Only the same return type"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-08",
+    "lessonId": "inheritance-polymorphism-interfaces-2-overriding",
+    "type": "mcq",
+    "prompt": "What does `@Override` do?",
+    "choices": [
+      "Makes the method static",
+      "Makes the method run faster",
+      "Hides the method",
+      "Asks the compiler to check that the method really overrides something"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-09",
+    "lessonId": "inheritance-polymorphism-interfaces-2-overriding",
+    "type": "mcq",
+    "prompt": "When is the version of an overridden method chosen?",
+    "choices": [
+      "At run time, by the object's class",
+      "At compile time, by the variable's type",
+      "When the file is saved",
+      "When the class is imported"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-10",
+    "lessonId": "inheritance-polymorphism-interfaces-2-overriding",
+    "type": "mcq",
+    "prompt": "What does marking a method `final` do?",
+    "choices": [
+      "Makes it private",
+      "Stops subclasses from overriding it",
+      "Makes it abstract",
+      "Makes it run last"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-11",
+    "lessonId": "inheritance-polymorphism-interfaces-3-constructors-in-a-derived-class",
+    "type": "mcq",
+    "prompt": "Where must a call to `super(...)` appear in a constructor?",
+    "choices": [
+      "Anywhere",
+      "As the last statement",
+      "As the first statement",
+      "Outside the constructor"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-12",
+    "lessonId": "inheritance-polymorphism-interfaces-3-constructors-in-a-derived-class",
+    "type": "truefalse",
+    "prompt": "One constructor can contain both a `super(...)` call and a `this(...)` call.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-13",
+    "lessonId": "inheritance-polymorphism-interfaces-3-constructors-in-a-derived-class",
+    "type": "mcq",
+    "prompt": "What does `super.writeOutput()` do inside an overriding method?",
+    "choices": [
+      "Calls the same method again",
+      "Deletes the parent method",
+      "Creates a new parent object",
+      "Calls the parent class's version of the method"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-14",
+    "lessonId": "inheritance-polymorphism-interfaces-3-constructors-in-a-derived-class",
+    "type": "output",
+    "prompt": "What does this print, if `B extends A` and each constructor prints its own letter after `B` calls `super()` first?",
+    "code": "new B();",
+    "choices": [
+      "A\nB",
+      "B\nA",
+      "A",
+      "B"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-15",
+    "lessonId": "inheritance-polymorphism-interfaces-4-polymorphism",
+    "type": "mcq",
+    "prompt": "In polymorphism, what decides which version of an overridden method runs?",
+    "choices": [
+      "The method's parameter names",
+      "The class of the object created with `new`",
+      "The order of the methods in the file",
+      "The type of the variable"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-16",
+    "lessonId": "inheritance-polymorphism-interfaces-4-polymorphism",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "Animal a = new Dog();\nSystem.out.println(a.sound());",
+    "choices": [
+      "...",
+      "Animal",
+      "Woof",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-17",
+    "lessonId": "inheritance-polymorphism-interfaces-4-polymorphism",
+    "type": "mcq",
+    "prompt": "What is dynamic binding?",
+    "choices": [
+      "Loading classes from disk",
+      "Linking a method call to its definition at compile time",
+      "Joining two strings",
+      "Linking a method call to its definition at run time"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-18",
+    "lessonId": "inheritance-polymorphism-interfaces-4-polymorphism",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "Person p = new Student(\"Ana\", 7);\nif (p instanceof Student) {\n    Student s = (Student) p;\n    System.out.println(s.getStudentNumber());\n}",
+    "choices": [
+      "7",
+      "Ana",
+      "null",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-19",
+    "lessonId": "inheritance-polymorphism-interfaces-4-polymorphism",
+    "type": "mcq",
+    "prompt": "What happens if you cast an object to a class it is not an instance of?",
+    "choices": [
+      "Nothing, the cast is ignored",
+      "ClassCastException",
+      "NullPointerException",
+      "A compile error always"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-20",
+    "lessonId": "inheritance-polymorphism-interfaces-5-interfaces",
+    "type": "mcq",
+    "prompt": "Which class declaration is valid?",
+    "choices": [
+      "class R extends A, B",
+      "class R implement A B",
+      "class R implements A, B",
+      "class R implements A extends B"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-21",
+    "lessonId": "inheritance-polymorphism-interfaces-5-interfaces",
+    "type": "output",
+    "prompt": "What does this print, where `Rectangle` implements `Measurable` and `getArea()` returns `length * width`?",
+    "code": "Measurable m = new Rectangle(4, 6);\nSystem.out.println(m.getArea());",
+    "choices": [
+      "24",
+      "10.0",
+      "Compile error",
+      "24.0"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-22",
+    "lessonId": "inheritance-polymorphism-interfaces-5-interfaces",
+    "type": "mcq",
+    "prompt": "In `compareTo`, what does a negative return value mean?",
+    "choices": [
+      "This object comes before the other",
+      "This object comes after the other",
+      "The objects are equal",
+      "The comparison failed"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-23",
+    "lessonId": "inheritance-polymorphism-interfaces-6-abstract-classes",
+    "type": "truefalse",
+    "prompt": "An abstract class can be instantiated directly with `new`.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-24",
+    "lessonId": "inheritance-polymorphism-interfaces-6-abstract-classes",
+    "type": "mcq",
+    "prompt": "How is an abstract method written?",
+    "choices": [
+      "With a return of null",
+      "With no body, ending in a semicolon",
+      "With the keyword `final`",
+      "With an empty body `{ }`"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-25",
+    "lessonId": "inheritance-polymorphism-interfaces-7-choosing-between-them",
+    "type": "mcq",
+    "prompt": "Several unrelated classes need to share a behavior. Which is the better fit?",
+    "choices": [
+      "An abstract class",
+      "A final class",
+      "An interface",
+      "A static method"
+    ],
+    "answer": 2
+  }
+]

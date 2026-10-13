@@ -61,6 +61,23 @@
     {
       "type": "text",
       "value": "**Prefer `Runnable`.** A class can extend only one class (Lesson 15), so `extends Thread` spends your single inheritance slot on plumbing. Implementing `Runnable` leaves the class free to extend something meaningful, and separates *what to do* from *how it is run*."
+    },
+    {
+      "type": "heading",
+      "value": "A shorter way: lambda"
+    },
+    {
+      "type": "text",
+      "value": "`Runnable` has a single method, so instead of writing a whole class you can pass the code for `run()` straight to the `Thread` constructor as a **lambda**, the arrow form `() -> { ... }`. A second argument names the thread. Calling `join()` waits for it, which makes the output reliable:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Thread worker = new Thread(\n    () -> System.out.println(\"Hello from \" + Thread.currentThread().getName()),\n    \"worker-1\");\n\nworker.start();\nworker.join();     // wait for it to finish\n// prints: Hello from worker-1"
+    },
+    {
+      "type": "text",
+      "value": "Threads that are not given a name are called `Thread-0`, `Thread-1` and so on, in the order they are created."
     }
   ]
 }

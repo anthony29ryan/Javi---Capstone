@@ -41,6 +41,14 @@
     {
       "type": "text",
       "value": "**Attributes** are the questions you can ask; **state** is the current answers; **behaviors** are what it can do. Two cars can share attributes while having completely different states."
+    },
+    {
+      "type": "heading",
+      "value": "The words you will see in code"
+    },
+    {
+      "type": "text",
+      "value": "In Java source code the vocabulary changes slightly. An object's **attributes** are stored in **fields**, also called instance variables, and its **behaviors** are written as **methods**. When a lesson says \"attribute\" and the code says \"field\", they mean the same thing."
     }
   ]
 }

@@ -113,6 +113,19 @@
     {
       "type": "text",
       "value": "Note `table[row].length` rather than a fixed column count. Because each row is its own array, rows can differ in length, and using `table[row].length` keeps the code correct if they do."
+    },
+    {
+      "type": "heading",
+      "value": "Rows of different lengths"
+    },
+    {
+      "type": "text",
+      "value": "Because each row is its own array, you can create the rows separately and give them different lengths. Leave the column size out to create just the row slots:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[][] triangle = new int[3][];            // 3 rows, no columns yet\nfor (int row = 0; row < triangle.length; row++) {\n    triangle[row] = new int[row + 1];       // row 0 has 1 element, row 1 has 2...\n    for (int col = 0; col < triangle[row].length; col++) {\n        triangle[row][col] = row + col;\n    }\n}\nSystem.out.println(Arrays.deepToString(triangle));   // [[0], [1, 2], [2, 3, 4]]"
     }
   ]
 }

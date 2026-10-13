@@ -36,6 +36,10 @@
           "value": "Also covered in Lesson 15."
         }
       ]
+    },
+    {
+      "type": "text",
+      "value": "A class can extend only one other class, but it can implement **several** interfaces, by listing them after `implements` separated by commas, for example `class Report implements Printable, Savable`. It must then supply the methods of every interface it lists."
     }
   ]
 }

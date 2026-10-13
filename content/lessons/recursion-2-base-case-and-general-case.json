@@ -48,6 +48,19 @@
           "value": "A page of identical stack-trace lines means one thing: a recursion that never reached its base case. Check that the base case exists, **and** that every recursive call moves toward it."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "More than one base case"
+    },
+    {
+      "type": "text",
+      "value": "Some problems need two base cases. Each Fibonacci number is the sum of the previous two, so the first two numbers have to be given directly:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static int fib(int n) {\n    if (n == 0) { return 0; }        // base case 1\n    if (n == 1) { return 1; }        // base case 2\n    return fib(n - 1) + fib(n - 2);  // general case\n}\n\n// fib(6) returns 8  (0, 1, 1, 2, 3, 5, 8)"
     }
   ]
 }

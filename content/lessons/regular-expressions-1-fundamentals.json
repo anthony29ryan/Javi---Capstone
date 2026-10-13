@@ -57,9 +57,22 @@
       "blocks": [
         {
           "type": "text",
-          "value": "**The single most important rule in this lesson: `matches()` tests the *entire* string.** Not part of it, all of it, start to finish. `\"my cat\".matches(\"cat\")` is **`false`**. This is different from most other languages' regex functions, and it is the first thing that confuses people. To search *within* a string, use `find()`, covered in Section 4."
+          "value": "**`matches()` tests the *entire* string.** Not part of it, all of it, start to finish. `\"my cat\".matches(\"cat\")` is **`false`**. This is different from most other languages' regex functions, and it is the first thing that confuses people. To search *within* a string, use `find()`, covered in Section 4."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "A realistic use: checking a format"
+    },
+    {
+      "type": "text",
+      "value": "Regexes are most useful for validating text that must follow a pattern. This checks a student number made of four digits, a hyphen, and four more digits. Because `matches()` tests the whole string, extra characters on either side make it fail:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"2024-0012\".matches(\"\\\\d{4}-\\\\d{4}\"));   // true\nSystem.out.println(\"2024-001\".matches(\"\\\\d{4}-\\\\d{4}\"));    // false, too short"
     }
   ]
 }

@@ -62,6 +62,19 @@
     {
       "type": "text",
       "value": "Without `this`, the line `name = name;` assigns the parameter to itself and the instance variable never changes, a bug that compiles cleanly and silently does nothing. `this.name` removes the ambiguity."
+    },
+    {
+      "type": "heading",
+      "value": "Printing an object: toString"
+    },
+    {
+      "type": "text",
+      "value": "If you pass an object to `println`, Java prints its class name and a hash code, something like `Rectangle@1b6d3586`, which tells you nothing about its state. Adding a method named `toString()` that returns a `String` changes what is printed. Java calls it automatically whenever the object is used as text:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Rectangle {\n    private double length;\n    private double width;\n\n    public Rectangle(double length, double width) {\n        this.length = length;\n        this.width = width;\n    }\n\n    public String toString() {\n        return \"Rectangle \" + length + \" x \" + width;\n    }\n}\n\n// System.out.println(new Rectangle(4.0, 3.0));   prints: Rectangle 4.0 x 3.0"
     }
   ]
 }

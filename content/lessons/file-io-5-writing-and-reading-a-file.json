@@ -107,6 +107,32 @@
           "value": "Use the stream classes when files are large enough that you do not want them entirely in memory, or when you need fine control. Use these for everything else."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Adding to the end of a file"
+    },
+    {
+      "type": "text",
+      "value": "To add lines without erasing what is already there, open the file with `CREATE` and `APPEND`. `CREATE` makes the file if it is missing, and `APPEND` places new text after the existing text:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "try (BufferedWriter writer = Files.newBufferedWriter(\n         Paths.get(\"log.txt\"), StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {\n    writer.write(\"second line\");\n    writer.newLine();\n}"
+    },
+    {
+      "type": "heading",
+      "value": "Reading with Scanner"
+    },
+    {
+      "type": "text",
+      "value": "A `Scanner` can read from a file as easily as from the keyboard. Pass it a `Path` instead of `System.in`, and use the `hasNextLine()` and `nextLine()` methods you already know:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "try (Scanner in = new Scanner(Paths.get(\"students.txt\"))) {\n    while (in.hasNextLine()) {\n        String[] fields = in.nextLine().split(\",\");\n        System.out.println(fields[0] + \" has grade \" + fields[2]);\n    }\n} catch (IOException e) {\n    System.out.println(\"Could not read: \" + e.getMessage());\n}"
     }
   ]
 }

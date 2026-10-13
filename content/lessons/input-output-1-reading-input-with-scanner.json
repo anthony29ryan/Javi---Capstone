@@ -66,6 +66,24 @@
           "value": "Use `System.out.print`, not `println`, for prompts, so the user types on the same line."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Checking before you read"
+    },
+    {
+      "type": "text",
+      "value": "`nextInt()` crashes if the user types letters. The `has` methods look at the next token without reading it and return a `boolean`, so you can test first. `hasNextInt()` is `true` only when the next token can be read as an `int`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"Age: \");\nif (input.hasNextInt()) {\n    int age = input.nextInt();\n    System.out.println(\"Next year you will be \" + (age + 1) + \".\");\n} else {\n    System.out.println(\"That is not a number.\");\n    input.next();   // discard the bad token\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Age: abc\nThat is not a number."
     }
   ]
 }

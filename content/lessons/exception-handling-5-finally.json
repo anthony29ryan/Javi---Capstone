@@ -45,6 +45,19 @@
           "value": "You will use this constantly in the next lesson, File Input & Output."
         }
       ]
+    },
+    {
+      "type": "heading",
+      "value": "finally runs even after return"
+    },
+    {
+      "type": "text",
+      "value": "A `return` inside `try` does not skip the `finally` block. The method's return value is worked out first, then `finally` runs, and only then does control go back to the caller:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "static int withFinally() {\n    try {\n        return 1;\n    } finally {\n        System.out.println(\"cleanup\");\n    }\n}\n\n// System.out.println(withFinally());   prints cleanup, then 1"
     }
   ]
 }

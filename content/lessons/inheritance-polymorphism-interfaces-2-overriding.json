@@ -51,6 +51,10 @@
           "At **compile time**, by the arguments"
         ]
       ]
+    },
+    {
+      "type": "text",
+      "value": "To forbid overriding, mark a method `final`. A subclass that tries to override a `final` method fails to compile. A whole class can be `final` as well, in which case it cannot be extended at all. `String` is a `final` class."
     }
   ]
 }

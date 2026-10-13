@@ -93,6 +93,19 @@
           "`Period.values()` returns an array with 4 elements"
         ]
       ]
+    },
+    {
+      "type": "heading",
+      "value": "Comparing positions"
+    },
+    {
+      "type": "text",
+      "value": "`compareTo()` subtracts the positions of the two constants. A negative result means the calling constant comes earlier in the list, so it can be used for ordering:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(Period.PRELIM.compareTo(Period.FINAL));   // -3  (position 0 minus position 3)"
     }
   ]
 }

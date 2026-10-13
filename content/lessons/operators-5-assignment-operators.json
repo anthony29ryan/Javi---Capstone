@@ -88,6 +88,19 @@
     {
       "type": "text",
       "value": "`++` and `--` will become second nature in Lesson 7, where nearly every loop ends with one."
+    },
+    {
+      "type": "heading",
+      "value": "Increment before or after"
+    },
+    {
+      "type": "text",
+      "value": "`++` can go after the variable (`a++`) or before it (`++a`). On its own they are the same. Inside a larger statement, **postfix** `a++` uses the old value and then adds one, while **prefix** `++a` adds one first and then uses the new value:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int a = 5;\nint b = a++;                   // b gets 5, then a becomes 6\nSystem.out.println(a + \" \" + b);   // 6 5\n\nint c = ++a;                   // a becomes 7, then c gets 7\nSystem.out.println(a + \" \" + c);   // 7 7"
     }
   ]
 }

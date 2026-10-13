@@ -13,7 +13,7 @@
         "Every program lives in a **class**, and execution begins at **`main`**.",
         "The file name must match the public class name, and every statement ends with a semicolon.",
         "**Identifiers** are case sensitive, cannot start with a digit, and cannot be reserved words.",
-        "**Syntax errors** stop the build; **logical errors** let the program run and give wrong answers.",
+        "**Syntax errors** stop the build; **logical errors** let the program run and give wrong answers; **runtime errors** crash the program while it runs.",
         "**Comments** are ignored by the compiler: write them to explain *why*."
       ]
     }

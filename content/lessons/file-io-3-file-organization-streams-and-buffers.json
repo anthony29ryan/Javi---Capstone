@@ -47,6 +47,10 @@
     {
       "type": "text",
       "value": "Buffering exists for speed: writing one character at a time to a disk is enormously slower than collecting a few thousand and writing them at once. The cost is that **data sitting in a buffer has not reached the file yet**, which is why closing a stream matters."
+    },
+    {
+      "type": "text",
+      "value": "A comma-separated record has one weakness: a value that itself contains a comma, such as `\"Reyes, Ana\"`, will be split in the wrong place. Simple files avoid this by choosing a separator that never appears in the data, such as a tab or a vertical bar."
     }
   ]
 }
