@@ -5,23 +5,26 @@ import { askTutor, getTutorThread } from '../services/tutor';
 import { colors, fonts, radius, spacing } from '../theme/colors';
 
 const MAX_QUESTION_CHARS = 500; // keep in step with functions/index.js
-const SHOWN_MESSAGES = 10; // the full thread is saved; a lesson page only needs the recent part
 
-function suggestions(lessonTitle) {
+function suggestions(topic) {
   return [
-    { label: 'Explain this', question: `Explain "${lessonTitle}" in simple terms.` },
-    { label: 'Give me an example', question: `Give me a small Java example for "${lessonTitle}".` },
-    { label: 'Give me a hint', question: `Give me a hint to help me understand "${lessonTitle}" without giving everything away.` },
+    { label: 'Explain this', question: `Explain "${topic}" in simple terms.` },
+    { label: 'Give me an example', question: `Give me a small Java example for "${topic}".` },
+    { label: 'Give me a hint', question: `Give me a hint to help me understand "${topic}" without giving everything away.` },
   ];
 }
 
 /**
- * The tutor box at the bottom of a lesson. The question goes to the askTutor
- * Cloud Function, which keeps the answer on this module's lessons and saves
- * the conversation; the thread is one per module, so it is the same whichever
- * of the module's lessons it is opened from.
+ * The tutor chat, used at the bottom of a lesson and on the Tutor tab. The
+ * question goes to the askTutor Cloud Function, which keeps the answer on this
+ * module's lessons and saves the conversation. The thread is one per module,
+ * so it is the same from any of the module's lessons and from the tab.
+ *
+ * `topic` is what the suggestion chips ask about (a lesson or module title).
+ * `shownMessages` caps how much of the saved thread is shown; a lesson page
+ * only needs the recent part.
  */
-export default function TutorChat({ moduleId, lessonTitle }) {
+export default function TutorChat({ moduleId, topic, heading = 'Ask about this lesson', shownMessages = 10 }) {
   const [messages, setMessages] = useState([]);
   const [loadingThread, setLoadingThread] = useState(true);
   const [text, setText] = useState('');
@@ -76,7 +79,7 @@ export default function TutorChat({ moduleId, lessonTitle }) {
       <View style={styles.head}>
         <View style={styles.avatar} />
         <View style={styles.headText}>
-          <Text style={styles.title}>Ask about this lesson</Text>
+          <Text style={styles.title}>{heading}</Text>
           <Text style={styles.subtitle} numberOfLines={2}>
             The tutor only answers on this module
           </Text>
@@ -85,7 +88,7 @@ export default function TutorChat({ moduleId, lessonTitle }) {
 
       {loadingThread ? <ActivityIndicator color={colors.primary} style={styles.loading} /> : null}
 
-      {messages.slice(-SHOWN_MESSAGES).map((message, index) => (
+      {messages.slice(-shownMessages).map((message, index) => (
         <View key={index} style={[styles.bubble, message.role === 'learner' ? styles.bubbleLearner : styles.bubbleTutor]}>
           <Text style={[styles.bubbleText, message.role === 'learner' && styles.bubbleTextLearner]}>
             {message.text}
@@ -97,7 +100,7 @@ export default function TutorChat({ moduleId, lessonTitle }) {
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <View style={styles.chips}>
-        {suggestions(lessonTitle).map(({ label, question }) => (
+        {suggestions(topic).map(({ label, question }) => (
           <Pressable
             key={label}
             onPress={() => send(question)}

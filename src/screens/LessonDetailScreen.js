@@ -115,7 +115,7 @@ export default function LessonDetailScreen({ route, navigation }) {
           />
         </View>
 
-        <TutorChat moduleId={lesson.moduleId} lessonTitle={lesson.title} />
+        <TutorChat moduleId={lesson.moduleId} topic={lesson.title} />
 
         <Pressable
           onPress={toggleComplete}
