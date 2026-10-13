@@ -72,8 +72,14 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
 // Set once with `firebase functions:secrets:set GEMINI_API_KEY`. It lives in
 // Secret Manager and reaches only this function, never the app.
 const geminiKey = defineSecret('GEMINI_API_KEY');
-const GEMINI_MODEL = 'gemini-3.5-flash-lite';
-const GEMINI_TIMEOUT_MS = 25000;
+// Tried in order, moving on only when one is busy: the free tier refuses busy
+// models with 503 "high demand".
+// shortcut: when both are busy the tutor fails (question refunded), turn on billing for the key if that happens often.
+const GEMINI_MODELS = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
+// Both tries plus the pause stay inside the function's 60-second limit, so
+// the caller's catch still runs and refunds the question.
+const GEMINI_TIMEOUT_MS = 15000;
+const GEMINI_RETRY_PAUSE_MS = 1000;
 
 const DAILY_QUESTIONS = 30; // per user, over a rolling 24 hours
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -129,13 +135,17 @@ function tutorInstruction(moduleTitle, lessonText) {
   ].join('\n');
 }
 
-async function askGemini(instruction, messages) {
+// Busy (503), rate-limited (429) or too slow: worth one more try. Anything
+// else, like a bad key, will fail the same way again.
+function isWorthRetrying(err) {
+  return err.status === 503 || err.status === 429 || err.name === 'TimeoutError';
+}
+
+async function callGemini(model, instruction, messages) {
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
     {
       method: 'POST',
-      // Give up well inside the function's 60-second limit, so the caller's
-      // catch still runs and the learner gets their question back.
       signal: AbortSignal.timeout(GEMINI_TIMEOUT_MS),
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': geminiKey.value() },
       body: JSON.stringify({
@@ -145,11 +155,31 @@ async function askGemini(instruction, messages) {
       }),
     }
   );
-  if (!response.ok) throw new Error(`Gemini returned ${response.status}`);
+  if (!response.ok) {
+    // Gemini says why in the body (overloaded, quota, bad key); keep it for the logs.
+    const detail = await response.text().catch(() => '');
+    throw Object.assign(new Error(`Gemini returned ${response.status}: ${detail.slice(0, 300)}`), {
+      status: response.status,
+    });
+  }
   const body = await response.json();
   const reply = body.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('').trim();
-  if (!reply) throw new Error('Gemini returned no text');
+  if (!reply) throw new Error(`Gemini returned no text (finishReason ${body.candidates?.[0]?.finishReason})`);
   return reply;
+}
+
+/** Asks each of GEMINI_MODELS in turn until one answers, moving on only when a model is busy. */
+async function askGemini(instruction, messages) {
+  for (const [i, model] of GEMINI_MODELS.entries()) {
+    try {
+      return await callGemini(model, instruction, messages);
+    } catch (err) {
+      const last = i === GEMINI_MODELS.length - 1;
+      if (last || !isWorthRetrying(err)) throw err;
+      console.warn(`askTutor: ${model} busy, trying ${GEMINI_MODELS[i + 1]}:`, err.message);
+      await new Promise((resolve) => setTimeout(resolve, GEMINI_RETRY_PAUSE_MS));
+    }
+  }
 }
 
 // shortcut: lesson text can be up to 10 minutes stale after a publish, drop the cache if that matters.

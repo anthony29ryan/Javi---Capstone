@@ -17,10 +17,11 @@ const ask = (uid, data) => askTutor.run({ auth: { uid }, data });
 const refused = (code) => (err) => err.code === code;
 
 let geminiCalls;
-let geminiReply;
-function stubGemini(reply = 'Arrays have fixed length.') {
+let geminiReplies;
+// One reply per call, in order; the last one repeats once the list runs out.
+function stubGemini(...replies) {
   geminiCalls = [];
-  geminiReply = reply;
+  geminiReplies = replies.length > 0 ? replies : ['Arrays have fixed length.'];
 }
 
 before(async () => {
@@ -28,9 +29,10 @@ before(async () => {
   // the way fetch rejects when its timeout signal aborts the request.
   global.fetch = async (url, options) => {
     geminiCalls.push({ url, options, body: JSON.parse(options.body) });
-    if (geminiReply instanceof Error) throw geminiReply;
-    if (typeof geminiReply === 'number') return { ok: false, status: geminiReply };
-    return { ok: true, json: async () => ({ candidates: [{ content: { parts: [{ text: geminiReply }] } }] }) };
+    const reply = geminiReplies.length > 1 ? geminiReplies.shift() : geminiReplies[0];
+    if (reply instanceof Error) throw reply;
+    if (typeof reply === 'number') return { ok: false, status: reply, text: async () => `{"error":{"code":${reply}}}` };
+    return { ok: true, json: async () => ({ candidates: [{ content: { parts: [{ text: reply }] } }] }) };
   };
   await db.doc('modules/arrays').set({ title: 'Arrays', courseId: 'c1', order: 1 });
   await db.doc('lessons/l2').set({
@@ -121,12 +123,24 @@ test('the 31st question within 24 hours is refused, and an old one stops countin
 });
 
 test('a failed or timed-out model call is not charged to the learner', async () => {
-  for (const failure of [500, new DOMException('The operation timed out.', 'TimeoutError')]) {
+  const timeout = new DOMException('The operation timed out.', 'TimeoutError');
+  for (const [failure, expectedTries] of [[401, 1], [500, 1], [503, 2], [timeout, 2]]) {
     stubGemini(failure);
     await assert.rejects(ask('t6', { moduleId: 'arrays', question: 'hello' }), refused('unavailable'));
+    assert.strictEqual(geminiCalls.length, expectedTries, `tries for ${failure}`);
     assert.deepStrictEqual((await db.doc('tutorUsage/t6').get()).data().askedAt, []);
     assert.strictEqual((await db.doc('chats/t6_arrays').get()).exists, false, 'nothing saved on failure');
   }
+});
+
+test('busy models hand over to the next one in order, and the first answer is used', async () => {
+  stubGemini(503, 'Answer after retry.');
+  assert.deepStrictEqual(await ask('t9', { moduleId: 'arrays', question: 'hello' }), { reply: 'Answer after retry.' });
+  assert.deepStrictEqual(
+    geminiCalls.map((call) => call.url.match(/models\/(.+):generateContent/)[1]),
+    ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']
+  );
+  assert.strictEqual((await db.doc('tutorUsage/t9').get()).data().askedAt.length, 1, 'charged once, not twice');
 });
 
 test('two questions answered at the same time are both saved', async () => {
