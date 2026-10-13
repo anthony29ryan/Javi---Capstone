@@ -1,7 +1,7 @@
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-import { colors, radius, spacing, type } from '../theme/colors';
+import { colors, fonts, radius, spacing, type } from '../theme/colors';
 
 /**
  * Lesson content is stored as an array of blocks. This renders them.
@@ -41,11 +41,13 @@ function InlineText({ value, style }) {
   );
 }
 
-function CodeBlock({ value, language }) {
+function CodeBlock({ value, language, label }) {
   return (
     <View style={styles.codeBlock}>
       <View style={styles.codeHeader}>
-        <Text style={styles.codeLanguage}>{language || 'code'}</Text>
+        {/* The screen can pass a label naming the module the example belongs
+            to; otherwise fall back to the block's own language. */}
+        <Text style={styles.codeLanguage}>{label || language || 'code'}</Text>
       </View>
       {/* Java lines run long, so the block scrolls sideways instead of wrapping
           mid-statement and breaking the indentation. */}
@@ -88,53 +90,123 @@ function NoteBlock({ title, variant, blocks }) {
   );
 }
 
+// Approximate advance widths at the table's 12.5px size. Monospace is the
+// wider of the two, and these cells are full of `code`, so measuring
+// everything as proportional text under-sizes those columns badly enough that
+// short expressions wrap mid-statement.
+const TABLE_TEXT_CHAR = 6.2;
+const TABLE_CODE_CHAR = 7.5;
+const TABLE_CELL_PADDING = spacing.md * 2;
+const TABLE_MIN_COLUMN = 72;
+const TABLE_MAX_COLUMN = 230;
+
+// Firestore cannot nest an array inside an array, so publishContent wraps each
+// row as { cells: [...] }. Accept the authored plain-array shape too, so a
+// table renders the same whichever it came from.
+function toCells(row) {
+  return Array.isArray(row) ? row : row?.cells || [];
+}
+
+/**
+ * Roughly how wide a cell's text wants to be, run by run.
+ *
+ * Splitting on the inline markers does two jobs at once: the markers are
+ * formatting rather than characters the reader sees, so they drop out of the
+ * count, and each run can be charged at the rate for the font it will actually
+ * render in.
+ */
+function measuredWidth(value) {
+  return String(value ?? '')
+    .split(INLINE_PATTERN)
+    .filter(Boolean)
+    .reduce((total, run) => {
+      if (run.startsWith('`') && run.endsWith('`')) {
+        return total + (run.length - 2) * TABLE_CODE_CHAR;
+      }
+      if (run.startsWith('**') && run.endsWith('**')) {
+        return total + (run.length - 4) * TABLE_TEXT_CHAR;
+      }
+      return total + run.length * TABLE_TEXT_CHAR;
+    }, 0);
+}
+
+/**
+ * One width per column, from the longest cell in that column.
+ *
+ * Every row then uses the same widths, which is what makes the grid line up.
+ * Sizing each cell to its own content instead — the obvious thing, and what
+ * this did before — lets each row pick its own column boundaries, so nothing
+ * aligns vertically and it stops reading as a table at all.
+ */
+function measureColumns(headers, rows) {
+  const bodies = rows.map(toCells);
+  const columnCount = Math.max(headers.length, ...bodies.map((cells) => cells.length), 0);
+
+  return Array.from({ length: columnCount }, (_, column) => {
+    const widths = [measuredWidth(headers[column]), ...bodies.map((c) => measuredWidth(c[column]))];
+    const ideal = Math.max(...widths, 0) + TABLE_CELL_PADDING;
+    return Math.round(Math.min(TABLE_MAX_COLUMN, Math.max(TABLE_MIN_COLUMN, ideal)));
+  });
+}
+
 /**
  * Tables carry real content in these lessons (primitive type ranges, exception
  * lists), so they scroll sideways rather than being squeezed to phone width.
  */
 function TableBlock({ headers, rows }) {
+  const widths = measureColumns(headers, rows);
+  if (widths.length === 0) return null;
+
+  const renderRow = (cells, { key, header = false, first = false, alt = false }) => (
+    <View
+      key={key}
+      style={[
+        styles.tableRow,
+        !first && styles.tableRowDivided,
+        alt && styles.tableRowAlt,
+        header && styles.tableHeaderRow,
+      ]}
+    >
+      {widths.map((width, column) => (
+        <View
+          key={column}
+          style={[
+            styles.tableCell,
+            { width },
+            column < widths.length - 1 && styles.tableCellDivided,
+          ]}
+        >
+          <InlineText
+            value={cells[column] ?? ''}
+            style={header ? styles.tableHeaderText : styles.tableText}
+          />
+        </View>
+      ))}
+    </View>
+  );
+
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View style={styles.table}>
         {/* Some tables are a plain grid with no header row. */}
-        {headers.length ? (
-          <View style={[styles.tableRow, styles.tableHeaderRow]}>
-            {headers.map((cell, index) => (
-              <View key={index} style={styles.tableCell}>
-                <InlineText value={cell} style={styles.tableHeaderText} />
-              </View>
-            ))}
-          </View>
-        ) : null}
+        {headers.length ? renderRow(headers, { key: 'head', header: true, first: true }) : null}
 
-        {rows.map((row, rowIndex) => {
-          // Firestore cannot nest an array inside an array, so publishContent
-          // wraps each row as { cells: [...] }. Accept the authored plain-array
-          // shape too, so this renders the same either way.
-          const cells = Array.isArray(row) ? row : row?.cells || [];
-
-          return (
-            <View
-              key={rowIndex}
-              style={[styles.tableRow, rowIndex % 2 === 1 && styles.tableRowAlt]}
-            >
-              {cells.map((cell, cellIndex) => (
-                <View key={cellIndex} style={styles.tableCell}>
-                  <InlineText value={cell} style={styles.tableText} />
-                </View>
-              ))}
-            </View>
-          );
-        })}
+        {rows.map((row, rowIndex) =>
+          renderRow(toCells(row), {
+            key: rowIndex,
+            first: !headers.length && rowIndex === 0,
+            alt: rowIndex % 2 === 1,
+          })
+        )}
       </View>
     </ScrollView>
   );
 }
 
-function Block({ block }) {
+function Block({ block, codeLabel }) {
   switch (block.type) {
     case 'code':
-      return <CodeBlock value={block.value} language={block.language} />;
+      return <CodeBlock value={block.value} language={block.language} label={codeLabel} />;
 
     case 'heading':
       return <InlineText value={block.value} style={styles.heading} />;
@@ -174,11 +246,11 @@ function Block({ block }) {
   }
 }
 
-export default function Blocks({ blocks }) {
+export default function Blocks({ blocks, codeLabel }) {
   return (
     <View style={styles.blocks}>
       {(blocks || []).map((block, index) => (
-        <Block key={index} block={block} />
+        <Block key={index} block={block} codeLabel={codeLabel} />
       ))}
     </View>
   );
@@ -193,16 +265,18 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   bold: {
-    fontWeight: '700',
+    fontFamily: fonts.bold,
   },
   inlineCode: {
-    fontFamily: 'monospace',
-    fontSize: 14,
+    fontFamily: fonts.monoRegular,
+    // No size of its own: inline code inherits whatever it sits in, so it
+    // stays in step with body text at 14 and with table text at 12.5. Pinning
+    // it at 14 made code in a table taller than the row around it.
     color: colors.primaryDark,
   },
   heading: {
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     lineHeight: 25,
     color: colors.text,
     marginTop: spacing.sm,
@@ -219,7 +293,7 @@ const styles = StyleSheet.create({
   listMarker: {
     ...type.body,
     color: colors.primary,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     minWidth: 18,
   },
   listText: {
@@ -257,26 +331,32 @@ const styles = StyleSheet.create({
   },
   tableRow: {
     flexDirection: 'row',
+    // Cells wrap to different heights, so they hang from a common top edge
+    // rather than centring independently.
+    alignItems: 'stretch',
   },
-  tableHeaderRow: {
-    backgroundColor: colors.surfaceSunken,
+  tableRowDivided: {
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
   },
   tableRowAlt: {
     backgroundColor: colors.surface,
   },
+  tableHeaderRow: {
+    backgroundColor: colors.surfaceSunken,
+  },
   tableCell: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    minWidth: 110,
-    maxWidth: 240,
+    justifyContent: 'flex-start',
+  },
+  tableCellDivided: {
     borderRightWidth: 1,
     borderRightColor: colors.border,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
   },
   tableHeaderText: {
     ...type.small,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   tableText: {
@@ -286,28 +366,25 @@ const styles = StyleSheet.create({
 
   codeBlock: {
     backgroundColor: colors.codeBg,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
+    padding: 18,
     overflow: 'hidden',
   },
   codeHeader: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: '#3D3029',
+    marginBottom: spacing.md,
   },
   codeLanguage: {
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 1,
+    fontFamily: fonts.mono,
+    fontSize: 9.5,
+    letterSpacing: 9.5 * 0.14,
     textTransform: 'uppercase',
-    color: colors.primaryLight,
+    color: colors.codeLabel,
   },
   codeText: {
     color: colors.codeText,
-    fontFamily: 'monospace',
-    fontSize: 13,
-    lineHeight: 21,
-    padding: spacing.md,
+    fontFamily: fonts.monoRegular,
+    fontSize: 12.5,
+    lineHeight: 12.5 * 1.75,
   },
 
   mediaBlock: {

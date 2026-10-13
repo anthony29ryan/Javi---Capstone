@@ -59,8 +59,11 @@ Warnings are safe to publish with but worth reading.
 node --env-file=.env scripts/publishContent.js
 ```
 
-Requires `SEED_EMAIL` and `SEED_PASSWORD` in `.env` pointing at an existing account
-— `firestore.rules` requires an authenticated user to write content.
+Requires `GOOGLE_APPLICATION_CREDENTIALS` in `.env`, pointing at a service-account key
+file kept outside the repo (see `scripts/adminApp.js` for how to get one). The script
+writes with admin rights because `firestore.rules` makes content read-only for every
+app user. A normal account, even the developer's, can no longer publish. Do not
+loosen the rules to get around a missing key.
 
 Expected output ends with a line like
 `Done. Published 3 courses, 21 modules, 180 lessons, removed 77 stale.`

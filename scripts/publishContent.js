@@ -1,35 +1,17 @@
-// Publishes content/ (courses.json, modules.json, lessons/*.json) to Firestore.
+// Publishes content/ (courses.json, modules.json, lessons/*.json,
+// questions/*.json) to Firestore.
 // Safe to re-run any time after editing a content file — it's an upsert.
 //
 // Run with:
 //   node --env-file=.env scripts/publishContent.js
 //
-// Requires SEED_EMAIL / SEED_PASSWORD env vars pointing at an existing
-// dev/test account (Firestore rules currently require an authenticated user
-// to write to courses/modules/lessons — see firestore.rules).
+// Writes as admin (see adminApp.js): firestore.rules makes content read-only
+// for the app, so a normal user account can no longer publish.
 
 const fs = require('fs');
 const path = require('path');
 
-const { initializeApp } = require('firebase/app');
-const { getAuth, signInWithEmailAndPassword } = require('firebase/auth');
-const {
-  getFirestore,
-  doc,
-  setDoc,
-  collection,
-  getDocs,
-  deleteDoc,
-} = require('firebase/firestore');
-
-const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
-};
+const { connectAsAdmin } = require('./adminApp');
 
 const CONTENT_DIR = path.join(__dirname, '..', 'content');
 
@@ -53,34 +35,20 @@ function encodeBlocks(blocks) {
 }
 
 async function main() {
-  const missingConfig = Object.entries(firebaseConfig).filter(([, v]) => !v);
-  if (missingConfig.length > 0) {
-    throw new Error(
-      `Missing Firebase config values: ${missingConfig.map(([k]) => k).join(', ')}. Did you run with --env-file=.env?`
-    );
-  }
-  if (!process.env.SEED_EMAIL || !process.env.SEED_PASSWORD) {
-    throw new Error('Set SEED_EMAIL and SEED_PASSWORD in .env to an existing dev account.');
-  }
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  await signInWithEmailAndPassword(auth, process.env.SEED_EMAIL, process.env.SEED_PASSWORD);
-  console.log('Signed in as', process.env.SEED_EMAIL);
+  const { db } = connectAsAdmin();
+  console.log('Connected as admin to', process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID);
 
   const courses = readJson(path.join(CONTENT_DIR, 'courses.json'));
   for (const course of courses) {
     const { id, ...data } = course;
-    await setDoc(doc(db, 'courses', id), data);
+    await db.collection('courses').doc(id).set(data);
     console.log('Wrote course:', id);
   }
 
   const modules = readJson(path.join(CONTENT_DIR, 'modules.json'));
   for (const module of modules) {
     const { id, ...data } = module;
-    await setDoc(doc(db, 'modules', id), data);
+    await db.collection('modules').doc(id).set(data);
     console.log('Wrote module:', id);
   }
 
@@ -93,28 +61,71 @@ async function main() {
   for (const file of lessonFiles) {
     const lesson = readJson(path.join(lessonsDir, file));
     const { id, ...data } = lesson;
-    await setDoc(doc(db, 'lessons', id), { ...data, blocks: encodeBlocks(data.blocks) });
+    await db.collection('lessons').doc(id).set({ ...data, blocks: encodeBlocks(data.blocks) });
     publishedLessonIds.add(id);
     console.log('Wrote lesson:', id);
   }
 
-  // setDoc only ever adds or overwrites, so a lesson that was renamed or removed
+  // set() only ever adds or overwrites, so a lesson that was renamed or removed
   // locally would linger in Firestore and still show up in getLessons(). Delete
   // anything that is no longer in content/lessons so the two stay in step.
   let removed = 0;
   if (lessonFiles.length > 0) {
-    const existing = await getDocs(collection(db, 'lessons'));
+    const existing = await db.collection('lessons').get();
     for (const found of existing.docs) {
       if (publishedLessonIds.has(found.id)) continue;
-      await deleteDoc(doc(db, 'lessons', found.id));
+      await found.ref.delete();
       console.log('Removed stale lesson:', found.id);
       removed++;
     }
   }
 
+  // Each question is split in two. `questions` holds what the app shows and is
+  // readable by any signed-in user; `answerKeys` holds only the correct answer
+  // and no security rule allows reading it, so only the grading Cloud Function
+  // (which uses admin access, like this script) ever sees it.
+  const questionsDir = path.join(CONTENT_DIR, 'questions');
+  const questionFiles = fs.existsSync(questionsDir)
+    ? fs.readdirSync(questionsDir).filter((f) => f.endsWith('.json'))
+    : [];
+
+  const publishedQuestionIds = new Set();
+  for (const file of questionFiles) {
+    const moduleId = path.basename(file, '.json');
+    for (const question of readJson(path.join(questionsDir, file))) {
+      const { id, answer, ...shown } = question;
+      const batch = db.batch();
+      batch.set(db.collection('questions').doc(id), { ...shown, moduleId });
+      batch.set(db.collection('answerKeys').doc(id), { moduleId, answer });
+      await batch.commit();
+      publishedQuestionIds.add(id);
+    }
+    console.log('Wrote questions for module:', moduleId);
+  }
+
+  // Same reasoning as lessons: remove questions (and their keys) that no
+  // longer exist locally. Skipped when content/questions is absent entirely,
+  // so running this from a checkout without it cannot wipe every quiz.
+  let removedQuestions = 0;
+  if (fs.existsSync(questionsDir)) {
+    for (const collectionName of ['questions', 'answerKeys']) {
+      const existing = await db.collection(collectionName).get();
+      for (const found of existing.docs) {
+        if (publishedQuestionIds.has(found.id)) continue;
+        await found.ref.delete();
+        if (collectionName === 'questions') {
+          console.log('Removed stale question:', found.id);
+          removedQuestions++;
+        }
+      }
+    }
+  }
+
   console.log(
     `Done. Published ${courses.length} courses, ${modules.length} modules, ` +
-      `${lessonFiles.length} lessons${removed ? `, removed ${removed} stale` : ''}.`
+      `${lessonFiles.length} lessons${removed ? `, removed ${removed} stale` : ''}, ` +
+      `${publishedQuestionIds.size} questions` +
+      `${removedQuestions ? `, removed ${removedQuestions} stale` : ''}.`
   );
   process.exit(0);
 }

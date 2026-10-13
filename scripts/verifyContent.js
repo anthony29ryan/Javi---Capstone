@@ -106,6 +106,90 @@ for (const m of modules) {
   }
 }
 
+/* ----------------------------------------------------------------- questions */
+
+// One file per module, content/questions/<moduleId>.json, holding an array of
+// questions. The quiz draws QUIZ_LENGTH of them at random per attempt, so a
+// module needs at least that many before its quiz is complete. Aim for about
+// 25, so retakes do not ask exactly the same set.
+//
+// The `answer` field is split off by publishContent.js into `answerKeys`,
+// which the app cannot read; only the grading Cloud Function sees it.
+
+const QUESTIONS_DIR = path.join(CONTENT_DIR, 'questions');
+const QUESTION_TYPES = new Set(['mcq', 'output', 'truefalse']);
+const MAX_CHOICES = 6; // QuizScreen letters them A-F
+const QUIZ_LENGTH = 20; // keep in step with functions/index.js
+
+const lessonModule = new Map();
+for (const file of files) {
+  const lesson = readJson(path.join(LESSONS_DIR, file));
+  lessonModule.set(lesson.id, lesson.moduleId);
+}
+
+const questionFiles = fs.existsSync(QUESTIONS_DIR)
+  ? fs.readdirSync(QUESTIONS_DIR).filter((f) => f.endsWith('.json'))
+  : [];
+const questionCounts = {};
+const questionIds = new Set();
+
+for (const file of questionFiles) {
+  const moduleId = path.basename(file, '.json');
+  const where = `questions/${file}`;
+
+  if (!moduleIds.has(moduleId)) {
+    problems.push(`${where}: filename does not match any module id`);
+    continue;
+  }
+
+  const questions = readJson(path.join(QUESTIONS_DIR, file));
+  if (!Array.isArray(questions)) {
+    problems.push(`${where}: must be an array of questions`);
+    continue;
+  }
+  questionCounts[moduleId] = questions.length;
+
+  for (const q of questions) {
+    const at = `${where} ${q.id || '(no id)'}`;
+
+    if (!q.id?.trim()) problems.push(`${at}: missing id`);
+    else if (questionIds.has(q.id)) problems.push(`${at}: duplicate id`);
+    questionIds.add(q.id);
+
+    // Every question must trace back to a lesson in this module, so it only
+    // tests what the app actually teaches.
+    if (!lessonModule.has(q.lessonId)) problems.push(`${at}: unknown lessonId "${q.lessonId}"`);
+    else if (lessonModule.get(q.lessonId) !== moduleId) {
+      problems.push(`${at}: lesson "${q.lessonId}" belongs to another module`);
+    }
+
+    if (!QUESTION_TYPES.has(q.type)) problems.push(`${at}: unknown type "${q.type}"`);
+    if (!String(q.prompt || '').trim()) problems.push(`${at}: missing prompt`);
+    if (q.type === 'output' && !String(q.code || '').trim()) problems.push(`${at}: output question needs code`);
+
+    const choices = Array.isArray(q.choices) ? q.choices : [];
+    if (q.type === 'truefalse') {
+      if (choices.length !== 2 || choices[0] !== 'True' || choices[1] !== 'False') {
+        problems.push(`${at}: true/false choices must be exactly ["True", "False"]`);
+      }
+    } else if (choices.length < 2 || choices.length > MAX_CHOICES) {
+      problems.push(`${at}: needs 2-${MAX_CHOICES} choices, has ${choices.length}`);
+    }
+    if (choices.some((c) => typeof c !== 'string' || !c.trim())) problems.push(`${at}: empty choice`);
+    if (new Set(choices).size !== choices.length) problems.push(`${at}: duplicate choices`);
+
+    if (!Number.isInteger(q.answer) || q.answer < 0 || q.answer >= choices.length) {
+      problems.push(`${at}: answer must be an index into choices (0-${choices.length - 1})`);
+    }
+  }
+
+  if (questions.length < QUIZ_LENGTH) {
+    warnings.push(`${where}: ${questions.length} questions, fewer than the ${QUIZ_LENGTH} a quiz asks`);
+  }
+}
+
+const modulesWithoutQuestions = modules.filter((m) => !questionCounts[m.id]).length;
+
 /* -------------------------------------------------------------------- report */
 
 console.log(`courses  ${courses.length}`);
@@ -114,6 +198,8 @@ console.log(`lessons  ${files.length}`);
 console.log(`blocks   ${blockCount}  ${JSON.stringify(typeCount)}`);
 console.log(`lessons per module: min ${Math.min(...Object.values(perModule).map((a) => a.length))}, ` +
             `max ${Math.max(...Object.values(perModule).map((a) => a.length))}`);
+console.log(`questions ${questionIds.size} across ${Object.keys(questionCounts).length} modules` +
+            (modulesWithoutQuestions ? ` (${modulesWithoutQuestions} modules have none yet)` : ''));
 
 if (warnings.length) {
   console.log(`\n${warnings.length} warning(s):`);
