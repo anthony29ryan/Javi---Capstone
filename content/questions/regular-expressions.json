@@ -263,8 +263,8 @@
     "id": "regular-expressions-20",
     "lessonId": "regular-expressions-4-pattern-and-matcher",
     "type": "output",
-    "prompt": "What does this print, using the pattern `(\\d{3})-(\\d{4})` on \"Call 555-1234 now\" after `find()` succeeds?",
-    "code": "System.out.println(m.group(2));",
+    "prompt": "What does this print?",
+    "code": "Pattern p = Pattern.compile(\"(\\\\d{3})-(\\\\d{4})\");\nMatcher m = p.matcher(\"Call 555-1234 now\");\nm.find();\nSystem.out.println(m.group(2));",
     "choices": [
       "555",
       "Call",

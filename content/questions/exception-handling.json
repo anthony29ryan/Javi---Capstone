@@ -186,8 +186,8 @@
     "id": "exception-handling-15",
     "lessonId": "exception-handling-4-multiple-catch-blocks",
     "type": "output",
-    "prompt": "What does this print, if `level3()` divides by zero and `main` catches `ArithmeticException`?",
-    "code": "static void level3() {\n    System.out.println(\"level3 start\");\n    int x = 10 / 0;\n    System.out.println(\"level3 end\");\n}\n\nstatic void level2() {\n    System.out.println(\"level2 start\");\n    level3();\n    System.out.println(\"level2 end\");\n}\n\n// main: try { level2(); } catch (ArithmeticException e) { System.out.println(\"caught in main\"); }",
+    "prompt": "What does this print?",
+    "code": "static void level3() {\n    System.out.println(\"level3 start\");\n    int x = 10 / 0;\n    System.out.println(\"level3 end\");\n}\n\nstatic void level2() {\n    System.out.println(\"level2 start\");\n    level3();\n    System.out.println(\"level2 end\");\n}\n\ntry {\n    level2();\n} catch (ArithmeticException e) {\n    System.out.println(\"caught in main\");\n}",
     "choices": [
       "level2 start\nlevel3 start\nlevel3 end\ncaught in main",
       "level3 start\ncaught in main",
@@ -227,8 +227,8 @@
     "id": "exception-handling-18",
     "lessonId": "exception-handling-5-finally",
     "type": "output",
-    "prompt": "What does this print, where the method is `static int withFinally()` with `try { return 1; } finally { System.out.println(\"cleanup\"); }`?",
-    "code": "System.out.println(withFinally());",
+    "prompt": "What does this print?",
+    "code": "static int withFinally() {\n    try {\n        return 1;\n    } finally {\n        System.out.println(\"cleanup\");\n    }\n}\n\nSystem.out.println(withFinally());",
     "choices": [
       "1",
       "cleanup\n1",

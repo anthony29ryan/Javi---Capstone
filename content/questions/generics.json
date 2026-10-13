@@ -55,8 +55,8 @@
     "id": "generics-05",
     "lessonId": "generics-1-fundamentals",
     "type": "output",
-    "prompt": "What does this print, where `Gen<T>` has `setValue(T)` and `getValue()`?",
-    "code": "Gen<String> g = new Gen<>();\ng.setValue(\"One\");\nSystem.out.println(g.getValue());",
+    "prompt": "What does this print?",
+    "code": "class Gen<T> {\n    private T data;\n\n    public void setValue(T dt) { data = dt; }\n    public T getValue() { return data; }\n}\n\nGen<String> g = new Gen<>();\ng.setValue(\"One\");\nSystem.out.println(g.getValue());",
     "choices": [
       "One",
       "T",
@@ -122,8 +122,8 @@
     "id": "generics-10",
     "lessonId": "generics-2-using-a-generic-class",
     "type": "output",
-    "prompt": "What does this print, where `Pair<T, V>` has `setValue(T, V)` and `getT2Value()`?",
-    "code": "Pair<Integer, String> p = new Pair<>();\np.setValue(1, \"One\");\nSystem.out.println(p.getT2Value());",
+    "prompt": "What does this print?",
+    "code": "class Pair<T, V> {\n    private T data1;\n    private V data2;\n\n    public void setValue(T dt1, V dt2) {\n        data1 = dt1;\n        data2 = dt2;\n    }\n\n    public T getT1Value() { return data1; }\n    public V getT2Value() { return data2; }\n}\n\nPair<Integer, String> p = new Pair<>();\np.setValue(1, \"One\");\nSystem.out.println(p.getT2Value());",
     "choices": [
       "1",
       "One",
@@ -186,8 +186,8 @@
     "id": "generics-15",
     "lessonId": "generics-3-wildcard-arguments",
     "type": "output",
-    "prompt": "What does this print, using `sumOfList(List<? extends Number>)` from the lesson?",
-    "code": "List<Integer> li = Arrays.asList(1, 2, 3);\nSystem.out.println(sumOfList(li));",
+    "prompt": "What does this print?",
+    "code": "public static double sumOfList(List<? extends Number> list) {\n    double s = 0.0;\n    for (Number n : list) {\n        s += n.doubleValue();\n    }\n    return s;\n}\n\nList<Integer> li = Arrays.asList(1, 2, 3);\nSystem.out.println(sumOfList(li));",
     "choices": [
       "6",
       "6.0",

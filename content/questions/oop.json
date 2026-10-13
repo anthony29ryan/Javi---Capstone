@@ -105,8 +105,8 @@
     "id": "oop-09",
     "lessonId": "oop-3-classes",
     "type": "output",
-    "prompt": "What does this print, where `Student` has fields `String name`, `int age` and `double grade`?",
-    "code": "Student s = new Student();\nSystem.out.println(s.name + \" \" + s.age + \" \" + s.grade);",
+    "prompt": "What does this print?",
+    "code": "class Student {\n    String name;\n    int age;\n    double grade;\n}\n\nStudent s = new Student();\nSystem.out.println(s.name + \" \" + s.age + \" \" + s.grade);",
     "choices": [
       "null null null",
       " 0 0",
@@ -120,7 +120,7 @@
     "lessonId": "oop-3-classes",
     "type": "output",
     "prompt": "What does this print?",
-    "code": "Student ana = new Student();\nana.grade = 92.5;\nStudent jess = new Student();\njess.grade = 88.0;\nana.grade = 70;\nSystem.out.println(jess.grade);",
+    "code": "class Student {\n    String name;\n    int age;\n    double grade;\n}\n\nStudent ana = new Student();\nana.grade = 92.5;\nStudent jess = new Student();\njess.grade = 88.0;\nana.grade = 70;\nSystem.out.println(jess.grade);",
     "choices": [
       "88.0",
       "92.5",
@@ -134,7 +134,7 @@
     "lessonId": "oop-3-classes",
     "type": "output",
     "prompt": "What does this print?",
-    "code": "Student ana = new Student();\nana.grade = 70;\nStudent same = ana;\nsame.grade = 50.0;\nSystem.out.println(ana.grade);",
+    "code": "class Student {\n    String name;\n    int age;\n    double grade;\n}\n\nStudent ana = new Student();\nana.grade = 70;\nStudent same = ana;\nsame.grade = 50.0;\nSystem.out.println(ana.grade);",
     "choices": [
       "50.0",
       "Compile error",
@@ -199,8 +199,8 @@
     "id": "oop-16",
     "lessonId": "oop-4-inheritance",
     "type": "output",
-    "prompt": "What does this print, if `Student extends Person` and `Person` declares `name`?",
-    "code": "Student pupil = new Student();\npupil.name = \"Ana\";\npupil.studentNumber = 7;\nSystem.out.println(pupil.name + \" \" + pupil.studentNumber);",
+    "prompt": "What does this print?",
+    "code": "class Person {\n    String name;\n}\n\nclass Student extends Person {\n    int studentNumber;\n}\n\nStudent pupil = new Student();\npupil.name = \"Ana\";\npupil.studentNumber = 7;\nSystem.out.println(pupil.name + \" \" + pupil.studentNumber);",
     "choices": [
       "7 Ana",
       "Ana 7",

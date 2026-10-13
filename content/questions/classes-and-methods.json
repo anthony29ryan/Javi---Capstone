@@ -69,8 +69,8 @@
     "id": "classes-and-methods-06",
     "lessonId": "classes-and-methods-1-methods-and-variables-in-a-class",
     "type": "output",
-    "prompt": "What does this print, if the `Rectangle` class defines `toString()` to return `\"Rectangle \" + length + \" x \" + width`?",
-    "code": "Rectangle r = new Rectangle(4.0, 3.0);\nSystem.out.println(r);",
+    "prompt": "What does this print?",
+    "code": "class Rectangle {\n    private double length;\n    private double width;\n\n    public Rectangle(double length, double width) {\n        this.length = length;\n        this.width = width;\n    }\n\n    public String toString() {\n        return \"Rectangle \" + length + \" x \" + width;\n    }\n}\n\nRectangle r = new Rectangle(4.0, 3.0);\nSystem.out.println(r);",
     "choices": [
       "4.0 x 3.0",
       "Rectangle 4.0 x 3.0",
@@ -135,8 +135,8 @@
     "id": "classes-and-methods-11",
     "lessonId": "classes-and-methods-2-information-hiding",
     "type": "output",
-    "prompt": "What does this print, if `setGrade` ignores values below 0 or above 100?",
-    "code": "Student s = new Student();\ns.setGrade(-5);\nSystem.out.println(s.getGrade());",
+    "prompt": "What does this print?",
+    "code": "class Student {\n    private double grade;\n\n    public void setGrade(double grade) {\n        if (grade < 0 || grade > 100) {\n            return;\n        }\n        this.grade = grade;\n    }\n\n    public double getGrade() { return grade; }\n}\n\nStudent s = new Student();\ns.setGrade(-5);\nSystem.out.println(s.getGrade());",
     "choices": [
       "-5.0",
       "100.0",
@@ -200,7 +200,7 @@
     "lessonId": "classes-and-methods-3-encapsulation",
     "type": "output",
     "prompt": "What does this print?",
-    "code": "Account acct = new Account(5000);\nacct.deposit(1500);\nacct.withdraw(2000);\nSystem.out.println(acct.getBalance());",
+    "code": "class Account {\n    private double balance;\n\n    public Account(double balance) { this.balance = balance; }\n\n    public void deposit(double amount) {\n        if (amount > 0) { balance += amount; }\n    }\n\n    public void withdraw(double amount) {\n        if (amount > 0 && amount <= balance) { balance -= amount; }\n    }\n\n    public double getBalance() { return balance; }\n}\n\nAccount acct = new Account(5000);\nacct.deposit(1500);\nacct.withdraw(2000);\nSystem.out.println(acct.getBalance());",
     "choices": [
       "4500.0",
       "6500.0",
@@ -265,8 +265,8 @@
     "id": "classes-and-methods-21",
     "lessonId": "classes-and-methods-5-objects-and-references",
     "type": "output",
-    "prompt": "What does this print, using a `Student` class with a constructor taking the name?",
-    "code": "Student a = new Student(\"Ana\");\nStudent b = new Student(\"Ana\");\nSystem.out.println(a == b);",
+    "prompt": "What does this print?",
+    "code": "class Student {\n    private String name;\n\n    public Student(String name) { this.name = name; }\n}\n\nStudent a = new Student(\"Ana\");\nStudent b = new Student(\"Ana\");\nSystem.out.println(a == b);",
     "choices": [
       "Ana",
       "true",
@@ -280,7 +280,7 @@
     "lessonId": "classes-and-methods-5-objects-and-references",
     "type": "output",
     "prompt": "What does this print?",
-    "code": "Student a = new Student(\"Ana\");\nStudent c = a;\nc.setName(\"Jess\");\nSystem.out.println(a.getName());",
+    "code": "class Student {\n    private String name;\n\n    public Student(String name) { this.name = name; }\n    public String getName() { return name; }\n    public void setName(String name) { this.name = name; }\n}\n\nStudent a = new Student(\"Ana\");\nStudent c = a;\nc.setName(\"Jess\");\nSystem.out.println(a.getName());",
     "choices": [
       "Compile error",
       "Ana",
@@ -293,8 +293,8 @@
     "id": "classes-and-methods-23",
     "lessonId": "classes-and-methods-5-objects-and-references",
     "type": "output",
-    "prompt": "What does this print, if `Student` overrides `equals` to compare names?",
-    "code": "Student a = new Student(\"Ana\");\nStudent b = new Student(\"Ana\");\nSystem.out.println(a.equals(b));",
+    "prompt": "What does this print?",
+    "code": "class Student {\n    private String name;\n\n    public Student(String name) { this.name = name; }\n\n    public boolean equals(Object other) {\n        if (!(other instanceof Student)) {\n            return false;\n        }\n        Student s = (Student) other;\n        return name.equals(s.name);\n    }\n}\n\nStudent a = new Student(\"Ana\");\nStudent b = new Student(\"Ana\");\nSystem.out.println(a.equals(b));",
     "choices": [
       "true",
       "false",

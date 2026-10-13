@@ -216,8 +216,8 @@
     "id": "predefined-functions-17",
     "lessonId": "predefined-functions-3-user-defined-methods",
     "type": "output",
-    "prompt": "What does this print, given `add(int, int)` and `add(double, double)` methods?",
-    "code": "System.out.println(add(2, 3) + \" \" + add(2.5, 3.5));",
+    "prompt": "What does this print?",
+    "code": "public static int add(int a, int b) { return a + b; }\npublic static double add(double a, double b) { return a + b; }\n\nSystem.out.println(add(2, 3) + \" \" + add(2.5, 3.5));",
     "choices": [
       "5.0 6.0",
       "5 6.0",
@@ -243,8 +243,8 @@
     "id": "predefined-functions-19",
     "lessonId": "predefined-functions-3-user-defined-methods",
     "type": "output",
-    "prompt": "What does this print, given `square(int n)` returns `n * n`?",
-    "code": "System.out.println(square(3) + square(4));",
+    "prompt": "What does this print?",
+    "code": "public static int square(int n) {\n    return n * n;\n}\n\nSystem.out.println(square(3) + square(4));",
     "choices": [
       "7",
       "25",

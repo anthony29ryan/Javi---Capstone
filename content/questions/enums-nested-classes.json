@@ -55,8 +55,8 @@
     "id": "enums-nested-classes-05",
     "lessonId": "enums-nested-classes-1-enumerations",
     "type": "output",
-    "prompt": "What does this print, if `isFinalExam(Period p)` returns `p == Period.FINAL`?",
-    "code": "System.out.println(isFinalExam(Period.FINAL));",
+    "prompt": "What does this print?",
+    "code": "enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }\n\npublic static boolean isFinalExam(Period p) {\n    return p == Period.FINAL;\n}\n\nSystem.out.println(isFinalExam(Period.FINAL));",
     "choices": [
       "true",
       "false",
@@ -82,8 +82,8 @@
     "id": "enums-nested-classes-07",
     "lessonId": "enums-nested-classes-2-enum-methods",
     "type": "output",
-    "prompt": "What does this print, given `enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }`?",
-    "code": "System.out.println(Period.MIDTERM.ordinal());",
+    "prompt": "What does this print?",
+    "code": "enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }\n\nSystem.out.println(Period.MIDTERM.ordinal());",
     "choices": [
       "0",
       "2",
@@ -97,7 +97,7 @@
     "lessonId": "enums-nested-classes-2-enum-methods",
     "type": "output",
     "prompt": "What does this print?",
-    "code": "System.out.println(Period.valueOf(\"PRELIM\"));",
+    "code": "enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }\n\nSystem.out.println(Period.valueOf(\"PRELIM\"));",
     "choices": [
       "0",
       "Compile error",
@@ -111,7 +111,7 @@
     "lessonId": "enums-nested-classes-2-enum-methods",
     "type": "output",
     "prompt": "What does this print?",
-    "code": "System.out.println(Period.values().length);",
+    "code": "enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }\n\nSystem.out.println(Period.values().length);",
     "choices": [
       "4",
       "3",
@@ -138,7 +138,7 @@
     "lessonId": "enums-nested-classes-2-enum-methods",
     "type": "output",
     "prompt": "What does this print?",
-    "code": "System.out.println(Period.PRELIM.compareTo(Period.FINAL));",
+    "code": "enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }\n\nSystem.out.println(Period.PRELIM.compareTo(Period.FINAL));",
     "choices": [
       "3",
       "0",
@@ -203,8 +203,8 @@
     "id": "enums-nested-classes-16",
     "lessonId": "enums-nested-classes-4-enums-in-a-switch",
     "type": "output",
-    "prompt": "What does this print, using the `Size` enum switch from the lesson with `s = Size.LARGE`?",
-    "code": "switch (s) {\n    case REGULAR: System.out.println(\"381.00\"); break;\n    case LARGE:   System.out.println(\"602.00\"); break;\n    case PARTY:   System.out.println(\"799.00\"); break;\n}",
+    "prompt": "What does this print?",
+    "code": "enum Size { REGULAR, LARGE, PARTY }\n\nSize s = Size.LARGE;\nswitch (s) {\n    case REGULAR: System.out.println(\"381.00\"); break;\n    case LARGE:   System.out.println(\"602.00\"); break;\n    case PARTY:   System.out.println(\"799.00\"); break;\n}",
     "choices": [
       "381.00",
       "Nothing",
@@ -218,7 +218,7 @@
     "lessonId": "enums-nested-classes-4-enums-in-a-switch",
     "type": "output",
     "prompt": "What does this print?",
-    "code": "Size s = Size.LARGE;\ndouble price = switch (s) {\n    case REGULAR -> 381.00;\n    case LARGE -> 602.00;\n    case PARTY -> 799.00;\n};\nSystem.out.println(price);",
+    "code": "enum Size { REGULAR, LARGE, PARTY }\n\nSize s = Size.LARGE;\ndouble price = switch (s) {\n    case REGULAR -> 381.00;\n    case LARGE -> 602.00;\n    case PARTY -> 799.00;\n};\nSystem.out.println(price);",
     "choices": [
       "602.0",
       "381.0",
@@ -257,8 +257,8 @@
     "id": "enums-nested-classes-20",
     "lessonId": "enums-nested-classes-5-type-safety-and-enums-with-fields",
     "type": "output",
-    "prompt": "What does this print, using the `PizzaSize` enum from the lesson?",
-    "code": "System.out.println(PizzaSize.LARGE.getPrice());",
+    "prompt": "What does this print?",
+    "code": "enum PizzaSize {\n    REGULAR(\"Regular\", 381.00),\n    LARGE(\"Large\", 602.00),\n    PARTY(\"Party\", 799.00);\n\n    private final String label;\n    private final double price;\n\n    PizzaSize(String label, double price) {\n        this.label = label;\n        this.price = price;\n    }\n\n    public double getPrice() { return price; }\n    public double priceWithVat() { return price * 1.12; }\n}\n\nSystem.out.println(PizzaSize.LARGE.getPrice());",
     "choices": [
       "LARGE",
       "381.0",
@@ -271,8 +271,8 @@
     "id": "enums-nested-classes-21",
     "lessonId": "enums-nested-classes-5-type-safety-and-enums-with-fields",
     "type": "output",
-    "prompt": "What does this print, using the `PizzaSize` enum from the lesson?",
-    "code": "System.out.printf(\"%.2f%n\", PizzaSize.REGULAR.priceWithVat());",
+    "prompt": "What does this print?",
+    "code": "enum PizzaSize {\n    REGULAR(\"Regular\", 381.00),\n    LARGE(\"Large\", 602.00),\n    PARTY(\"Party\", 799.00);\n\n    private final String label;\n    private final double price;\n\n    PizzaSize(String label, double price) {\n        this.label = label;\n        this.price = price;\n    }\n\n    public double getPrice() { return price; }\n    public double priceWithVat() { return price * 1.12; }\n}\n\nSystem.out.printf(\"%.2f%n\", PizzaSize.REGULAR.priceWithVat());",
     "choices": [
       "381.00",
       "426.00",

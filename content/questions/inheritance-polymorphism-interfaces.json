@@ -55,8 +55,8 @@
     "id": "inheritance-polymorphism-interfaces-05",
     "lessonId": "inheritance-polymorphism-interfaces-1-inheritance",
     "type": "output",
-    "prompt": "What does this print, where `Student` extends `Person`?",
-    "code": "Student s = new Student(\"Ana\", 7);\nSystem.out.println(s instanceof Object);",
+    "prompt": "What does this print?",
+    "code": "class Person {\n    private String name;\n\n    public Person(String name) { this.name = name; }\n}\n\nclass Student extends Person {\n    private int studentNumber;\n\n    public Student(String name, int studentNumber) {\n        super(name);\n        this.studentNumber = studentNumber;\n    }\n}\n\nStudent s = new Student(\"Ana\", 7);\nSystem.out.println(s instanceof Object);",
     "choices": [
       "true",
       "false",
@@ -171,8 +171,8 @@
     "id": "inheritance-polymorphism-interfaces-14",
     "lessonId": "inheritance-polymorphism-interfaces-3-constructors-in-a-derived-class",
     "type": "output",
-    "prompt": "What does this print, if `B extends A` and each constructor prints its own letter after `B` calls `super()` first?",
-    "code": "new B();",
+    "prompt": "What does this print?",
+    "code": "class A {\n    A() { System.out.println(\"A\"); }\n}\n\nclass B extends A {\n    B() {\n        super();\n        System.out.println(\"B\");\n    }\n}\n\nnew B();",
     "choices": [
       "A\nB",
       "B\nA",
@@ -199,7 +199,7 @@
     "lessonId": "inheritance-polymorphism-interfaces-4-polymorphism",
     "type": "output",
     "prompt": "What does this print?",
-    "code": "Animal a = new Dog();\nSystem.out.println(a.sound());",
+    "code": "class Animal {\n    String sound() { return \"...\"; }\n}\n\nclass Dog extends Animal {\n    @Override\n    String sound() { return \"Woof\"; }\n}\n\nAnimal a = new Dog();\nSystem.out.println(a.sound());",
     "choices": [
       "...",
       "Animal",
@@ -226,7 +226,7 @@
     "lessonId": "inheritance-polymorphism-interfaces-4-polymorphism",
     "type": "output",
     "prompt": "What does this print?",
-    "code": "Person p = new Student(\"Ana\", 7);\nif (p instanceof Student) {\n    Student s = (Student) p;\n    System.out.println(s.getStudentNumber());\n}",
+    "code": "class Person {\n    private String name;\n\n    public Person(String name) { this.name = name; }\n}\n\nclass Student extends Person {\n    private int studentNumber;\n\n    public Student(String name, int studentNumber) {\n        super(name);\n        this.studentNumber = studentNumber;\n    }\n\n    public int getStudentNumber() { return studentNumber; }\n}\n\nPerson p = new Student(\"Ana\", 7);\nif (p instanceof Student) {\n    Student s = (Student) p;\n    System.out.println(s.getStudentNumber());\n}",
     "choices": [
       "7",
       "Ana",
@@ -265,8 +265,8 @@
     "id": "inheritance-polymorphism-interfaces-21",
     "lessonId": "inheritance-polymorphism-interfaces-5-interfaces",
     "type": "output",
-    "prompt": "What does this print, where `Rectangle` implements `Measurable` and `getArea()` returns `length * width`?",
-    "code": "Measurable m = new Rectangle(4, 6);\nSystem.out.println(m.getArea());",
+    "prompt": "What does this print?",
+    "code": "interface Measurable {\n    double getArea();\n}\n\nclass Rectangle implements Measurable {\n    private double length, width;\n\n    public Rectangle(double length, double width) {\n        this.length = length;\n        this.width = width;\n    }\n\n    public double getArea() { return length * width; }\n}\n\nMeasurable m = new Rectangle(4, 6);\nSystem.out.println(m.getArea());",
     "choices": [
       "24",
       "10.0",
