@@ -267,7 +267,7 @@
     "id": "input-output-21",
     "lessonId": "input-output-5-a-complete-program",
     "type": "mcq",
-    "prompt": "In the payroll program, what is `gross` when `hours` is 160 and `rate` is 125.50?",
+    "prompt": "A payroll program computes `gross = hours * rate`. What is `gross` when `hours` is 160 and `rate` is 125.50?",
     "choices": [
       "1600.0",
       "20080.0",
@@ -280,7 +280,7 @@
     "id": "input-output-22",
     "lessonId": "input-output-5-a-complete-program",
     "type": "mcq",
-    "prompt": "Why does the payroll program write `%%` in the tax label?",
+    "prompt": "Why is `%%` written in a `printf` format string such as `\"Tax (12%%):\"`?",
     "choices": [
       "To format a decimal",
       "To print a literal percent sign",

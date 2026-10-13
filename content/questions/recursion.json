@@ -110,7 +110,7 @@
     "id": "recursion-09",
     "lessonId": "recursion-2-base-case-and-general-case",
     "type": "mcq",
-    "prompt": "How many base cases does the Fibonacci method in the lesson have?",
+    "prompt": "A recursive Fibonacci method returns 0 when `n` is 0, returns 1 when `n` is 1, and otherwise returns `fib(n - 1) + fib(n - 2)`. How many base cases does it have?",
     "choices": [
       "1",
       "2",
@@ -204,7 +204,7 @@
     "id": "recursion-16",
     "lessonId": "recursion-4-designing-a-recursive-method",
     "type": "mcq",
-    "prompt": "In the `largest` method, what is the base case?",
+    "prompt": "A recursive method `largest(list, startIndex, lastIndex)` finds the largest element of part of an array. What should its base case be?",
     "choices": [
       "max == 0",
       "startIndex == 0",

@@ -118,7 +118,7 @@
     "id": "arrays-10",
     "lessonId": "arrays-2-traversing-an-array",
     "type": "mcq",
-    "prompt": "Why does the lesson start `lowest` at `scores[0]` instead of `0`?",
+    "prompt": "A program finds the lowest of the scores {88, 92, 75, 96, 63, 81}. Why should `lowest` start at `scores[0]` instead of `0`?",
     "choices": [
       "Zero is not a valid int",
       "scores[0] is always the smallest value",

@@ -164,7 +164,7 @@
     "id": "enums-nested-classes-13",
     "lessonId": "enums-nested-classes-3-a-worked-example",
     "type": "mcq",
-    "prompt": "In the worked example, what happens when the user types `Pizza`?",
+    "prompt": "A program reads a grading period and calls `Period.valueOf(input.toUpperCase())` inside a `try` block that catches `IllegalArgumentException`. What happens when the user types `Pizza`?",
     "choices": [
       "`valueOf` throws IllegalArgumentException, which the program catches",
       "The program crashes with no message",
@@ -285,7 +285,7 @@
     "id": "enums-nested-classes-22",
     "lessonId": "enums-nested-classes-6-nested-classes",
     "type": "mcq",
-    "prompt": "How many kinds of nested class does the lesson describe?",
+    "prompt": "How many kinds of nested class are there?",
     "choices": [
       "2",
       "3",
