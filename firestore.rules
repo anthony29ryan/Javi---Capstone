@@ -1,42 +1,143 @@
 rules_version = '2';
 
+// Tested by tests/rules/firestore.test.js — run `npm run test:rules` after any
+// change here, then `npm run rules:deploy`. A rule that is too permissive
+// still lets the app work, so only the tests will notice it.
+//
+// Admin access: the Firebase console and the scripts in scripts/ use admin
+// credentials, which bypass these rules entirely. So "only the admin can do X"
+// is written here as "nobody can do X", and it is not a missing feature.
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // A signed-in user may read and write only their own profile document.
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+    function signedIn() {
+      return request.auth != null;
     }
 
-    // TEMPORARY: any signed-in user can read/write course content while we're
-    // still seeding placeholder lessons via scripts/seedContent.js. Once real
-    // content is in place, tighten this to read-only (no client write) since
-    // content should only ever be authored via the seed script, not the app.
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    // The fields this write adds, changes or removes compared with what is
+    // stored. Checking only these, rather than the whole document, means an
+    // account created by an older build that carries a field the app no longer
+    // writes can still save everything else.
+    function changedFields() {
+      return resource == null
+        ? request.resource.data.keys().toSet()
+        : request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    // True when this write sets `field` to a new value. Used as
+    // `!changed('x') || <check on x>`: fields the write does not touch, or
+    // removes, skip the check, and `||` stops before reading a missing field.
+    function changed(field) {
+      return field in changedFields() && field in request.resource.data;
+    }
+
+    // ---------------------------------------------------------------- content
+    // Read-only for the app. Published by scripts/publishContent.js, which
+    // uses the Admin SDK, and editable by hand in the Firebase console.
+
     match /courses/{courseId} {
-      allow read, write: if request.auth != null;
+      allow read: if signedIn();
     }
     match /modules/{moduleId} {
-      allow read, write: if request.auth != null;
+      allow read: if signedIn();
     }
     match /lessons/{lessonId} {
-      allow read, write: if request.auth != null;
+      allow read: if signedIn();
     }
-    // Same TEMPORARY seeding rule for placeholder quiz questions.
     match /questions/{questionId} {
-      allow read, write: if request.auth != null;
+      allow read: if signedIn();
     }
 
-    // A signed-in user may create attempt records for themselves, and read
-    // only their own — never anyone else's, and never edit/delete history.
-    match /attempts/{attemptId} {
-      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
-      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+    // ------------------------------------------------------------------ users
+    // Profile and preferences. Written by AuthContext and services/preferences.
+
+    function validUserWrite() {
+      let data = request.resource.data;
+      return changedFields().hasOnly([
+          'email', 'displayName', 'createdAt',
+          'reminderTime', 'reminderEnabled', 'goals', 'setupComplete',
+          'deletionRequestedAt'
+        ])
+        && (!changed('email') || data.email is string)
+        && (!changed('displayName')
+            || (data.displayName is string && data.displayName.size() > 0 && data.displayName.size() <= 100))
+        && (!changed('createdAt') || data.createdAt == request.time)
+        && (!changed('reminderTime')
+            || (data.reminderTime is string && data.reminderTime.matches('^[0-2][0-9]:[0-5][0-9]$')))
+        && (!changed('reminderEnabled') || data.reminderEnabled is bool)
+        && (!changed('goals') || (data.goals is list && data.goals.size() <= 20))
+        && (!changed('setupComplete') || data.setupComplete is bool)
+        // Starts the 30-day deletion window. It must be the server's clock, so
+        // the window cannot be backdated to make the purge run early. Removing
+        // the field (logging back in) is also allowed, since `changed` is false
+        // once the field is gone.
+        && (!changed('deletionRequestedAt') || data.deletionRequestedAt == request.time);
     }
 
-    // A signed-in user may read and write only their own progress document.
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId) && validUserWrite();
+      // Deleting an account is scheduled, not immediate: the app sets
+      // deletionRequestedAt and scripts/purgeDeletedAccounts.js removes the
+      // data once 30 days pass. So the app never deletes this document.
+    }
+
+    // --------------------------------------------------------------- progress
+    // Written by services/progress.js with merge, so each write carries only
+    // some of these fields.
+
+    function validProgressWrite() {
+      let data = request.resource.data;
+      return changedFields().hasOnly([
+          'completedLessons', 'moduleScores', 'streak', 'lastLessonId', 'updatedAt'
+        ])
+        && (!changed('completedLessons')
+            || (data.completedLessons is list && data.completedLessons.size() <= 1000))
+        && (!changed('moduleScores') || data.moduleScores is map)
+        && (!changed('streak')
+            || (data.streak is map
+                && data.streak.keys().hasOnly(['current', 'longest', 'lastActiveDate'])
+                && data.streak.current is int
+                && data.streak.longest is int
+                && (data.streak.lastActiveDate == null || data.streak.lastActiveDate is string)))
+        && (!changed('lastLessonId') || data.lastLessonId is string)
+        && (!changed('updatedAt') || data.updatedAt == request.time);
+    }
+
     match /progress/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId) && validProgressWrite();
     }
 
-    // Everything else stays default-deny until those collections get rules.
+    // --------------------------------------------------------------- attempts
+    // One document per quiz answer, written by services/quizzes.js. This is
+    // the trained model's feature source, so the shape is enforced exactly:
+    // every field present, nothing extra, and never edited afterwards.
+
+    function validAttempt() {
+      let data = request.resource.data;
+      let fields = ['userId', 'questionId', 'topic', 'correct', 'timeTakenMs', 'attemptNumber', 'createdAt'];
+      return data.keys().hasOnly(fields)
+        && data.keys().hasAll(fields)
+        && data.userId == request.auth.uid
+        && data.questionId is string
+        && data.topic is string
+        && data.correct is bool
+        && data.timeTakenMs is number && data.timeTakenMs >= 0
+        && data.attemptNumber is int && data.attemptNumber >= 1
+        && data.createdAt == request.time;
+    }
+
+    match /attempts/{attemptId} {
+      allow create: if signedIn() && validAttempt();
+      allow read: if signedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // Everything else is denied by default.
   }
 }

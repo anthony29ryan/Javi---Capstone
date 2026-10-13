@@ -1,0 +1,315 @@
+// Security-rules tests for firestore.rules, run against the local emulator.
+//
+//   npm run test:rules
+//
+// Rules that are too permissive still let the app work normally, so they fail
+// silently. These tests are the only thing that notices. Each section has two
+// halves: the writes the app really makes (copied from src/services and
+// src/context, and they must keep passing or the app breaks), and the writes
+// a tampered client could make (these must be denied).
+
+const { readFileSync } = require('node:fs');
+const path = require('node:path');
+const { after, before, beforeEach, describe, test } = require('node:test');
+
+const {
+  assertFails,
+  assertSucceeds,
+  initializeTestEnvironment,
+} = require('@firebase/rules-unit-testing');
+const {
+  Timestamp,
+  addDoc,
+  collection,
+  deleteDoc,
+  deleteField,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where,
+} = require('firebase/firestore');
+
+let testEnv;
+
+// A Firestore client signed in as `uid`, or signed out when `uid` is null.
+function dbAs(uid) {
+  const context = uid ? testEnv.authenticatedContext(uid) : testEnv.unauthenticatedContext();
+  return context.firestore();
+}
+
+// Writes test fixtures directly, the way the Admin SDK or the console would.
+async function seed(write) {
+  await testEnv.withSecurityRulesDisabled((context) => write(context.firestore()));
+}
+
+before(async () => {
+  testEnv = await initializeTestEnvironment({
+    projectId: 'demo-javi-rules',
+    firestore: {
+      rules: readFileSync(path.join(__dirname, '..', '..', 'firestore.rules'), 'utf8'),
+    },
+  });
+});
+
+beforeEach(async () => {
+  await testEnv.clearFirestore();
+});
+
+after(async () => {
+  await testEnv.cleanup();
+});
+
+describe('course content', () => {
+  const contentPaths = ['courses/beginner', 'modules/oop', 'lessons/oop-1', 'questions/q1'];
+
+  beforeEach(async () => {
+    await seed(async (db) => {
+      for (const contentPath of contentPaths) {
+        await setDoc(doc(db, contentPath), { title: 'Seeded', order: 1 });
+      }
+    });
+  });
+
+  test('signed-in users can read every content collection', async () => {
+    const db = dbAs('alice');
+    for (const contentPath of contentPaths) {
+      await assertSucceeds(getDoc(doc(db, contentPath)));
+    }
+    await assertSucceeds(getDocs(collection(db, 'lessons')));
+    await assertSucceeds(getDocs(query(collection(db, 'questions'), where('moduleId', '==', 'oop'))));
+  });
+
+  test('signed-out visitors cannot read content', async () => {
+    await assertFails(getDoc(doc(dbAs(null), 'lessons/oop-1')));
+  });
+
+  test('signed-in users cannot create, change or delete content', async () => {
+    const db = dbAs('alice');
+    for (const contentPath of contentPaths) {
+      await assertFails(setDoc(doc(db, contentPath), { title: 'Vandalised' }));
+      await assertFails(deleteDoc(doc(db, contentPath)));
+    }
+    await assertFails(setDoc(doc(db, 'lessons/brand-new'), { title: 'Injected' }));
+  });
+});
+
+describe('users', () => {
+  test('sign-up creates the profile document', async () => {
+    await assertSucceeds(
+      setDoc(doc(dbAs('alice'), 'users/alice'), {
+        email: 'alice@example.com',
+        displayName: 'Alice',
+        createdAt: serverTimestamp(),
+      })
+    );
+  });
+
+  test('every preference and profile write the app makes is allowed', async () => {
+    const db = dbAs('alice');
+    const ref = doc(db, 'users/alice');
+    await seed((admin) =>
+      setDoc(doc(admin, 'users/alice'), { email: 'alice@example.com', displayName: 'Alice' })
+    );
+
+    // SetupScreen, SettingsScreen, ProfileDetailsScreen, AuthContext.updateDisplayName
+    await assertSucceeds(
+      setDoc(ref, { reminderTime: '20:00', reminderEnabled: true, setupComplete: true }, { merge: true })
+    );
+    await assertSucceeds(setDoc(ref, { reminderEnabled: false }, { merge: true }));
+    await assertSucceeds(setDoc(ref, { goals: ['Exam prep', 'Curiosity'] }, { merge: true }));
+    await assertSucceeds(setDoc(ref, { goals: [] }, { merge: true }));
+    await assertSucceeds(updateDoc(ref, { displayName: 'Alice B' }));
+    await assertSucceeds(getDoc(ref));
+  });
+
+  test('a profile holding a field the rules do not know about can still be updated', async () => {
+    // Accounts created by older builds may carry fields the app no longer
+    // writes. Rules check only the fields a write changes, so these accounts
+    // are not locked out of saving their preferences.
+    await seed((admin) => setDoc(doc(admin, 'users/alice'), { email: 'a@x.com', legacyLevel: 2 }));
+    await assertSucceeds(setDoc(doc(dbAs('alice'), 'users/alice'), { goals: [] }, { merge: true }));
+  });
+
+  test('nobody can read or write someone else’s profile', async () => {
+    await seed((admin) => setDoc(doc(admin, 'users/bob'), { email: 'bob@example.com' }));
+    const db = dbAs('alice');
+    await assertFails(getDoc(doc(db, 'users/bob')));
+    await assertFails(setDoc(doc(db, 'users/bob'), { displayName: 'Hacked' }, { merge: true }));
+    await assertFails(getDoc(doc(dbAs(null), 'users/bob')));
+  });
+
+  test('unknown fields and wrong types are rejected', async () => {
+    const ref = doc(dbAs('alice'), 'users/alice');
+    await assertFails(setDoc(ref, { isAdmin: true }, { merge: true }));
+    await assertFails(setDoc(ref, { reminderEnabled: 'yes' }, { merge: true }));
+    await assertFails(setDoc(ref, { reminderTime: 'eight pm' }, { merge: true }));
+    await assertFails(setDoc(ref, { goals: 'Exam prep' }, { merge: true }));
+    await assertFails(setDoc(ref, { setupComplete: 1 }, { merge: true }));
+    await assertFails(setDoc(ref, { displayName: '' }, { merge: true }));
+  });
+
+  test('a user can schedule their own deletion, stamped with the server time', async () => {
+    await seed((admin) => setDoc(doc(admin, 'users/alice'), { email: 'alice@example.com' }));
+    await assertSucceeds(
+      setDoc(doc(dbAs('alice'), 'users/alice'), { deletionRequestedAt: serverTimestamp() }, { merge: true })
+    );
+  });
+
+  test('a scheduled deletion cannot be backdated to skip the 30-day window', async () => {
+    const longAgo = Timestamp.fromDate(new Date('2020-01-01'));
+    await assertFails(
+      setDoc(doc(dbAs('alice'), 'users/alice'), { deletionRequestedAt: longAgo }, { merge: true })
+    );
+  });
+
+  test('logging back in during the window cancels the deletion', async () => {
+    await seed((admin) =>
+      setDoc(doc(admin, 'users/alice'), {
+        email: 'alice@example.com',
+        deletionRequestedAt: Timestamp.now(),
+      })
+    );
+    await assertSucceeds(
+      updateDoc(doc(dbAs('alice'), 'users/alice'), { deletionRequestedAt: deleteField() })
+    );
+  });
+
+  test('the app cannot delete a profile — only the purge script can', async () => {
+    await seed((admin) => setDoc(doc(admin, 'users/alice'), { email: 'alice@example.com' }));
+    await assertFails(deleteDoc(doc(dbAs('alice'), 'users/alice')));
+  });
+});
+
+describe('progress', () => {
+  test('every progress write the app makes is allowed', async () => {
+    const ref = doc(dbAs('alice'), 'progress/alice');
+
+    // recordLessonOpened
+    await assertSucceeds(
+      setDoc(ref, { lastLessonId: 'oop-1', updatedAt: serverTimestamp() }, { merge: true })
+    );
+    // setLessonComplete (complete, then undo, which leaves the streak alone)
+    await assertSucceeds(
+      setDoc(
+        ref,
+        {
+          completedLessons: ['oop-1'],
+          streak: { current: 1, longest: 1, lastActiveDate: '2026-09-30' },
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+      )
+    );
+    await assertSucceeds(
+      setDoc(ref, { completedLessons: [], updatedAt: serverTimestamp() }, { merge: true })
+    );
+    // recordModuleQuizCompletion
+    await assertSucceeds(
+      setDoc(
+        ref,
+        {
+          moduleScores: { oop: { correct: 4, total: 5, lastAttemptAt: Date.now() } },
+          streak: { current: 2, longest: 2, lastActiveDate: '2026-10-01' },
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+      )
+    );
+    await assertSucceeds(getDoc(ref));
+  });
+
+  test('nobody can read or write someone else’s progress', async () => {
+    await seed((admin) => setDoc(doc(admin, 'progress/bob'), { completedLessons: [] }));
+    const db = dbAs('alice');
+    await assertFails(getDoc(doc(db, 'progress/bob')));
+    await assertFails(setDoc(doc(db, 'progress/bob'), { completedLessons: [] }, { merge: true }));
+  });
+
+  test('unknown fields and malformed values are rejected', async () => {
+    const ref = doc(dbAs('alice'), 'progress/alice');
+    await assertFails(setDoc(ref, { badges: ['all'] }, { merge: true }));
+    await assertFails(setDoc(ref, { completedLessons: 'oop-1' }, { merge: true }));
+    await assertFails(setDoc(ref, { moduleScores: 100 }, { merge: true }));
+    await assertFails(setDoc(ref, { streak: { current: 'lots' } }, { merge: true }));
+    await assertFails(
+      setDoc(ref, { streak: { current: 1, longest: 1, lastActiveDate: null, bonus: 9 } }, { merge: true })
+    );
+    await assertFails(setDoc(ref, { updatedAt: Timestamp.fromDate(new Date('2020-01-01')) }, { merge: true }));
+  });
+
+  test('the app cannot delete a progress document', async () => {
+    await seed((admin) => setDoc(doc(admin, 'progress/alice'), { completedLessons: [] }));
+    await assertFails(deleteDoc(doc(dbAs('alice'), 'progress/alice')));
+  });
+});
+
+describe('attempts', () => {
+  // Exactly what src/services/quizzes.js recordAttempt() writes. This is the
+  // trained model's feature source, so its shape is enforced strictly.
+  function validAttempt(overrides = {}) {
+    return {
+      userId: 'alice',
+      questionId: 'q1',
+      topic: 'Objects',
+      correct: true,
+      timeTakenMs: 5400,
+      attemptNumber: 1,
+      createdAt: serverTimestamp(),
+      ...overrides,
+    };
+  }
+
+  test('recording an attempt and counting earlier ones works', async () => {
+    const db = dbAs('alice');
+    await assertSucceeds(addDoc(collection(db, 'attempts'), validAttempt()));
+    await assertSucceeds(
+      getDocs(
+        query(collection(db, 'attempts'), where('userId', '==', 'alice'), where('questionId', '==', 'q1'))
+      )
+    );
+  });
+
+  test('an attempt cannot be recorded for someone else', async () => {
+    await assertFails(addDoc(collection(dbAs('alice'), 'attempts'), validAttempt({ userId: 'bob' })));
+  });
+
+  test('malformed attempts are rejected', async () => {
+    const attempts = collection(dbAs('alice'), 'attempts');
+    const { topic, ...missingTopic } = validAttempt();
+    await assertFails(addDoc(attempts, missingTopic));
+    await assertFails(addDoc(attempts, validAttempt({ extra: 'field' })));
+    await assertFails(addDoc(attempts, validAttempt({ correct: 'yes' })));
+    await assertFails(addDoc(attempts, validAttempt({ timeTakenMs: -1 })));
+    await assertFails(addDoc(attempts, validAttempt({ attemptNumber: 0 })));
+    await assertFails(
+      addDoc(attempts, validAttempt({ createdAt: Timestamp.fromDate(new Date('2020-01-01')) }))
+    );
+  });
+
+  test('attempt history can be read by its owner only, and never edited or deleted', async () => {
+    await seed(async (admin) => {
+      await setDoc(doc(admin, 'attempts/a1'), { ...validAttempt(), createdAt: Timestamp.now() });
+      await setDoc(doc(admin, 'attempts/b1'), {
+        ...validAttempt({ userId: 'bob' }),
+        createdAt: Timestamp.now(),
+      });
+    });
+    const db = dbAs('alice');
+    await assertSucceeds(getDoc(doc(db, 'attempts/a1')));
+    await assertFails(getDoc(doc(db, 'attempts/b1')));
+    await assertFails(getDocs(collection(db, 'attempts')));
+    await assertFails(updateDoc(doc(db, 'attempts/a1'), { correct: false }));
+    await assertFails(deleteDoc(doc(db, 'attempts/a1')));
+  });
+});
+
+describe('everything else', () => {
+  test('collections without rules are closed', async () => {
+    await assertFails(setDoc(doc(dbAs('alice'), 'admins/alice'), { role: 'admin' }));
+    await assertFails(getDoc(doc(dbAs('alice'), 'secrets/anything')));
+  });
+});

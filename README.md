@@ -48,15 +48,32 @@ EXPO_PUBLIC_FIREBASE_APP_ID=
 These are client identifiers, not secrets, safe to have in the built app. Real API keys (AI
 tutor, code execution) stay server-side in Cloud Functions and never ship to the client.
 
-Publish `firestore.rules` (Firestore Database → Rules tab) and `storage.rules` (Storage → Rules
-tab, after enabling Storage) in the Firebase console so signed-in users can read/write their own
-profile document, plus content collections/images while content is being actively authored.
-
-Publish lesson content (courses/modules/lessons, sourced from the `content/` folder). Add
-`SEED_EMAIL` / `SEED_PASSWORD` to `.env` (an existing dev/test account), then:
+Security rules live in `firestore.rules` and `storage.rules`. Signed-in users read content and
+read/write only their own profile, progress and quiz attempts; nobody can write content from the
+app. Test and deploy them with the Firebase CLI (installed as a dev dependency; the emulator
+needs Java 17+):
 
 ```bash
-node --env-file=.env scripts/publishContent.js
+npm run test:rules      # runs tests/rules/ against the local emulator
+npx firebase login      # once per machine
+npm run rules:deploy
+```
+
+The scripts in `scripts/` write as admin, using a service-account key. Download one from
+Firebase console → Project settings → Service accounts → Generate new private key, save it
+**outside** this folder, and set `GOOGLE_APPLICATION_CREDENTIALS` in `.env` to its path. Then
+publish lesson content (courses/modules/lessons, sourced from the `content/` folder):
+
+```bash
+npm run content:publish
+```
+
+Deleted accounts are kept for 30 days, and logging in during that time restores them. Run this
+regularly (e.g. weekly) to permanently remove accounts past their 30 days:
+
+```bash
+npm run accounts:purge               # lists who is due, deletes nothing
+npm run accounts:purge -- --confirm  # deletes them
 ```
 
 ### Run
