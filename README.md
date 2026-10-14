@@ -13,7 +13,7 @@ Solo capstone project, built incrementally over one semester.
 - **Navigation:** React Navigation
 - **AI tutor:** Gemini 3.5 Flash Lite (Google AI Studio free-tier key), called from a Cloud Function (never from the client)
 - **Code execution:** Piston or Judge0 API, called from a Cloud Function
-- **Trained model:** TensorFlow.js (tfjs-node), run inside a Cloud Function
+- **Trained model:** TensorFlow.js (`@tensorflow/tfjs`, pure JS), run inside a Cloud Function — see `docs/model.md`
 
 There is no custom Node/Express server. Firebase Cloud Functions are the only backend layer.
 The app stays inside **Expo Go** (no custom dev client or native modules).

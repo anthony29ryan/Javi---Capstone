@@ -18,7 +18,7 @@ development. Prefer explanations alongside code, and favor clarity over cleverne
 - **Backend:** Firebase — Auth, Firestore, Cloud Functions, notifications
 - **AI tutor:** Gemini 3.5 Flash Lite (Google AI Studio free-tier key), called from a Cloud Function (never from the client)
 - **Code execution:** Piston or Judge0 API, called from a Cloud Function
-- **Trained model:** TensorFlow.js (tfjs-node), loaded and run inside a Cloud Function
+- **Trained model:** TensorFlow.js (`@tensorflow/tfjs`, pure JS — no native build), loaded and run inside a Cloud Function
 - **Video demos:** embedded YouTube
 
 There is no custom Node/Express server. Firebase Cloud Functions are the only backend layer.

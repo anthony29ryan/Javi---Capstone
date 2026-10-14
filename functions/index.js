@@ -67,6 +67,34 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
   return { correct, answer };
 });
 
+// ------------------------------------------------------------ weak topics
+
+/**
+ * Predicts which topics the signed-in learner is weak in, using the trained
+ * classifier in weakTopics.js (method in docs/model.md). Only topics with
+ * enough attempts are returned, most likely weak first.
+ *
+ * Returns { topics: [{ topic, probability, weak, attempts, accuracy, avgTimeSec, longestWrongStreak }] }.
+ */
+exports.getWeakTopics = onCall({ region: 'asia-southeast1' }, async (request) => {
+  const userId = request.auth?.uid;
+  if (!userId) throw new HttpsError('unauthenticated', 'Sign in to see weak topics.');
+
+  // Required here, not at the top: TensorFlow.js would slow every other function's cold start.
+  const { loadModel, predictWeakTopics } = require('./weakTopics');
+  // shortcut: reads all of a user's attempts, add orderBy+index or a cap if users reach thousands.
+  const [attempts, modules, model] = await Promise.all([
+    db.collection('attempts').where('userId', '==', userId).get(),
+    db.collection('modules').select().get(),
+    loadModel(),
+  ]);
+  // Attempts from before gradeAnswer stored the module title as `topic` and were
+  // written by the app, so only ones naming a real module id are trusted.
+  const moduleIds = new Set(modules.docs.map((d) => d.id));
+  const trusted = attempts.docs.map((d) => d.data()).filter((a) => moduleIds.has(a.topic));
+  return { topics: predictWeakTopics(model, trusted) };
+});
+
 // ---------------------------------------------------------------- AI tutor
 
 // Set once with `firebase functions:secrets:set GEMINI_API_KEY`. It lives in
