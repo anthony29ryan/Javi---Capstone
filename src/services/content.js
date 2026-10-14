@@ -1,6 +1,7 @@
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, getDocsFromServer, query, where } from 'firebase/firestore';
 
 import { db } from './firebase';
+import { getDownloadedLesson } from './offline';
 
 function byOrder(a, b) {
   return a.order - b.order;
@@ -11,9 +12,31 @@ export async function getCourses() {
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byOrder);
 }
 
+/**
+ * One lesson, from Firestore when reachable. A failed read falls back to the
+ * downloaded copy, so a module saved for offline still opens with no signal.
+ */
 export async function getLesson(lessonId) {
-  const snapshot = await getDoc(doc(db, 'lessons', lessonId));
-  return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
+  try {
+    const snapshot = await getDoc(doc(db, 'lessons', lessonId));
+    return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
+  } catch {
+    const downloaded = await getDownloadedLesson(lessonId);
+    if (downloaded) return downloaded;
+    throw new Error('Download this module while online to read it offline.');
+  }
+}
+
+/**
+ * A module's full lessons, for saving it to read offline. From the server
+ * only: plain getDocs answers from the (empty) cache when offline instead of
+ * failing, which would save a "downloaded" module with no lessons in it.
+ */
+export async function getModuleLessons(moduleId) {
+  const snapshot = await getDocsFromServer(
+    query(collection(db, 'lessons'), where('moduleId', '==', moduleId))
+  );
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
 export async function getAllModules() {
@@ -62,21 +85,26 @@ function estimateMinutes(blocks = []) {
 }
 
 /**
- * Every lesson, reduced to the fields needed to work out progress and to
- * describe a lesson in a list.
+ * Every lesson, both in full and reduced to the fields needed to work out
+ * progress and to describe a lesson in a list.
  *
- * The `blocks` array is dropped from the result because it is the bulk of a
- * lesson document and no summary screen renders it — but the reading estimate
- * is computed here first, while the blocks are in hand. Firestore has already
- * sent the whole document by this point, so measuring it costs nothing extra;
- * storing a duration on each lesson would be the same number for more work.
+ * `refs` drops the `blocks` array because it is the bulk of a lesson document
+ * and no summary screen renders it — but the reading estimate is computed
+ * first, while the blocks are in hand. Firestore has already sent the whole
+ * document by this point, so measuring it costs nothing extra. `full` keeps
+ * the blocks only so downloaded modules can be refreshed from this same read.
  */
-export async function getAllLessonProgressRefs() {
+export async function getAllLessons() {
   const snapshot = await getDocs(collection(db, 'lessons'));
-  return snapshot.docs
-    .map((d) => {
-      const { moduleId, title, order, blocks } = d.data();
-      return { id: d.id, moduleId, title, order, minutes: estimateMinutes(blocks) };
-    })
+  const full = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  const refs = full
+    .map(({ id, moduleId, title, order, blocks }) => ({
+      id,
+      moduleId,
+      title,
+      order,
+      minutes: estimateMinutes(blocks),
+    }))
     .sort(byOrder);
+  return { full, refs };
 }

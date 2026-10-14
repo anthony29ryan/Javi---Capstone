@@ -22,6 +22,7 @@ export default function LessonDetailScreen({ route, navigation }) {
     isLessonComplete,
     markLessonOpened,
     reloadProgress,
+    offline,
   } = useProgress();
 
   const [lesson, setLesson] = useState(null);
@@ -119,15 +120,17 @@ export default function LessonDetailScreen({ route, navigation }) {
 
         <Pressable
           onPress={toggleComplete}
-          disabled={saving}
+          // Saving reads progress first, which fails offline; disabled says so up front.
+          disabled={saving || offline}
           style={({ pressed }) => [
             styles.complete,
             done && styles.completeDone,
-            pressed && styles.completePressed,
+            pressed && !offline && styles.completePressed,
+            offline && styles.completeOffline,
           ]}
         >
           <Text style={[styles.completeLabel, done && styles.completeLabelDone]}>
-            {done ? '✓ Completed' : 'Mark as complete'}
+            {offline ? 'Connect to save progress' : done ? '✓ Completed' : 'Mark as complete'}
           </Text>
         </Pressable>
 
@@ -261,6 +264,9 @@ const styles = StyleSheet.create({
   },
   completeDone: {
     backgroundColor: colors.primarySoft,
+  },
+  completeOffline: {
+    opacity: 0.5,
   },
   completePressed: {
     opacity: 0.85,

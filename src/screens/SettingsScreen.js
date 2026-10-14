@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ScreenState from '../components/ScreenState';
 import { useAuth } from '../context/AuthContext';
+import { useProgress } from '../context/ProgressContext';
 import { syncDailyReminder } from '../services/notifications';
+import { downloadsSize } from '../services/offline';
 import { getPreferences, savePreferences } from '../services/preferences';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
@@ -49,6 +51,15 @@ export default function SettingsScreen({ navigation }) {
 
   const [preferences, setPreferences] = useState(null);
   const [error, setError] = useState('');
+  const { downloadedIds, removeAllDownloads } = useProgress();
+  const [downloadBytes, setDownloadBytes] = useState(0);
+
+  // Re-measured whenever the set of downloaded modules changes.
+  useEffect(() => {
+    downloadsSize()
+      .then(setDownloadBytes)
+      .catch(() => {});
+  }, [downloadedIds]);
 
   useEffect(() => {
     let cancelled = false;
@@ -80,8 +91,18 @@ export default function SettingsScreen({ navigation }) {
     await savePreferences({ reminderEnabled: scheduled });
   }
 
-  if (error) return <ScreenState error={error} />;
-  if (!preferences) return <ScreenState loading />;
+  function confirmDeleteDownloads() {
+    Alert.alert('Delete all downloads?', 'Lessons will need a connection until you download them again.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive', onPress: () => removeAllDownloads().catch(() => {}) },
+    ]);
+  }
+
+  const downloadCount = downloadedIds.size;
+
+  // A failed preferences read (usually offline) only disables the reminder row,
+  // so downloads and log-out stay reachable without a connection.
+  if (!preferences && !error) return <ScreenState loading />;
 
   return (
     <ScrollView
@@ -108,12 +129,35 @@ export default function SettingsScreen({ navigation }) {
         <Row
           title="Daily study reminder"
           subtitle={
-            preferences.reminderEnabled
-              ? `Daily nudge at ${preferences.reminderTime}`
-              : 'Off — no reminder scheduled'
+            !preferences
+              ? 'Connect to change your reminder'
+              : preferences.reminderEnabled
+                ? `Daily nudge at ${preferences.reminderTime}`
+                : 'Off — no reminder scheduled'
           }
           onPress={toggleReminder}
-          right={<Toggle on={preferences.reminderEnabled} />}
+          right={<Toggle on={Boolean(preferences?.reminderEnabled)} disabled={!preferences} />}
+          disabled={!preferences}
+          isLast
+        />
+      </View>
+
+      <Text style={styles.sectionLabel}>Downloads</Text>
+      <View style={styles.group}>
+        <Row
+          title="Downloaded modules"
+          subtitle={
+            downloadCount
+              ? `${downloadCount} module${downloadCount === 1 ? '' : 's'} · ${Math.max(1, Math.round(downloadBytes / 1024))} KB`
+              : 'None yet. Download a module from its course page.'
+          }
+          disabled={!downloadCount}
+        />
+        <Row
+          title="Delete all downloads"
+          onPress={confirmDeleteDownloads}
+          destructive
+          disabled={!downloadCount}
           isLast
         />
       </View>

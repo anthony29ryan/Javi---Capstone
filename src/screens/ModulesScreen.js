@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
+  ActivityIndicator,
   FlatList,
   LayoutAnimation,
   Platform,
@@ -11,6 +13,7 @@ import {
   View,
 } from 'react-native';
 
+import OfflineBanner from '../components/OfflineBanner';
 import ScreenState from '../components/ScreenState';
 import { levelLabel } from '../constants/levels';
 import { scorePercent, useProgress } from '../context/ProgressContext';
@@ -26,6 +29,30 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 function scoreNote(score) {
   if (!score || !score.total) return 'Not taken';
   return `Last ${scorePercent(score)}%`;
+}
+
+/** Download / downloading / downloaded toggle for one module's offline copy. */
+function DownloadButton({ downloaded, busy, onPress }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={busy}
+      hitSlop={8}
+      accessibilityRole="button"
+      accessibilityLabel={downloaded ? 'Remove download' : 'Download module'}
+      style={({ pressed }) => [styles.download, pressed && styles.downloadPressed]}
+    >
+      {busy ? (
+        <ActivityIndicator size="small" color={colors.primaryDark} />
+      ) : (
+        <Ionicons
+          name={downloaded ? 'checkmark-circle' : 'cloud-download-outline'}
+          size={22}
+          color={downloaded ? colors.success : colors.borderStrong}
+        />
+      )}
+    </Pressable>
+  );
 }
 
 function LessonRow({ lesson, done, onPress }) {
@@ -71,6 +98,9 @@ export default function ModulesScreen({ route, navigation }) {
     loading,
     error,
     refresh,
+    downloadedIds,
+    downloadModule,
+    removeDownload,
   } = useProgress();
 
   // null until the first render with data, then the id of whichever module the
@@ -79,6 +109,8 @@ export default function ModulesScreen({ route, navigation }) {
   // thing that made it unwieldy.
   const [openModuleId, setOpenModuleId] = useState(null);
   const [touched, setTouched] = useState(false);
+  const [busyModuleId, setBusyModuleId] = useState(null);
+  const [downloadErrors, setDownloadErrors] = useState({});
 
   if (loading) return <ScreenState loading />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
@@ -111,6 +143,25 @@ export default function ModulesScreen({ route, navigation }) {
 
   const expandedId = touched ? openModuleId : suggestedOpenId;
 
+  async function toggleDownload(moduleId) {
+    setBusyModuleId(moduleId);
+    setDownloadErrors((current) => ({ ...current, [moduleId]: '' }));
+    const removing = downloadedIds.has(moduleId);
+    try {
+      if (removing) await removeDownload(moduleId);
+      else await downloadModule(moduleId);
+    } catch {
+      setDownloadErrors((current) => ({
+        ...current,
+        [moduleId]: removing
+          ? 'Could not remove the download. Try again.'
+          : 'Could not download. Check your connection and try again.',
+      }));
+    } finally {
+      setBusyModuleId(null);
+    }
+  }
+
   function toggleModule(moduleId) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setTouched(true);
@@ -138,6 +189,8 @@ export default function ModulesScreen({ route, navigation }) {
             <Text style={styles.levelTag}>{levelLabel(courseIndex)}</Text>
           </View>
 
+          <OfflineBanner />
+
           <Text style={styles.courseTitle}>{course?.title ?? courseTitle}</Text>
           {course?.description ? (
             <Text style={styles.courseBlurb}>{course.description}</Text>
@@ -154,32 +207,45 @@ export default function ModulesScreen({ route, navigation }) {
 
         return (
           <View style={styles.card}>
-            <Pressable
-              onPress={() => toggleModule(item.id)}
-              accessibilityRole="button"
-              accessibilityState={{ expanded }}
-              accessibilityLabel={`${item.title}, ${expanded ? 'collapse' : 'expand'}`}
-              style={({ pressed }) => [styles.cardHead, pressed && styles.cardHeadPressed]}
-            >
-              <View style={styles.cardHeadText}>
-                <Text style={styles.moduleLabel}>Module {item.order}</Text>
-                <Text style={styles.moduleTitle}>{item.title}</Text>
-                {item.description ? (
-                  <Text style={styles.moduleSummary}>{item.description}</Text>
-                ) : null}
-              </View>
-              <View style={styles.cardHeadRight}>
-                <View style={styles.countBadge}>
-                  <Text style={styles.countBadgeText}>
-                    {moduleStats.completed}/{moduleStats.total}
-                  </Text>
+            {/* The download button sits beside the head, not inside it: a
+                labelled Pressable hides its children from screen readers. */}
+            <View style={styles.cardHeadRow}>
+              <Pressable
+                onPress={() => toggleModule(item.id)}
+                accessibilityRole="button"
+                accessibilityState={{ expanded }}
+                accessibilityLabel={`${item.title}, ${expanded ? 'collapse' : 'expand'}`}
+                style={({ pressed }) => [styles.cardHead, pressed && styles.cardHeadPressed]}
+              >
+                <View style={styles.cardHeadText}>
+                  <Text style={styles.moduleLabel}>Module {item.order}</Text>
+                  <Text style={styles.moduleTitle}>{item.title}</Text>
+                  {item.description ? (
+                    <Text style={styles.moduleSummary}>{item.description}</Text>
+                  ) : null}
                 </View>
-                {/* One chevron, turned: down when closed, up when open. A
-                    rotated glyph keeps the two states visually identical apart
-                    from direction, which two different characters would not. */}
-                <Text style={[styles.chevron, expanded && styles.chevronOpen]}>›</Text>
-              </View>
-            </Pressable>
+                <View style={styles.cardHeadRight}>
+                  <View style={styles.countBadge}>
+                    <Text style={styles.countBadgeText}>
+                      {moduleStats.completed}/{moduleStats.total}
+                    </Text>
+                  </View>
+                  {/* One chevron, turned: down when closed, up when open. A
+                      rotated glyph keeps the two states visually identical apart
+                      from direction, which two different characters would not. */}
+                  <Text style={[styles.chevron, expanded && styles.chevronOpen]}>›</Text>
+                </View>
+              </Pressable>
+              <DownloadButton
+                downloaded={downloadedIds.has(item.id)}
+                busy={busyModuleId === item.id}
+                onPress={() => toggleDownload(item.id)}
+              />
+            </View>
+
+            {downloadErrors[item.id] ? (
+              <Text style={styles.downloadError}>{downloadErrors[item.id]}</Text>
+            ) : null}
 
             {expanded ? (
               <>
@@ -309,7 +375,12 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     overflow: 'hidden',
   },
+  cardHeadRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
   cardHead: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
@@ -357,6 +428,25 @@ const styles = StyleSheet.create({
     lineHeight: 12.5 * 1.5,
     color: colors.textMuted,
     marginTop: 5,
+  },
+  download: {
+    width: 44,
+    height: 44,
+    marginTop: spacing.lg,
+    marginRight: spacing.sm,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  downloadPressed: {
+    backgroundColor: colors.primarySoft,
+  },
+  downloadError: {
+    fontFamily: fonts.regular,
+    fontSize: 12,
+    color: colors.error,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.md,
   },
   countBadge: {
     width: 44,

@@ -2,6 +2,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Avatar from '../components/Avatar';
+import OfflineBanner from '../components/OfflineBanner';
 import ScreenState from '../components/ScreenState';
 import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
@@ -138,6 +139,8 @@ export default function HomeScreen({ navigation }) {
         </View>
         <Avatar user={user} size={44} onPress={() => navigation.navigate('Settings')} />
       </View>
+
+      <OfflineBanner />
 
       {next ? (
         <View style={styles.hero}>

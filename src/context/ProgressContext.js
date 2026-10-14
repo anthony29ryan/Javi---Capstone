@@ -1,6 +1,15 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { getAllLessonProgressRefs, getAllModules, getCourses } from '../services/content';
+import { getAllLessons, getAllModules, getCourses, getModuleLessons } from '../services/content';
+import {
+  getDownloadedModuleIds,
+  loadSnapshot,
+  refreshDownloads,
+  removeAllModules,
+  removeModule,
+  saveModule,
+  saveSnapshot,
+} from '../services/offline';
 import { getProgress, recordLessonOpened } from '../services/progress';
 import { liveStreak } from '../services/streak';
 
@@ -36,6 +45,9 @@ export function ProgressProvider({ children }) {
   const [lessonRefs, setLessonRefs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  // True while showing the last saved snapshot because Firestore could not be reached.
+  const [offline, setOffline] = useState(false);
+  const [downloadedIds, setDownloadedIds] = useState(() => new Set());
 
   const refresh = useCallback(async () => {
     // Screens show the spinner, not the old error, while a retry is in flight.
@@ -45,15 +57,35 @@ export function ProgressProvider({ children }) {
         getProgress(),
         getCourses(),
         getAllModules(),
-        getAllLessonProgressRefs(),
+        getAllLessons(),
       ]);
       setProgress(progressData);
       setCourses(courseData);
       setModules(moduleData);
-      setLessonRefs(lessonData);
+      setLessonRefs(lessonData.refs);
       setError('');
+      setOffline(false);
+      // Keep the offline copies current from the read just made. Failing to
+      // save only means a staler copy next time, so it never blocks the app.
+      saveSnapshot({
+        progress: progressData,
+        courses: courseData,
+        modules: moduleData,
+        lessonRefs: lessonData.refs,
+      }).catch(() => {});
+      refreshDownloads(lessonData.full).catch(() => {});
     } catch (err) {
-      setError(err.message);
+      const snapshot = await loadSnapshot().catch(() => null);
+      if (snapshot) {
+        setProgress(snapshot.progress);
+        setCourses(snapshot.courses);
+        setModules(snapshot.modules);
+        setLessonRefs(snapshot.lessonRefs);
+        setError('');
+        setOffline(true);
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -61,7 +93,29 @@ export function ProgressProvider({ children }) {
 
   useEffect(() => {
     refresh();
+    getDownloadedModuleIds()
+      .then((ids) => setDownloadedIds(new Set(ids)))
+      .catch(() => {});
   }, [refresh]);
+
+  const downloadModule = useCallback(async (moduleId) => {
+    await saveModule(moduleId, await getModuleLessons(moduleId));
+    setDownloadedIds((current) => new Set(current).add(moduleId));
+  }, []);
+
+  const removeDownload = useCallback(async (moduleId) => {
+    await removeModule(moduleId);
+    setDownloadedIds((current) => {
+      const next = new Set(current);
+      next.delete(moduleId);
+      return next;
+    });
+  }, []);
+
+  const removeAllDownloads = useCallback(async () => {
+    await removeAllModules();
+    setDownloadedIds(new Set());
+  }, []);
 
   // For after a write that only touched the progress document: one read,
   // where refresh() would re-read every course, module and lesson too.
@@ -126,6 +180,11 @@ export function ProgressProvider({ children }) {
       loading,
       error,
       refresh,
+      offline,
+      downloadedIds,
+      downloadModule,
+      removeDownload,
+      removeAllDownloads,
       reloadProgress,
       markLessonOpened,
       lastLessonId: progress?.lastLessonId ?? null,
@@ -142,7 +201,22 @@ export function ProgressProvider({ children }) {
       courseProgress,
       isLessonComplete: (lessonId) => completedSet.has(lessonId),
     };
-  }, [progress, courses, modules, lessonRefs, loading, error, refresh, reloadProgress, markLessonOpened]);
+  }, [
+    progress,
+    courses,
+    modules,
+    lessonRefs,
+    loading,
+    error,
+    refresh,
+    reloadProgress,
+    markLessonOpened,
+    offline,
+    downloadedIds,
+    downloadModule,
+    removeDownload,
+    removeAllDownloads,
+  ]);
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
 }
