@@ -1,10 +1,11 @@
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { arrayUnion, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 import { auth, db } from './firebase';
 import { advanceStreak } from './streak';
 
 const EMPTY_PROGRESS = {
   completedLessons: [],
+  completedTraces: [],
   moduleScores: {},
   streak: { current: 0, longest: 0, lastActiveDate: null },
   lastLessonId: null,
@@ -78,6 +79,27 @@ export async function recordModuleQuizCompletion(moduleId, correct, total) {
     doc(db, 'progress', userId),
     {
       moduleScores,
+      streak: advanceStreak(existing.streak),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
+}
+
+/**
+ * Marks a Code Tracer program as done. Finishing one is real study, so it
+ * advances the streak every time, the same as finishing a quiz. arrayUnion
+ * adds the id on the server, so a repeat leaves the list as it is and two
+ * saves at once cannot overwrite each other.
+ */
+export async function recordTraceCompletion(traceId) {
+  const userId = auth.currentUser.uid;
+  const existing = await readProgress(userId);
+
+  await setDoc(
+    doc(db, 'progress', userId),
+    {
+      completedTraces: arrayUnion(traceId),
       streak: advanceStreak(existing.streak),
       updatedAt: serverTimestamp(),
     },

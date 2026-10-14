@@ -33,6 +33,8 @@ import ModulesScreen from '../screens/ModulesScreen';
 import ProgressScreen from '../screens/ProgressScreen';
 import QuizScreen from '../screens/QuizScreen';
 import SignupScreen from '../screens/SignupScreen';
+import TracerListScreen from '../screens/TracerListScreen';
+import TracerScreen from '../screens/TracerScreen';
 import VerifyEmailScreen from '../screens/VerifyEmailScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 
@@ -116,6 +118,12 @@ function AppStack({ needsSetup }) {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'Quiz' }} />
+      <Stack.Screen
+        name="TracerList"
+        component={TracerListScreen}
+        options={{ title: 'Code Tracer' }}
+      />
+      <Stack.Screen name="Tracer" component={TracerScreen} options={{ title: 'Code Tracer' }} />
     </Stack.Navigator>
   );
 }

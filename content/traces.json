@@ -1,0 +1,421 @@
+[
+  {
+    "id": "introduction-to-java-trace",
+    "moduleId": "introduction-to-java",
+    "title": "Your first program",
+    "lines": [
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    System.out.println(\"Hello, Java!\");",
+      "    System.out.print(\"Learning \");",
+      "    System.out.println(\"line by line\");",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "data-types-trace",
+    "moduleId": "data-types",
+    "title": "Storing values",
+    "lines": [
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    int age = 21;",
+      "    double price = 9.99;",
+      "    char grade = 'A';",
+      "    boolean passed = true;",
+      "    long stars = 9000000000L;",
+      "    System.out.println(age + \" \" + grade);",
+      "    System.out.println(price + \" \" + passed);",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "operators-trace",
+    "moduleId": "operators",
+    "title": "Comparing numbers",
+    "lines": [
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    int a = 17;",
+      "    int b = 5;",
+      "    System.out.println(a / b);",
+      "    System.out.println(a % b);",
+      "    System.out.println(a > b && b != 0);",
+      "    System.out.println(!(a == b) || a < 0);",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "expressions-trace",
+    "moduleId": "expressions",
+    "title": "Working out values",
+    "lines": [
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    int total = 3 + 4 * 2;",
+      "    double avg = (double) total / 2;",
+      "    int count = 0;",
+      "    count += 5;",
+      "    count++;",
+      "    boolean big = total * 2 >= 20;",
+      "    System.out.println(total + \" \" + avg);",
+      "    System.out.println(count + \" \" + big);",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "input-output-trace",
+    "moduleId": "input-output",
+    "title": "Asking the user",
+    "lines": [
+      "import java.util.Scanner;",
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    Scanner in = new Scanner(System.in);",
+      "    System.out.print(\"Your name: \");",
+      "    String name = in.nextLine();",
+      "    System.out.print(\"Your age: \");",
+      "    int age = in.nextInt();",
+      "    System.out.println(name + \" is \" + age);",
+      "    System.out.printf(\"%.2f%n\", 3.14159);",
+      "    in.close();",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "control-structures-trace",
+    "moduleId": "control-structures",
+    "title": "Making a decision",
+    "lines": [
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    int score = 72;",
+      "    if (score >= 50) {",
+      "      System.out.println(\"Pass\");",
+      "    } else {",
+      "      System.out.println(\"Try again\");",
+      "    }",
+      "    switch (score / 10) {",
+      "      case 9: System.out.println(\"A\"); break;",
+      "      case 7: System.out.println(\"C\"); break;",
+      "      default: System.out.println(\"Other\");",
+      "    }",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "loops-trace",
+    "moduleId": "loops",
+    "title": "Three kinds of loop",
+    "lines": [
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    for (int i = 1; i <= 3; i++) {",
+      "      System.out.println(\"for \" + i);",
+      "    }",
+      "    int n = 3;",
+      "    while (n > 0) {",
+      "      n--;",
+      "    }",
+      "    do {",
+      "      n++;",
+      "    } while (n < 5);",
+      "    System.out.println(\"n = \" + n);",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "strings-trace",
+    "moduleId": "strings",
+    "title": "String methods",
+    "lines": [
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    String word = \"Javascript\";",
+      "    System.out.println(word.length());",
+      "    System.out.println(word.charAt(0));",
+      "    System.out.println(word.substring(0, 4));",
+      "    System.out.println(word.toUpperCase());",
+      "    System.out.println(word.indexOf('s'));",
+      "    System.out.println(word.equals(\"Java\"));",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "arrays-trace",
+    "moduleId": "arrays",
+    "title": "Averaging an array",
+    "lines": [
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    int[] marks = {70, 85, 92, 64};",
+      "    int sum = 0;",
+      "    for (int mark : marks) {",
+      "      sum += mark;",
+      "    }",
+      "    System.out.println(sum / marks.length);",
+      "    int[][] grid = new int[2][3];",
+      "    grid[1][2] = 5;",
+      "    System.out.println(grid[1].length);",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "predefined-functions-trace",
+    "moduleId": "predefined-functions",
+    "title": "Calling methods",
+    "lines": [
+      "public class Main {",
+      "  static double area(double r) {",
+      "    return Math.PI * Math.pow(r, 2);",
+      "  }",
+      "  static void bump(int n) {",
+      "    n++;",
+      "  }",
+      "  public static void main(String[] args) {",
+      "    int x = 5;",
+      "    bump(x);",
+      "    System.out.println(x);",
+      "    System.out.println(Math.sqrt(49));",
+      "    System.out.println(area(2));",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "recursion-trace",
+    "moduleId": "recursion",
+    "title": "Factorial",
+    "lines": [
+      "public class Main {",
+      "  static int factorial(int n) {",
+      "    if (n <= 1) {",
+      "      return 1;",
+      "    }",
+      "    return n * factorial(n - 1);",
+      "  }",
+      "  public static void main(String[] args) {",
+      "    System.out.println(factorial(5));",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "oop-trace",
+    "moduleId": "oop",
+    "title": "A first object",
+    "lines": [
+      "class Dog {",
+      "  String name;",
+      "  void bark() {",
+      "    System.out.println(name + \" says woof\");",
+      "  }",
+      "}",
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    Dog rex = new Dog();",
+      "    rex.name = \"Rex\";",
+      "    rex.bark();",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "classes-and-methods-trace",
+    "moduleId": "classes-and-methods",
+    "title": "Hiding the balance",
+    "lines": [
+      "public class Account {",
+      "  private double balance;",
+      "  public void deposit(double amount) {",
+      "    balance += amount;",
+      "  }",
+      "  public double getBalance() {",
+      "    return balance;",
+      "  }",
+      "  public static void main(String[] args) {",
+      "    Account acc = new Account();",
+      "    acc.deposit(50);",
+      "    System.out.println(acc.getBalance());",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "object-and-methods-trace",
+    "moduleId": "object-and-methods",
+    "title": "Constructors",
+    "lines": [
+      "public class Box {",
+      "  static int count = 0;",
+      "  int size;",
+      "  Box() {",
+      "    this(1);",
+      "  }",
+      "  Box(int size) {",
+      "    this.size = size;",
+      "    count++;",
+      "  }",
+      "  public static void main(String[] args) {",
+      "    Box b = new Box();",
+      "    System.out.println(b.size + \" \" + count);",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "inheritance-polymorphism-interfaces-trace",
+    "moduleId": "inheritance-polymorphism-interfaces",
+    "title": "Overriding a method",
+    "lines": [
+      "abstract class Animal {",
+      "  abstract String sound();",
+      "}",
+      "class Cat extends Animal {",
+      "  @Override",
+      "  String sound() {",
+      "    return \"meow\";",
+      "  }",
+      "}",
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    Animal a = new Cat();",
+      "    System.out.println(a.sound());",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "exception-handling-trace",
+    "moduleId": "exception-handling",
+    "title": "Catching an error",
+    "lines": [
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    try {",
+      "      int result = 10 / 0;",
+      "      System.out.println(result);",
+      "    } catch (ArithmeticException e) {",
+      "      System.out.println(\"Cannot divide\");",
+      "    } catch (Exception e) {",
+      "      System.out.println(\"Other error\");",
+      "    } finally {",
+      "      System.out.println(\"Done\");",
+      "    }",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "file-io-trace",
+    "moduleId": "file-io",
+    "title": "Writing a file",
+    "lines": [
+      "import java.io.IOException;",
+      "import java.nio.file.*;",
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    Path file = Paths.get(\"notes.txt\");",
+      "    try {",
+      "      Files.writeString(file, \"Hello file\");",
+      "      String text = Files.readString(file);",
+      "      System.out.println(text);",
+      "    } catch (IOException e) {",
+      "      System.out.println(\"File error\");",
+      "    }",
+      "    System.out.println(Files.exists(file));",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "enums-nested-classes-trace",
+    "moduleId": "enums-nested-classes",
+    "title": "An enum in a switch",
+    "lines": [
+      "public class Main {",
+      "  enum Size { SMALL, MEDIUM, LARGE }",
+      "  public static void main(String[] args) {",
+      "    Size s = Size.MEDIUM;",
+      "    System.out.println(s.ordinal());",
+      "    switch (s) {",
+      "      case SMALL:",
+      "        System.out.println(\"S\");",
+      "        break;",
+      "      default:",
+      "        System.out.println(\"Not S\");",
+      "    }",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "regular-expressions-trace",
+    "moduleId": "regular-expressions",
+    "title": "Finding numbers",
+    "lines": [
+      "import java.util.regex.Matcher;",
+      "import java.util.regex.Pattern;",
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    Pattern p = Pattern.compile(\"[0-9]+\");",
+      "    Matcher m = p.matcher(\"a1 b22 c333\");",
+      "    while (m.find()) {",
+      "      System.out.println(m.group());",
+      "    }",
+      "    String code = \"ab12\";",
+      "    System.out.println(code.matches(\"\\\\w+\"));",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "concurrency-trace",
+    "moduleId": "concurrency",
+    "title": "Starting a thread",
+    "lines": [
+      "public class Main {",
+      "  public static void main(String[] args)",
+      "      throws InterruptedException {",
+      "    Thread worker = new Thread(() -> {",
+      "      System.out.println(\"Working\");",
+      "    });",
+      "    worker.start();",
+      "    worker.join();",
+      "    System.out.println(\"Finished\");",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "id": "generics-trace",
+    "moduleId": "generics",
+    "title": "A generic box",
+    "lines": [
+      "class Box<T> {",
+      "  private T item;",
+      "  Box(T item) {",
+      "    this.item = item;",
+      "  }",
+      "  T get() {",
+      "    return item;",
+      "  }",
+      "}",
+      "public class Main {",
+      "  public static void main(String[] args) {",
+      "    Box<String> box = new Box<>(\"Java\");",
+      "    System.out.println(box.get().length());",
+      "  }",
+      "}"
+    ]
+  }
+]

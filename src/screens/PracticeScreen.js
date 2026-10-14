@@ -48,7 +48,7 @@ function QuizRow({ module, courseTitle, score, onPress }) {
 }
 
 export default function PracticeScreen({ navigation }) {
-  const { modules, courses, moduleScores, loading, error, refresh } = useProgress();
+  const { modules, courses, moduleScores, progress, loading, error, refresh } = useProgress();
   // Tab screen with no nav header, so it owns its top inset.
   const insets = useSafeAreaInsets();
 
@@ -81,6 +81,22 @@ export default function PracticeScreen({ navigation }) {
             <StatCard label="Average" value={average === null ? '—' : `${average}%`} />
             <StatCard label="Attempts" value={String(attempted.length)} />
           </View>
+          {/* shortcut: plain entry card until the Code Tracer design is brought in. */}
+          <Pressable
+            onPress={() => navigation.navigate('TracerList')}
+            style={({ pressed }) => [styles.quizCard, pressed && styles.quizCardPressed]}
+          >
+            <View style={styles.quizBody}>
+              <Text style={styles.quizEyebrow}>Typing drill</Text>
+              <Text style={styles.quizName}>Code Tracer</Text>
+              <Text style={styles.quizMeta}>
+                {/* shortcut: one drill per module, so the module count is the drill
+                    count; ids of renamed drills stay in completedTraces and would
+                    overcount. Count against the traces list when the design lands. */}
+                {`${progress?.completedTraces?.length ?? 0} of ${modules.length} done`}
+              </Text>
+            </View>
+          </Pressable>
         </>
       }
       renderItem={({ item }) => (

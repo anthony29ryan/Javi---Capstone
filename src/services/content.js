@@ -39,6 +39,12 @@ export async function getModuleLessons(moduleId) {
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
+/** Every Code Tracer drill. Online only: traces are not in offline downloads. */
+export async function getTraces() {
+  const snapshot = await getDocs(collection(db, 'traces'));
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
 export async function getAllModules() {
   const snapshot = await getDocs(collection(db, 'modules'));
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byOrder);

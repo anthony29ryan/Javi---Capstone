@@ -143,6 +143,7 @@ export function ProgressProvider({ children }) {
 
   const value = useMemo(() => {
     const completedSet = new Set(progress?.completedLessons ?? []);
+    const completedTraces = new Set(progress?.completedTraces ?? []);
 
     const lessonsByModule = {};
     for (const lesson of lessonRefs) {
@@ -200,6 +201,7 @@ export function ProgressProvider({ children }) {
       moduleProgress,
       courseProgress,
       isLessonComplete: (lessonId) => completedSet.has(lessonId),
+      isTraceComplete: (traceId) => completedTraces.has(traceId),
     };
   }, [
     progress,

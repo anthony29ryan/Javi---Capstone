@@ -20,6 +20,7 @@ const {
 const {
   Timestamp,
   addDoc,
+  arrayUnion,
   collection,
   deleteDoc,
   deleteField,
@@ -64,7 +65,7 @@ after(async () => {
 });
 
 describe('course content', () => {
-  const contentPaths = ['courses/beginner', 'modules/oop', 'lessons/oop-1', 'questions/q1'];
+  const contentPaths = ['courses/beginner', 'modules/oop', 'lessons/oop-1', 'questions/q1', 'traces/t1'];
 
   beforeEach(async () => {
     await seed(async (db) => {
@@ -214,6 +215,18 @@ describe('progress', () => {
         {
           moduleScores: { oop: { correct: 4, total: 5, lastAttemptAt: Date.now() } },
           streak: { current: 2, longest: 2, lastActiveDate: '2026-10-01' },
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+      )
+    );
+    // recordTraceCompletion
+    await assertSucceeds(
+      setDoc(
+        ref,
+        {
+          completedTraces: arrayUnion('oop-trace'),
+          streak: { current: 3, longest: 3, lastActiveDate: '2026-10-02' },
           updatedAt: serverTimestamp(),
         },
         { merge: true }

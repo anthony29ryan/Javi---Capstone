@@ -190,6 +190,52 @@ for (const file of questionFiles) {
 
 const modulesWithoutQuestions = modules.filter((m) => !questionCounts[m.id]).length;
 
+/* -------------------------------------------------------------------- traces */
+
+// content/traces.json: the Code Tracer drills, one array of
+// { id, moduleId, title, lines }. Limits keep each line typeable on a phone
+// and each drill short enough to finish in one sitting.
+
+const TRACES_FILE = path.join(CONTENT_DIR, 'traces.json');
+const TRACE_MIN_LINES = 6;
+const TRACE_MAX_LINES = 15;
+const TRACE_MAX_LINE_LENGTH = 45;
+
+const traces = fs.existsSync(TRACES_FILE) ? readJson(TRACES_FILE) : [];
+const traceIds = new Set();
+const modulesWithTrace = new Set();
+
+if (!Array.isArray(traces)) {
+  problems.push('traces.json: must be an array of traces');
+} else {
+  for (const t of traces) {
+    const at = `traces.json ${t.id || '(no id)'}`;
+
+    if (!t.id?.trim()) problems.push(`${at}: missing id`);
+    else if (traceIds.has(t.id)) problems.push(`${at}: duplicate id`);
+    traceIds.add(t.id);
+
+    if (!moduleIds.has(t.moduleId)) problems.push(`${at}: unknown moduleId "${t.moduleId}"`);
+    modulesWithTrace.add(t.moduleId);
+    if (!String(t.title || '').trim()) problems.push(`${at}: missing title`);
+
+    const lines = Array.isArray(t.lines) ? t.lines : [];
+    if (lines.length < TRACE_MIN_LINES || lines.length > TRACE_MAX_LINES) {
+      problems.push(`${at}: needs ${TRACE_MIN_LINES}-${TRACE_MAX_LINES} lines, has ${lines.length}`);
+    }
+    lines.forEach((line, i) => {
+      // A blank line would be a step with nothing to type.
+      if (typeof line !== 'string' || !line.trim()) problems.push(`${at}: line ${i + 1} is blank`);
+      else if (line.length > TRACE_MAX_LINE_LENGTH) {
+        problems.push(`${at}: line ${i + 1} is ${line.length} chars, max ${TRACE_MAX_LINE_LENGTH}`);
+      }
+    });
+  }
+}
+
+const modulesWithoutTrace = modules.filter((m) => !modulesWithTrace.has(m.id)).length;
+if (modulesWithoutTrace) warnings.push(`${modulesWithoutTrace} modules have no Code Tracer drill`);
+
 /* -------------------------------------------------------------------- report */
 
 console.log(`courses  ${courses.length}`);
@@ -200,6 +246,7 @@ console.log(`lessons per module: min ${Math.min(...Object.values(perModule).map(
             `max ${Math.max(...Object.values(perModule).map((a) => a.length))}`);
 console.log(`questions ${questionIds.size} across ${Object.keys(questionCounts).length} modules` +
             (modulesWithoutQuestions ? ` (${modulesWithoutQuestions} modules have none yet)` : ''));
+console.log(`traces   ${traceIds.size}`);
 
 if (warnings.length) {
   console.log(`\n${warnings.length} warning(s):`);

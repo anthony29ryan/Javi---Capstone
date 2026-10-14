@@ -52,6 +52,9 @@ service cloud.firestore {
     match /questions/{questionId} {
       allow read: if signedIn();
     }
+    match /traces/{traceId} {
+      allow read: if signedIn();
+    }
 
     // ------------------------------------------------------------------ users
     // Profile and preferences. Written by AuthContext and services/preferences.
@@ -94,10 +97,12 @@ service cloud.firestore {
     function validProgressWrite() {
       let data = request.resource.data;
       return changedFields().hasOnly([
-          'completedLessons', 'moduleScores', 'streak', 'lastLessonId', 'updatedAt'
+          'completedLessons', 'completedTraces', 'moduleScores', 'streak', 'lastLessonId', 'updatedAt'
         ])
         && (!changed('completedLessons')
             || (data.completedLessons is list && data.completedLessons.size() <= 1000))
+        && (!changed('completedTraces')
+            || (data.completedTraces is list && data.completedTraces.size() <= 1000))
         && (!changed('moduleScores') || data.moduleScores is map)
         && (!changed('streak')
             || (data.streak is map

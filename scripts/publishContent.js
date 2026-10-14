@@ -1,5 +1,5 @@
 // Publishes content/ (courses.json, modules.json, lessons/*.json,
-// questions/*.json) to Firestore.
+// questions/*.json, traces.json) to Firestore.
 // Safe to re-run any time after editing a content file — it's an upsert.
 //
 // Run with:
@@ -121,11 +121,31 @@ async function main() {
     }
   }
 
+  // Code Tracer drills: upsert, then remove any no longer in the file. Skipped
+  // when traces.json is absent, for the same reason as questions above.
+  const tracesFile = path.join(CONTENT_DIR, 'traces.json');
+  const publishedTraceIds = new Set();
+  let removedTraces = 0;
+  if (fs.existsSync(tracesFile)) {
+    for (const { id, ...data } of readJson(tracesFile)) {
+      await db.collection('traces').doc(id).set(data);
+      publishedTraceIds.add(id);
+    }
+    const existing = await db.collection('traces').get();
+    for (const found of existing.docs) {
+      if (publishedTraceIds.has(found.id)) continue;
+      await found.ref.delete();
+      console.log('Removed stale trace:', found.id);
+      removedTraces++;
+    }
+  }
+
   console.log(
     `Done. Published ${courses.length} courses, ${modules.length} modules, ` +
       `${lessonFiles.length} lessons${removed ? `, removed ${removed} stale` : ''}, ` +
       `${publishedQuestionIds.size} questions` +
-      `${removedQuestions ? `, removed ${removedQuestions} stale` : ''}.`
+      `${removedQuestions ? `, removed ${removedQuestions} stale` : ''}, ` +
+      `${publishedTraceIds.size} traces${removedTraces ? `, removed ${removedTraces} stale` : ''}.`
   );
   process.exit(0);
 }
