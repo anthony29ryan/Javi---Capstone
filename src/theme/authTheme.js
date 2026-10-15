@@ -157,3 +157,4 @@ export const authType = {
 // loads them so every screen stays in sync with what's actually bundled.
 export { Outfit_400Regular, Outfit_500Medium, Outfit_600SemiBold, Outfit_700Bold, Outfit_800ExtraBold } from '@expo-google-fonts/outfit';
 export { JetBrainsMono_400Regular, JetBrainsMono_500Medium } from '@expo-google-fonts/jetbrains-mono';
+export { Baloo2_800ExtraBold } from '@expo-google-fonts/baloo-2';

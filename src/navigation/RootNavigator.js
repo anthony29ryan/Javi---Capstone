@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
@@ -15,7 +15,9 @@ import {
   Outfit_800ExtraBold,
   JetBrainsMono_400Regular,
   JetBrainsMono_500Medium,
+  Baloo2_800ExtraBold,
 } from '../theme/authTheme';
+import SplashView from '../components/SplashView';
 import MainTabs from './MainTabs';
 import { syncDailyReminder } from '../services/notifications';
 import { getPreferences } from '../services/preferences';
@@ -137,6 +139,14 @@ export default function RootNavigator() {
   const [needsSetup, setNeedsSetup] = useState(undefined);
   const verified = Boolean(user?.emailVerified);
 
+  // Keep the splash up for at least a second on launch so the branding is
+  // seen, even when sign-in resolves instantly.
+  const [minimumSplashDone, setMinimumSplashDone] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setMinimumSplashDone(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     if (!verified) {
       setNeedsSetup(undefined);
@@ -174,15 +184,12 @@ export default function RootNavigator() {
     Outfit_800ExtraBold,
     JetBrainsMono_400Regular,
     JetBrainsMono_500Medium,
+    Baloo2_800ExtraBold,
   });
 
-  if (initializing || !authFontsLoaded) {
-    return (
-      <View style={styles.loader}>
-        <ActivityIndicator color={colors.primary} />
-      </View>
-    );
-  }
+  // Plain background until the fonts are in: the splash's text needs them.
+  if (!authFontsLoaded) return <View style={styles.blank} />;
+  if (initializing || !minimumSplashDone) return <SplashView />;
 
   return (
     <NavigationContainer>
@@ -194,9 +201,7 @@ export default function RootNavigator() {
       ) : !user.emailVerified ? (
         <VerifyEmailScreen />
       ) : needsSetup === undefined ? (
-        <View style={styles.loader}>
-          <ActivityIndicator color={colors.primary} />
-        </View>
+        <SplashView />
       ) : (
         <ProgressProvider>
           <AppStack needsSetup={needsSetup} />
@@ -207,10 +212,8 @@ export default function RootNavigator() {
 }
 
 const styles = StyleSheet.create({
-  loader: {
+  blank: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: colors.background,
   },
 });

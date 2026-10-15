@@ -90,6 +90,7 @@ export const fonts = {
   bold: 'Outfit_700Bold',
   mono: 'JetBrainsMono_500Medium',
   monoRegular: 'JetBrainsMono_400Regular',
+  wordmark: 'Baloo2_800ExtraBold', // the "Javi" wordmark only
 };
 
 export const type = {
