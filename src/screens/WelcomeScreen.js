@@ -4,7 +4,7 @@ import Svg, { Circle, Defs, Pattern, Rect } from 'react-native-svg';
 
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthButton from '../components/auth/AuthButton';
-import { authColors, authType, centeredColumn, contentWidth } from '../theme/authTheme';
+import { authColors, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
 
 const MASCOT_SIZE = 210;
 
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   footerText: {
-    fontFamily: 'PlusJakartaSans_600SemiBold',
+    fontFamily: authFonts.semiBold,
     fontSize: 12,
     letterSpacing: 12 * 0.08,
     textTransform: 'uppercase',

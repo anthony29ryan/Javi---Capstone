@@ -25,14 +25,16 @@ export const colors = {
   surface: authColors.surface, // cards, inputs, sheets sitting on the background
   surfaceSunken: authColors.surface2, // recessed areas, progress tracks
 
-  primary: authColors.accent, // terracotta - main buttons, active elements
+  primary: authColors.accent, // periwinkle - active elements, links, progress
   primaryDark: authColors.accentDeep, // pressed states, accent text on light ground
-  // The handoff has no token for this: it is the one place the old theme drew
-  // a distinction the design does not, for progress-bar fills that need to sit
+  // The handoff has no token for this: progress-bar fills that need to sit
   // between the track and the full accent. A lightened accent keeps that
   // hierarchy without inventing a second hue.
-  primaryLight: '#DCA08E',
+  primaryLight: '#B8BEFE',
   primarySoft: authColors.accentSoft, // tinted panel behind selected/secondary surfaces
+
+  button: authColors.button, // terracotta fill - filled buttons only
+  buttonPressed: authColors.buttonPressed,
 
   text: authColors.ink, // primary text
   textMuted: authColors.ink2, // secondary/help text
@@ -43,7 +45,7 @@ export const colors = {
   success: authColors.success,
   successBg: '#E6F4EC',
   error: authColors.error,
-  errorBg: '#F7E9E7',
+  errorBg: authColors.errorSoft,
 
   // The design gives code its own ground, slightly bluer and deeper than the
   // near-black used for the tutor card and toast.
@@ -76,15 +78,16 @@ export const spacing = {
   xxl: 32,
 };
 
-// The design is set in Plus Jakarta Sans throughout, with JetBrains Mono for
-// code, scores and other numeric marks. React Native picks a font file by
+// The design is set in Outfit throughout. Code, scores and other numeric marks
+// stay in JetBrains Mono (the design uses Outfit there too, but the Code
+// Tracer needs fixed-width characters for its caret to line up). React Native picks a font file by
 // family name rather than by weight, so weights are chosen by naming the
 // right family here — a `fontWeight` alongside one of these is ignored.
 export const fonts = {
-  regular: 'PlusJakartaSans_400Regular',
-  medium: 'PlusJakartaSans_500Medium',
-  semiBold: 'PlusJakartaSans_600SemiBold',
-  bold: 'PlusJakartaSans_700Bold',
+  regular: 'Outfit_400Regular',
+  medium: 'Outfit_500Medium',
+  semiBold: 'Outfit_600SemiBold',
+  bold: 'Outfit_700Bold',
   mono: 'JetBrainsMono_500Medium',
   monoRegular: 'JetBrainsMono_400Regular',
 };

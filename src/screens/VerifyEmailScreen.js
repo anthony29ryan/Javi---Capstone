@@ -7,7 +7,7 @@ import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthButton from '../components/auth/AuthButton';
 import AuthToast from '../components/auth/AuthToast';
 import { useAuth } from '../context/AuthContext';
-import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth } from '../theme/authTheme';
+import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
 
 const RESEND_COOLDOWN_SECONDS = 30;
 
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   cardBody: {
-    fontFamily: 'PlusJakartaSans_400Regular',
+    fontFamily: authFonts.regular,
     fontSize: 13,
     lineHeight: 13 * 1.5,
     color: authColors.ink2,

@@ -258,12 +258,13 @@ const styles = StyleSheet.create({
     borderRadius: 27,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.primary,
+    backgroundColor: colors.button,
     borderWidth: 1,
-    borderColor: colors.primary,
+    borderColor: colors.button,
   },
   completeDone: {
     backgroundColor: colors.primarySoft,
+    borderColor: colors.primary,
   },
   completeOffline: {
     opacity: 0.5,

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import Animated, { cubicBezier, useReducedMotion } from 'react-native-reanimated';
 
-import { colors, fonts, radius, spacing } from '../theme/colors';
+import { colors, fonts, spacing } from '../theme/colors';
 
 // Strong ease-out: the change lands almost immediately under the finger,
 // then settles. Shared with ListCard so every press in the app feels the same.
@@ -54,7 +54,7 @@ export default function Button({
         ]}
       >
         {loading ? (
-          <ActivityIndicator color={variant === 'primary' ? colors.white : colors.primary} />
+          <ActivityIndicator color={variant === 'primary' ? colors.white : colors.primaryDark} />
         ) : (
           <Text style={[styles.label, styles[`${variant}Label`]]}>{label}</Text>
         )}
@@ -65,8 +65,8 @@ export default function Button({
 
 const styles = StyleSheet.create({
   base: {
-    minHeight: 50,
-    borderRadius: radius.md,
+    minHeight: 56,
+    borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
@@ -80,28 +80,32 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.97 }],
   },
   label: {
-    fontSize: 16,
-    fontFamily: fonts.semiBold,
+    fontSize: 14,
+    fontFamily: fonts.bold,
+    letterSpacing: 14 * 0.06,
+    textTransform: 'uppercase',
   },
   primary: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.button,
   },
   primaryPressed: {
-    backgroundColor: colors.primaryDark,
+    backgroundColor: colors.buttonPressed,
   },
   primaryLabel: {
     color: colors.white,
   },
   secondary: {
+    minHeight: 52,
+    borderRadius: 26,
     backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.borderStrong,
+    borderColor: colors.primary,
   },
   secondaryPressed: {
     backgroundColor: colors.primarySoft,
   },
   secondaryLabel: {
-    color: colors.primary,
+    color: colors.primaryDark,
   },
   ghost: {
     backgroundColor: 'transparent',
@@ -113,6 +117,9 @@ const styles = StyleSheet.create({
   ghostLabel: {
     color: colors.textMuted,
     fontFamily: fonts.medium,
+    fontSize: 15,
+    letterSpacing: 0,
+    textTransform: 'none',
   },
   disabled: {
     opacity: 0.5,

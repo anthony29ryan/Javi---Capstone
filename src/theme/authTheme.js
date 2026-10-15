@@ -23,13 +23,20 @@ export const authColors = {
   ink2: '#6B6E7F',
   muted: '#A1A4B2',
 
-  accent: '#C88B7A',
-  accentDeep: '#A8563F',
-  accentSoft: '#F7ECE7',
+  // Periwinkle: links, active states, progress, tiles.
+  accent: '#8E97FD',
+  accentDeep: '#6A73E8',
+  accentSoft: '#ECEEFF',
+
+  // Filled buttons are the one terracotta element; deeper at rest, lighter
+  // while pressed, so a press reads as the button lighting up.
+  button: '#A8563F',
+  buttonPressed: '#C88B7A',
 
   line: 'rgba(46,49,65,.09)',
 
-  error: '#D3736A',
+  error: '#B4483E',
+  errorSoft: '#FBE9E5',
   success: '#5EB78D',
 
   white: '#FFFFFF',
@@ -70,11 +77,11 @@ export function centeredColumn(width) {
 
 // Font family keys, once loaded via useFonts() in the auth navigator.
 export const authFonts = {
-  regular: 'PlusJakartaSans_400Regular',
-  medium: 'PlusJakartaSans_500Medium',
-  semiBold: 'PlusJakartaSans_600SemiBold',
-  bold: 'PlusJakartaSans_700Bold',
-  extraBold: 'PlusJakartaSans_800ExtraBold',
+  regular: 'Outfit_400Regular',
+  medium: 'Outfit_500Medium',
+  semiBold: 'Outfit_600SemiBold',
+  bold: 'Outfit_700Bold',
+  extraBold: 'Outfit_800ExtraBold',
   monoRegular: 'JetBrainsMono_400Regular',
   monoMedium: 'JetBrainsMono_500Medium',
 };
@@ -148,5 +155,5 @@ export const authType = {
 
 // Fonts to hand to useFonts(). Import and spread this in the one place that
 // loads them so every screen stays in sync with what's actually bundled.
-export { PlusJakartaSans_400Regular, PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold, PlusJakartaSans_700Bold, PlusJakartaSans_800ExtraBold } from '@expo-google-fonts/plus-jakarta-sans';
+export { Outfit_400Regular, Outfit_500Medium, Outfit_600SemiBold, Outfit_700Bold, Outfit_800ExtraBold } from '@expo-google-fonts/outfit';
 export { JetBrainsMono_400Regular, JetBrainsMono_500Medium } from '@expo-google-fonts/jetbrains-mono';

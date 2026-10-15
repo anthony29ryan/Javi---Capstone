@@ -17,7 +17,7 @@ import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
 import AuthToast from '../components/auth/AuthToast';
 import { useAuth } from '../context/AuthContext';
-import { authColors, authSpacing, authType, centeredColumn, contentWidth } from '../theme/authTheme';
+import { authColors, authSpacing, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
 
 const EMAIL_PATTERN = /.+@.+\..+/;
 
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     backgroundColor: authColors.surface2,
   },
   googleLabel: {
-    fontFamily: 'PlusJakartaSans_600SemiBold',
+    fontFamily: authFonts.semiBold,
     fontSize: 12,
     letterSpacing: 12 * 0.07,
     textTransform: 'uppercase',
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     ...authType.helper,
-    fontFamily: 'PlusJakartaSans_600SemiBold',
+    fontFamily: authFonts.semiBold,
     color: authColors.ink2,
   },
 });

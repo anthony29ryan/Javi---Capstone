@@ -8,7 +8,7 @@ import AuthBackButton from '../components/auth/AuthBackButton';
 import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
 import { useAuth } from '../context/AuthContext';
-import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth } from '../theme/authTheme';
+import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
 
 const EMAIL_PATTERN = /.+@.+\..+/;
 const RESEND_COOLDOWN_SECONDS = 120;
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   cardBody: {
-    fontFamily: 'PlusJakartaSans_400Regular',
+    fontFamily: authFonts.regular,
     fontSize: 13,
     lineHeight: 13 * 1.5,
     color: authColors.ink2,

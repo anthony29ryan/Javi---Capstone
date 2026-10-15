@@ -8,11 +8,11 @@ import { useAuth } from '../context/AuthContext';
 import { ProgressProvider } from '../context/ProgressContext';
 import { colors, fonts } from '../theme/colors';
 import {
-  PlusJakartaSans_400Regular,
-  PlusJakartaSans_500Medium,
-  PlusJakartaSans_600SemiBold,
-  PlusJakartaSans_700Bold,
-  PlusJakartaSans_800ExtraBold,
+  Outfit_400Regular,
+  Outfit_500Medium,
+  Outfit_600SemiBold,
+  Outfit_700Bold,
+  Outfit_800ExtraBold,
   JetBrainsMono_400Regular,
   JetBrainsMono_500Medium,
 } from '../theme/authTheme';
@@ -167,11 +167,11 @@ export default function RootNavigator() {
   // it here rather than per-screen means it is ready before either AuthStack
   // or the standalone VerifyEmailScreen below ever mounts.
   const [authFontsLoaded] = useFonts({
-    PlusJakartaSans_400Regular,
-    PlusJakartaSans_500Medium,
-    PlusJakartaSans_600SemiBold,
-    PlusJakartaSans_700Bold,
-    PlusJakartaSans_800ExtraBold,
+    Outfit_400Regular,
+    Outfit_500Medium,
+    Outfit_600SemiBold,
+    Outfit_700Bold,
+    Outfit_800ExtraBold,
     JetBrainsMono_400Regular,
     JetBrainsMono_500Medium,
   });

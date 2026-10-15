@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     borderRadius: authRadius.primaryButton,
     // The deeper tone at rest and the lighter one while pressed, so a press
     // reads as the button lighting up rather than it already looking pressed.
-    backgroundColor: authColors.accentDeep,
+    backgroundColor: authColors.button,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#2E3141',
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   primaryPressed: {
-    backgroundColor: authColors.accent,
+    backgroundColor: authColors.buttonPressed,
   },
   primaryLabel: {
     ...authType.primaryButtonLabel,

@@ -16,7 +16,7 @@ import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
 import PasswordRules, { passwordMeetsAllRules } from '../components/auth/PasswordRules';
 import { useAuth } from '../context/AuthContext';
-import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth } from '../theme/authTheme';
+import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
 
 const EMAIL_PATTERN = /.+@.+\..+/;
 
@@ -252,6 +252,6 @@ const styles = StyleSheet.create({
   },
   footerAccent: {
     color: authColors.accentDeep,
-    fontFamily: 'PlusJakartaSans_600SemiBold',
+    fontFamily: authFonts.semiBold,
   },
 });
