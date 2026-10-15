@@ -240,7 +240,10 @@ export default function LessonDetailScreen({ route, navigation }) {
           { paddingTop: top, paddingBottom: insets.bottom + BAR_HEIGHT + spacing.xl },
         ]}
         onScroll={onScroll}
-        scrollEventThrottle={100}
+        // A fast fling can stop between scroll events, so the resting place is checked too.
+        onMomentumScrollEnd={onScroll}
+        onScrollEndDrag={onScroll}
+        scrollEventThrottle={16}
         onLayout={(event) => {
           sizes.current.view = event.nativeEvent.layout.height;
           checkFits();
