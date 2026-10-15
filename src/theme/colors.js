@@ -25,15 +25,15 @@ export const colors = {
   surface: authColors.surface, // cards, inputs, sheets sitting on the background
   surfaceSunken: authColors.surface2, // recessed areas, progress tracks
 
-  primary: authColors.accent, // periwinkle - active elements, links, progress
+  primary: authColors.accent, // terracotta - active elements, links, progress
   primaryDark: authColors.accentDeep, // pressed states, accent text on light ground
   // The handoff has no token for this: progress-bar fills that need to sit
   // between the track and the full accent. A lightened accent keeps that
   // hierarchy without inventing a second hue.
-  primaryLight: '#B8BEFE',
+  primaryLight: '#DCA08E',
   primarySoft: authColors.accentSoft, // tinted panel behind selected/secondary surfaces
 
-  button: authColors.button, // terracotta fill - filled buttons only
+  button: authColors.button, // filled buttons only
   buttonPressed: authColors.buttonPressed,
 
   text: authColors.ink, // primary text

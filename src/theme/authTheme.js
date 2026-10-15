@@ -23,13 +23,13 @@ export const authColors = {
   ink2: '#6B6E7F',
   muted: '#A1A4B2',
 
-  // Periwinkle: links, active states, progress, tiles.
-  accent: '#8E97FD',
-  accentDeep: '#6A73E8',
-  accentSoft: '#ECEEFF',
+  // Terracotta: links, active states, progress, tiles.
+  accent: '#C88B7A',
+  accentDeep: '#A8563F',
+  accentSoft: '#F7ECE7',
 
-  // Filled buttons are the one terracotta element; deeper at rest, lighter
-  // while pressed, so a press reads as the button lighting up.
+  // Filled buttons: deeper at rest, lighter while pressed, so a press reads
+  // as the button lighting up.
   button: '#A8563F',
   buttonPressed: '#C88B7A',
 
