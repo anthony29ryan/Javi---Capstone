@@ -22,7 +22,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 47 done · 22 to do · 43 not built · 1 partly · 9 last
+Totals: 51 done · 18 to do · 43 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -68,7 +68,7 @@ Totals: 47 done · 22 to do · 43 not built · 1 partly · 9 last
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
 | 25 | Module | ModulesScreen | done | 0a1bd8d |
-| 26 | Lesson | LessonDetailScreen | to do |  |
+| 26 | Lesson | LessonDetailScreen | done | 3c5b564 (pinned Javi + complete bar, read-to-the-end gate, Ask Javi sheet links to the Javi tab; slide card and step-through demo skipped, no such data; 27 still not built) |
 | 27 | Lesson complete | — | not built |  |
 | 28 | Module complete | — | not built |  |
 | 29 | Quizzes | QuizzesScreen | done | 5c6116d (last score, not best) |
@@ -126,14 +126,14 @@ Totals: 47 done · 22 to do · 43 not built · 1 partly · 9 last
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
 | 63 | Home · Loading | with Home | done | 2894257 |
-| 64 | Lesson · Loading | with Lesson | to do |  |
+| 64 | Lesson · Loading | with Lesson | done | 3c5b564 |
 | 65 | Courses · Loading | with Courses | done | 4e9c640 |
 | 66 | Module · Loading | with Module | done | 0a1bd8d |
 | 67 | Practice · Loading | with Practice | done | 5c6116d |
 | 68 | Profile · Loading | with Profile | done | 4ad2ad9 |
 | 69 | Home · Offline, saved content | with Home | done | 2894257 (inline bar, not edge to edge) |
 | 70 | Courses · Error | with Courses | done | 4e9c640 (no saved-modules list; offline not claimed) |
-| 71 | Lesson · Offline | with Lesson | to do |  |
+| 71 | Lesson · Offline | with Lesson | done | 3c5b564 (honest copy: only downloaded modules read offline) |
 | 72 | Quiz · Offline | with Quiz | to do |  |
 | 73 | Tutor · Error | with Tutor | done | a01ce13 |
 | 74 | Practice · Empty | with Practice | done | 5c6116d (card inside the page; Code Tracer stays visible) |
@@ -169,7 +169,7 @@ Totals: 47 done · 22 to do · 43 not built · 1 partly · 9 last
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
 | 96 | Session expired | — | not built |  |
-| 97 | Lesson · Server error | with Lesson | to do |  |
+| 97 | Lesson · Server error | with Lesson | done | 3c5b564 (real Firebase error code, not a made-up ref; Back to module instead of Report) |
 | 98 | Quiz result · Not synced | with Quiz result | to do |  |
 | 99 | Challenge · Compile error | — | not built |  |
 | 100 | Challenge · Test failing | — | not built |  |
