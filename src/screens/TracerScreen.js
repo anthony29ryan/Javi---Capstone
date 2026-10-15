@@ -44,33 +44,28 @@ function Stat({ label, value, alert, large }) {
 }
 
 /**
- * The line being typed, drawn over its own target text: typed characters are
- * bright, characters from the first mistake on are red, the next character to
- * type carries the caret, and the rest of the line waits dimmed. Characters
- * typed past the end of the line are shown in red after it.
+ * The line being typed: what the student has typed so far, bright while it is
+ * right and red from the first wrong character on, then the caret on the next
+ * character of the target and the rest of the target dimmed.
  */
 function CurrentLine({ target, typed }) {
   const expected = target.trim();
   const indent = target.slice(0, target.length - target.trimStart().length);
   const attempt = typed.trimStart();
   const wrongAt = mismatchIndex(typed, target);
-  const extra = attempt.length > expected.length ? attempt.slice(expected.length) : '';
+  const right = wrongAt === -1 ? attempt : attempt.slice(0, wrongAt);
+  const wrong = wrongAt === -1 ? '' : attempt.slice(wrongAt);
+  // Past the end of the target the caret sits on a blank cell instead.
+  const caret = expected[attempt.length] ?? ' ';
+  const rest = expected.slice(attempt.length + 1);
 
   return (
     <Text style={styles.codeText} accessibilityLiveRegion="polite">
       {indent}
-      {[...expected].map((char, i) => {
-        let style = styles.charPending;
-        if (i < attempt.length) style = wrongAt !== -1 && i >= wrongAt ? styles.charWrong : styles.charDone;
-        else if (i === attempt.length) style = styles.charCaret;
-        return (
-          <Text key={i} style={style}>
-            {char}
-          </Text>
-        );
-      })}
-      {extra ? <Text style={styles.charWrong}>{extra}</Text> : null}
-      {attempt.length >= expected.length && !extra ? <Text style={styles.charCaret}> </Text> : null}
+      <Text style={styles.charDone}>{right}</Text>
+      <Text style={styles.charWrong}>{wrong}</Text>
+      <Text style={styles.charCaret}>{caret}</Text>
+      <Text style={styles.charPending}>{rest}</Text>
     </Text>
   );
 }
@@ -257,6 +252,7 @@ export default function TracerScreen({ route, navigation }) {
             spellCheck={false}
             caretHidden
             contextMenuHidden
+            underlineColorAndroid="transparent"
             // Keep the keyboard up between lines; Enter does nothing on its own.
             submitBehavior="submit"
             accessibilityLabel={`Type line ${lineIndex + 1}: ${target.trim()}`}
@@ -406,10 +402,11 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
     paddingLeft: 40,
   },
+  // Fully transparent rather than a transparent text colour, which Android
+  // ignores; at opacity 0 it still takes taps and keeps the keyboard.
   input: {
     ...StyleSheet.absoluteFillObject,
-    color: 'transparent',
-    backgroundColor: 'transparent',
+    opacity: 0,
   },
   completeEyebrow: {
     ...type.sectionLabel,
