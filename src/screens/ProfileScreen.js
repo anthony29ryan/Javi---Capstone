@@ -36,7 +36,7 @@ function earnedBadges({ completedCount, percent, streak, moduleScores }) {
 }
 
 export default function ProfileScreen({ navigation }) {
-  const { user } = useAuth();
+  const { user, callName } = useAuth();
   const insets = useSafeAreaInsets();
   const {
     courses,
@@ -56,7 +56,7 @@ export default function ProfileScreen({ navigation }) {
   if (loading) return <ScreenState loading />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
 
-  const name = user?.displayName || user?.email?.split('@')[0] || 'there';
+  const name = callName;
 
   const modulesDone = modules.filter((m) => (moduleProgress[m.id]?.percent ?? 0) === 100).length;
 
@@ -79,7 +79,7 @@ export default function ProfileScreen({ navigation }) {
       contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
     >
       <View style={styles.identity}>
-        <Avatar user={user} size={64} />
+        <Avatar user={user} name={callName} size={64} />
         <View style={styles.identityText}>
           <Text style={styles.name} numberOfLines={1}>
             {name}

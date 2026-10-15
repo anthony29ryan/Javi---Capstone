@@ -112,6 +112,16 @@ describe('users', () => {
     );
   });
 
+  test('a nickname must be 1 to 30 characters of text', async () => {
+    const ref = doc(dbAs('alice'), 'users/alice');
+    await seed((admin) => setDoc(doc(admin, 'users/alice'), { email: 'alice@example.com', displayName: 'Alice' }));
+    // Setup and Profile details both merge it in on its own.
+    await assertSucceeds(setDoc(ref, { nickname: 'Kai' }, { merge: true }));
+    await assertFails(setDoc(ref, { nickname: '' }, { merge: true }));
+    await assertFails(setDoc(ref, { nickname: 'x'.repeat(31) }, { merge: true }));
+    await assertFails(setDoc(ref, { nickname: ['Kai'] }, { merge: true }));
+  });
+
   test('a last name must be 1 to 100 characters of text', async () => {
     const ref = doc(dbAs('alice'), 'users/alice');
     await seed((admin) => setDoc(doc(admin, 'users/alice'), { email: 'alice@example.com', displayName: 'Alice' }));

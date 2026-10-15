@@ -25,12 +25,13 @@ import { authColors, authRadius, authSpacing, authType, authFonts, centeredColum
 const GOALS = ['Exam prep', 'Class requirement', 'Build an app', 'Internship', 'Curiosity'];
 
 export default function ProfileDetailsScreen({ navigation }) {
-  const { user, updateDisplayName } = useAuth();
+  const { user, updateDisplayName, nickname, updateNickname } = useAuth();
   const insets = useSafeAreaInsets();
 
   const [name, setName] = useState(user?.displayName ?? '');
   // Lives only on the profile document, so it arrives with the goals below.
   const [lastName, setLastName] = useState('');
+  const [nick, setNick] = useState(nickname || user?.displayName || '');
   const [goals, setGoals] = useState(null);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
@@ -72,11 +73,18 @@ export default function ProfileDetailsScreen({ navigation }) {
       setError('Enter your last name.');
       return;
     }
+    const trimmedNick = nick.trim();
+    if (!trimmedNick) {
+      setError('Enter your nickname.');
+      return;
+    }
 
     setSaving(true);
     try {
       if (trimmed !== user?.displayName) await updateDisplayName(trimmed);
       await savePreferences({ goals, lastName: trimmedLast });
+      // Through the context, so greetings pick up the new nickname at once.
+      if (trimmedNick !== nickname) await updateNickname(trimmedNick);
       setToast('Profile saved');
     } catch (err) {
       setError(err.message);
@@ -109,7 +117,7 @@ export default function ProfileDetailsScreen({ navigation }) {
             Your email is what you sign in with and cannot be changed here.
           </Text>
 
-          <Text style={styles.label}>What should we call you?</Text>
+          <Text style={styles.label}>Your name</Text>
           <AuthTextField
             placeholder="First name"
             value={name}
@@ -126,6 +134,16 @@ export default function ProfileDetailsScreen({ navigation }) {
               setError('');
             }}
             style={styles.lastName}
+          />
+
+          <Text style={styles.label}>What should we call you?</Text>
+          <AuthTextField
+            placeholder="Nickname"
+            value={nick}
+            onChangeText={(value) => {
+              setNick(value);
+              setError('');
+            }}
           />
 
           <Text style={styles.label}>Why you are learning Java</Text>

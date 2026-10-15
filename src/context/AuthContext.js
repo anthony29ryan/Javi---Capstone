@@ -26,6 +26,9 @@ export function AuthProvider({ children }) {
   // The date this device's account will be purged, set right after the user
   // schedules its deletion so the sign-up screen they land on can say when.
   const [scheduledDeletion, setScheduledDeletion] = useState(null);
+  // What the app calls the user, set on Setup. Lives on the profile document,
+  // so it is read along with the deletion check below; null until set.
+  const [nickname, setNickname] = useState(null);
   // While logIn() is deciding whether to restore or refuse an account, it
   // owns the signed-in state. The listener below stands aside so the app
   // does not flash open for an account that is about to be signed out again.
@@ -37,9 +40,8 @@ export function AuthProvider({ children }) {
 
       // A failed read counts as "not pending" here, so a network blip on
       // launch cannot lock anyone out of an account that is fine.
-      const deletionRequested =
-        firebaseUser && (await readDeletionRequest(firebaseUser.uid).catch(() => null));
-      if (deletionRequested) {
+      const profile = firebaseUser ? await readProfile(firebaseUser.uid).catch(() => null) : null;
+      if (profile?.deletionRequestedAt) {
         // A session saved on this device from before the account was deleted
         // on another one. Only typing the password restores an account, so
         // end the session rather than quietly cancelling the deletion. The
@@ -50,6 +52,7 @@ export function AuthProvider({ children }) {
         return;
       }
 
+      setNickname(profile?.nickname ?? null);
       setUser(firebaseUser);
       setInitializing(false);
     });
@@ -110,7 +113,10 @@ export function AuthProvider({ children }) {
 
       let restored = false;
       try {
-        const requestedAt = await readDeletionRequest(signedInUser.uid);
+        const { deletionRequestedAt: requestedAt, nickname: savedNickname } = await readProfile(
+          signedInUser.uid
+        );
+        setNickname(savedNickname);
         if (requestedAt && permanentDeletionDate(requestedAt) <= new Date()) {
           const err = new Error('This account has been deleted.');
           err.code = 'account/deleted';
@@ -197,6 +203,11 @@ export function AuthProvider({ children }) {
     await signOut(auth);
   }
 
+  async function updateNickname(value) {
+    await setDoc(doc(db, 'users', auth.currentUser.uid), { nickname: value }, { merge: true });
+    setNickname(value);
+  }
+
   async function updateDisplayName(displayName) {
     await updateProfile(auth.currentUser, { displayName });
     await updateDoc(doc(db, 'users', auth.currentUser.uid), { displayName });
@@ -214,6 +225,11 @@ export function AuthProvider({ children }) {
         logIn,
         logOut,
         updateDisplayName,
+        nickname,
+        updateNickname,
+        // The name to greet the user by: nickname, else first name, else the
+        // start of their email.
+        callName: nickname || user?.displayName || user?.email?.split('@')[0] || 'there',
         refreshUser,
         resendVerification,
         sendPasswordReset,
@@ -227,10 +243,16 @@ export function AuthProvider({ children }) {
   );
 }
 
-/** When the user asked for this account to be deleted, or null if they have not. */
-async function readDeletionRequest(userId) {
-  const snapshot = await getDoc(doc(db, 'users', userId));
-  return snapshot.data()?.deletionRequestedAt?.toDate() ?? null;
+/**
+ * The two profile fields needed at sign-in, from one read: when the user asked
+ * for the account to be deleted (or null), and their nickname (or null).
+ */
+async function readProfile(userId) {
+  const data = (await getDoc(doc(db, 'users', userId))).data();
+  return {
+    deletionRequestedAt: data?.deletionRequestedAt?.toDate() ?? null,
+    nickname: data?.nickname ?? null,
+  };
 }
 
 export function useAuth() {

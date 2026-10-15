@@ -56,7 +56,7 @@ function Tile({ eyebrow, title, meta, background, ink, subtleInk, onPress }) {
 }
 
 export default function HomeScreen({ navigation }) {
-  const { user } = useAuth();
+  const { user, callName } = useAuth();
   const insets = useSafeAreaInsets();
   const {
     lessons,
@@ -75,7 +75,7 @@ export default function HomeScreen({ navigation }) {
   if (loading) return <ScreenState loading />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
 
-  const name = user?.displayName || user?.email?.split('@')[0] || 'there';
+  const name = callName;
 
   const modulesById = Object.fromEntries(modules.map((module) => [module.id, module]));
   const coursesById = Object.fromEntries(courses.map((course) => [course.id, course]));
@@ -137,7 +137,7 @@ export default function HomeScreen({ navigation }) {
             streak
           </Text>
         </View>
-        <Avatar user={user} size={44} onPress={() => navigation.navigate('Settings')} />
+        <Avatar user={user} name={callName} size={44} onPress={() => navigation.navigate('Settings')} />
       </View>
 
       <OfflineBanner />

@@ -11,6 +11,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+import AuthAlert from '../components/auth/AuthAlert';
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
@@ -24,6 +25,20 @@ const PRESETS = [
   { time: '13:00', label: 'Midday' },
   { time: '20:00', label: 'Evening' },
 ];
+
+const FAILURES = {
+  offline: {
+    tone: 'warn',
+    title: 'No internet connection',
+    body: 'Check Wi-Fi or mobile data, then try again.',
+    action: 'Try again',
+  },
+  failed: {
+    tone: 'danger',
+    title: 'Could not save your setup',
+    body: 'Something went wrong on our side. Try again in a moment.',
+  },
+};
 
 function toDate(time) {
   const [hours, minutes] = time.split(':').map(Number);
@@ -42,13 +57,15 @@ function toTimeString(date) {
  * going — the goals still exist, but Profile details owns them now.
  */
 export default function SetupScreen({ navigation }) {
-  const { user, updateDisplayName } = useAuth();
+  const { user, nickname, updateNickname } = useAuth();
   const insets = useSafeAreaInsets();
 
-  const [name, setName] = useState(user?.displayName ?? '');
+  // Starts as the first name, so nobody has to invent a nickname to continue.
+  const [name, setName] = useState(nickname || user?.displayName || '');
   const [time, setTime] = useState(DEFAULT_REMINDER_TIME);
   const [customOpen, setCustomOpen] = useState(false);
-  const [error, setError] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [failure, setFailure] = useState(null); // a key of FAILURES
   const [saving, setSaving] = useState(false);
 
   function pickPreset(preset) {
@@ -59,17 +76,17 @@ export default function SetupScreen({ navigation }) {
   }
 
   async function handleFinish() {
-    setError('');
+    setFailure(null);
 
     const trimmed = name.trim();
     if (!trimmed) {
-      setError('Enter your first name.');
+      setNameError('Add a nickname so we know what to call you.');
       return;
     }
 
     setSaving(true);
     try {
-      if (trimmed !== user?.displayName) await updateDisplayName(trimmed);
+      if (trimmed !== nickname) await updateNickname(trimmed);
       await savePreferences({ reminderTime: time, reminderEnabled: true, setupComplete: true });
       // A refused permission prompt turns the reminder off rather than
       // blocking setup, so this never stops someone reaching the app.
@@ -78,7 +95,8 @@ export default function SetupScreen({ navigation }) {
 
       navigation.replace('MainTabs');
     } catch (err) {
-      setError(err.message);
+      const offline = err.code === 'unavailable' || err.code === 'auth/network-request-failed';
+      setFailure(offline ? 'offline' : 'failed');
     } finally {
       setSaving(false);
     }
@@ -95,21 +113,23 @@ export default function SetupScreen({ navigation }) {
             { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 28 },
           ]} keyboardShouldPersistTaps="handled">
           <Text style={styles.step}>Step 1 of 1</Text>
-          <Text style={styles.title}>Set up your path</Text>
+          <Text style={styles.title}>Before you start</Text>
           <Text style={styles.body}>
-            We use this to pick your first module and your daily reminder.
+            Tell us what to call you and when you want a daily study reminder.
           </Text>
 
           <Text style={styles.label}>What should we call you?</Text>
           <AuthTextField
-            placeholder="First name"
+            placeholder="Nickname"
             value={name}
+            error={nameError}
             onChangeText={(value) => {
               setName(value);
-              setError('');
+              setNameError('');
             }}
             style={styles.nameField}
           />
+          <View style={styles.afterName} />
 
           <Text style={styles.label}>Daily study reminder</Text>
           <View style={styles.presets}>
@@ -155,11 +175,13 @@ export default function SetupScreen({ navigation }) {
             />
           ) : null}
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
-
           <View style={styles.spacer} />
 
-          <AuthButton label="Start Learning" onPress={handleFinish} loading={saving} />
+          {failure ? (
+            <AuthAlert {...FAILURES[failure]} onAction={handleFinish} style={styles.failure} />
+          ) : null}
+
+          <AuthButton label="Start learning" onPress={handleFinish} loading={saving} />
         </ScrollView>
       </AuthAnimatedScreen>
     </KeyboardAvoidingView>
@@ -198,7 +220,11 @@ const styles = StyleSheet.create({
   },
   nameField: {
     marginTop: 10,
-    marginBottom: 24,
+  },
+  // Below the field and its error, if any; on the field itself it would sit
+  // between the field and the error.
+  afterName: {
+    height: 24,
   },
   presets: {
     flexDirection: 'row',
@@ -269,11 +295,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: authColors.muted,
   },
-  error: {
-    ...authType.helper,
-    color: authColors.error,
-    marginTop: 14,
-    marginHorizontal: 4,
+  failure: {
+    marginBottom: 16,
   },
   spacer: {
     flex: 1,
