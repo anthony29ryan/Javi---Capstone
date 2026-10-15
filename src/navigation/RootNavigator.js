@@ -41,6 +41,7 @@ import AskJaviSheetScreen from '../screens/AskJaviSheetScreen';
 import LeaveSheetScreen from '../screens/LeaveSheetScreen';
 import LogOutSheetScreen from '../screens/LogOutSheetScreen';
 import ReminderSheetScreen from '../screens/ReminderSheetScreen';
+import RestoreAccountScreen from '../screens/RestoreAccountScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModulesScreen from '../screens/ModulesScreen';
 import ProgressScreen from '../screens/ProgressScreen';
@@ -111,6 +112,7 @@ function AuthStack({ afterAccountDeletion }) {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      <Stack.Screen name="RestoreAccount" component={RestoreAccountScreen} />
     </Stack.Navigator>
   );
 }

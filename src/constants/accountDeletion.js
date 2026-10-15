@@ -1,6 +1,6 @@
 /**
  * How long a deleted account waits before it is removed for good. Logging in
- * at any point inside the window restores it untouched.
+ * at any point inside the window offers to restore it untouched.
  *
  * scripts/purgeDeletedAccounts.js does the actual removal and keeps its own
  * copy of this number, because it runs in Node outside the app bundle. Change

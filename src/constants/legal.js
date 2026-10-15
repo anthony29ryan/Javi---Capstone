@@ -9,8 +9,8 @@
 // A section's body is a list of parts: a string is a paragraph; an object is a
 // bullet list, with an optional bold label above it.
 
-export const TERMS_VERSION = '2026-10-15b';
-export const TERMS_UPDATED = '15 Oct 2026';
+export const TERMS_VERSION = '2026-10-16';
+export const TERMS_UPDATED = '16 Oct 2026';
 export const LEGAL_CONTACT = 'support.javi@gmail.com';
 
 const APP_NAME = 'Javi: An AI-Powered Android Application for Java Learning ("Javi," "the Application," "we," "our," or "us")';
@@ -223,7 +223,7 @@ export const LEGAL_DOCS = {
       {
         h: 'Data Retention',
         body: [
-          'Your information is kept while your account exists. When you delete your account in Settings, your profile, progress, quiz answers and tutor conversations are permanently removed 30 days later; logging back in before then cancels the deletion.',
+          'Your information is kept while your account exists. When you delete your account in Settings, your profile, progress, quiz answers and tutor conversations are permanently removed 30 days later; logging back in before then lets you restore it.',
           'Lessons downloaded to your phone stay there until you remove them in Settings or uninstall the app.',
         ],
       },

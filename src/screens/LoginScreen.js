@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -129,14 +128,10 @@ export default function LoginScreen({ navigation, route }) {
 
     setSubmitting(true);
     try {
-      const { restored } = await logIn(trimmedEmail, password);
-      if (restored) {
-        // A native alert outlives this screen, which unmounts as the app
-        // opens, so the message is still there when the user lands.
-        Alert.alert(
-          'Welcome back',
-          'Your account was scheduled for deletion. Logging in cancelled that, and all of your progress is still here.'
-        );
+      const { pendingDeletion, name } = await logIn(trimmedEmail, password);
+      if (pendingDeletion) {
+        // Frame 52: the user chooses between restoring and staying deleted.
+        navigation.navigate('RestoreAccount', { name, removalDate: pendingDeletion.getTime() });
       }
     } catch (err) {
       if (CREDENTIAL_ERROR_CODES.has(err.code)) {

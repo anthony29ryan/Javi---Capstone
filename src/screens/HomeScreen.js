@@ -1,8 +1,9 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import AuthToast from '../components/auth/AuthToast';
 import Avatar from '../components/Avatar';
 import Mascot from '../components/Mascot';
 import OfflineBanner from '../components/OfflineBanner';
@@ -102,8 +103,17 @@ function HomeSkeleton({ top }) {
 }
 
 export default function HomeScreen({ navigation }) {
-  const { user, callName } = useAuth();
+  const { user, callName, restoredNotice, clearRestoredNotice } = useAuth();
   const insets = useSafeAreaInsets();
+
+  // Straight after the Welcome back screen restored the account. Kept in
+  // state, so it still shows if the skeleton is up when it arrives.
+  const [toast, setToast] = useState('');
+  useEffect(() => {
+    if (!restoredNotice) return;
+    setToast('Account restored. Welcome back.');
+    clearRestoredNotice();
+  }, [restoredNotice]);
   const {
     lessons,
     modules,
@@ -217,130 +227,133 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
-    >
-      <View style={styles.header}>
-        <Mascot variant="greeting" px={48} decorative animate={false} style={styles.mascot} />
-        <View style={styles.headerText}>
-          <Text style={styles.greeting} numberOfLines={1}>
-            {greeting()}, {name}
-          </Text>
-          <Text style={styles.streakLine}>
-            {completedCount} lesson{completedCount === 1 ? '' : 's'} done · {streak.current} day
-            streak
-          </Text>
-        </View>
-        <Avatar user={user} name={callName} size={44} onPress={() => navigation.navigate('Profile')} />
-      </View>
-
-      <OfflineBanner message="Showing lessons and progress saved on this phone." />
-
-      {next ? (
-        <View style={styles.hero}>
-          <Text style={styles.heroEyebrow}>Continue learning</Text>
-          <Text style={styles.heroTitle}>{next.title}</Text>
-          <Text style={styles.heroCrumb}>
-            {[nextCourse?.title, nextModule?.title].filter(Boolean).join(' · ')}
-          </Text>
-
-          <View style={styles.heroTrack}>
-            <View style={[styles.heroFill, { width: `${nextModuleStats?.percent ?? 0}%` }]} />
-          </View>
-
-          <View style={styles.heroFooter}>
-            <Text style={styles.heroProgress}>
-              {nextModuleStats?.completed ?? 0} of {nextModuleStats?.total ?? 0} lessons in this
-              module
+    <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
+      >
+        <View style={styles.header}>
+          <Mascot variant="greeting" px={48} decorative animate={false} style={styles.mascot} />
+          <View style={styles.headerText}>
+            <Text style={styles.greeting} numberOfLines={1}>
+              {greeting()}, {name}
             </Text>
-            <Pressable
-              onPress={() => openLesson(next)}
-              style={({ pressed }) => [styles.resume, pressed && styles.pressed]}
-            >
-              <Text style={styles.resumeLabel}>Resume</Text>
-            </Pressable>
-          </View>
-        </View>
-      ) : (
-        <View style={styles.hero}>
-          <Text style={styles.heroEyebrow}>All caught up</Text>
-          <Text style={styles.heroTitle}>Every lesson done</Text>
-          <Text style={styles.heroCrumb}>Revisit a module quiz to keep your scores sharp.</Text>
-        </View>
-      )}
-
-      <View style={styles.tiles}>
-        <Tile
-          eyebrow="Practice"
-          title={nextModule ? `${nextModule.title} quiz` : 'Module quiz'}
-          meta="Test what you have read"
-          background={PRACTICE_TILE_BG}
-          ink={PRACTICE_TILE_INK}
-          subtleInk="rgba(63,65,78,.72)"
-          onPress={() => navigation.navigate('Practice')}
-        />
-        <Tile
-          eyebrow="Javi"
-          title="Ask about code"
-          // askTutor's real limit (DAILY_QUESTIONS in functions/index.js).
-          meta="30 questions a day"
-          background={TUTOR_TILE_BG}
-          ink={colors.white}
-          subtleInk="rgba(255,255,255,.62)"
-          onPress={() => navigation.navigate('Tutor')}
-        />
-      </View>
-
-      {recsLoading || recommendations.length > 0 ? (
-        <>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Recommended for you</Text>
-            <Text
-              style={styles.sectionAll}
-              suppressHighlighting
-              onPress={() =>
-                weakPicks.lessons.length
-                  ? navigation.navigate('WeakLessons', { topics: weakTopics.filter((t) => t.weak) })
-                  : navigation.navigate('Courses')
-              }
-            >
-              All
+            <Text style={styles.streakLine}>
+              {completedCount} lesson{completedCount === 1 ? '' : 's'} done · {streak.current} day
+              streak
             </Text>
           </View>
+          <Avatar user={user} name={callName} size={44} onPress={() => navigation.navigate('Profile')} />
+        </View>
 
-          <View style={styles.recommendations}>
-            {recsLoading ? (
-              <>
-                <RecSkeleton />
-                <RecSkeleton />
-                <RecSkeleton />
-              </>
-            ) : null}
-            {recsLoading ? null : recommendations.map((lesson) => (
+        <OfflineBanner message="Showing lessons and progress saved on this phone." />
+
+        {next ? (
+          <View style={styles.hero}>
+            <Text style={styles.heroEyebrow}>Continue learning</Text>
+            <Text style={styles.heroTitle}>{next.title}</Text>
+            <Text style={styles.heroCrumb}>
+              {[nextCourse?.title, nextModule?.title].filter(Boolean).join(' · ')}
+            </Text>
+
+            <View style={styles.heroTrack}>
+              <View style={[styles.heroFill, { width: `${nextModuleStats?.percent ?? 0}%` }]} />
+            </View>
+
+            <View style={styles.heroFooter}>
+              <Text style={styles.heroProgress}>
+                {nextModuleStats?.completed ?? 0} of {nextModuleStats?.total ?? 0} lessons in this
+                module
+              </Text>
               <Pressable
-                key={lesson.id}
-                onPress={() => openLesson(lesson)}
-                style={({ pressed }) => [styles.recRow, pressed && styles.recRowPressed]}
+                onPress={() => openLesson(next)}
+                style={({ pressed }) => [styles.resume, pressed && styles.pressed]}
               >
-                <View style={styles.recGlyphTile}>
-                  <Text style={styles.recGlyph}>{glyphFor(lesson.moduleId)}</Text>
-                </View>
-                <View style={styles.recBody}>
-                  <Text style={styles.recTitle}>{lesson.title}</Text>
-                  <Text style={styles.recMeta} numberOfLines={1}>
-                    {modulesById[lesson.moduleId]?.title ?? 'Module'} · {lesson.minutes} min
-                  </Text>
-                </View>
-                <Text style={styles.recChevron}>›</Text>
+                <Text style={styles.resumeLabel}>Resume</Text>
               </Pressable>
-            ))}
+            </View>
           </View>
+        ) : (
+          <View style={styles.hero}>
+            <Text style={styles.heroEyebrow}>All caught up</Text>
+            <Text style={styles.heroTitle}>Every lesson done</Text>
+            <Text style={styles.heroCrumb}>Revisit a module quiz to keep your scores sharp.</Text>
+          </View>
+        )}
 
-          {recsLoading ? null : <Text style={styles.recWhy}>{recWhy}</Text>}
-        </>
-      ) : null}
-    </ScrollView>
+        <View style={styles.tiles}>
+          <Tile
+            eyebrow="Practice"
+            title={nextModule ? `${nextModule.title} quiz` : 'Module quiz'}
+            meta="Test what you have read"
+            background={PRACTICE_TILE_BG}
+            ink={PRACTICE_TILE_INK}
+            subtleInk="rgba(63,65,78,.72)"
+            onPress={() => navigation.navigate('Practice')}
+          />
+          <Tile
+            eyebrow="Javi"
+            title="Ask about code"
+            // askTutor's real limit (DAILY_QUESTIONS in functions/index.js).
+            meta="30 questions a day"
+            background={TUTOR_TILE_BG}
+            ink={colors.white}
+            subtleInk="rgba(255,255,255,.62)"
+            onPress={() => navigation.navigate('Tutor')}
+          />
+        </View>
+
+        {recsLoading || recommendations.length > 0 ? (
+          <>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Recommended for you</Text>
+              <Text
+                style={styles.sectionAll}
+                suppressHighlighting
+                onPress={() =>
+                  weakPicks.lessons.length
+                    ? navigation.navigate('WeakLessons', { topics: weakTopics.filter((t) => t.weak) })
+                    : navigation.navigate('Courses')
+                }
+              >
+                All
+              </Text>
+            </View>
+
+            <View style={styles.recommendations}>
+              {recsLoading ? (
+                <>
+                  <RecSkeleton />
+                  <RecSkeleton />
+                  <RecSkeleton />
+                </>
+              ) : null}
+              {recsLoading ? null : recommendations.map((lesson) => (
+                <Pressable
+                  key={lesson.id}
+                  onPress={() => openLesson(lesson)}
+                  style={({ pressed }) => [styles.recRow, pressed && styles.recRowPressed]}
+                >
+                  <View style={styles.recGlyphTile}>
+                    <Text style={styles.recGlyph}>{glyphFor(lesson.moduleId)}</Text>
+                  </View>
+                  <View style={styles.recBody}>
+                    <Text style={styles.recTitle}>{lesson.title}</Text>
+                    <Text style={styles.recMeta} numberOfLines={1}>
+                      {modulesById[lesson.moduleId]?.title ?? 'Module'} · {lesson.minutes} min
+                    </Text>
+                  </View>
+                  <Text style={styles.recChevron}>›</Text>
+                </Pressable>
+              ))}
+            </View>
+
+            {recsLoading ? null : <Text style={styles.recWhy}>{recWhy}</Text>}
+          </>
+        ) : null}
+      </ScrollView>
+      <AuthToast message={toast} onHide={() => setToast('')} />
+    </View>
   );
 }
 

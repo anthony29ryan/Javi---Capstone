@@ -26,6 +26,8 @@ export function AuthProvider({ children }) {
   // The date this device's account will be purged, set right after the user
   // schedules its deletion so the sign-up screen they land on can say when.
   const [scheduledDeletion, setScheduledDeletion] = useState(null);
+  // Set when the Welcome back screen restores an account, so Home can say so.
+  const [restoredNotice, setRestoredNotice] = useState(false);
   // What the app calls the user, set on Setup. Lives on the profile document,
   // so it is read along with the deletion check below; null until set.
   const [nickname, setNickname] = useState(null);
@@ -102,19 +104,21 @@ export function AuthProvider({ children }) {
   }
 
   /**
-   * Signs in, and settles a pending account deletion on the way.
+   * Signs in, stopping short for an account that is scheduled for deletion.
    *
-   * Inside the 30-day window, logging in cancels the deletion and nothing is
-   * lost; the result says so, so the screen can tell the user. After the
-   * window the account is treated as gone even if the purge script has not
-   * run yet, so the sign-in is undone and this throws.
+   * Inside the 30-day window the result carries `pendingDeletion` (the purge
+   * date) and the name to greet, and the app stays closed: Firebase is signed in, but `user` is not
+   * set until the Welcome back screen calls restoreAccount() or keepDeleted().
+   * After the window the account is treated as gone even if the purge script
+   * has not run yet, so the sign-in is undone and this throws.
    */
   async function logIn(email, password) {
     logInInProgress.current = true;
     try {
       const { user: signedInUser } = await signInWithEmailAndPassword(auth, email, password);
 
-      let restored = false;
+      let pendingDeletion = null;
+      let name = null;
       try {
         const {
           deletionRequestedAt: requestedAt,
@@ -122,16 +126,14 @@ export function AuthProvider({ children }) {
           avatar: savedAvatar,
         } = await readProfile(signedInUser.uid);
         setNickname(savedNickname);
+        name = savedNickname || signedInUser.displayName;
         setAvatar(savedAvatar);
         if (requestedAt && permanentDeletionDate(requestedAt) <= new Date()) {
           const err = new Error('This account has been deleted.');
           err.code = 'account/deleted';
           throw err;
         }
-        if (requestedAt) {
-          await updateDoc(doc(db, 'users', signedInUser.uid), { deletionRequestedAt: deleteField() });
-          restored = true;
-        }
+        if (requestedAt) pendingDeletion = permanentDeletionDate(requestedAt);
       } catch (err) {
         // Whatever went wrong, do not leave a half-finished sign-in behind:
         // the account either opens fully restored or not at all.
@@ -139,12 +141,29 @@ export function AuthProvider({ children }) {
         throw err;
       }
 
+      if (pendingDeletion) return { pendingDeletion, name };
       setScheduledDeletion(null);
       setUser(signedInUser);
-      return { restored };
+      return {};
     } finally {
       logInInProgress.current = false;
     }
+  }
+
+  /** Welcome back's Restore: cancels the deletion and opens the app. */
+  async function restoreAccount() {
+    await updateDoc(doc(db, 'users', auth.currentUser.uid), { deletionRequestedAt: deleteField() });
+    setScheduledDeletion(null);
+    setRestoredNotice(true);
+    setUser(auth.currentUser);
+  }
+
+  /**
+   * Welcome back's Log out: ends the half-open session and leaves the account
+   * scheduled. Nothing was set up on this phone yet, so there is nothing to clear.
+   */
+  function keepDeleted() {
+    return signOut(auth);
   }
 
   /**
@@ -249,6 +268,10 @@ export function AuthProvider({ children }) {
         changePassword,
         scheduleAccountDeletion,
         scheduledDeletion,
+        restoreAccount,
+        keepDeleted,
+        restoredNotice,
+        clearRestoredNotice: () => setRestoredNotice(false),
       }}
     >
       {children}
