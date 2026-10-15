@@ -38,7 +38,7 @@ import QuizzesScreen from '../screens/QuizzesScreen';
 import AvatarSheetScreen from '../screens/AvatarSheetScreen';
 import DownloadSheetScreen from '../screens/DownloadSheetScreen';
 import AskJaviSheetScreen from '../screens/AskJaviSheetScreen';
-import QuitQuizSheetScreen from '../screens/QuitQuizSheetScreen';
+import LeaveSheetScreen from '../screens/LeaveSheetScreen';
 import LogOutSheetScreen from '../screens/LogOutSheetScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModulesScreen from '../screens/ModulesScreen';
@@ -189,8 +189,8 @@ function AppStack({ needsSetup }) {
         layout={bare}
       />
       <Stack.Screen
-        name="QuitQuizSheet"
-        component={QuitQuizSheetScreen}
+        name="LeaveSheet"
+        component={LeaveSheetScreen}
         options={SHEET_OPTIONS}
         layout={bare}
       />

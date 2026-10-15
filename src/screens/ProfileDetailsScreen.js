@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  BackHandler,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
@@ -19,80 +20,118 @@ import { useAuth } from '../context/AuthContext';
 import { getPreferences, savePreferences } from '../services/preferences';
 import { authColors, authRadius, authSpacing, authType, authFonts, centeredColumn, contentWidth } from '../theme/authTheme';
 
-// The handoff removed these from the setup screen and left them here, so this
-// editor is the only place the value is set.
-const GOALS = ['Exam prep', 'Class requirement', 'Build an app', 'Internship', 'Curiosity'];
-
+/** Frame 46, with frame 91's "Discard your changes?" sheet on leaving with edits. */
 export default function ProfileDetailsScreen({ navigation }) {
   const { user, updateDisplayName, nickname, updateNickname } = useAuth();
   const insets = useSafeAreaInsets();
 
   const [name, setName] = useState(user?.displayName ?? '');
-  // Lives only on the profile document, so it arrives with the goals below.
+  // Lives only on the profile document, so it arrives after a read.
   const [lastName, setLastName] = useState('');
   const [nick, setNick] = useState(nickname || user?.displayName || '');
-  const [goals, setGoals] = useState(null);
-  const [error, setError] = useState('');
+  const [loaded, setLoaded] = useState(false);
+  const [loadError, setLoadError] = useState('');
+  // One message per empty field, shown all at once under each.
+  const [fieldErrors, setFieldErrors] = useState({});
+  // A save that Firebase refused.
+  const [saveError, setSaveError] = useState('');
   const [saving, setSaving] = useState(false);
+  // What the fields held on arrival, so edits can be told apart from no change.
+  const initial = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
     getPreferences()
       .then((preferences) => {
         if (cancelled) return;
-        setGoals(preferences.goals ?? []);
-        setLastName(preferences.lastName ?? '');
+        const last = preferences.lastName ?? '';
+        setLastName(last);
+        initial.current = { name: name.trim(), lastName: last.trim(), nick: nick.trim() };
+        setLoaded(true);
       })
       .catch((err) => {
-        if (!cancelled) setError(err.message);
+        if (!cancelled) setLoadError(err.message);
       });
     return () => {
       cancelled = true;
     };
+    // Runs once: the starting values are what the fields hold on arrival.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function toggleGoal(goal) {
-    setGoals((current) =>
-      current.includes(goal) ? current.filter((item) => item !== goal) : [...current, goal]
-    );
+  const dirty =
+    loaded &&
+    (name.trim() !== initial.current.name ||
+      lastName.trim() !== initial.current.lastName ||
+      nick.trim() !== initial.current.nick);
+
+  const leave = useCallback(() => {
+    if (!dirty) {
+      navigation.goBack();
+      return;
+    }
+    navigation.navigate('LeaveSheet', {
+      kicker: 'Unsaved changes',
+      title: 'Discard your changes?',
+      body: 'You edited your profile but did not save. Leaving now puts it back the way it was.',
+      confirmLabel: 'Discard changes',
+      keepLabel: 'Keep editing',
+    });
+  }, [dirty, navigation]);
+
+  // Android back asks first too, but only while there is something to lose.
+  useFocusEffect(
+    useCallback(() => {
+      if (!dirty) return undefined;
+      const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+        leave();
+        return true;
+      });
+      return () => sub.remove();
+    }, [dirty, leave])
+  );
+
+  function edit(setter, field) {
+    return (value) => {
+      setter(value);
+      setSaveError('');
+      if (fieldErrors[field]) setFieldErrors((current) => ({ ...current, [field]: undefined }));
+    };
   }
 
   async function handleSave() {
-    setError('');
-
+    setSaveError('');
     const trimmed = name.trim();
-    if (!trimmed) {
-      setError('Enter your first name.');
-      return;
-    }
     // Accounts made before last names were asked for fill it in here.
     const trimmedLast = lastName.trim();
-    if (!trimmedLast) {
-      setError('Enter your last name.');
-      return;
-    }
     const trimmedNick = nick.trim();
-    if (!trimmedNick) {
-      setError('Enter your nickname.');
-      return;
-    }
+
+    const errors = {
+      name: trimmed ? undefined : 'Enter your first name.',
+      lastName: trimmedLast ? undefined : 'Enter your last name.',
+      nick: trimmedNick ? undefined : 'Enter your nickname.',
+    };
+    setFieldErrors(errors);
+    if (errors.name || errors.lastName || errors.nick) return;
 
     setSaving(true);
     try {
       if (trimmed !== user?.displayName) await updateDisplayName(trimmed);
-      await savePreferences({ goals, lastName: trimmedLast });
+      if (trimmedLast !== initial.current.lastName) await savePreferences({ lastName: trimmedLast });
       // Through the context, so greetings pick up the new nickname at once.
       if (trimmedNick !== nickname) await updateNickname(trimmedNick);
       // Frame 78: back to Settings, which shows the confirmation.
       navigation.popTo('Settings', { toast: 'Profile updated', toastAt: Date.now() });
     } catch (err) {
-      setError(err.message);
+      setSaveError(err.message);
     } finally {
       setSaving(false);
     }
   }
 
-  if (goals === null) return error ? <ScreenState error={error} /> : <ScreenState loading />;
+  if (!loaded) return loadError ? <ScreenState error={loadError} /> : <ScreenState loading />;
+
+  const top = insets.top + authSpacing.screenTop;
 
   return (
     <KeyboardAvoidingView
@@ -100,13 +139,40 @@ export default function ProfileDetailsScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <AuthAnimatedScreen>
-        <ScrollView contentContainerStyle={[
+        <ScrollView
+          contentContainerStyle={[
             styles.content,
-            { paddingTop: insets.top + authSpacing.screenTop, paddingBottom: insets.bottom + authSpacing.screenBottom },
-          ]} keyboardShouldPersistTaps="handled">
-          <AuthBackButton onPress={() => navigation.goBack()} />
+            { paddingTop: top, paddingBottom: insets.bottom + authSpacing.screenBottom },
+          ]}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Indented to clear the floating back button, which reserves no space. */}
+          <View style={styles.header}>
+            <Text style={styles.title}>Profile details</Text>
+          </View>
 
-          <Text style={styles.title}>Profile details</Text>
+          <Text style={styles.label}>Your name</Text>
+          <AuthTextField
+            placeholder="First name"
+            value={name}
+            onChangeText={edit(setName, 'name')}
+            error={fieldErrors.name}
+          />
+          <AuthTextField
+            placeholder="Last name"
+            value={lastName}
+            onChangeText={edit(setLastName, 'lastName')}
+            error={fieldErrors.lastName}
+            style={styles.lastName}
+          />
+
+          <Text style={styles.label}>What should we call you?</Text>
+          <AuthTextField
+            placeholder="Nickname"
+            value={nick}
+            onChangeText={edit(setNick, 'nick')}
+            error={fieldErrors.nick}
+          />
 
           <Text style={styles.label}>Email</Text>
           <View style={styles.readOnly}>
@@ -116,67 +182,24 @@ export default function ProfileDetailsScreen({ navigation }) {
             Your email is what you sign in with and cannot be changed here.
           </Text>
 
-          <Text style={styles.label}>Your name</Text>
-          <AuthTextField
-            placeholder="First name"
-            value={name}
-            onChangeText={(value) => {
-              setName(value);
-              setError('');
-            }}
+          {saveError ? <Text style={styles.error}>{saveError}</Text> : null}
+
+          <AuthButton
+            label="Save Changes"
+            onPress={handleSave}
+            loading={saving}
+            disabled={!dirty}
+            style={styles.submit}
           />
-          <AuthTextField
-            placeholder="Last name"
-            value={lastName}
-            onChangeText={(value) => {
-              setLastName(value);
-              setError('');
-            }}
-            style={styles.lastName}
-          />
-
-          <Text style={styles.label}>What should we call you?</Text>
-          <AuthTextField
-            placeholder="Nickname"
-            value={nick}
-            onChangeText={(value) => {
-              setNick(value);
-              setError('');
-            }}
-          />
-
-          <Text style={styles.label}>Why you are learning Java</Text>
-          <View style={styles.chips}>
-            {GOALS.map((goal) => {
-              const selected = goals.includes(goal);
-              return (
-                <Pressable
-                  key={goal}
-                  onPress={() => toggleGoal(goal)}
-                  style={[styles.chip, selected && styles.chipSelected]}
-                >
-                  <Text style={[styles.chipLabel, selected && styles.chipLabelSelected]}>
-                    {goal}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-
-          {error ? <Text style={styles.error}>{error}</Text> : null}
-
-          <AuthButton label="Save Changes" onPress={handleSave} loading={saving} style={styles.submit} />
         </ScrollView>
       </AuthAnimatedScreen>
 
+      <AuthBackButton onPress={leave} style={[styles.back, { top }]} />
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  lastName: {
-    marginTop: 12,
-  },
   container: {
     flex: 1,
     backgroundColor: authColors.bg,
@@ -186,17 +209,37 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: authSpacing.screenH,
   },
+  back: {
+    position: 'absolute',
+    left: authSpacing.screenH,
+    zIndex: 2,
+    shadowColor: authColors.ink,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 14,
+    elevation: 3,
+  },
+  header: {
+    // Clears the floating back button: 40px plus the design's 12px gap.
+    marginLeft: 52,
+    minHeight: 40,
+    justifyContent: 'center',
+  },
   title: {
-    ...authType.screenTitle,
+    fontFamily: authFonts.bold,
+    fontSize: 22,
+    lineHeight: 22 * 1.2,
+    letterSpacing: -0.22,
     color: authColors.ink,
-    marginTop: 26,
-    marginBottom: 22,
   },
   label: {
     ...authType.eyebrow,
     color: authColors.muted,
-    marginBottom: 10,
+    marginBottom: 8,
     marginTop: 22,
+  },
+  lastName: {
+    marginTop: 12,
   },
   readOnly: {
     height: 56,
@@ -217,31 +260,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginHorizontal: 4,
   },
-  chips: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 9,
-  },
-  chip: {
-    paddingVertical: 11,
-    paddingHorizontal: 16,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: authColors.line,
-    backgroundColor: authColors.surface,
-  },
-  chipSelected: {
-    borderColor: authColors.accent,
-    backgroundColor: authColors.accentSoft,
-  },
-  chipLabel: {
-    fontFamily: authFonts.semiBold,
-    fontSize: 13,
-    color: authColors.ink,
-  },
-  chipLabelSelected: {
-    color: authColors.accentDeep,
-  },
   error: {
     ...authType.helper,
     color: authColors.error,
@@ -249,6 +267,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   submit: {
-    marginTop: 22,
+    marginTop: 24,
   },
 });

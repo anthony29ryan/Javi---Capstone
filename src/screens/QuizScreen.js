@@ -198,7 +198,19 @@ export default function QuizScreen({ route, navigation }) {
   useEffect(load, [load]);
 
   const inQuestion = !loading && !loadFailed && questions.length > 0 && !finished;
-  const openQuit = useCallback(() => navigation.navigate('QuitQuizSheet'), [navigation]);
+  // Frame 38. The app keeps a module's last score, and each checked answer is
+  // already recorded by the grading function, hence this copy rather than the
+  // design's "best score" line.
+  const openQuit = useCallback(
+    () =>
+      navigation.navigate('LeaveSheet', {
+        title: 'Quit this quiz?',
+        body: "Your score for this attempt won't be saved. Answers you've already checked still count toward Javi's suggestions.",
+        confirmLabel: 'Quit quiz',
+        keepLabel: 'Keep going',
+      }),
+    [navigation]
+  );
 
   // Android back asks first, like ✕, while a question is on screen.
   useFocusEffect(
