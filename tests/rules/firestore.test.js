@@ -112,6 +112,15 @@ describe('users', () => {
     );
   });
 
+  test('an avatar must be one of the 12 ids', async () => {
+    const ref = doc(dbAs('alice'), 'users/alice');
+    await seed((admin) => setDoc(doc(admin, 'users/alice'), { email: 'alice@example.com', displayName: 'Alice' }));
+    await assertSucceeds(setDoc(ref, { avatar: 'w1' }, { merge: true }));
+    await assertFails(setDoc(ref, { avatar: 'x9' }, { merge: true }));
+    await assertFails(setDoc(ref, { avatar: '' }, { merge: true }));
+    await assertFails(setDoc(ref, { avatar: 1 }, { merge: true }));
+  });
+
   test('a nickname must be 1 to 30 characters of text', async () => {
     const ref = doc(dbAs('alice'), 'users/alice');
     await seed((admin) => setDoc(doc(admin, 'users/alice'), { email: 'alice@example.com', displayName: 'Alice' }));

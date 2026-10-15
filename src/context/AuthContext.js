@@ -29,6 +29,8 @@ export function AuthProvider({ children }) {
   // What the app calls the user, set on Setup. Lives on the profile document,
   // so it is read along with the deletion check below; null until set.
   const [nickname, setNickname] = useState(null);
+  // The picked avatar's id (see src/constants/art.js), or null for the letter.
+  const [avatar, setAvatar] = useState(null);
   // While logIn() is deciding whether to restore or refuse an account, it
   // owns the signed-in state. The listener below stands aside so the app
   // does not flash open for an account that is about to be signed out again.
@@ -53,6 +55,7 @@ export function AuthProvider({ children }) {
       }
 
       setNickname(profile?.nickname ?? null);
+      setAvatar(profile?.avatar ?? null);
       setUser(firebaseUser);
       setInitializing(false);
     });
@@ -113,10 +116,13 @@ export function AuthProvider({ children }) {
 
       let restored = false;
       try {
-        const { deletionRequestedAt: requestedAt, nickname: savedNickname } = await readProfile(
-          signedInUser.uid
-        );
+        const {
+          deletionRequestedAt: requestedAt,
+          nickname: savedNickname,
+          avatar: savedAvatar,
+        } = await readProfile(signedInUser.uid);
         setNickname(savedNickname);
+        setAvatar(savedAvatar);
         if (requestedAt && permanentDeletionDate(requestedAt) <= new Date()) {
           const err = new Error('This account has been deleted.');
           err.code = 'account/deleted';
@@ -208,6 +214,11 @@ export function AuthProvider({ children }) {
     setNickname(value);
   }
 
+  async function updateAvatar(id) {
+    await setDoc(doc(db, 'users', auth.currentUser.uid), { avatar: id }, { merge: true });
+    setAvatar(id);
+  }
+
   async function updateDisplayName(displayName) {
     await updateProfile(auth.currentUser, { displayName });
     await updateDoc(doc(db, 'users', auth.currentUser.uid), { displayName });
@@ -227,6 +238,8 @@ export function AuthProvider({ children }) {
         updateDisplayName,
         nickname,
         updateNickname,
+        avatar,
+        updateAvatar,
         // The name to greet the user by: nickname, else first name, else the
         // start of their email.
         callName: nickname || user?.displayName || user?.email?.split('@')[0] || 'there',
@@ -244,14 +257,15 @@ export function AuthProvider({ children }) {
 }
 
 /**
- * The two profile fields needed at sign-in, from one read: when the user asked
- * for the account to be deleted (or null), and their nickname (or null).
+ * The profile fields needed at sign-in, from one read: when the user asked for
+ * the account to be deleted, their nickname and their avatar (each null if unset).
  */
 async function readProfile(userId) {
   const data = (await getDoc(doc(db, 'users', userId))).data();
   return {
     deletionRequestedAt: data?.deletionRequestedAt?.toDate() ?? null,
     nickname: data?.nickname ?? null,
+    avatar: data?.avatar ?? null,
   };
 }
 

@@ -62,7 +62,7 @@ service cloud.firestore {
     function validUserWrite() {
       let data = request.resource.data;
       return changedFields().hasOnly([
-          'email', 'displayName', 'lastName', 'nickname', 'createdAt',
+          'email', 'displayName', 'lastName', 'nickname', 'avatar', 'createdAt',
           'reminderTime', 'reminderEnabled', 'goals', 'setupComplete',
           'deletionRequestedAt', 'termsAcceptedAt', 'termsVersion'
         ])
@@ -74,6 +74,9 @@ service cloud.firestore {
         // Shown in greetings, so kept short enough for one line.
         && (!changed('nickname')
             || (data.nickname is string && data.nickname.size() > 0 && data.nickname.size() <= 30))
+        // One of the 12 avatars in src/constants/art.js.
+        && (!changed('avatar')
+            || data.avatar in ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'w1', 'w2', 'w3', 'w4', 'w5', 'w6'])
         && (!changed('createdAt') || data.createdAt == request.time)
         && (!changed('reminderTime')
             || (data.reminderTime is string && data.reminderTime.matches('^[0-2][0-9]:[0-5][0-9]$')))
