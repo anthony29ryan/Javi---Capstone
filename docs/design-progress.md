@@ -22,7 +22,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 69 done · 0 to do · 43 not built · 1 partly · 9 last
+Totals: 70 done · 1 to do · 43 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -48,9 +48,9 @@ Totals: 69 done · 0 to do · 43 not built · 1 partly · 9 last
 | 13 | Tour · Welcome | — | not built |  |
 | 14 | Tour · Home | — | not built |  |
 | 15 | Tour · Courses | — | not built |  |
-| 16 | Tour · Practice | — | not built |  |
-| 17 | Tour · Tutor | — | not built |  |
-| 18 | Tour · Profile | — | not built |  |
+| 16 | Tour · Javi | — | not built |  |
+| 17 | Tour · Practice | — | not built |  |
+| 18 | Tour · Settings | — | not built |  |
 
 ## B · Main tabs
 
@@ -58,150 +58,152 @@ Totals: 69 done · 0 to do · 43 not built · 1 partly · 9 last
 |---|---|---|---|---|
 | 19 | Home | HomeScreen | done | 2894257 |
 | 20 | Courses | CoursesScreen | done | 4e9c640 |
-| 21 | Practice | PracticeScreen | done | 1083617, 5c6116d |
-| 22 | Tutor | TutorScreen | done | a01ce13 (module picker first (accordion)) |
-| 23 | Profile | ProfileScreen | done | 4ad2ad9 (Quizzes / Tracer panel; 2 badges locked until the code runner) |
-| 24 | Profile · Choose avatar | ProfileScreen sheet | done | 4ad2ad9 |
+| 21 | Tutor | TutorScreen | done | a01ce13 (module picker first (accordion)) |
+| 22 | Practice | PracticeScreen | done | 1083617, 5c6116d |
+| 23 | Settings (tab) | SettingsScreen | done | b33a2bb (code-glyph stickers in terracotta, centre label Javi; the part of the Javi button above the bar may not take taps on Android) |
+| 24 | Profile · from Home | ProfileScreen | done | 4ad2ad9, b33a2bb (opens from Home's avatar, with a back button; Quizzes / Tracer panel; 2 badges locked until the code runner) |
+| 25 | Profile · Choose avatar | ProfileScreen sheet | done | 4ad2ad9 |
 
 ## C · Learning and quizzes
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 25 | Module | ModulesScreen | done | 0a1bd8d |
-| 26 | Lesson | LessonDetailScreen | done | 3c5b564 (pinned Javi + complete bar, read-to-the-end gate, Ask Javi sheet links to the Javi tab; slide card and step-through demo skipped, no such data; 27 still not built) |
-| 27 | Lesson complete | — | not built |  |
-| 28 | Module complete | — | not built |  |
-| 29 | Quizzes | QuizzesScreen | done | 5c6116d (last score, not best) |
-| 30 | Code Challenges | — | not built |  |
-| 31 | Challenge | — | not built |  |
-| 32 | Full editor · Output open | — | not built |  |
-| 33 | Challenge solved | — | not built |  |
-| 34 | Code Tracer | TracerListScreen | done | 1083617 |
-| 35 | Trace | TracerScreen | done | 1083617, d62ff49 |
-| 36 | Trace result | TracerScreen | done | 0a61859 |
-| 37 | Quiz | QuizScreen | done | 3f4c279 (pick then submit; no question explanations, so feedback names the right answer) |
-| 38 | Quit quiz · bottom sheet | with Quiz | done | 3f4c279 (honest copy: last score not best, checked answers still recorded) |
-| 39 | Quiz result | QuizScreen | done | 3f4c279 (What next card instead of Adaptive, which the app does not do; review missed first) |
+| 26 | Module | ModulesScreen | done | 0a1bd8d |
+| 27 | Lesson | LessonDetailScreen | done | 3c5b564 (pinned Javi + complete bar, read-to-the-end gate, Ask Javi sheet links to the Javi tab; slide card and step-through demo skipped, no such data; 28 still not built) |
+| 28 | Lesson complete | — | not built |  |
+| 29 | Module complete | — | not built |  |
+| 30 | Quizzes | QuizzesScreen | done | 5c6116d (last score, not best) |
+| 31 | Code Challenges | — | not built |  |
+| 32 | Challenge | — | not built |  |
+| 33 | Full editor · Output open | — | not built |  |
+| 34 | Challenge solved | — | not built |  |
+| 35 | Code Tracer | TracerListScreen | done | 1083617 |
+| 36 | Trace | TracerScreen | done | 1083617, d62ff49 |
+| 37 | Trace result | TracerScreen | done | 0a61859 |
+| 38 | Quiz | QuizScreen | done | 3f4c279 (pick then submit; no question explanations, so feedback names the right answer) |
+| 39 | Quit quiz · bottom sheet | with Quiz | done | 3f4c279 (honest copy: last score not best, checked answers still recorded) |
+| 40 | Quiz result | QuizScreen | done | 3f4c279 (What next card instead of Adaptive, which the app does not do; review missed first) |
 
 ## D · Progress and coming later
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 40 | Streak | — | not built |  |
-| 41 | Playground | — | not built |  |
-| 42 | Mini-projects | — | not built |  |
+| 41 | Streak | — | not built |  |
+| 42 | Playground | — | not built |  |
+| 43 | Mini-projects | — | not built |  |
 
 ## E · Settings
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 43 | Settings | SettingsScreen | done | ebfb3e6 (text size scales lessons and quizzes only, kept on the phone; read-only Terms row; Notifications, Help and About not built) |
-| 44 | Log out · bottom sheet | with Settings | done | ebfb3e6 (honest copy: downloads and the reminder leave the phone) |
-| 45 | Notifications | — | not built |  |
-| 46 | Profile details | ProfileDetailsScreen | done | 3e5eb9c (first and last name plus nickname instead of one display name; goal chips removed; no Change email, 47 not built) |
-| 47 | Change email | — | not built |  |
-| 48 | Change password | ChangePasswordScreen | done | 17911ea (current-password check as OWASP ASVS / NIST ask; Firebase signs other devices out; known gap: no email alert after a change, needs an email service) |
-| 49 | Delete account | DeleteAccountScreen | done | da06720 (honest 30-day card instead of cannot be undone; no extra confirm popup; 50 not built) |
-| 50 | Account deleted | — | not built |  |
-| 51 | Help & feedback | — | not built |  |
-| 52 | About | — | not built |  |
-| 53 | Terms & privacy | — | not built |  |
+| 44 | Settings | SettingsScreen | done | ebfb3e6 (text size scales lessons and quizzes only, kept on the phone; read-only Terms row; Notifications, Help and About not built) |
+| 45 | Log out · bottom sheet | with Settings | done | ebfb3e6 (honest copy: downloads and the reminder leave the phone) |
+| 46 | Notifications | — | not built |  |
+| 47 | Profile details | ProfileDetailsScreen | done | 3e5eb9c (first and last name plus nickname instead of one display name; goal chips removed; no Change email, 48 not built) |
+| 48 | Change email | — | not built |  |
+| 49 | Change password | ChangePasswordScreen | done | 17911ea (current-password check as OWASP ASVS / NIST ask; Firebase signs other devices out; known gap: no email alert after a change, needs an email service) |
+| 50 | Delete account | DeleteAccountScreen | done | da06720 (honest 30-day card instead of cannot be undone; no extra confirm popup; 51 not built) |
+| 51 | Account deleted | — | not built |  |
+| 52 | Welcome back · Restore | — | to do |  |
+| 53 | Help & feedback | — | not built |  |
+| 54 | About | — | not built |  |
+| 55 | Terms & privacy | — | not built |  |
 
 ## K · Offline downloads
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 54 | Module · Download sheet | DownloadSheetScreen | done | 0a1bd8d (lesson counts, no sizes) |
-| 55 | Module · Downloading | with Module | done | 0a1bd8d (% by finished modules) |
-| 56 | Toast · Modules saved | with Module | done | 0a1bd8d |
-| 57 | Download · Not enough space | — | not built |  |
-| 58 | Module · Offline, saved modules | with Module | done | 0a1bd8d |
-| 59 | Offline lessons | — | not built |  |
-| 60 | Toast · Module removed | — | not built |  |
-| 61 | Remove all downloads | — | not built |  |
-| 62 | Offline lessons · Empty | — | not built |  |
+| 56 | Module · Download sheet | DownloadSheetScreen | done | 0a1bd8d (lesson counts, no sizes) |
+| 57 | Module · Downloading | with Module | done | 0a1bd8d (% by finished modules) |
+| 58 | Toast · Modules saved | with Module | done | 0a1bd8d |
+| 59 | Download · Not enough space | — | not built |  |
+| 60 | Module · Offline, saved modules | with Module | done | 0a1bd8d |
+| 61 | Offline lessons | — | not built |  |
+| 62 | Toast · Module removed | — | not built |  |
+| 63 | Remove all downloads | — | not built |  |
+| 64 | Offline lessons · Empty | — | not built |  |
 
 ## F · Loading, empty and offline
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 63 | Home · Loading | with Home | done | 2894257 |
-| 64 | Lesson · Loading | with Lesson | done | 3c5b564 |
-| 65 | Courses · Loading | with Courses | done | 4e9c640 |
-| 66 | Module · Loading | with Module | done | 0a1bd8d |
-| 67 | Practice · Loading | with Practice | done | 5c6116d |
-| 68 | Profile · Loading | with Profile | done | 4ad2ad9 |
-| 69 | Home · Offline, saved content | with Home | done | 2894257 (inline bar, not edge to edge) |
-| 70 | Courses · Error | with Courses | done | 4e9c640 (no saved-modules list; offline not claimed) |
-| 71 | Lesson · Offline | with Lesson | done | 3c5b564 (honest copy: only downloaded modules read offline) |
-| 72 | Quiz · Offline | with Quiz | done | 3f4c279 (server grades every answer, so offline shows a needs-internet page; questions read from the server) |
-| 73 | Tutor · Error | with Tutor | done | a01ce13 |
-| 74 | Practice · Empty | with Practice | done | 5c6116d (card inside the page; Code Tracer stays visible) |
-| 75 | Tutor · Empty | with Tutor | done | a01ce13 |
-| 76 | Toast · Email verified | — | not built |  |
-| 77 | Toast · Link sent again | with Check your email | done | 2d8ffad |
-| 78 | Toast · Profile updated | with Settings | done | ebfb3e6 |
+| 65 | Home · Loading | with Home | done | 2894257 |
+| 66 | Lesson · Loading | with Lesson | done | 3c5b564 |
+| 67 | Courses · Loading | with Courses | done | 4e9c640 |
+| 68 | Module · Loading | with Module | done | 0a1bd8d |
+| 69 | Practice · Loading | with Practice | done | 5c6116d |
+| 70 | Profile · Loading | with Profile | done | 4ad2ad9 |
+| 71 | Home · Offline, saved content | with Home | done | 2894257 (inline bar, not edge to edge) |
+| 72 | Courses · Error | with Courses | done | 4e9c640 (no saved-modules list; offline not claimed) |
+| 73 | Lesson · Offline | with Lesson | done | 3c5b564 (honest copy: only downloaded modules read offline) |
+| 74 | Quiz · Offline | with Quiz | done | 3f4c279 (server grades every answer, so offline shows a needs-internet page; questions read from the server) |
+| 75 | Tutor · Error | with Tutor | done | a01ce13 |
+| 76 | Practice · Empty | with Practice | done | 5c6116d (card inside the page; Code Tracer stays visible) |
+| 77 | Tutor · Empty | with Tutor | done | a01ce13 |
+| 78 | Toast · Email verified | — | not built |  |
+| 79 | Toast · Link sent again | with Check your email | done | 2d8ffad |
+| 80 | Toast · Profile updated | with Settings | done | ebfb3e6 |
 
 ## G · Form validation and sign-in errors
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 79 | Log in · Empty fields | with Log in | done | 00c4d64 |
-| 80 | Log in · Wrong password | with Log in | done | 00c4d64 (generic message; no tries-left count (Firebase decides)) |
-| 81 | Log in · Too many attempts | with Log in | done | 00c4d64 (no 5-minute claim (Firebase decides)) |
-| 82 | Log in · Email not verified | with Log in | done | 00c4d64 (handled by Check your email) |
-| 83 | Log in · Google sign-in failed | — | not built |  |
-| 84 | Log in · No connection | with Log in | done | 00c4d64 |
-| 85 | Log in · Signing in | with Log in | done | 00c4d64 |
-| 86 | Sign up · Field errors | with Sign up | partly | 92c72ee (one error at a time; the design shows all at once) |
-| 87 | Sign up · Email already used | with Sign up | done | 92c72ee |
-| 88 | Forgot password · Rate limited | with Forgot password | done | 388a1d4 (shown when Firebase refuses; no 3-in-10-minutes claim) |
-| 89 | New password · Mismatch | — | not built |  |
-| 90 | Set up · Name missing | with Before you start | done | 289e43f (asks for a nickname) |
-| 91 | Profile details · Unsaved changes | with Profile details | done | 3e5eb9c |
-| 92 | Change password · Wrong current | with Change password | done | 17911ea |
-| 93 | Change email · Already in use | — | not built |  |
-| 94 | Delete account · Wrong password | with Delete account | done | da06720 |
-| 95 | Feedback · Not sent | — | not built |  |
+| 81 | Log in · Empty fields | with Log in | done | 00c4d64 |
+| 82 | Log in · Wrong password | with Log in | done | 00c4d64 (generic message; no tries-left count (Firebase decides)) |
+| 83 | Log in · Too many attempts | with Log in | done | 00c4d64 (no 5-minute claim (Firebase decides)) |
+| 84 | Log in · Email not verified | with Log in | done | 00c4d64 (handled by Check your email) |
+| 85 | Log in · Google sign-in failed | — | not built |  |
+| 86 | Log in · No connection | with Log in | done | 00c4d64 |
+| 87 | Log in · Signing in | with Log in | done | 00c4d64 |
+| 88 | Sign up · Field errors | with Sign up | partly | 92c72ee (one error at a time; the design shows all at once) |
+| 89 | Sign up · Email already used | with Sign up | done | 92c72ee |
+| 90 | Forgot password · Rate limited | with Forgot password | done | 388a1d4 (shown when Firebase refuses; no 3-in-10-minutes claim) |
+| 91 | New password · Mismatch | — | not built |  |
+| 92 | Set up · Name missing | with Before you start | done | 289e43f (asks for a nickname) |
+| 93 | Profile details · Unsaved changes | with Profile details | done | 3e5eb9c |
+| 94 | Change password · Wrong current | with Change password | done | 17911ea |
+| 95 | Change email · Already in use | — | not built |  |
+| 96 | Delete account · Wrong password | with Delete account | done | da06720 |
+| 97 | Feedback · Not sent | — | not built |  |
 
 ## H · Runtime errors and warnings
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 96 | Session expired | — | not built |  |
-| 97 | Lesson · Server error | with Lesson | done | 3c5b564 (real Firebase error code, not a made-up ref; Back to module instead of Report) |
-| 98 | Quiz result · Not synced | with Quiz result | done | 3f4c279 (banner with Try saving again) |
-| 99 | Challenge · Compile error | — | not built |  |
-| 100 | Challenge · Test failing | — | not built |  |
-| 101 | Challenge · Time limit | — | not built |  |
-| 102 | Challenge · Runner offline | — | not built |  |
-| 103 | Playground · Compile error | — | not built |  |
-| 104 | Tutor · Writing a reply | with Tutor | done | a01ce13 |
-| 105 | Tutor · Daily limit | with Tutor | done | a01ce13 (rolling 24 h, shown after a refusal) |
-| 106 | Notifications · Blocked by Android | — | not built |  |
+| 98 | Session expired | — | not built |  |
+| 99 | Lesson · Server error | with Lesson | done | 3c5b564 (real Firebase error code, not a made-up ref; Back to module instead of Report) |
+| 100 | Quiz result · Not synced | with Quiz result | done | 3f4c279 (banner with Try saving again) |
+| 101 | Challenge · Compile error | — | not built |  |
+| 102 | Challenge · Test failing | — | not built |  |
+| 103 | Challenge · Time limit | — | not built |  |
+| 104 | Challenge · Runner offline | — | not built |  |
+| 105 | Playground · Compile error | — | not built |  |
+| 106 | Tutor · Writing a reply | with Tutor | done | a01ce13 |
+| 107 | Tutor · Daily limit | with Tutor | done | a01ce13 (rolling 24 h, shown after a refusal) |
+| 108 | Notifications · Blocked by Android | — | not built |  |
 
 ## J · Mascot moments
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 107 | Quiz result · Passed | with Quiz result | done | 3f4c279 (pass at 75% everywhere, Quizzes badge too) |
-| 108 | Quiz result · Below 75% | with Quiz result | done | 3f4c279 |
-| 109 | Quiz · Correct answer | with Quiz | done | 3f4c279 |
-| 110 | Quiz · Not quite | with Quiz | done | 3f4c279 |
-| 111 | Lesson complete | — | not built |  |
-| 112 | Module complete | — | not built |  |
-| 113 | Tutor · Empty | with Tutor | done | a01ce13 |
+| 109 | Quiz result · Passed | with Quiz result | done | 3f4c279 (pass at 75% everywhere, Quizzes badge too) |
+| 110 | Quiz result · Below 75% | with Quiz result | done | 3f4c279 |
+| 111 | Quiz · Correct answer | with Quiz | done | 3f4c279 |
+| 112 | Quiz · Not quite | with Quiz | done | 3f4c279 |
+| 113 | Lesson complete | — | not built |  |
+| 114 | Module complete | — | not built |  |
+| 115 | Tutor · Empty | with Tutor | done | a01ce13 |
 
 ## I · Night study mode
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 114 | Welcome · Dark | needs a theme switch | last |  |
-| 115 | Home · Dark | needs a theme switch | last |  |
-| 116 | Lesson · Dark | needs a theme switch | last |  |
-| 117 | Practice · Dark | needs a theme switch | last |  |
-| 118 | Quiz · Dark | needs a theme switch | last |  |
-| 119 | Settings · Dark | needs a theme switch | last |  |
-| 120 | Download sheet · Dark | needs a theme switch | last |  |
-| 121 | Module · Downloading · Dark | needs a theme switch | last |  |
-| 122 | Offline lessons · Dark | needs a theme switch | last |  |
+| 116 | Welcome · Dark | needs a theme switch | last |  |
+| 117 | Home · Dark | needs a theme switch | last |  |
+| 118 | Lesson · Dark | needs a theme switch | last |  |
+| 119 | Practice · Dark | needs a theme switch | last |  |
+| 120 | Quiz · Dark | needs a theme switch | last |  |
+| 121 | Settings · Dark | needs a theme switch | last |  |
+| 122 | Download sheet · Dark | needs a theme switch | last |  |
+| 123 | Module · Downloading · Dark | needs a theme switch | last |  |
+| 124 | Offline lessons · Dark | needs a theme switch | last |  |
