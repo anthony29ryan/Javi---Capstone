@@ -19,7 +19,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 8 done · 56 to do · 47 not built · 2 partly · 9 last
+Totals: 10 done · 54 to do · 47 not built · 2 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -29,7 +29,7 @@ Totals: 8 done · 56 to do · 47 not built · 2 partly · 9 last
 | 02 | Welcome | WelcomeScreen | done | 316b4cc |
 | 03 | Sign up | SignupScreen | done | 92c72ee |
 | 04 | Sign up · Terms popup | TermsSheet | done | 92c72ee |
-| 05 | Check your email | VerifyEmailScreen | to do |  |
+| 05 | Check your email | VerifyEmailScreen | done | 2d8ffad |
 | 06 | Link expired | — | not built |  |
 | 07 | Before you start | SetupScreen | to do |  |
 | 08 | Notification permission | — | not built |  |
@@ -136,7 +136,7 @@ Totals: 8 done · 56 to do · 47 not built · 2 partly · 9 last
 | 74 | Practice · Empty | with Practice | to do |  |
 | 75 | Tutor · Empty | with Tutor | to do |  |
 | 76 | Toast · Email verified | — | not built |  |
-| 77 | Toast · Link sent again | with Check your email | to do |  |
+| 77 | Toast · Link sent again | with Check your email | done | 2d8ffad |
 | 78 | Toast · Profile updated | with Settings | to do |  |
 
 ## G · Form validation and sign-in errors
