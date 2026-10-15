@@ -6,11 +6,16 @@ import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthBackButton from '../components/auth/AuthBackButton';
 import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
-import AuthToast from '../components/auth/AuthToast';
 import PasswordRules, { passwordMeetsAllRules } from '../components/auth/PasswordRules';
 import { useAuth } from '../context/AuthContext';
-import { authColors, authSpacing, authType, centeredColumn, contentWidth } from '../theme/authTheme';
+import { authColors, authFonts, authSpacing, authType, centeredColumn, contentWidth } from '../theme/authTheme';
 
+/**
+ * Frame 48, with frame 92's wrong-current-password message. Proof is the
+ * current password (AuthContext.changePassword re-authenticates first), which
+ * is what OWASP ASVS and NIST ask for; Firebase signs other devices out.
+ * Known gap: no email alert after a change, which would need an email service.
+ */
 export default function ChangePasswordScreen({ navigation }) {
   const { changePassword } = useAuth();
   const insets = useSafeAreaInsets();
@@ -18,45 +23,55 @@ export default function ChangePasswordScreen({ navigation }) {
   const [current, setCurrent] = useState('');
   const [next, setNext] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [error, setError] = useState('');
+  // One message per field, shown all at once under each.
+  const [fieldErrors, setFieldErrors] = useState({});
+  // A refusal that is not about one field.
+  const [saveError, setSaveError] = useState('');
   const [saving, setSaving] = useState(false);
-  const [toast, setToast] = useState('');
+
+  function edit(setter, field) {
+    return (value) => {
+      setter(value);
+      setSaveError('');
+      if (fieldErrors[field]) setFieldErrors((errors) => ({ ...errors, [field]: undefined }));
+    };
+  }
 
   async function handleSave() {
-    setError('');
+    setSaveError('');
 
-    if (!current) {
-      setError('Enter your current password.');
-      return;
-    }
     // The same four rules sign-up enforces. Every screen that sets a password
     // holds the same line, so none of them becomes the weak way in.
-    if (!passwordMeetsAllRules(next)) {
-      setError('Your password does not meet all four requirements yet.');
-      return;
-    }
-    if (next !== confirm) {
-      setError('The two passwords do not match.');
-      return;
-    }
+    const errors = {
+      current: current ? undefined : 'Enter your current password.',
+      next: passwordMeetsAllRules(next)
+        ? undefined
+        : 'Your password does not meet all four requirements yet.',
+      confirm: next === confirm ? undefined : 'The two passwords do not match.',
+    };
+    setFieldErrors(errors);
+    if (errors.current || errors.next || errors.confirm) return;
 
     setSaving(true);
     try {
       await changePassword(current, next);
-      setToast('Password changed');
-      setCurrent('');
-      setNext('');
-      setConfirm('');
+      navigation.popTo('Settings', { toast: 'Password updated', toastAt: Date.now() });
     } catch (err) {
-      setError(
-        err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password'
-          ? 'That current password is not right.'
-          : err.message
-      );
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
+        setFieldErrors({
+          current: 'That is not your current password. Try again, or log out and use Forgot password.',
+        });
+      } else if (err.code === 'auth/too-many-requests') {
+        setSaveError('Too many tries. Wait a few minutes, then try again.');
+      } else {
+        setSaveError(err.message);
+      }
     } finally {
       setSaving(false);
     }
   }
+
+  const top = insets.top + authSpacing.screenTop;
 
   return (
     <KeyboardAvoidingView
@@ -64,56 +79,52 @@ export default function ChangePasswordScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <AuthAnimatedScreen>
-        <ScrollView contentContainerStyle={[
+        <ScrollView
+          contentContainerStyle={[
             styles.content,
-            { paddingTop: insets.top + authSpacing.screenTop, paddingBottom: insets.bottom + authSpacing.screenBottom },
-          ]} keyboardShouldPersistTaps="handled">
-          <AuthBackButton onPress={() => navigation.goBack()} />
-
-          <Text style={styles.title}>Change password</Text>
-          <Text style={styles.body}>
-            Enter your current password, then choose a new one.
-          </Text>
+            { paddingTop: top, paddingBottom: insets.bottom + authSpacing.screenBottom },
+          ]}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Indented to clear the floating back button, which reserves no space. */}
+          <View style={styles.header}>
+            <Text style={styles.title}>Change password</Text>
+          </View>
+          <Text style={styles.body}>You stay logged in on this phone. Other devices are signed out.</Text>
 
           <View style={styles.form}>
             <AuthTextField
               placeholder="Current password"
               secureTextEntry
               value={current}
-              onChangeText={(value) => {
-                setCurrent(value);
-                setError('');
-              }}
+              onChangeText={edit(setCurrent, 'current')}
+              error={fieldErrors.current}
             />
             <AuthTextField
               placeholder="New password"
               secureTextEntry
               value={next}
-              onChangeText={(value) => {
-                setNext(value);
-                setError('');
-              }}
+              onChangeText={edit(setNext, 'next')}
+              error={fieldErrors.next}
             />
             <AuthTextField
               placeholder="Repeat new password"
               secureTextEntry
               value={confirm}
-              onChangeText={(value) => {
-                setConfirm(value);
-                setError('');
-              }}
+              onChangeText={edit(setConfirm, 'confirm')}
+              error={fieldErrors.confirm}
             />
           </View>
 
           <PasswordRules password={next} />
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+          {saveError ? <Text style={styles.error}>{saveError}</Text> : null}
 
           <AuthButton label="Save Password" onPress={handleSave} loading={saving} style={styles.submit} />
         </ScrollView>
       </AuthAnimatedScreen>
 
-      <AuthToast message={toast} onHide={() => setToast('')} />
+      <AuthBackButton onPress={() => navigation.goBack()} style={[styles.back, { top }]} />
     </KeyboardAvoidingView>
   );
 }
@@ -128,16 +139,34 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: authSpacing.screenH,
   },
+  back: {
+    position: 'absolute',
+    left: authSpacing.screenH,
+    zIndex: 2,
+    shadowColor: authColors.ink,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 14,
+    elevation: 3,
+  },
+  header: {
+    // Clears the floating back button: 40px plus the design's 12px gap.
+    marginLeft: 52,
+    minHeight: 40,
+    justifyContent: 'center',
+  },
   title: {
-    ...authType.screenTitle,
+    fontFamily: authFonts.bold,
+    fontSize: 22,
+    lineHeight: 22 * 1.2,
+    letterSpacing: -0.22,
     color: authColors.ink,
-    marginTop: 26,
-    marginBottom: 8,
   },
   body: {
     ...authType.body,
     color: authColors.ink2,
-    marginBottom: 22,
+    marginTop: 20,
+    marginBottom: 20,
   },
   form: {
     gap: authSpacing.fieldGap,
