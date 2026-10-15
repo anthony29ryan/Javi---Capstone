@@ -15,7 +15,7 @@ import { colors, fonts, radius, spacing, type } from '../theme/colors';
 // Splits on the markers but keeps them, so the runs can be styled in order.
 const INLINE_PATTERN = /(\*\*[^*]+\*\*|`[^`]+`)/g;
 
-function InlineText({ value, style }) {
+export function InlineText({ value, style }) {
   const runs = String(value ?? '').split(INLINE_PATTERN).filter(Boolean);
 
   return (

@@ -3,16 +3,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthBackButton from '../components/auth/AuthBackButton';
 import ScreenState from '../components/ScreenState';
-import { scorePercent, useProgress } from '../context/ProgressContext';
+import { PASS_PERCENT, scorePercent, useProgress } from '../context/ProgressContext';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
-
-const STRONG_SCORE = 80;
 
 export const quizCount = (n) => (n === 1 ? '1 quiz' : `${n} quizzes`);
 
 function QuizRow({ module, score, onPress }) {
   const percent = score ? scorePercent(score) : null;
-  const strong = percent !== null && percent >= STRONG_SCORE;
+  const strong = percent !== null && percent >= PASS_PERCENT;
 
   return (
     <Pressable

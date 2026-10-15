@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocsFromServer, query, where } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 
 import { db, functions } from './firebase';
@@ -17,7 +17,9 @@ import { db, functions } from './firebase';
  * a question's own `order` is only meaningful within its lesson.
  */
 export async function getModuleQuestions(moduleId) {
-  const snapshot = await getDocs(
+  // From the server: offline, the cache answers with no questions, which
+  // looked like a module with no quiz rather than a missing connection.
+  const snapshot = await getDocsFromServer(
     query(collection(db, 'questions'), where('moduleId', '==', moduleId))
   );
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));

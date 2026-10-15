@@ -37,6 +37,7 @@ import QuizzesScreen from '../screens/QuizzesScreen';
 import AvatarSheetScreen from '../screens/AvatarSheetScreen';
 import DownloadSheetScreen from '../screens/DownloadSheetScreen';
 import AskJaviSheetScreen from '../screens/AskJaviSheetScreen';
+import QuitQuizSheetScreen from '../screens/QuitQuizSheetScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModulesScreen from '../screens/ModulesScreen';
 import ProgressScreen from '../screens/ProgressScreen';
@@ -177,7 +178,14 @@ function AppStack({ needsSetup }) {
         options={SHEET_OPTIONS}
         layout={bare}
       />
-      <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'Quiz' }} />
+      {/* Quiz draws its own header: a close button, the bar and the count. */}
+      <Stack.Screen name="Quiz" component={QuizScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="QuitQuizSheet"
+        component={QuitQuizSheetScreen}
+        options={SHEET_OPTIONS}
+        layout={bare}
+      />
       <Stack.Screen
         name="TracerList"
         component={TracerListScreen}

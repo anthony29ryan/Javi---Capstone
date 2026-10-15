@@ -23,6 +23,9 @@ function toPercent(completed, total) {
 }
 
 /** A saved quiz score ({ correct, total }) as a whole percentage. */
+// A quiz score at or above this counts as passed (green badge, celebrating Javi).
+export const PASS_PERCENT = 75;
+
 export function scorePercent(score) {
   return toPercent(score.correct, score.total);
 }
