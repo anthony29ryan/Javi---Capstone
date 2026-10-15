@@ -24,12 +24,14 @@ export default function Avatar({ user, name, onPress, size = 38 }) {
     borderRadius: radius.pill,
   };
 
+  // A fresh view per state (keyed): Android drew nothing when the letter's
+  // view was restyled in place to hold the art, until the app reloaded.
   const content = art ? (
-    <View style={[styles.picked, dimensions]}>
+    <View key={avatar} style={[styles.picked, dimensions]}>
       <SvgXml xml={art} width={size} height={size} />
     </View>
   ) : (
-    <View style={[styles.circle, dimensions]}>
+    <View key="letter" style={[styles.circle, dimensions]}>
       <Text style={[styles.initial, { fontSize: size * 0.42 }]}>{initialFor(user, name)}</Text>
     </View>
   );
