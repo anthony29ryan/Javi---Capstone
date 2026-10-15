@@ -6,6 +6,7 @@ import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthBackButton from '../components/auth/AuthBackButton';
 import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
+import Mascot from '../components/Mascot';
 import {
   DELETION_WINDOW_DAYS,
   formatDeletionDate,
@@ -76,6 +77,11 @@ export default function DeleteAccountScreen({ navigation }) {
           {/* Indented to clear the floating back button, which reserves no space. */}
           <View style={styles.header}>
             <Text style={styles.title}>Delete account</Text>
+          </View>
+
+          <View style={styles.farewell}>
+            <Mascot variant="crying" px={120} animate={false} />
+            <Text style={styles.farewellLine}>Javi will miss you.</Text>
           </View>
 
           <View style={styles.card}>
@@ -167,6 +173,17 @@ const styles = StyleSheet.create({
     lineHeight: 22 * 1.2,
     letterSpacing: -0.22,
     color: authColors.ink,
+  },
+  farewell: {
+    alignItems: 'center',
+    marginTop: 18,
+  },
+  farewellLine: {
+    fontFamily: authFonts.semiBold,
+    fontSize: 15,
+    color: authColors.ink2,
+    textAlign: 'center',
+    marginTop: 10,
   },
   card: {
     marginTop: 22,

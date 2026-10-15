@@ -19,6 +19,7 @@ const VARIANTS = {
   celebrate: { image: IMAGES.happy, label: 'Javi the capybara celebrating' },
   proud: { image: IMAGES.happy, label: 'Javi the capybara cheering' }, // TODO: replace with proud mascot → assets/mascot/proud.png
   encourage: { image: IMAGES.sad, label: 'Javi the capybara, sympathetic' }, // TODO: replace with encourage mascot → assets/mascot/encourage.png
+  crying: { image: IMAGES.sad, label: 'Javi the capybara, crying' }, // the sad art already has a tear
   confused: { image: IMAGES.neutral, label: 'Javi the capybara, puzzled' }, // TODO: replace with confused mascot → assets/mascot/confused.png
   sleepy: { image: IMAGES.sad, label: 'Javi the capybara, drowsy' }, // TODO: replace with sleepy mascot → assets/mascot/sleepy.png
   curious: { image: IMAGES.neutral, label: 'Javi the capybara, curious' }, // TODO: replace with curious mascot → assets/mascot/curious.png
