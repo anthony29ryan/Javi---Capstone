@@ -3,25 +3,35 @@
 // run it under plain Node.
 
 /**
- * Up to `count` lessons from the modules the model marks weak, most likely
- * weak first. Within a module, unfinished lessons come before finished ones
- * (worth reviewing), each in lesson order. `skipId` is left out, so the list
- * never repeats the "Continue learning" lesson.
+ * Up to `count` lessons from the modules the model marks weak. The modules
+ * take turns, most likely weak first, so a second weak module is not crowded
+ * out by the first. Within a module, unfinished lessons come before finished
+ * ones (worth reviewing), each in lesson order. `skipId` is left out, so the
+ * list never repeats the "Continue learning" lesson.
  *
- * Returns { lessons, topic }: topic is the model entry for the first pick's
- * module, for the "Picked because" note, or null when there are no picks.
+ * Returns { lessons, topics }: topics are the weak model entries that got at
+ * least one pick, most likely weak first, for the "Javi thinks" note.
  */
 export function pickWeakLessons({ topics, orderedLessons, isComplete, count, skipId }) {
+  const queues = topics
+    .filter((t) => t.weak)
+    .map((topic) => {
+      const inModule = orderedLessons.filter((l) => l.moduleId === topic.topic && l.id !== skipId);
+      return {
+        topic,
+        lessons: [
+          ...inModule.filter((l) => !isComplete(l.id)),
+          ...inModule.filter((l) => isComplete(l.id)),
+        ],
+      };
+    })
+    .filter((q) => q.lessons.length);
+
   const lessons = [];
-  for (const topic of topics.filter((t) => t.weak)) {
-    const inModule = orderedLessons.filter((l) => l.moduleId === topic.topic && l.id !== skipId);
-    const byNeed = [
-      ...inModule.filter((l) => !isComplete(l.id)),
-      ...inModule.filter((l) => isComplete(l.id)),
-    ];
-    lessons.push(...byNeed.slice(0, count - lessons.length));
-    if (lessons.length >= count) break;
+  for (let round = 0; lessons.length < count && queues.some((q) => q.lessons.length > round); round++) {
+    for (const q of queues) {
+      if (lessons.length < count && q.lessons[round]) lessons.push(q.lessons[round]);
+    }
   }
-  const topic = lessons.length ? topics.find((t) => t.topic === lessons[0].moduleId) : null;
-  return { lessons, topic };
+  return { lessons, topics: queues.filter((q) => lessons.includes(q.lessons[0])).map((q) => q.topic) };
 }

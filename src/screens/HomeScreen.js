@@ -191,10 +191,14 @@ export default function HomeScreen({ navigation }) {
   const recommendations = weakPicks.lessons.length
     ? weakPicks.lessons
     : remaining.filter((lesson) => lesson.id !== next?.id).slice(0, RECOMMENDATION_COUNT);
+  const weakNames = weakPicks.topics.map((t) => modulesById[t.topic]?.title ?? 'this module');
   // The model's accuracy covers recent answers, so it is not called a quiz score.
-  const recWhy = weakPicks.topic
-    ? `Picked because your recent ${modulesById[weakPicks.topic.topic]?.title ?? 'quiz'} quiz answers were ${Math.round(weakPicks.topic.accuracy * 100)}% right.`
-    : 'Next in your course order.';
+  const recWhy =
+    weakNames.length === 1
+      ? `Javi thinks you should review ${weakNames[0]} (${Math.round(weakPicks.topics[0].accuracy * 100)}% right recently).`
+      : weakNames.length > 1
+        ? `Javi thinks you should review ${weakNames.slice(0, -1).join(', ')} and ${weakNames.at(-1)}.`
+        : 'Next in your course order.';
   const recsLoading = weakTopics === null;
 
   function openLesson(lesson) {
@@ -284,7 +288,11 @@ export default function HomeScreen({ navigation }) {
             <Text
               style={styles.sectionAll}
               suppressHighlighting
-              onPress={() => navigation.navigate('Courses')}
+              onPress={() =>
+                weakPicks.lessons.length
+                  ? navigation.navigate('WeakLessons', { topics: weakTopics.filter((t) => t.weak) })
+                  : navigation.navigate('Courses')
+              }
             >
               All
             </Text>
