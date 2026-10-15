@@ -1,15 +1,13 @@
 import { useCallback, useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import Animated, { SlideInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
 
-import AuthButton from '../components/auth/AuthButton';
 import Avatar from '../components/Avatar';
 import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';
-import { AVATAR_IDS, AVATARS, BADGE_ART } from '../constants/art';
+import { BADGE_ART } from '../constants/art';
 import { levelTheme } from '../constants/levels';
 import { useAuth } from '../context/AuthContext';
 import { scorePercent, useProgress } from '../context/ProgressContext';
@@ -227,90 +225,6 @@ function PracticePanel({ courses, modules, moduleScores, tracedIds, navigation }
   );
 }
 
-/** Frame 24: pick one of the design's 12 avatars. */
-function AvatarSheet({ visible, onClose }) {
-  const { avatar, updateAvatar } = useAuth();
-  const insets = useSafeAreaInsets();
-  const [picked, setPicked] = useState(avatar);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-
-  async function save() {
-    if (!picked || picked === avatar) {
-      onClose();
-      return;
-    }
-    setSaving(true);
-    setError('');
-    try {
-      await updateAvatar(picked);
-      onClose();
-    } catch {
-      setError('Could not save your avatar. Check your connection and try again.');
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  return (
-    <Modal
-      visible={visible}
-      transparent
-      // Fade, so the backdrop stays put; only the sheet itself slides up.
-      animationType="fade"
-      // Both, so the sheet reaches the bottom edge instead of stopping above
-      // Android's navigation bar (its padding already clears that bar).
-      statusBarTranslucent
-      navigationBarTranslucent
-      onRequestClose={onClose}
-      onShow={() => {
-        setPicked(avatar);
-        setError('');
-      }}
-    >
-      <View style={styles.sheetWrap}>
-        <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close" />
-        <Animated.View
-          entering={SlideInDown.duration(260)}
-          style={[styles.sheet, { paddingBottom: insets.bottom + 24 }]}
-        >
-          <View style={styles.grabber} />
-          <Text style={styles.sheetTitle}>Choose your avatar</Text>
-          <Text style={styles.sheetBody}>You can change this any time from your profile.</Text>
-          <View style={styles.avatarGrid}>
-            {AVATAR_IDS.map((id) => (
-              <View key={id} style={styles.avatarCell}>
-                <Pressable
-                  onPress={() => setPicked(id)}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Avatar ${id}`}
-                  accessibilityState={{ selected: picked === id }}
-                  style={[styles.avatarOption, picked === id && styles.avatarOptionOn]}
-                >
-                  <View style={styles.avatarClip}>
-                    <SvgXml xml={AVATARS[id]} width="100%" height="100%" />
-                  </View>
-                </Pressable>
-              </View>
-            ))}
-          </View>
-          {error ? <Text style={styles.sheetError}>{error}</Text> : null}
-          <View style={styles.sheetButtons}>
-            <AuthButton label="Cancel" variant="secondary" onPress={onClose} style={styles.flex} />
-            <AuthButton
-              label="Save"
-              loadingLabel="Saving…"
-              onPress={save}
-              loading={saving}
-              style={styles.flex}
-            />
-          </View>
-        </Animated.View>
-      </View>
-    </Modal>
-  );
-}
-
 export default function ProfileScreen({ navigation }) {
   const { user, callName } = useAuth();
   const insets = useSafeAreaInsets();
@@ -330,7 +244,6 @@ export default function ProfileScreen({ navigation }) {
     error,
     refresh,
   } = useProgress();
-  const [sheetOpen, setSheetOpen] = useState(false);
 
   // The model's weak topics, as on Home; null while the first answer is on
   // its way. Re-asked on each visit so a finished quiz shows up.
@@ -379,7 +292,7 @@ export default function ProfileScreen({ navigation }) {
     >
       <View style={styles.identity}>
         <Pressable
-          onPress={() => setSheetOpen(true)}
+          onPress={() => navigation.navigate('AvatarSheet')}
           accessibilityRole="button"
           accessibilityLabel="Choose your avatar"
         >
@@ -514,7 +427,6 @@ export default function ProfileScreen({ navigation }) {
         ))}
       </View>
 
-      <AvatarSheet visible={sheetOpen} onClose={() => setSheetOpen(false)} />
     </ScrollView>
   );
 }
@@ -912,78 +824,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: colors.borderStrong,
     marginTop: 6,
-  },
-  sheetWrap: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(20,22,34,.45)',
-  },
-  sheet: {
-    backgroundColor: colors.surface,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingTop: 12,
-    paddingHorizontal: 20,
-  },
-  grabber: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: colors.surfaceSunken,
-    alignSelf: 'center',
-    marginBottom: 22,
-  },
-  sheetTitle: {
-    fontFamily: fonts.bold,
-    fontSize: 21,
-    lineHeight: 21 * 1.3,
-    color: colors.text,
-    marginHorizontal: 4,
-  },
-  sheetBody: {
-    ...type.body,
-    color: colors.textMuted,
-    marginHorizontal: 4,
-    marginTop: 6,
-    marginBottom: 18,
-  },
-  // Four columns from quarter-width cells, as with the badges.
-  avatarGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    margin: -6,
-  },
-  avatarCell: {
-    width: '25%',
-    padding: 6,
-  },
-  avatarOption: {
-    aspectRatio: 1,
-    borderRadius: 999,
-    padding: 3,
-    borderWidth: 3,
-    borderColor: 'transparent',
-  },
-  avatarOptionOn: {
-    borderColor: colors.primary,
-  },
-  avatarClip: {
-    flex: 1,
-    borderRadius: 999,
-    overflow: 'hidden',
-  },
-  sheetError: {
-    ...type.small,
-    color: colors.error,
-    marginTop: 14,
-  },
-  sheetButtons: {
-    flexDirection: 'row',
-    gap: 10,
-    marginTop: 22,
   },
   skelLines: {
     flex: 1,
