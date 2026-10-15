@@ -16,6 +16,8 @@ export const LEVEL_THEMES = [
     ink: colors.white,
     subtleInk: 'rgba(255,255,255,.85)',
     eyebrowInk: 'rgba(255,255,255,.82)',
+    track: 'rgba(255,255,255,.28)',
+    fill: colors.white,
     elevated: true,
   },
   {
@@ -23,12 +25,16 @@ export const LEVEL_THEMES = [
     ink: '#3F414E',
     subtleInk: 'rgba(63,65,78,.78)',
     eyebrowInk: 'rgba(63,65,78,.7)',
+    track: 'rgba(63,65,78,.16)',
+    fill: '#3F414E',
   },
   {
     background: '#333242',
     ink: colors.white,
     subtleInk: 'rgba(255,255,255,.7)',
     eyebrowInk: 'rgba(255,255,255,.6)',
+    track: 'rgba(255,255,255,.16)',
+    fill: colors.white,
   },
 ];
 
