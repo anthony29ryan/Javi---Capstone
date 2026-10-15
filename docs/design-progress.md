@@ -19,7 +19,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 10 done · 54 to do · 47 not built · 2 partly · 9 last
+Totals: 13 done · 53 to do · 45 not built · 2 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -31,8 +31,8 @@ Totals: 10 done · 54 to do · 47 not built · 2 partly · 9 last
 | 04 | Sign up · Terms popup | TermsSheet | done | 92c72ee |
 | 05 | Check your email | VerifyEmailScreen | done | 2d8ffad |
 | 06 | Link expired | — | not built |  |
-| 07 | Before you start | SetupScreen | to do |  |
-| 08 | Notification permission | — | not built |  |
+| 07 | Before you start | SetupScreen | done | 289e43f |
+| 08 | Notification permission | Android's own dialog | done | 289e43f |
 | 09 | Log in | LoginScreen | to do |  |
 | 10 | Continue with Google | — | not built |  |
 | 11 | Forgot password | ForgotPasswordScreen | to do |  |
@@ -159,7 +159,7 @@ Totals: 10 done · 54 to do · 47 not built · 2 partly · 9 last
 | 92 | Change password · Wrong current | with Change password | to do |  |
 | 93 | Change email · Already in use | — | not built |  |
 | 94 | Delete account · Wrong password | with Delete account | to do |  |
-| 95 | Feedback · Not sent | — | not built |  |
+| 95 | Feedback · Not sent | — | done | 289e43f (asks for a nickname) |
 
 ## H · Runtime errors and warnings
 
