@@ -1,14 +1,29 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  LayoutAnimation,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  UIManager,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import Button from '../components/Button';
-import ListCard from '../components/ListCard';
+import Mascot from '../components/Mascot';
 import ScreenState from '../components/ScreenState';
 import TutorChat from '../components/TutorChat';
 import { levelLabel } from '../constants/levels';
 import { useProgress } from '../context/ProgressContext';
-import { colors, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
+import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
+
+// Same guard as ModulesScreen: old-architecture Android needs this before
+// LayoutAnimation does anything.
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 /**
  * The Java tutor tab. The tutor only answers on one module at a time, so the
@@ -17,14 +32,14 @@ import { colors, spacing, type, centeredColumn, contentWidth } from '../theme/co
  *
  * The picked module lives in this screen's state. Tab screens stay mounted, so
  * it is kept while switching tabs and asked again only after the app restarts.
- *
- * The module picker is deliberately plain; its final design is still to come.
  */
 export default function TutorScreen() {
   // Tab screen with no nav header, so it owns its top inset.
   const insets = useSafeAreaInsets();
-  const { courses, modules, loading, error, refresh } = useProgress();
+  const { courses, modules, lessons, lastLessonId, loading, error, refresh } = useProgress();
   const [moduleId, setModuleId] = useState(null);
+  // null until the learner taps a tier; until then the tier they are studying is open.
+  const [openCourseId, setOpenCourseId] = useState(null);
 
   if (loading) return <ScreenState loading />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
@@ -34,53 +49,108 @@ export default function TutorScreen() {
 
   const module = modules.find((item) => item.id === moduleId);
 
-  return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView
-        contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
-        // So tapping Send or a suggestion works while the keyboard is open.
-        keyboardShouldPersistTaps="handled"
+  if (module) {
+    return (
+      <KeyboardAvoidingView
+        style={[styles.container, styles.chat, { paddingTop: insets.top + spacing.lg }]}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <Text style={styles.title}>Java tutor</Text>
-
-        {module ? (
-          <>
-            <Text style={styles.subtitle}>{module.title}</Text>
-            <Button label="Change module" variant="secondary" onPress={() => setModuleId(null)} />
-            <TutorChat
-              moduleId={module.id}
-              topic={module.title}
-              heading="Ask about this module"
-              shownMessages={Infinity}
-            />
-          </>
-        ) : (
-          <>
-            <Text style={styles.subtitle}>Which module do you want help with?</Text>
-            {courses.map((course, courseIndex) => (
-              <View key={course.id} style={styles.group}>
-                <Text style={styles.groupLabel}>
-                  {levelLabel(courseIndex)} · {course.title}
-                </Text>
-                {modules
-                  .filter((item) => item.courseId === course.id)
-                  .map((item, index) => (
-                    <ListCard
-                      key={item.id}
-                      index={index + 1}
-                      title={item.title}
-                      onPress={() => setModuleId(item.id)}
-                    />
-                  ))}
+        <TutorChat
+          moduleId={module.id}
+          topic={module.title}
+          shownMessages={Infinity}
+          fullScreen
+          emptyState
+          header={
+            <View style={styles.chatHead}>
+              <View style={styles.chatAvatar}>
+                <Mascot variant="thinking" px={40} decorative animate={false} style={styles.chatAvatarImage} />
               </View>
-            ))}
-          </>
-        )}
-      </ScrollView>
-    </KeyboardAvoidingView>
+              <View style={styles.chatHeadText}>
+                <Text style={styles.chatTitle}>Java tutor</Text>
+                <Text style={styles.chatSubtitle} numberOfLines={1}>
+                  Answers on {module.title}
+                </Text>
+              </View>
+              <Text
+                style={styles.change}
+                suppressHighlighting
+                accessibilityRole="button"
+                onPress={() => setModuleId(null)}
+              >
+                Change
+              </Text>
+            </View>
+          }
+        />
+      </KeyboardAvoidingView>
+    );
+  }
+
+  const lastModuleId = lessons.find((lesson) => lesson.id === lastLessonId)?.moduleId;
+  const studyingCourseId =
+    modules.find((item) => item.id === lastModuleId)?.courseId ?? courses[0]?.id;
+  const expandedCourseId = openCourseId ?? studyingCourseId;
+
+  function toggleCourse(courseId) {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setOpenCourseId(expandedCourseId === courseId ? '' : courseId);
+  }
+
+  return (
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
+    >
+      <Text style={styles.title}>Java tutor</Text>
+      <View style={styles.intro}>
+        <Mascot variant="greeting" px={48} decorative animate={false} />
+        <Text style={styles.introText}>
+          Which module do you want help with? The tutor answers on that module's lessons only.
+        </Text>
+      </View>
+
+      {courses.map((course, courseIndex) => {
+        const expanded = expandedCourseId === course.id;
+        return (
+          <View key={course.id} style={styles.card}>
+            <Pressable
+              onPress={() => toggleCourse(course.id)}
+              accessibilityRole="button"
+              accessibilityState={{ expanded }}
+              accessibilityLabel={`${course.title}, ${expanded ? 'collapse' : 'expand'}`}
+              style={({ pressed }) => [styles.cardHead, pressed && styles.rowPressed]}
+            >
+              <View style={styles.cardHeadText}>
+                <Text style={styles.levelLabel}>{levelLabel(courseIndex)}</Text>
+                <Text style={styles.courseTitle}>{course.title}</Text>
+              </View>
+              <Text style={[styles.chevron, expanded && styles.chevronOpen]}>›</Text>
+            </Pressable>
+
+            {expanded
+              ? modules
+                  .filter((item) => item.courseId === course.id)
+                  .map((item) => (
+                    <Pressable
+                      key={item.id}
+                      onPress={() => setModuleId(item.id)}
+                      style={({ pressed }) => [styles.moduleRow, pressed && styles.rowPressed]}
+                    >
+                      <View style={styles.dot}>
+                        <Text style={styles.dotMark}>{item.order}</Text>
+                      </View>
+                      <Text style={styles.moduleTitle} numberOfLines={2}>
+                        {item.title}
+                      </Text>
+                      <Text style={styles.rowChevron}>›</Text>
+                    </Pressable>
+                  ))
+              : null}
+          </View>
+        );
+      })}
+    </ScrollView>
   );
 }
 
@@ -91,23 +161,149 @@ const styles = StyleSheet.create({
   },
   content: {
     ...centeredColumn(contentWidth.content),
-    padding: spacing.xl,
+    paddingHorizontal: 20,
+    paddingBottom: spacing.xl,
     gap: spacing.md,
+  },
+  chat: {
+    ...centeredColumn(contentWidth.content),
+    paddingHorizontal: 20,
+    paddingBottom: spacing.lg,
   },
   title: {
     ...type.pageTitle,
     color: colors.text,
   },
-  subtitle: {
-    ...type.small,
+  intro: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: spacing.sm,
+  },
+  introText: {
+    ...type.body,
+    flex: 1,
     color: colors.textMuted,
   },
-  group: {
-    gap: spacing.sm,
-    marginTop: spacing.md,
+  // Card, head and chevron match ModulesScreen's accordion.
+  card: {
+    borderRadius: 22,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    overflow: 'hidden',
   },
-  groupLabel: {
+  cardHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.lg,
+  },
+  cardHeadText: {
+    flex: 1,
+    minWidth: 0,
+  },
+  levelLabel: {
     ...type.sectionLabel,
     color: colors.borderStrong,
+  },
+  courseTitle: {
+    ...type.cardTitle,
+    color: colors.text,
+    marginTop: spacing.xs,
+  },
+  chevron: {
+    fontFamily: fonts.mono,
+    fontSize: 16,
+    lineHeight: 16,
+    color: colors.borderStrong,
+    transform: [{ rotate: '90deg' }],
+  },
+  chevronOpen: {
+    color: colors.primaryDark,
+    transform: [{ rotate: '-90deg' }],
+  },
+  rowPressed: {
+    backgroundColor: colors.primarySoft,
+  },
+  moduleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  dot: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  dotMark: {
+    fontFamily: fonts.mono,
+    fontSize: 11,
+    color: colors.borderStrong,
+  },
+  moduleTitle: {
+    flex: 1,
+    minWidth: 0,
+    fontFamily: fonts.semiBold,
+    fontSize: 13.5,
+    lineHeight: 13.5 * 1.35,
+    color: colors.text,
+  },
+  rowChevron: {
+    fontSize: 16,
+    color: colors.borderStrong,
+  },
+  chatHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingBottom: spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  chatAvatar: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: colors.primarySoft,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  chatAvatarImage: {
+    marginBottom: -2,
+  },
+  chatHeadText: {
+    flex: 1,
+    minWidth: 0,
+  },
+  chatTitle: {
+    fontFamily: fonts.bold,
+    fontSize: 16,
+    lineHeight: 16 * 1.2,
+    color: colors.text,
+  },
+  chatSubtitle: {
+    fontFamily: fonts.medium,
+    fontSize: 11.5,
+    lineHeight: 11.5 * 1.2,
+    color: colors.borderStrong,
+    marginTop: 3,
+  },
+  change: {
+    fontFamily: fonts.semiBold,
+    fontSize: 11,
+    letterSpacing: 11 * 0.08,
+    textTransform: 'uppercase',
+    color: colors.primaryDark,
+    padding: spacing.sm,
   },
 });
