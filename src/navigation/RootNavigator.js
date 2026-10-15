@@ -96,15 +96,12 @@ const headerScreenOptions = {
   contentStyle: { backgroundColor: colors.background },
 };
 
-function AuthStack({ afterAccountDeletion }) {
+function AuthStack() {
   return (
-    // AuthStack remounts fresh every time RootNavigator switches into it —
-    // on first launch (no user yet) and right after logOut() (user goes back
-    // to null) — so choosing the first screen here covers every case. The
-    // one exception to Welcome is straight after scheduling an account's
-    // deletion, which lands on Sign up and says when the deletion happens.
+    // AuthStack remounts fresh every time RootNavigator switches into it — on
+    // first launch, after logging out and after deleting the account — and
+    // always opens on Welcome, its first screen.
     <Stack.Navigator
-      initialRouteName={afterAccountDeletion ? 'Signup' : 'Welcome'}
       screenOptions={{ headerShown: false }}
       screenLayout={withStatusStrip}
     >
@@ -215,7 +212,7 @@ function AppStack({ needsSetup }) {
 }
 
 export default function RootNavigator() {
-  const { user, initializing, scheduledDeletion } = useAuth();
+  const { user, initializing } = useAuth();
 
   // Whether this account has been through the setup screen. Held as
   // undefined until known so the app stays on the loader rather than
@@ -286,7 +283,7 @@ export default function RootNavigator() {
           in. ProgressProvider sits inside the last branch so it never loads
           progress for a user that does not exist yet. */}
       {!user ? (
-        <AuthStack afterAccountDeletion={Boolean(scheduledDeletion)} />
+        <AuthStack />
       ) : !user.emailVerified ? (
         <VerifyEmailScreen />
       ) : needsSetup === undefined ? (

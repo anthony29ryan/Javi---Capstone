@@ -44,7 +44,7 @@ export default function DeleteAccountScreen({ navigation }) {
     setDeleting(true);
     try {
       // Scheduling the deletion signs the user out, which swaps the whole
-      // navigator back to the auth stack, opening on Sign up — so there is
+      // navigator back to the auth stack, opening on Welcome — so there is
       // nothing to navigate to here on success.
       await scheduleAccountDeletion(password);
     } catch (err) {

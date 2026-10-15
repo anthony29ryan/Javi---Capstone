@@ -132,13 +132,7 @@ export default function SignupScreen({ navigation }) {
           ]}
           keyboardShouldPersistTaps="handled"
         >
-          <AuthBackButton
-            // After an account deletion this is the first screen, so there is
-            // nothing to go back to — fall back to Welcome instead.
-            onPress={() =>
-              navigation.canGoBack() ? navigation.goBack() : navigation.replace('Welcome')
-            }
-          />
+          <AuthBackButton onPress={() => navigation.goBack()} />
 
           <Text style={styles.title}>Create your account</Text>
 

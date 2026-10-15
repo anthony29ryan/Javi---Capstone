@@ -23,9 +23,6 @@ const AuthContext = createContext(undefined);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [initializing, setInitializing] = useState(true);
-  // The date this device's account will be purged, set right after the user
-  // schedules its deletion so the sign-up screen they land on can say when.
-  const [scheduledDeletion, setScheduledDeletion] = useState(null);
   // Set when the Welcome back screen restores an account, so Home can say so.
   const [restoredNotice, setRestoredNotice] = useState(false);
   // What the app calls the user, set on Setup. Lives on the profile document,
@@ -79,7 +76,6 @@ export function AuthProvider({ children }) {
       termsVersion,
     });
     await sendEmailVerification(newUser);
-    setScheduledDeletion(null);
   }
 
   function resendVerification() {
@@ -142,7 +138,6 @@ export function AuthProvider({ children }) {
       }
 
       if (pendingDeletion) return { pendingDeletion, name };
-      setScheduledDeletion(null);
       setUser(signedInUser);
       return {};
     } finally {
@@ -153,7 +148,6 @@ export function AuthProvider({ children }) {
   /** Welcome back's Restore: cancels the deletion and opens the app. */
   async function restoreAccount() {
     await updateDoc(doc(db, 'users', auth.currentUser.uid), { deletionRequestedAt: deleteField() });
-    setScheduledDeletion(null);
     setRestoredNotice(true);
     setUser(auth.currentUser);
   }
@@ -222,7 +216,6 @@ export function AuthProvider({ children }) {
       { deletionRequestedAt: serverTimestamp() },
       { merge: true }
     );
-    setScheduledDeletion(permanentDeletionDate(new Date()));
     await cancelDailyReminder();
     await clearOfflineData();
     await signOut(auth);
@@ -267,7 +260,6 @@ export function AuthProvider({ children }) {
         sendPasswordReset,
         changePassword,
         scheduleAccountDeletion,
-        scheduledDeletion,
         restoreAccount,
         keepDeleted,
         restoredNotice,
