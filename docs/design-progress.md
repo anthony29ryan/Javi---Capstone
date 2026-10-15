@@ -19,7 +19,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 32 done · 35 to do · 45 not built · 1 partly · 9 last
+Totals: 38 done · 29 to do · 45 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -56,7 +56,7 @@ Totals: 32 done · 35 to do · 45 not built · 1 partly · 9 last
 | 19 | Home | HomeScreen | done | 2894257 |
 | 20 | Courses | CoursesScreen | done | 4e9c640 |
 | 21 | Practice | PracticeScreen | done | 1083617, 5c6116d |
-| 22 | Tutor | TutorScreen | to do |  |
+| 22 | Tutor | TutorScreen | done | a01ce13 (module picker first (accordion)) |
 | 23 | Profile | ProfileScreen | to do |  |
 | 24 | Profile · Choose avatar | — | not built |  |
 
@@ -132,9 +132,9 @@ Totals: 32 done · 35 to do · 45 not built · 1 partly · 9 last
 | 70 | Courses · Error | with Courses | done | 4e9c640 (no saved-modules list; offline not claimed) |
 | 71 | Lesson · Offline | with Lesson | to do |  |
 | 72 | Quiz · Offline | with Quiz | to do |  |
-| 73 | Tutor · Error | with Tutor | to do |  |
+| 73 | Tutor · Error | with Tutor | done | a01ce13 |
 | 74 | Practice · Empty | with Practice | done | 5c6116d (card inside the page; Code Tracer stays visible) |
-| 75 | Tutor · Empty | with Tutor | to do |  |
+| 75 | Tutor · Empty | with Tutor | done | a01ce13 |
 | 76 | Toast · Email verified | — | not built |  |
 | 77 | Toast · Link sent again | with Check your email | done | 2d8ffad |
 | 78 | Toast · Profile updated | with Settings | to do |  |
@@ -173,8 +173,8 @@ Totals: 32 done · 35 to do · 45 not built · 1 partly · 9 last
 | 101 | Challenge · Time limit | — | not built |  |
 | 102 | Challenge · Runner offline | — | not built |  |
 | 103 | Playground · Compile error | — | not built |  |
-| 104 | Tutor · Writing a reply | with Tutor | to do |  |
-| 105 | Tutor · Daily limit | with Tutor | to do |  |
+| 104 | Tutor · Writing a reply | with Tutor | done | a01ce13 |
+| 105 | Tutor · Daily limit | with Tutor | done | a01ce13 (rolling 24 h, shown after a refusal) |
 | 106 | Notifications · Blocked by Android | — | not built |  |
 
 ## J · Mascot moments
@@ -187,7 +187,7 @@ Totals: 32 done · 35 to do · 45 not built · 1 partly · 9 last
 | 110 | Quiz · Not quite | with Quiz | to do |  |
 | 111 | Lesson complete | — | not built |  |
 | 112 | Module complete | — | not built |  |
-| 113 | Tutor · Empty | with Tutor | to do |  |
+| 113 | Tutor · Empty | with Tutor | done | a01ce13 |
 
 ## I · Night study mode
 
