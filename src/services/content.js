@@ -1,14 +1,19 @@
-import { collection, doc, getDoc, getDocs, getDocsFromServer, query, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocsFromServer, query, where } from 'firebase/firestore';
 
 import { db } from './firebase';
 import { getDownloadedLesson } from './offline';
+
+// Collections are read from the server only. Plain getDocs answers from the
+// (often empty) local cache when offline instead of failing, which would show
+// "No courses yet" and overwrite the saved offline copy with empty lists.
+// Failing lets ProgressContext fall back to that copy instead.
 
 function byOrder(a, b) {
   return a.order - b.order;
 }
 
 export async function getCourses() {
-  const snapshot = await getDocs(collection(db, 'courses'));
+  const snapshot = await getDocsFromServer(collection(db, 'courses'));
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byOrder);
 }
 
@@ -28,9 +33,8 @@ export async function getLesson(lessonId) {
 }
 
 /**
- * A module's full lessons, for saving it to read offline. From the server
- * only: plain getDocs answers from the (empty) cache when offline instead of
- * failing, which would save a "downloaded" module with no lessons in it.
+ * A module's full lessons, for saving it to read offline. From the server, as
+ * above: a cache answer would save a "downloaded" module with no lessons.
  */
 export async function getModuleLessons(moduleId) {
   const snapshot = await getDocsFromServer(
@@ -41,12 +45,12 @@ export async function getModuleLessons(moduleId) {
 
 /** Every Code Tracer drill. Online only: traces are not in offline downloads. */
 export async function getTraces() {
-  const snapshot = await getDocs(collection(db, 'traces'));
+  const snapshot = await getDocsFromServer(collection(db, 'traces'));
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
 export async function getAllModules() {
-  const snapshot = await getDocs(collection(db, 'modules'));
+  const snapshot = await getDocsFromServer(collection(db, 'modules'));
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byOrder);
 }
 
@@ -101,7 +105,7 @@ function estimateMinutes(blocks = []) {
  * the blocks only so downloaded modules can be refreshed from this same read.
  */
 export async function getAllLessons() {
-  const snapshot = await getDocs(collection(db, 'lessons'));
+  const snapshot = await getDocsFromServer(collection(db, 'lessons'));
   const full = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
   const refs = full
     .map(({ id, moduleId, title, order, blocks }) => ({
