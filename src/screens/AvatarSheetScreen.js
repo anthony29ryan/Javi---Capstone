@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Animated, { SlideInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
 
 import AuthButton from '../components/auth/AuthButton';
+import BottomSheet from '../components/BottomSheet';
 import { AVATAR_IDS, AVATARS } from '../constants/art';
 import { useAuth } from '../context/AuthContext';
 import { colors, fonts, type } from '../theme/colors';
@@ -21,18 +21,17 @@ export default function AvatarSheetScreen({ navigation }) {
   const [picked, setPicked] = useState(avatar);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const onClose = () => navigation.goBack();
 
-  async function save() {
+  async function save(close) {
     if (!picked || picked === avatar) {
-      onClose();
+      close();
       return;
     }
     setSaving(true);
     setError('');
     try {
       await updateAvatar(picked);
-      onClose();
+      close();
     } catch {
       setError('Could not save your avatar. Check your connection and try again.');
     } finally {
@@ -41,45 +40,42 @@ export default function AvatarSheetScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.sheetWrap}>
-      <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close" />
-      <Animated.View
-        entering={SlideInDown.duration(260)}
-        style={[styles.sheet, { paddingBottom: insets.bottom + 24 }]}
-      >
-        <View style={styles.grabber} />
-        <Text style={styles.sheetTitle}>Choose your avatar</Text>
-        <Text style={styles.sheetBody}>You can change this any time from your profile.</Text>
-        <View style={styles.avatarGrid}>
-          {AVATAR_IDS.map((id) => (
-            <View key={id} style={styles.avatarCell}>
-              <Pressable
-                onPress={() => setPicked(id)}
-                accessibilityRole="button"
-                accessibilityLabel={`Avatar ${id}`}
-                accessibilityState={{ selected: picked === id }}
-                style={[styles.avatarOption, picked === id && styles.avatarOptionOn]}
-              >
-                <View style={styles.avatarClip}>
-                  <SvgXml xml={AVATARS[id]} width="100%" height="100%" />
-                </View>
-              </Pressable>
-            </View>
-          ))}
-        </View>
-        {error ? <Text style={styles.sheetError}>{error}</Text> : null}
-        <View style={styles.sheetButtons}>
-          <AuthButton label="Cancel" variant="secondary" onPress={onClose} style={styles.flex} />
-          <AuthButton
-            label="Save"
-            loadingLabel="Saving…"
-            onPress={save}
-            loading={saving}
-            style={styles.flex}
-          />
-        </View>
-      </Animated.View>
-    </View>
+    <BottomSheet onClosed={navigation.goBack} style={{ paddingBottom: insets.bottom + 24 }}>
+      {(close) => (
+        <>
+          <Text style={styles.sheetTitle}>Choose your avatar</Text>
+          <Text style={styles.sheetBody}>You can change this any time from your profile.</Text>
+          <View style={styles.avatarGrid}>
+            {AVATAR_IDS.map((id) => (
+              <View key={id} style={styles.avatarCell}>
+                <Pressable
+                  onPress={() => setPicked(id)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Avatar ${id}`}
+                  accessibilityState={{ selected: picked === id }}
+                  style={[styles.avatarOption, picked === id && styles.avatarOptionOn]}
+                >
+                  <View style={styles.avatarClip}>
+                    <SvgXml xml={AVATARS[id]} width="100%" height="100%" />
+                  </View>
+                </Pressable>
+              </View>
+            ))}
+          </View>
+          {error ? <Text style={styles.sheetError}>{error}</Text> : null}
+          <View style={styles.sheetButtons}>
+            <AuthButton label="Cancel" variant="secondary" onPress={close} style={styles.flex} />
+            <AuthButton
+              label="Save"
+              loadingLabel="Saving…"
+              onPress={() => save(close)}
+              loading={saving}
+              style={styles.flex}
+            />
+          </View>
+        </>
+      )}
+    </BottomSheet>
   );
 }
 
@@ -87,29 +83,6 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1,
     minWidth: 0,
-  },
-  sheetWrap: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(20,22,34,.45)',
-  },
-  sheet: {
-    backgroundColor: colors.surface,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingTop: 12,
-    paddingHorizontal: 20,
-  },
-  grabber: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: colors.surfaceSunken,
-    alignSelf: 'center',
-    marginBottom: 22,
   },
   sheetTitle: {
     fontFamily: fonts.bold,

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Animated, { SlideInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthButton from '../components/auth/AuthButton';
+import BottomSheet from '../components/BottomSheet';
 import { useProgress } from '../context/ProgressContext';
 import { colors, fonts, type } from '../theme/colors';
 
@@ -34,102 +34,76 @@ export default function DownloadSheetScreen({ navigation, route }) {
     });
   }
 
-  function start() {
+  function start(close) {
     // Not awaited: the Module screen shows the progress once the sheet closes.
     downloadModules(ids);
-    navigation.goBack();
+    close();
   }
 
   return (
-    <View style={styles.wrap}>
-      <Pressable style={styles.backdrop} onPress={() => navigation.goBack()} accessibilityLabel="Close" />
-      <Animated.View
-        entering={SlideInDown.duration(260)}
-        style={[styles.sheet, { paddingBottom: insets.bottom + 20 }]}
-      >
-        <View style={styles.grabber} />
-        <Text style={styles.title}>Download for offline</Text>
-        <Text style={styles.body}>Pick the modules you want to read without internet.</Text>
+    <BottomSheet onClosed={navigation.goBack} style={{ paddingBottom: insets.bottom + 20 }}>
+      {(close) => (
+        <>
+          <Text style={styles.title}>Download for offline</Text>
+          <Text style={styles.body}>Pick the modules you want to read without internet.</Text>
 
-        {courseModules.map((module) => {
-          const saved = downloadedIds.has(module.id);
-          const queued = downloadQueue.includes(module.id);
-          const locked = saved || queued;
-          const on = !locked && selected.has(module.id);
-          return (
-            <Pressable
-              key={module.id}
-              onPress={() => toggle(module.id)}
-              disabled={locked}
-              accessibilityRole="checkbox"
-              accessibilityState={{ checked: on, disabled: locked }}
-              style={styles.row}
-            >
-              {saved ? (
-                <View style={styles.savedMark}>
-                  <Text style={styles.savedTick}>✓</Text>
+          {courseModules.map((module) => {
+            const saved = downloadedIds.has(module.id);
+            const queued = downloadQueue.includes(module.id);
+            const locked = saved || queued;
+            const on = !locked && selected.has(module.id);
+            return (
+              <Pressable
+                key={module.id}
+                onPress={() => toggle(module.id)}
+                disabled={locked}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: on, disabled: locked }}
+                style={styles.row}
+              >
+                {saved ? (
+                  <View style={styles.savedMark}>
+                    <Text style={styles.savedTick}>✓</Text>
+                  </View>
+                ) : (
+                  <View style={[styles.box, on && styles.boxOn]}>
+                    {on ? <Text style={styles.boxTick}>✓</Text> : null}
+                  </View>
+                )}
+                <View style={styles.rowText}>
+                  <Text style={[styles.rowName, locked && styles.rowNameLocked]}>{module.title}</Text>
+                  <Text style={styles.rowNote}>
+                    Module {module.order} ·{' '}
+                    {saved ? 'Already saved' : queued ? 'Downloading' : `${lessonCount(module.id)} lessons`}
+                  </Text>
                 </View>
-              ) : (
-                <View style={[styles.box, on && styles.boxOn]}>
-                  {on ? <Text style={styles.boxTick}>✓</Text> : null}
-                </View>
-              )}
-              <View style={styles.rowText}>
-                <Text style={[styles.rowName, locked && styles.rowNameLocked]}>{module.title}</Text>
-                <Text style={styles.rowNote}>
-                  Module {module.order} ·{' '}
-                  {saved ? 'Already saved' : queued ? 'Downloading' : `${lessonCount(module.id)} lessons`}
-                </Text>
-              </View>
-            </Pressable>
-          );
-        })}
+              </Pressable>
+            );
+          })}
 
-        <Text style={styles.selectedLine}>
-          {ids.length ? `${modulesLabel(ids.length)} selected` : 'Nothing selected'}
-        </Text>
-        <AuthButton
-          label={ids.length ? `Download ${modulesLabel(ids.length)}` : 'Select modules'}
-          onPress={start}
-          disabled={!ids.length}
-        />
-        <Text
-          style={styles.link}
-          suppressHighlighting
-          accessibilityRole="link"
-          onPress={() => navigation.navigate('Settings')}
-        >
-          Remove all downloads in Settings
-        </Text>
-      </Animated.View>
-    </View>
+          <Text style={styles.selectedLine}>
+            {ids.length ? `${modulesLabel(ids.length)} selected` : 'Nothing selected'}
+          </Text>
+          <AuthButton
+            label={ids.length ? `Download ${modulesLabel(ids.length)}` : 'Select modules'}
+            onPress={() => start(close)}
+            disabled={!ids.length}
+          />
+          <Text
+            style={styles.link}
+            suppressHighlighting
+            accessibilityRole="link"
+            onPress={() => navigation.navigate('Settings')}
+          >
+            Remove all downloads in Settings
+          </Text>
+        </>
+      )}
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  wrap: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(20,22,34,.45)',
-  },
-  sheet: {
-    backgroundColor: colors.surface,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingTop: 12,
-    paddingHorizontal: 20,
-  },
-  grabber: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: colors.surfaceSunken,
-    alignSelf: 'center',
-    marginBottom: 22,
-  },
   title: {
     fontFamily: fonts.bold,
     fontSize: 21,

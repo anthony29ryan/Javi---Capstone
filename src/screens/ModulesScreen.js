@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
 import {
   FlatList,
@@ -29,6 +30,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 }
 
 const modulesLabel = (n) => `${n} module${n === 1 ? '' : 's'}`;
+const FINISHED_HOLD_MS = 1200;
 
 // Frame 66: the page's shape in grey while progress loads.
 function ModuleSkeleton({ top, onBack }) {
@@ -130,6 +132,8 @@ export default function ModulesScreen({ route, navigation }) {
   const [openModuleId, setOpenModuleId] = useState(null);
   const [touched, setTouched] = useState(false);
   const [toast, setToast] = useState('');
+  // A batch that just ended, held on screen briefly so its 100% is seen.
+  const [finished, setFinished] = useState(null);
 
   // Frame 56: once a batch for this course empties, say how many were saved.
   const courseModuleIds = modules.filter((m) => m.courseId === courseId).map((m) => m.id);
@@ -142,8 +146,27 @@ export default function ModulesScreen({ route, navigation }) {
     }
     if (!wasDownloading.current) return;
     wasDownloading.current = false;
-    if (downloadDone > 0) setToast(`${modulesLabel(downloadDone)} saved for offline`);
+    if (downloadDone > 0) setFinished({ count: downloadDone });
   }, [downloadingHere, downloadDone]);
+
+  useEffect(() => {
+    if (!finished) return undefined;
+    const timer = setTimeout(() => {
+      setFinished(null);
+      setToast(`${modulesLabel(finished.count)} saved for offline`);
+    }, FINISHED_HOLD_MS);
+    return () => clearTimeout(timer);
+  }, [finished]);
+
+  // Each module is one quick read, so the bar glides between steps rather
+  // than jumping, which made real progress look fake.
+  const downloadPercent = downloadTotal ? Math.round((downloadDone / downloadTotal) * 100) : 0;
+  const fill = useSharedValue(0);
+  useEffect(() => {
+    // A new batch starts empty at once instead of gliding back from 100%.
+    fill.value = downloadPercent === 0 ? 0 : withTiming(downloadPercent, { duration: 400 });
+  }, [downloadPercent, fill]);
+  const fillStyle = useAnimatedStyle(() => ({ width: `${fill.value}%` }));
 
   const top = insets.top + spacing.lg;
   if (loading) return <ModuleSkeleton top={top} onBack={() => navigation.goBack()} />;
@@ -179,7 +202,6 @@ export default function ModulesScreen({ route, navigation }) {
 
   const modulesById = Object.fromEntries(modules.map((module) => [module.id, module]));
   const savedHere = courseModules.filter((module) => downloadedIds.has(module.id)).length;
-  const downloadPercent = downloadTotal ? Math.round((downloadDone / downloadTotal) * 100) : 0;
   const firstQueued = modulesById[downloadQueue[0]]?.title ?? '';
   const failedModule = downloadFailed ? modulesById[downloadFailed] : null;
 
@@ -233,26 +255,37 @@ export default function ModulesScreen({ route, navigation }) {
 
           {/* Frame 55. The percentage counts finished modules: each one is a
               single read with no progress of its own. */}
-          {downloadingHere ? (
+          {downloadingHere || finished ? (
             <View style={styles.progressCard} accessibilityRole="progressbar">
               <View style={styles.progressTop}>
                 <View style={styles.flex}>
-                  <Text style={styles.progressTitle}>Downloading {modulesLabel(downloadTotal)}</Text>
-                  <Text style={styles.progressSub}>
-                    {firstQueued}
-                    {downloadQueue.length > 1 ? ` and ${downloadQueue.length - 1} more` : ''} ·{' '}
-                    {downloadPercent}%
-                  </Text>
+                  {finished ? (
+                    <>
+                      <Text style={styles.progressTitle}>Saved {modulesLabel(finished.count)}</Text>
+                      <Text style={styles.progressSub}>Ready to read offline · {downloadPercent}%</Text>
+                    </>
+                  ) : (
+                    <>
+                      <Text style={styles.progressTitle}>Downloading {modulesLabel(downloadTotal)}</Text>
+                      <Text style={styles.progressSub}>
+                        {firstQueued}
+                        {downloadQueue.length > 1 ? ` and ${downloadQueue.length - 1} more` : ''} ·{' '}
+                        {downloadPercent}%
+                      </Text>
+                    </>
+                  )}
                 </View>
-                <Pressable
-                  onPress={cancelDownloads}
-                  style={({ pressed }) => [styles.cancel, pressed && styles.cancelPressed]}
-                >
-                  <Text style={styles.cancelLabel}>Cancel</Text>
-                </Pressable>
+                {finished ? null : (
+                  <Pressable
+                    onPress={cancelDownloads}
+                    style={({ pressed }) => [styles.cancel, pressed && styles.cancelPressed]}
+                  >
+                    <Text style={styles.cancelLabel}>Cancel</Text>
+                  </Pressable>
+                )}
               </View>
               <View style={styles.progressTrack}>
-                <View style={[styles.progressFill, { width: `${downloadPercent}%` }]} />
+                <Animated.View style={[styles.progressFill, fillStyle]} />
               </View>
             </View>
           ) : null}

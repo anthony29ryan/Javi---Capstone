@@ -48,11 +48,12 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 const Stack = createNativeStackNavigator();
 
 // Bottom sheets drawn as see-through screens over the one below. Transparent,
-// or the stack's page background hides that screen behind the sheet.
+// or the stack's page background hides that screen behind the sheet. No stack
+// animation: BottomSheet slides itself in and out.
 const SHEET_OPTIONS = {
   headerShown: false,
   presentation: 'transparentModal',
-  animation: 'fade',
+  animation: 'none',
   contentStyle: { backgroundColor: 'transparent' },
 };
 
