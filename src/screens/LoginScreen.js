@@ -47,10 +47,11 @@ const FAILURES_BEFORE_RESET_HINT = 3;
 // tappable: each tap asks Firebase again, so the user gets in the moment
 // Firebase lifts its block instead of waiting out a guessed pause on top.
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation, route }) {
   const { logIn } = useAuth();
   const insets = useSafeAreaInsets();
-  const [email, setEmail] = useState('');
+  // Sign-up's "Log in instead" passes the email that was already taken.
+  const [email, setEmail] = useState(route.params?.email ?? '');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);

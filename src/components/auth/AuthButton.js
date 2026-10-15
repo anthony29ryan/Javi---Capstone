@@ -1,16 +1,19 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { authColors, authRadius, authType } from '../../theme/authTheme';
 
 /**
  * Buttons for the auth flow. variant: 'primary' (filled pill) | 'secondary'
  * (outlined pill) — matches the two button styles in the design handoff.
+ * `loadingLabel` (e.g. "Creating account…") shows beside the spinner while
+ * loading; without it the spinner stands alone.
  */
 export default function AuthButton({
   label,
   onPress,
   variant = 'primary',
   loading = false,
+  loadingLabel,
   disabled = false,
   style,
   labelStyle,
@@ -30,7 +33,17 @@ export default function AuthButton({
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={isPrimary ? authColors.white : authColors.accentDeep} />
+        <View style={styles.busy}>
+          <ActivityIndicator
+            size={loadingLabel ? 'small' : undefined}
+            color={isPrimary ? authColors.white : authColors.accentDeep}
+          />
+          {loadingLabel ? (
+            <Text style={[isPrimary ? styles.primaryLabel : styles.secondaryLabel, labelStyle]}>
+              {loadingLabel}
+            </Text>
+          ) : null}
+        </View>
       ) : (
         <Text style={[isPrimary ? styles.primaryLabel : styles.secondaryLabel, labelStyle]}>{label}</Text>
       )}
@@ -78,6 +91,11 @@ const styles = StyleSheet.create({
   secondaryLabel: {
     ...authType.secondaryButtonLabel,
     color: authColors.ink,
+  },
+  busy: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   disabled: {
     opacity: 0.5,

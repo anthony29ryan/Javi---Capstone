@@ -37,6 +37,12 @@ export const authColors = {
 
   error: '#B4483E',
   errorSoft: '#FBE9E5',
+  errorLine: 'rgba(180,72,62,.32)',
+  // Amber, for problems that are not the student's fault (e.g. no connection).
+  warn: '#B07220',
+  warnSoft: '#FFF3DF',
+  warnLine: 'rgba(214,150,60,.4)',
+  warnInk: '#6B4A1A',
   success: '#5EB78D',
 
   white: '#FFFFFF',

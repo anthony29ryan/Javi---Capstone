@@ -10,15 +10,63 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import AuthAlert from '../components/auth/AuthAlert';
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthBackButton from '../components/auth/AuthBackButton';
 import AuthButton from '../components/auth/AuthButton';
-import AuthTextField from '../components/auth/AuthTextField';
+import AuthTextField, { FieldError } from '../components/auth/AuthTextField';
 import PasswordRules, { passwordMeetsAllRules } from '../components/auth/PasswordRules';
+import TermsSheet from '../components/auth/TermsSheet';
+import { TERMS_VERSION } from '../constants/legal';
 import { useAuth } from '../context/AuthContext';
 import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
 
-const EMAIL_PATTERN = /.+@.+\..+/;
+// The design's own email check: something@something.tld, with at least two
+// letters after the last dot. Firebase still has the final say.
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+const BANNERS = {
+  taken: {
+    tone: 'danger',
+    title: 'This email already has an account',
+    body: 'Log in with it instead. If you forgot the password, reset it from the log-in screen.',
+    action: 'Log in instead',
+  },
+  offline: {
+    tone: 'warn',
+    title: 'No internet connection',
+    body: 'Check Wi-Fi or mobile data, then try again. What you typed is kept.',
+    action: 'Try again',
+  },
+  failed: {
+    tone: 'danger',
+    title: 'Could not create your account',
+    body: 'Something went wrong on our side. Try again in a moment.',
+  },
+};
+
+/**
+ * The first problem with the form, as { field, message }, or null when it is
+ * ready to send. One at a time, in the order the fields appear.
+ */
+function firstProblem({ displayName, email, password, confirmPassword, agreed }) {
+  if (!displayName.trim()) return { field: 'name', message: 'Enter your first name.' };
+  if (!email.trim()) return { field: 'email', message: 'Enter your email address.' };
+  if (!EMAIL_PATTERN.test(email.trim())) {
+    return { field: 'email', message: 'That email looks incomplete. Use the full address, like name@email.com.' };
+  }
+  if (!password) return { field: 'password', message: 'Create a password.' };
+  if (!passwordMeetsAllRules(password)) {
+    return {
+      field: 'password',
+      message: 'Use at least 8 characters with an uppercase letter, a lowercase letter and a symbol.',
+    };
+  }
+  if (!confirmPassword) return { field: 'confirm', message: 'Repeat your password.' };
+  if (password !== confirmPassword) return { field: 'confirm', message: 'This does not match the password above.' };
+  if (!agreed) return { field: 'agree', message: 'Read and accept the terms to continue.' };
+  return null;
+}
 
 export default function SignupScreen({ navigation }) {
   const { signUp } = useAuth();
@@ -28,54 +76,49 @@ export default function SignupScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [agreed, setAgreed] = useState(false);
-  const [error, setError] = useState('');
+  const [problem, setProblem] = useState(null); // { field, message }
+  const [banner, setBanner] = useState(null); // a key of BANNERS
+  const [termsTab, setTermsTab] = useState(null); // 'terms' | 'privacy' while the popup is open
   const [submitting, setSubmitting] = useState(false);
 
-  function clearError() {
-    if (error) setError('');
+  // Editing a field clears its own error. The "already has an account" banner
+  // stays until the email itself changes; the others go on any edit.
+  function edited(field) {
+    if (problem?.field === field) setProblem(null);
+    if (banner && (banner !== 'taken' || field === 'email')) setBanner(null);
   }
 
-  async function handleSignUp() {
-    setError('');
+  const errorFor = (field) => (problem?.field === field ? problem.message : undefined);
 
-    // Validated in this order, matching the design handoff, so the user
-    // always sees the single most relevant problem first.
-    if (!displayName.trim()) {
-      setError('Enter your first name.');
-      return;
-    }
-    if (!EMAIL_PATTERN.test(email.trim())) {
-      setError('Enter a valid email address.');
-      return;
-    }
-    if (!passwordMeetsAllRules(password)) {
-      setError('Your password does not meet all four requirements yet.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('The two passwords do not match.');
-      return;
-    }
-    if (!agreed) {
-      setError('Accept the terms to continue.');
-      return;
-    }
+  async function handleSignUp() {
+    const found = firstProblem({ displayName, email, password, confirmPassword, agreed });
+    setProblem(found);
+    setBanner(null);
+    if (found) return;
 
     setSubmitting(true);
     try {
-      await signUp(email.trim(), password, displayName.trim());
+      await signUp(email.trim(), password, displayName.trim(), TERMS_VERSION);
     } catch (err) {
-      // Firebase's own message here is a raw error code, so replace it with
-      // something a learner can act on.
-      setError(
-        err.code === 'auth/email-already-in-use'
-          ? 'This email already has an account. Log in instead.'
-          : err.message
-      );
+      // Firebase's own messages are raw error codes, so map them to ones a
+      // learner can act on.
+      if (err.code === 'auth/email-already-in-use') {
+        setProblem({ field: 'email', message: 'An account already uses this email.' });
+        setBanner('taken');
+      } else if (err.code === 'auth/network-request-failed') {
+        setBanner('offline');
+      } else {
+        setBanner('failed');
+      }
     } finally {
       setSubmitting(false);
     }
   }
+
+  const bannerActions = {
+    taken: () => navigation.navigate('Login', { email: email.trim() }),
+    offline: handleSignUp,
+  };
 
   return (
     <KeyboardAvoidingView
@@ -100,14 +143,18 @@ export default function SignupScreen({ navigation }) {
 
           <Text style={styles.title}>Create your account</Text>
 
+          {banner ? (
+            <AuthAlert {...BANNERS[banner]} onAction={bannerActions[banner]} style={styles.banner} />
+          ) : null}
 
           <View style={styles.form}>
             <AuthTextField
               placeholder="First name"
               value={displayName}
+              error={errorFor('name')}
               onChangeText={(value) => {
                 setDisplayName(value);
-                clearError();
+                edited('name');
               }}
             />
             <AuthTextField
@@ -116,51 +163,70 @@ export default function SignupScreen({ navigation }) {
               autoComplete="email"
               keyboardType="email-address"
               value={email}
+              error={errorFor('email')}
               onChangeText={(value) => {
                 setEmail(value);
-                clearError();
+                edited('email');
               }}
             />
             <AuthTextField
               placeholder="Password"
               secureTextEntry
               value={password}
+              error={errorFor('password')}
               onChangeText={(value) => {
                 setPassword(value);
-                clearError();
+                edited('password');
               }}
             />
             <AuthTextField
               placeholder="Confirm password"
               secureTextEntry
               value={confirmPassword}
+              error={errorFor('confirm')}
               onChangeText={(value) => {
                 setConfirmPassword(value);
-                clearError();
+                edited('confirm');
               }}
             />
           </View>
 
           <PasswordRules password={password} />
 
-          <Pressable
-            onPress={() => {
-              setAgreed((value) => !value);
-              clearError();
-            }}
-            style={styles.terms}
-            hitSlop={4}
-          >
-            <View style={[styles.checkbox, agreed && styles.checkboxChecked]}>
+          {/* Ticking goes through the Terms popup; unticking is direct. */}
+          <View style={styles.terms}>
+            <Pressable
+              onPress={() => (agreed ? setAgreed(false) : setTermsTab('terms'))}
+              hitSlop={8}
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: agreed }}
+              accessibilityLabel="I agree to the terms and privacy policy"
+              style={[
+                styles.checkbox,
+                agreed && styles.checkboxChecked,
+                problem?.field === 'agree' && styles.checkboxError,
+              ]}
+            >
               {agreed ? <Text style={styles.checkboxMark}>✓</Text> : null}
-            </View>
-            <Text style={styles.termsLabel}>I agree to the terms and privacy policy</Text>
-          </Pressable>
-
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+            </Pressable>
+            <Text style={styles.termsLabel}>
+              I agree to the{' '}
+              <Text style={styles.termsLink} onPress={() => setTermsTab('terms')}>
+                terms
+              </Text>{' '}
+              and{' '}
+              <Text style={styles.termsLink} onPress={() => setTermsTab('privacy')}>
+                privacy policy
+              </Text>
+            </Text>
+          </View>
+          {problem?.field === 'agree' ? (
+            <FieldError message={problem.message} style={styles.agreeError} />
+          ) : null}
 
           <AuthButton
-            label="Get Started"
+            label="Get started"
+            loadingLabel="Creating account…"
             onPress={handleSignUp}
             loading={submitting}
             style={styles.submit}
@@ -176,6 +242,17 @@ export default function SignupScreen({ navigation }) {
           </Pressable>
         </ScrollView>
       </AuthAnimatedScreen>
+
+      <TermsSheet
+        visible={termsTab !== null}
+        initialTab={termsTab ?? 'terms'}
+        onClose={() => setTermsTab(null)}
+        onAccept={() => {
+          setAgreed(true);
+          edited('agree');
+          setTermsTab(null);
+        }}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -200,10 +277,13 @@ const styles = StyleSheet.create({
   form: {
     gap: authSpacing.fieldGap,
   },
+  banner: {
+    marginBottom: 16,
+  },
   terms: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
     marginTop: 18,
     marginHorizontal: 2,
   },
@@ -220,38 +300,48 @@ const styles = StyleSheet.create({
     backgroundColor: authColors.accent,
     borderColor: authColors.accent,
   },
+  checkboxError: {
+    borderColor: authColors.error,
+  },
   checkboxMark: {
     color: authColors.white,
     fontSize: 13,
     fontWeight: '700',
   },
   termsLabel: {
-    ...authType.helper,
-    color: authColors.ink2,
     flex: 1,
+    fontFamily: authFonts.medium,
+    fontSize: 12.5,
+    lineHeight: 12.5 * 1.5,
+    color: authColors.ink2,
   },
-  error: {
-    ...authType.helper,
-    color: authColors.error,
-    marginTop: authSpacing.fieldGap,
+  termsLink: {
+    fontFamily: authFonts.semiBold,
+    color: authColors.accentDeep,
+    textDecorationLine: 'underline',
+  },
+  agreeError: {
+    marginTop: 10,
   },
   submit: {
-    marginTop: 18,
+    marginTop: 22,
   },
   footer: {
-    marginTop: authSpacing.screenH,
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 16,
+    paddingHorizontal: 8,
   },
   footerPressed: {
     opacity: 0.6,
   },
   footerText: {
-    ...authType.helper,
-    color: authColors.ink2,
+    fontFamily: authFonts.semiBold,
+    fontSize: 12,
+    letterSpacing: 12 * 0.08,
+    textTransform: 'uppercase',
+    color: authColors.muted,
   },
   footerAccent: {
     color: authColors.accentDeep,
-    fontFamily: authFonts.semiBold,
   },
 });

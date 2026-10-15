@@ -1,23 +1,42 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-import { authColors, authRadius, authType } from '../../theme/authTheme';
+import { authColors, authFonts, authRadius, authType } from '../../theme/authTheme';
+
+/** The design's inline field error: a small red "!" and the message. */
+export function FieldError({ message, style }) {
+  return (
+    <View style={[styles.error, style]} accessibilityRole="alert">
+      <View style={styles.errorDot}>
+        <Text style={styles.errorDotMark}>!</Text>
+      </View>
+      <Text style={styles.errorText}>{message}</Text>
+    </View>
+  );
+}
 
 /**
- * Text field for the auth flow. Per the design handoff, fields never show
- * their own inline error — validation messages appear as one message above
- * the screen's submit button instead, so this component only renders the
- * input itself (plus the password reveal toggle, when needed).
+ * Text field for the auth flow, with the password reveal toggle when needed.
+ * Pass `error` to give it a red border and the design's message under it;
+ * without it the field renders exactly as before.
  */
-export default function AuthTextField({ secureTextEntry, style, ...inputProps }) {
+export default function AuthTextField({ secureTextEntry, style, error, ...inputProps }) {
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
   const isPassword = Boolean(secureTextEntry);
 
-  return (
-    <View style={[styles.row, focused && styles.rowFocused, isPassword && styles.rowWithToggle, style]}>
+  const field = (
+    <View
+      style={[
+        styles.row,
+        focused && styles.rowFocused,
+        error && styles.rowError,
+        isPassword && styles.rowWithToggle,
+        style,
+      ]}
+    >
       <TextInput
         style={styles.input}
         placeholderTextColor={authColors.muted}
@@ -44,6 +63,14 @@ export default function AuthTextField({ secureTextEntry, style, ...inputProps })
       ) : null}
     </View>
   );
+
+  if (!error) return field;
+  return (
+    <View>
+      {field}
+      <FieldError message={error} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -62,6 +89,37 @@ const styles = StyleSheet.create({
   },
   rowFocused: {
     borderColor: authColors.accent,
+  },
+  rowError: {
+    borderColor: authColors.error,
+  },
+  error: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 7,
+    marginTop: 8,
+    marginHorizontal: 4,
+  },
+  errorDot: {
+    width: 15,
+    height: 15,
+    marginTop: 1,
+    borderRadius: 8,
+    backgroundColor: authColors.error,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  errorDotMark: {
+    fontFamily: authFonts.extraBold,
+    fontSize: 9,
+    color: authColors.bg,
+  },
+  errorText: {
+    flex: 1,
+    fontFamily: authFonts.medium,
+    fontSize: 12.5,
+    lineHeight: 12.5 * 1.45,
+    color: authColors.error,
   },
   input: {
     flex: 1,

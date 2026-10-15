@@ -55,13 +55,17 @@ export function AuthProvider({ children }) {
     });
   }, []);
 
-  async function signUp(email, password, displayName) {
+  // termsVersion: the version of the Terms and Privacy text the user accepted
+  // in the sign-up popup, recorded with the server's time as proof of consent.
+  async function signUp(email, password, displayName, termsVersion) {
     const { user: newUser } = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(newUser, { displayName });
     await setDoc(doc(db, 'users', newUser.uid), {
       email,
       displayName,
       createdAt: serverTimestamp(),
+      termsAcceptedAt: serverTimestamp(),
+      termsVersion,
     });
     await sendEmailVerification(newUser);
     setScheduledDeletion(null);

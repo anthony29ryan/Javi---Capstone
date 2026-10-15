@@ -105,7 +105,25 @@ describe('users', () => {
         email: 'alice@example.com',
         displayName: 'Alice',
         createdAt: serverTimestamp(),
+        termsAcceptedAt: serverTimestamp(),
+        termsVersion: '2026-10-15',
       })
+    );
+  });
+
+  test('terms acceptance must use the server clock and a short version string', async () => {
+    const ref = doc(dbAs('alice'), 'users/alice');
+    const profile = { email: 'alice@example.com', displayName: 'Alice', createdAt: serverTimestamp() };
+    await assertFails(
+      setDoc(ref, {
+        ...profile,
+        termsAcceptedAt: Timestamp.fromDate(new Date('2020-01-01')),
+        termsVersion: '2026-10-15',
+      })
+    );
+    await assertFails(setDoc(ref, { ...profile, termsAcceptedAt: serverTimestamp(), termsVersion: 20261015 }));
+    await assertFails(
+      setDoc(ref, { ...profile, termsAcceptedAt: serverTimestamp(), termsVersion: 'x'.repeat(21) })
     );
   });
 

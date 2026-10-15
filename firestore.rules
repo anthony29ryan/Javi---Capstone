@@ -64,7 +64,7 @@ service cloud.firestore {
       return changedFields().hasOnly([
           'email', 'displayName', 'createdAt',
           'reminderTime', 'reminderEnabled', 'goals', 'setupComplete',
-          'deletionRequestedAt'
+          'deletionRequestedAt', 'termsAcceptedAt', 'termsVersion'
         ])
         && (!changed('email') || data.email is string)
         && (!changed('displayName')
@@ -75,6 +75,11 @@ service cloud.firestore {
         && (!changed('reminderEnabled') || data.reminderEnabled is bool)
         && (!changed('goals') || (data.goals is list && data.goals.size() <= 20))
         && (!changed('setupComplete') || data.setupComplete is bool)
+        // Proof of consent from the sign-up Terms popup: the server's clock,
+        // so the acceptance time cannot be backdated, and the text's version.
+        && (!changed('termsAcceptedAt') || data.termsAcceptedAt == request.time)
+        && (!changed('termsVersion')
+            || (data.termsVersion is string && data.termsVersion.size() <= 20))
         // Starts the 30-day deletion window. It must be the server's clock, so
         // the window cannot be backdated to make the purge run early. Removing
         // the field (logging back in) is also allowed, since `changed` is false
