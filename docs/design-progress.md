@@ -19,7 +19,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 13 done · 53 to do · 45 not built · 2 partly · 9 last
+Totals: 13 done · 52 to do · 46 not built · 2 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -154,12 +154,12 @@ Totals: 13 done · 53 to do · 45 not built · 2 partly · 9 last
 | 87 | Sign up · Email already used | with Sign up | done | 92c72ee |
 | 88 | Forgot password · Rate limited | with Forgot password | to do |  |
 | 89 | New password · Mismatch | — | not built |  |
-| 90 | Set up · Name missing | with Before you start | to do |  |
+| 90 | Set up · Name missing | with Before you start | done | 289e43f (asks for a nickname) |
 | 91 | Profile details · Unsaved changes | with Profile details | to do |  |
 | 92 | Change password · Wrong current | with Change password | to do |  |
 | 93 | Change email · Already in use | — | not built |  |
 | 94 | Delete account · Wrong password | with Delete account | to do |  |
-| 95 | Feedback · Not sent | — | done | 289e43f (asks for a nickname) |
+| 95 | Feedback · Not sent | — | not built |  |
 
 ## H · Runtime errors and warnings
 
