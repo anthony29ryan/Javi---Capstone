@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -123,6 +123,8 @@ export default function HomeScreen({ navigation }) {
   // Re-asked on every visit so a finished quiz shows up. Any failure just
   // means course-order picks, so it is never reported.
   const [weakTopics, setWeakTopics] = useState(null);
+  // Lessons kept out of Recommended until something real changes; see below.
+  const recHidden = useRef({ key: null, hidden: new Set() });
   useFocusEffect(
     useCallback(() => {
       if (offline) {
@@ -181,21 +183,30 @@ export default function HomeScreen({ navigation }) {
   const nextCourse = nextModule ? coursesById[nextModule.courseId] : null;
   const nextModuleStats = next ? moduleProgress[next.moduleId] : null;
 
+  // Every pick in refill order. The list only changes when a quiz changes the
+  // weak modules or a lesson is finished (the key). Until then, every lesson
+  // that reaches the Continue card stays out, so tapping through the rows
+  // never brings one back or shifts the others; the next one fills the gap.
   const weakPicks = pickWeakLessons({
     topics: weakTopics ?? [],
     orderedLessons: ordered,
     isComplete: isLessonComplete,
-    count: RECOMMENDATION_COUNT,
-    skipId: next?.id,
+    count: Infinity,
   });
-  const recommendations = weakPicks.lessons.length
-    ? weakPicks.lessons
-    : remaining.filter((lesson) => lesson.id !== next?.id).slice(0, RECOMMENDATION_COUNT);
-  const weakNames = weakPicks.topics.map((t) => modulesById[t.topic]?.title ?? 'this module');
+  const recKey = `${weakTopics === null}|${weakPicks.topics.map((t) => t.topic)}|${completedCount}`;
+  if (recHidden.current.key !== recKey) recHidden.current = { key: recKey, hidden: new Set() };
+  if (next) recHidden.current.hidden.add(next.id);
+  const recommendations = (weakPicks.lessons.length ? weakPicks.lessons : remaining)
+    .filter((lesson) => !recHidden.current.hidden.has(lesson.id))
+    .slice(0, RECOMMENDATION_COUNT);
+  const shownTopics = weakPicks.topics.filter((t) =>
+    recommendations.some((lesson) => lesson.moduleId === t.topic)
+  );
+  const weakNames = shownTopics.map((t) => modulesById[t.topic]?.title ?? 'this module');
   // The model's accuracy covers recent answers, so it is not called a quiz score.
   const recWhy =
     weakNames.length === 1
-      ? `Javi thinks you should review ${weakNames[0]} (${Math.round(weakPicks.topics[0].accuracy * 100)}% right recently).`
+      ? `Javi thinks you should review ${weakNames[0]} (${Math.round(shownTopics[0].accuracy * 100)}% right recently).`
       : weakNames.length > 1
         ? `Javi thinks you should review ${weakNames.slice(0, -1).join(', ')} and ${weakNames.at(-1)}.`
         : 'Next in your course order.';
