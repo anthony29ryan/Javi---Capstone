@@ -4,16 +4,14 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 import Svg, { Path } from 'react-native-svg';
 import {
   FlatList,
-  LayoutAnimation,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
-  UIManager,
   View,
 } from 'react-native';
 
 import AuthToast from '../components/auth/AuthToast';
+import Collapsible, { Chevron } from '../components/Collapsible';
 import LessonRow from '../components/LessonRow';
 import OfflineBanner from '../components/OfflineBanner';
 import ScreenState from '../components/ScreenState';
@@ -22,12 +20,6 @@ import { levelLabel } from '../constants/levels';
 import { scorePercent, useProgress } from '../context/ProgressContext';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
-// Old-architecture Android needs this switched on before LayoutAnimation does
-// anything. It is a no-op (and the method is absent) under the new renderer,
-// hence the guard rather than a bare call.
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 
 const modulesLabel = (n) => `${n} module${n === 1 ? '' : 's'}`;
 const FINISHED_HOLD_MS = 1200;
@@ -211,7 +203,6 @@ export default function ModulesScreen({ route, navigation }) {
   }
 
   function toggleModule(moduleId) {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setTouched(true);
     setOpenModuleId((current) => {
       const effective = touched ? current : suggestedOpenId;
@@ -348,37 +339,35 @@ export default function ModulesScreen({ route, navigation }) {
                 {/* One chevron, turned: down when closed, up when open. A
                     rotated glyph keeps the two states visually identical apart
                     from direction, which two different characters would not. */}
-                <Text style={[styles.chevron, expanded && styles.chevronOpen]}>›</Text>
+                <Chevron open={expanded} />
               </View>
             </Pressable>
 
-            {expanded ? (
-              <>
-                {moduleLessons.map((lesson) => (
-                  <LessonRow
-                    key={lesson.id}
-                    lesson={lesson}
-                    done={isLessonComplete(lesson.id)}
-                    onPress={() =>
-                      navigation.navigate('LessonDetail', {
-                        lessonId: lesson.id,
-                        lessonTitle: lesson.title,
-                      })
-                    }
-                  />
-                ))}
-
-                <Pressable
+            <Collapsible open={expanded}>
+              {moduleLessons.map((lesson) => (
+                <LessonRow
+                  key={lesson.id}
+                  lesson={lesson}
+                  done={isLessonComplete(lesson.id)}
                   onPress={() =>
-                    navigation.navigate('Quiz', { moduleId: item.id, title: item.title })
+                    navigation.navigate('LessonDetail', {
+                      lessonId: lesson.id,
+                      lessonTitle: lesson.title,
+                    })
                   }
-                  style={({ pressed }) => [styles.quizRow, pressed && styles.quizRowPressed]}
-                >
-                  <Text style={styles.quizLabel}>Module quiz</Text>
-                  <Text style={styles.quizNote}>{scoreNote(moduleScores[item.id])}</Text>
-                </Pressable>
-              </>
-            ) : null}
+                />
+              ))}
+
+              <Pressable
+                onPress={() =>
+                  navigation.navigate('Quiz', { moduleId: item.id, title: item.title })
+                }
+                style={({ pressed }) => [styles.quizRow, pressed && styles.quizRowPressed]}
+              >
+                <Text style={styles.quizLabel}>Module quiz</Text>
+                <Text style={styles.quizNote}>{scoreNote(moduleScores[item.id])}</Text>
+              </Pressable>
+            </Collapsible>
           </View>
         );
       }}
@@ -489,17 +478,6 @@ const styles = StyleSheet.create({
   cardHeadRight: {
     alignItems: 'center',
     gap: spacing.sm,
-  },
-  chevron: {
-    fontFamily: fonts.mono,
-    fontSize: 16,
-    lineHeight: 16,
-    color: colors.borderStrong,
-    transform: [{ rotate: '90deg' }],
-  },
-  chevronOpen: {
-    color: colors.primaryDark,
-    transform: [{ rotate: '-90deg' }],
   },
   moduleLabel: {
     ...type.sectionLabel,

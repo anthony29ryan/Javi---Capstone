@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,
-  LayoutAnimation,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  UIManager,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import Collapsible, { Chevron } from '../components/Collapsible';
 import Mascot from '../components/Mascot';
 import ScreenState from '../components/ScreenState';
 import TutorChat from '../components/TutorChat';
@@ -19,11 +18,6 @@ import { levelLabel } from '../constants/levels';
 import { useProgress } from '../context/ProgressContext';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
-// Same guard as ModulesScreen: old-architecture Android needs this before
-// LayoutAnimation does anything.
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 
 /**
  * The Java tutor tab. The tutor only answers on one module at a time, so the
@@ -98,7 +92,6 @@ export default function TutorScreen({ route }) {
   const expandedCourseId = openCourseId ?? studyingCourseId;
 
   function toggleCourse(courseId) {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setOpenCourseId(expandedCourseId === courseId ? '' : courseId);
   }
 
@@ -130,28 +123,28 @@ export default function TutorScreen({ route }) {
                 <Text style={styles.levelLabel}>{levelLabel(courseIndex)}</Text>
                 <Text style={styles.courseTitle}>{course.title}</Text>
               </View>
-              <Text style={[styles.chevron, expanded && styles.chevronOpen]}>›</Text>
+              <Chevron open={expanded} />
             </Pressable>
 
-            {expanded
-              ? modules
-                  .filter((item) => item.courseId === course.id)
-                  .map((item) => (
-                    <Pressable
-                      key={item.id}
-                      onPress={() => setModuleId(item.id)}
-                      style={({ pressed }) => [styles.moduleRow, pressed && styles.rowPressed]}
-                    >
-                      <View style={styles.dot}>
-                        <Text style={styles.dotMark}>{item.order}</Text>
-                      </View>
-                      <Text style={styles.moduleTitle} numberOfLines={2}>
-                        {item.title}
-                      </Text>
-                      <Text style={styles.rowChevron}>›</Text>
-                    </Pressable>
-                  ))
-              : null}
+            <Collapsible open={expanded}>
+              {modules
+                .filter((item) => item.courseId === course.id)
+                .map((item) => (
+                  <Pressable
+                    key={item.id}
+                    onPress={() => setModuleId(item.id)}
+                    style={({ pressed }) => [styles.moduleRow, pressed && styles.rowPressed]}
+                  >
+                    <View style={styles.dot}>
+                      <Text style={styles.dotMark}>{item.order}</Text>
+                    </View>
+                    <Text style={styles.moduleTitle} numberOfLines={2}>
+                      {item.title}
+                    </Text>
+                    <Text style={styles.rowChevron}>›</Text>
+                  </Pressable>
+                ))}
+            </Collapsible>
           </View>
         );
       })}
@@ -216,17 +209,6 @@ const styles = StyleSheet.create({
     ...type.cardTitle,
     color: colors.text,
     marginTop: spacing.xs,
-  },
-  chevron: {
-    fontFamily: fonts.mono,
-    fontSize: 16,
-    lineHeight: 16,
-    color: colors.borderStrong,
-    transform: [{ rotate: '90deg' }],
-  },
-  chevronOpen: {
-    color: colors.primaryDark,
-    transform: [{ rotate: '-90deg' }],
   },
   rowPressed: {
     backgroundColor: colors.primarySoft,

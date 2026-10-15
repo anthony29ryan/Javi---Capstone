@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import AuthButton from '../components/auth/AuthButton';
 import AuthToast from '../components/auth/AuthToast';
@@ -291,17 +290,8 @@ export default function LessonDetailScreen({ route, navigation }) {
         </View>
       </ScrollView>
 
-      {/* Frame 26's pinned bar: Javi and the complete button, over a fade. */}
+      {/* Frame 26's pinned bar: Javi and the complete button, with nothing behind them. */}
       <View style={[styles.bar, { paddingBottom: insets.bottom + 16 }]} pointerEvents="box-none">
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <Defs>
-            <LinearGradient id="barFade" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={colors.background} stopOpacity="0" />
-              <Stop offset="0.3" stopColor={colors.background} stopOpacity="1" />
-            </LinearGradient>
-          </Defs>
-          <Rect width="100%" height="100%" fill="url(#barFade)" />
-        </Svg>
         <Pressable
           onPress={() =>
             navigation.navigate('AskJaviSheet', {

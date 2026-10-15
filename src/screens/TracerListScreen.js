@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthBackButton from '../components/auth/AuthBackButton';
 import Button from '../components/Button';
+import Collapsible from '../components/Collapsible';
 import ScreenState from '../components/ScreenState';
 import { useProgress } from '../context/ProgressContext';
 import { getTraces } from '../services/content';
@@ -54,8 +55,9 @@ function TraceCard({ trace, topic, level, traced, open, onToggle, onStart }) {
         </View>
       </Pressable>
 
-      {open ? (
-        <>
+      <Collapsible open={open}>
+        {/* The gap lives inside, so a closed card adds no space below its head. */}
+        <View style={styles.openBody}>
           <View style={styles.preview}>
             {trace.lines.map((line, i) => (
               <View key={i} style={styles.previewRow}>
@@ -65,8 +67,8 @@ function TraceCard({ trace, topic, level, traced, open, onToggle, onStart }) {
             ))}
           </View>
           <Button label="Start typing" onPress={onStart} />
-        </>
-      ) : null}
+        </View>
+      </Collapsible>
     </View>
   );
 }
@@ -252,7 +254,6 @@ const styles = StyleSheet.create({
   },
   card: {
     padding: spacing.lg,
-    gap: spacing.lg,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: colors.border,
@@ -323,6 +324,10 @@ const styles = StyleSheet.create({
     fontSize: 11.5,
     color: colors.textMuted,
     marginTop: spacing.xs,
+  },
+  openBody: {
+    paddingTop: spacing.lg,
+    gap: spacing.lg,
   },
   preview: {
     paddingVertical: spacing.lg,

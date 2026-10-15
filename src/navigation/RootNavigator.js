@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 import { useAssets } from 'expo-asset';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAuth } from '../context/AuthContext';
 import { ProgressProvider } from '../context/ProgressContext';
@@ -48,6 +49,26 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 
 const Stack = createNativeStackNavigator();
 
+// A cream strip behind the status bar on every screen, so content scrolling
+// up does not show through under the clock. Screens draw edge to edge.
+function StatusStrip({ children }) {
+  const insets = useSafeAreaInsets();
+  return (
+    <View style={styles.layout}>
+      {children}
+      <View style={[styles.statusStrip, { height: insets.top }]} />
+    </View>
+  );
+}
+
+// The navigator calls a layout as a plain function, so the hook above has to
+// live in a component it renders rather than in the layout itself.
+const withStatusStrip = ({ children }) => <StatusStrip>{children}</StatusStrip>;
+
+// Sheets skip the strip: theirs would sit undimmed above the backdrop, while
+// the screen underneath keeps its own strip under the dim.
+const bare = ({ children }) => children;
+
 // Bottom sheets drawn as see-through screens over the one below. Transparent,
 // or the stack's page background hides that screen behind the sheet. No stack
 // animation: BottomSheet slides itself in and out.
@@ -80,6 +101,7 @@ function AuthStack({ afterAccountDeletion }) {
     <Stack.Navigator
       initialRouteName={afterAccountDeletion ? 'Signup' : 'Welcome'}
       screenOptions={{ headerShown: false }}
+      screenLayout={withStatusStrip}
     >
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
@@ -96,6 +118,7 @@ function AppStack({ needsSetup }) {
       // route rather than a redirect so there is no flash of the app behind it.
       initialRouteName={needsSetup ? 'Setup' : 'MainTabs'}
       screenOptions={headerScreenOptions}
+      screenLayout={withStatusStrip}
     >
       {/* The tab bar is the app's home; everything below is pushed over it. */}
       <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
@@ -140,9 +163,20 @@ function AppStack({ needsSetup }) {
         name="AvatarSheet"
         component={AvatarSheetScreen}
         options={SHEET_OPTIONS}
+        layout={bare}
       />
-      <Stack.Screen name="DownloadSheet" component={DownloadSheetScreen} options={SHEET_OPTIONS} />
-      <Stack.Screen name="AskJaviSheet" component={AskJaviSheetScreen} options={SHEET_OPTIONS} />
+      <Stack.Screen
+        name="DownloadSheet"
+        component={DownloadSheetScreen}
+        options={SHEET_OPTIONS}
+        layout={bare}
+      />
+      <Stack.Screen
+        name="AskJaviSheet"
+        component={AskJaviSheetScreen}
+        options={SHEET_OPTIONS}
+        layout={bare}
+      />
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'Quiz' }} />
       <Stack.Screen
         name="TracerList"
@@ -241,6 +275,16 @@ export default function RootNavigator() {
 }
 
 const styles = StyleSheet.create({
+  layout: {
+    flex: 1,
+  },
+  statusStrip: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: colors.background,
+  },
   blank: {
     flex: 1,
     backgroundColor: colors.background,

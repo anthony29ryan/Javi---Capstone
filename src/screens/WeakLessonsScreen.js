@@ -1,27 +1,20 @@
 import { useState } from 'react';
 import {
-  LayoutAnimation,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  UIManager,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthBackButton from '../components/auth/AuthBackButton';
+import Collapsible, { Chevron } from '../components/Collapsible';
 import LessonRow from '../components/LessonRow';
 import Mascot from '../components/Mascot';
 import { useProgress } from '../context/ProgressContext';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
-// Same guard as ModulesScreen: old-architecture Android needs this before
-// LayoutAnimation does anything.
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 
 /**
  * Every lesson in the modules the weak-topic model flagged, opened from Home's
@@ -48,7 +41,6 @@ export default function WeakLessonsScreen({ navigation, route }) {
   const [openId, setOpenId] = useState(sections[0]?.topic.topic ?? null);
 
   function toggle(moduleId) {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setOpenId((current) => (current === moduleId ? null : moduleId));
   }
 
@@ -91,35 +83,33 @@ export default function WeakLessonsScreen({ navigation, route }) {
                       {Math.round(topic.accuracy * 100)}% of recent answers right
                     </Text>
                   </View>
-                  <Text style={[styles.chevron, expanded && styles.chevronOpen]}>›</Text>
+                  <Chevron open={expanded} />
                 </Pressable>
   
-                {expanded ? (
-                  <>
-                    {moduleLessons.map((lesson) => (
-                      <LessonRow
-                        key={lesson.id}
-                        lesson={lesson}
-                        done={isLessonComplete(lesson.id)}
-                        onPress={() =>
-                          navigation.navigate('LessonDetail', {
-                            lessonId: lesson.id,
-                            lessonTitle: lesson.title,
-                          })
-                        }
-                      />
-                    ))}
-                    <Pressable
+                <Collapsible open={expanded}>
+                  {moduleLessons.map((lesson) => (
+                    <LessonRow
+                      key={lesson.id}
+                      lesson={lesson}
+                      done={isLessonComplete(lesson.id)}
                       onPress={() =>
-                        navigation.navigate('Quiz', { moduleId: module.id, title: module.title })
+                        navigation.navigate('LessonDetail', {
+                          lessonId: lesson.id,
+                          lessonTitle: lesson.title,
+                        })
                       }
-                      style={({ pressed }) => [styles.quizRow, pressed && styles.quizRowPressed]}
-                    >
-                      <Text style={styles.quizLabel}>Retake quiz</Text>
-                      <Text style={styles.quizChevron}>›</Text>
-                    </Pressable>
-                  </>
-                ) : null}
+                    />
+                  ))}
+                  <Pressable
+                    onPress={() =>
+                      navigation.navigate('Quiz', { moduleId: module.id, title: module.title })
+                    }
+                    style={({ pressed }) => [styles.quizRow, pressed && styles.quizRowPressed]}
+                  >
+                    <Text style={styles.quizLabel}>Retake quiz</Text>
+                    <Text style={styles.quizChevron}>›</Text>
+                  </Pressable>
+                </Collapsible>
               </View>
             );
           })}
@@ -203,17 +193,6 @@ const styles = StyleSheet.create({
     ...type.meta,
     color: colors.textMuted,
     marginTop: spacing.xs,
-  },
-  chevron: {
-    fontFamily: fonts.mono,
-    fontSize: 16,
-    lineHeight: 16,
-    color: colors.borderStrong,
-    transform: [{ rotate: '90deg' }],
-  },
-  chevronOpen: {
-    color: colors.primaryDark,
-    transform: [{ rotate: '-90deg' }],
   },
   quizRow: {
     flexDirection: 'row',
