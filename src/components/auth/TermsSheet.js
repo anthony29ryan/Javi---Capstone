@@ -62,12 +62,19 @@ export default function TermsSheet({ visible, initialTab = 'terms', onClose, onA
   const doc = LEGAL_DOCS[tab];
   const unread = TABS.filter(([id]) => !read[id]).map(([, label]) => label);
 
-  function markReadIfAtEnd(offsetY) {
+  function markRead() {
+    if (!read[tab]) setRead((current) => ({ ...current, [tab]: true }));
+  }
+
+  // Uses the sizes each scroll event carries rather than ones stored earlier.
+  function checkEnd({ nativeEvent: { contentOffset, layoutMeasurement, contentSize } }) {
+    if (contentOffset.y + layoutMeasurement.height >= contentSize.height - END_SLACK) markRead();
+  }
+
+  // A document short enough to fit without scrolling counts as read once shown.
+  function checkFits() {
     const { view, content } = box.current;
-    // A document short enough to fit without scrolling counts as read once shown.
-    if (view && content && offsetY + view >= content - END_SLACK && !read[tab]) {
-      setRead((current) => ({ ...current, [tab]: true }));
-    }
+    if (view && content && content <= view + END_SLACK) markRead();
   }
 
   function pickTab(id) {
@@ -114,15 +121,20 @@ export default function TermsSheet({ visible, initialTab = 'terms', onClose, onA
             ref={scroll}
             style={styles.scroll}
             contentContainerStyle={styles.scrollContent}
-            scrollEventThrottle={100}
-            onScroll={(e) => markReadIfAtEnd(e.nativeEvent.contentOffset.y)}
+            // Android honours the throttle, and a fling can land at the end
+            // between two events; the end-of-drag and end-of-momentum events
+            // always report where the list came to rest.
+            scrollEventThrottle={16}
+            onScroll={checkEnd}
+            onScrollEndDrag={checkEnd}
+            onMomentumScrollEnd={checkEnd}
             onLayout={(e) => {
               box.current.view = e.nativeEvent.layout.height;
-              markReadIfAtEnd(0);
+              checkFits();
             }}
             onContentSizeChange={(_, contentHeight) => {
               box.current.content = contentHeight;
-              markReadIfAtEnd(0);
+              checkFits();
             }}
           >
             <Text style={styles.intro}>{doc.intro}</Text>
