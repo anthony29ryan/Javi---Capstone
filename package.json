@@ -33,7 +33,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "node --experimental-test-module-mocks --test tests/streak.test.js tests/offline.test.js tests/tracer.test.js functions/weakTopics.test.js",
+    "test": "node --experimental-test-module-mocks --test tests/streak.test.js tests/offline.test.js tests/tracer.test.js tests/recommendations.test.js functions/weakTopics.test.js",
     "model:train": "node functions/scripts/trainModel.js",
     "content:verify": "node scripts/verifyContent.js",
     "content:import": "node scripts/importLessons.js",

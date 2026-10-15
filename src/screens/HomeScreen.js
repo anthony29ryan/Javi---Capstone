@@ -1,11 +1,17 @@
+import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Avatar from '../components/Avatar';
+import Mascot from '../components/Mascot';
 import OfflineBanner from '../components/OfflineBanner';
 import ScreenState from '../components/ScreenState';
+import Skeleton from '../components/Skeleton';
 import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
+import { pickWeakLessons } from '../services/recommendations';
+import { getWeakTopics } from '../services/weakTopics';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 const PRACTICE_TILE_BG = '#FFC97E';
@@ -55,6 +61,46 @@ function Tile({ eyebrow, title, meta, background, ink, subtleInk, onPress }) {
   );
 }
 
+function RecSkeleton() {
+  return (
+    <View style={styles.recRow}>
+      <Skeleton style={styles.skelGlyph} />
+      <View style={styles.skelLines}>
+        <Skeleton style={styles.skelRecTitle} />
+        <Skeleton style={styles.skelRecMeta} />
+      </View>
+    </View>
+  );
+}
+
+// Frame 63: the screen's shape in grey while progress loads.
+function HomeSkeleton({ top }) {
+  return (
+    <View style={styles.container}>
+      <View style={[styles.content, { paddingTop: top }]}>
+        <View style={styles.header}>
+          <View style={styles.skelLines}>
+            <Skeleton style={styles.skelGreeting} />
+            <Skeleton style={styles.skelStreak} />
+          </View>
+          <Skeleton style={styles.skelAvatar} />
+        </View>
+        <Skeleton style={styles.skelHero} />
+        <View style={styles.tiles}>
+          <Skeleton style={styles.skelTile} />
+          <Skeleton style={styles.skelTile} />
+        </View>
+        <Skeleton style={styles.skelHeading} />
+        <View style={styles.recommendations}>
+          <RecSkeleton />
+          <RecSkeleton />
+          <RecSkeleton />
+        </View>
+      </View>
+    </View>
+  );
+}
+
 export default function HomeScreen({ navigation }) {
   const { user, callName } = useAuth();
   const insets = useSafeAreaInsets();
@@ -69,10 +115,31 @@ export default function HomeScreen({ navigation }) {
     lastLessonId,
     loading,
     error,
+    offline,
     refresh,
   } = useProgress();
 
-  if (loading) return <ScreenState loading />;
+  // The model's weak topics; null while the first answer is on its way.
+  // Re-asked on every visit so a finished quiz shows up. Any failure just
+  // means course-order picks, so it is never reported.
+  const [weakTopics, setWeakTopics] = useState(null);
+  useFocusEffect(
+    useCallback(() => {
+      if (offline) {
+        setWeakTopics([]);
+        return undefined;
+      }
+      let cancelled = false;
+      getWeakTopics()
+        .then((topics) => !cancelled && setWeakTopics(topics))
+        .catch(() => !cancelled && setWeakTopics([]));
+      return () => {
+        cancelled = true;
+      };
+    }, [offline])
+  );
+
+  if (loading) return <HomeSkeleton top={insets.top + spacing.lg} />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
 
   const name = callName;
@@ -114,9 +181,21 @@ export default function HomeScreen({ navigation }) {
   const nextCourse = nextModule ? coursesById[nextModule.courseId] : null;
   const nextModuleStats = next ? moduleProgress[next.moduleId] : null;
 
-  const recommendations = remaining
-    .filter((lesson) => lesson.id !== next?.id)
-    .slice(0, RECOMMENDATION_COUNT);
+  const weakPicks = pickWeakLessons({
+    topics: weakTopics ?? [],
+    orderedLessons: ordered,
+    isComplete: isLessonComplete,
+    count: RECOMMENDATION_COUNT,
+    skipId: next?.id,
+  });
+  const recommendations = weakPicks.lessons.length
+    ? weakPicks.lessons
+    : remaining.filter((lesson) => lesson.id !== next?.id).slice(0, RECOMMENDATION_COUNT);
+  // The model's accuracy covers recent answers, so it is not called a quiz score.
+  const recWhy = weakPicks.topic
+    ? `Picked because your recent ${modulesById[weakPicks.topic.topic]?.title ?? 'quiz'} quiz answers were ${Math.round(weakPicks.topic.accuracy * 100)}% right.`
+    : 'Next in your course order.';
+  const recsLoading = weakTopics === null;
 
   function openLesson(lesson) {
     navigation.navigate('LessonDetail', { lessonId: lesson.id, lessonTitle: lesson.title });
@@ -128,6 +207,7 @@ export default function HomeScreen({ navigation }) {
       contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
     >
       <View style={styles.header}>
+        <Mascot variant="greeting" px={48} decorative animate={false} style={styles.mascot} />
         <View style={styles.headerText}>
           <Text style={styles.greeting} numberOfLines={1}>
             {greeting()}, {name}
@@ -140,7 +220,7 @@ export default function HomeScreen({ navigation }) {
         <Avatar user={user} name={callName} size={44} onPress={() => navigation.navigate('Settings')} />
       </View>
 
-      <OfflineBanner />
+      <OfflineBanner message="Showing lessons and progress saved on this phone." />
 
       {next ? (
         <View style={styles.hero}>
@@ -188,9 +268,8 @@ export default function HomeScreen({ navigation }) {
         <Tile
           eyebrow="Tutor"
           title="Ask about code"
-          // Honest rather than a question count: the tutor has no backing
-          // service in this build, so there is nothing to count.
-          meta="Not set up yet"
+          // askTutor's real limit (DAILY_QUESTIONS in functions/index.js).
+          meta="30 questions a day"
           background={TUTOR_TILE_BG}
           ink={colors.white}
           subtleInk="rgba(255,255,255,.62)"
@@ -198,7 +277,7 @@ export default function HomeScreen({ navigation }) {
         />
       </View>
 
-      {recommendations.length > 0 ? (
+      {recsLoading || recommendations.length > 0 ? (
         <>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Recommended for you</Text>
@@ -212,7 +291,14 @@ export default function HomeScreen({ navigation }) {
           </View>
 
           <View style={styles.recommendations}>
-            {recommendations.map((lesson) => (
+            {recsLoading ? (
+              <>
+                <RecSkeleton />
+                <RecSkeleton />
+                <RecSkeleton />
+              </>
+            ) : null}
+            {recsLoading ? null : recommendations.map((lesson) => (
               <Pressable
                 key={lesson.id}
                 onPress={() => openLesson(lesson)}
@@ -232,12 +318,7 @@ export default function HomeScreen({ navigation }) {
             ))}
           </View>
 
-          {/* The design intends this list to come from the trained model. Until
-              that runs, it is simply what comes next in the course order. */}
-          <Text style={styles.recWhy}>
-            Next in your course order. Personalised picks need the trained model, which is not
-            running in this build.
-          </Text>
+          {recsLoading ? null : <Text style={styles.recWhy}>{recWhy}</Text>}
         </>
       ) : null}
     </ScrollView>
@@ -259,6 +340,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     gap: 14,
+  },
+  mascot: {
+    marginTop: -4,
   },
   headerText: {
     flex: 1,
@@ -424,6 +508,8 @@ const styles = StyleSheet.create({
   },
   recMeta: {
     ...type.meta,
+    letterSpacing: 11.5 * 0.06,
+    textTransform: 'uppercase',
     color: colors.borderStrong,
     marginTop: spacing.xs,
   },
@@ -438,5 +524,56 @@ const styles = StyleSheet.create({
     color: colors.borderStrong,
     marginTop: 14,
     marginHorizontal: spacing.xs,
+  },
+  skelLines: {
+    flex: 1,
+    gap: 10,
+  },
+  skelGreeting: {
+    height: 26,
+    width: '78%',
+    borderRadius: 8,
+  },
+  skelStreak: {
+    height: 14,
+    width: '52%',
+    borderRadius: 6,
+  },
+  skelAvatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+  },
+  skelHero: {
+    marginTop: 20,
+    height: 184,
+    borderRadius: radius.xl,
+  },
+  skelTile: {
+    flex: 1,
+    height: 94,
+    borderRadius: 20,
+  },
+  skelHeading: {
+    marginTop: 26,
+    marginBottom: spacing.md,
+    height: 18,
+    width: '56%',
+    borderRadius: 6,
+  },
+  skelGlyph: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+  },
+  skelRecTitle: {
+    height: 14,
+    width: '70%',
+    borderRadius: 6,
+  },
+  skelRecMeta: {
+    height: 10,
+    width: '44%',
+    borderRadius: 5,
   },
 });

@@ -35,12 +35,14 @@ export default function Avatar({ user, name, onPress, size = 38 }) {
 
 const styles = StyleSheet.create({
   circle: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.primarySoft,
+    borderWidth: 1,
+    borderColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   initial: {
-    color: colors.white,
+    color: colors.primaryDark,
     fontFamily: fonts.bold,
   },
   pressed: {
