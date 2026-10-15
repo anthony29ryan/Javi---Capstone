@@ -19,7 +19,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 13 done · 52 to do · 46 not built · 2 partly · 9 last
+Totals: 20 done · 45 to do · 46 not built · 2 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -33,7 +33,7 @@ Totals: 13 done · 52 to do · 46 not built · 2 partly · 9 last
 | 06 | Link expired | — | not built |  |
 | 07 | Before you start | SetupScreen | done | 289e43f |
 | 08 | Notification permission | Android's own dialog | done | 289e43f |
-| 09 | Log in | LoginScreen | to do |  |
+| 09 | Log in | LoginScreen | done | 00c4d64 |
 | 10 | Continue with Google | — | not built |  |
 | 11 | Forgot password | ForgotPasswordScreen | to do |  |
 | 12 | Set a new password | — | not built |  |
@@ -143,13 +143,13 @@ Totals: 13 done · 52 to do · 46 not built · 2 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 79 | Log in · Empty fields | with Log in | to do |  |
-| 80 | Log in · Wrong password | with Log in | to do |  |
-| 81 | Log in · Too many attempts | with Log in | to do |  |
-| 82 | Log in · Email not verified | with Log in | to do |  |
+| 79 | Log in · Empty fields | with Log in | done | 00c4d64 |
+| 80 | Log in · Wrong password | with Log in | done | 00c4d64 (generic message; no tries-left count (Firebase decides)) |
+| 81 | Log in · Too many attempts | with Log in | done | 00c4d64 (no 5-minute claim (Firebase decides)) |
+| 82 | Log in · Email not verified | with Log in | done | 00c4d64 (handled by Check your email) |
 | 83 | Log in · Google sign-in failed | — | not built |  |
-| 84 | Log in · No connection | with Log in | to do |  |
-| 85 | Log in · Signing in | with Log in | to do |  |
+| 84 | Log in · No connection | with Log in | done | 00c4d64 |
+| 85 | Log in · Signing in | with Log in | done | 00c4d64 |
 | 86 | Sign up · Field errors | with Sign up | partly | 92c72ee (one error at a time; the design shows all at once) |
 | 87 | Sign up · Email already used | with Sign up | done | 92c72ee |
 | 88 | Forgot password · Rate limited | with Forgot password | to do |  |
