@@ -22,7 +22,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 41 done · 27 to do · 44 not built · 1 partly · 9 last
+Totals: 47 done · 22 to do · 43 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -67,7 +67,7 @@ Totals: 41 done · 27 to do · 44 not built · 1 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 25 | Module | ModulesScreen + LessonsScreen | to do |  |
+| 25 | Module | ModulesScreen | done | 0a1bd8d |
 | 26 | Lesson | LessonDetailScreen | to do |  |
 | 27 | Lesson complete | — | not built |  |
 | 28 | Module complete | — | not built |  |
@@ -111,11 +111,11 @@ Totals: 41 done · 27 to do · 44 not built · 1 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 54 | Module · Download sheet | — | not built |  |
-| 55 | Module · Downloading | with Module | to do |  |
-| 56 | Toast · Modules saved | with Module | to do |  |
+| 54 | Module · Download sheet | DownloadSheetScreen | done | 0a1bd8d (lesson counts, no sizes) |
+| 55 | Module · Downloading | with Module | done | 0a1bd8d (% by finished modules) |
+| 56 | Toast · Modules saved | with Module | done | 0a1bd8d |
 | 57 | Download · Not enough space | — | not built |  |
-| 58 | Module · Offline, saved modules | with Module | to do |  |
+| 58 | Module · Offline, saved modules | with Module | done | 0a1bd8d |
 | 59 | Offline lessons | — | not built |  |
 | 60 | Toast · Module removed | — | not built |  |
 | 61 | Remove all downloads | — | not built |  |
@@ -128,7 +128,7 @@ Totals: 41 done · 27 to do · 44 not built · 1 partly · 9 last
 | 63 | Home · Loading | with Home | done | 2894257 |
 | 64 | Lesson · Loading | with Lesson | to do |  |
 | 65 | Courses · Loading | with Courses | done | 4e9c640 |
-| 66 | Module · Loading | with Module | to do |  |
+| 66 | Module · Loading | with Module | done | 0a1bd8d |
 | 67 | Practice · Loading | with Practice | done | 5c6116d |
 | 68 | Profile · Loading | with Profile | done | 4ad2ad9 |
 | 69 | Home · Offline, saved content | with Home | done | 2894257 (inline bar, not edge to edge) |
