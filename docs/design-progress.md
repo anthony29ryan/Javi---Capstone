@@ -19,7 +19,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 22 done · 43 to do · 46 not built · 2 partly · 9 last
+Totals: 25 done · 40 to do · 46 not built · 2 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -53,7 +53,7 @@ Totals: 22 done · 43 to do · 46 not built · 2 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 19 | Home | HomeScreen | to do |  |
+| 19 | Home | HomeScreen | done | 2894257 |
 | 20 | Courses | CoursesScreen | to do |  |
 | 21 | Practice | PracticeScreen | partly | 1083617 (Code Tracer card only) |
 | 22 | Tutor | TutorScreen | to do |  |
@@ -122,13 +122,13 @@ Totals: 22 done · 43 to do · 46 not built · 2 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 63 | Home · Loading | with Home | to do |  |
+| 63 | Home · Loading | with Home | done | 2894257 |
 | 64 | Lesson · Loading | with Lesson | to do |  |
 | 65 | Courses · Loading | with Courses | to do |  |
 | 66 | Module · Loading | with Module | to do |  |
 | 67 | Practice · Loading | with Practice | to do |  |
 | 68 | Profile · Loading | with Profile | to do |  |
-| 69 | Home · Offline, saved content | with Home | to do |  |
+| 69 | Home · Offline, saved content | with Home | done | 2894257 (inline bar, not edge to edge) |
 | 70 | Courses · Error | with Courses | to do |  |
 | 71 | Lesson · Offline | with Lesson | to do |  |
 | 72 | Quiz · Offline | with Quiz | to do |  |
