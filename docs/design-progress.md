@@ -22,7 +22,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 70 done · 1 to do · 43 not built · 1 partly · 9 last
+Totals: 71 done · 0 to do · 43 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -104,7 +104,7 @@ Totals: 70 done · 1 to do · 43 not built · 1 partly · 9 last
 | 49 | Change password | ChangePasswordScreen | done | 17911ea (current-password check as OWASP ASVS / NIST ask; Firebase signs other devices out; known gap: no email alert after a change, needs an email service) |
 | 50 | Delete account | DeleteAccountScreen | done | da06720 (honest 30-day card instead of cannot be undone; no extra confirm popup; 51 not built) |
 | 51 | Account deleted | — | not built |  |
-| 52 | Welcome back · Restore | — | to do |  |
+| 52 | Welcome back · Restore | RestoreAccountScreen | done | 54e8792 (two choices, Restore or Keep it deleted; Start fresh left out, it needs a Cloud Function) |
 | 53 | Help & feedback | — | not built |  |
 | 54 | About | — | not built |  |
 | 55 | Terms & privacy | — | not built |  |
