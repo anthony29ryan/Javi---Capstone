@@ -24,22 +24,20 @@ function suggestions(topic) {
 }
 
 /**
- * The tutor chat, used at the bottom of a lesson and on the Tutor tab. The
+ * The tutor chat, used in a lesson's Ask Javi sheet and on the Tutor tab. The
  * question goes to the askTutor Cloud Function, which keeps the answer on this
  * module's lessons and saves the conversation. The thread is one per module,
  * so it is the same from any of the module's lessons and from the tab.
  *
  * `topic` is what the suggestion chips ask about (a lesson or module title).
- * `shownMessages` caps how much of the saved thread is shown; a lesson page
- * only needs the recent part. `fullScreen` fills the Tutor tab instead of
- * sitting in a card, with `header` above and an `emptyState` for new threads.
+ * `shownMessages` caps how much of the saved thread is shown; the lesson
+ * sheet only needs the recent part. It fills its parent, with `header` above
+ * the thread and an `emptyState` for new threads.
  */
 export default function TutorChat({
   moduleId,
   topic,
-  heading = 'Ask about this lesson',
   shownMessages = 10,
-  fullScreen = false,
   header = null,
   emptyState = false,
 }) {
@@ -109,7 +107,7 @@ export default function TutorChat({
     <>
       {loadingThread ? <ActivityIndicator color={colors.primary} style={styles.loading} /> : null}
 
-      {fullScreen && emptyState && !loadingThread && messages.length === 0 ? (
+      {emptyState && !loadingThread && messages.length === 0 ? (
         <View style={styles.empty}>
           <Mascot variant="curious" px={120} decorative animate={false} />
           <Text style={styles.emptyTitle}>Ask your first question</Text>
@@ -231,53 +229,24 @@ export default function TutorChat({
     </>
   );
 
-  if (fullScreen) {
-    return (
-      <View style={styles.fullScreen}>
-        {header}
-        <ScrollView
-          ref={scrollRef}
-          style={styles.fullThread}
-          contentContainerStyle={styles.fullThreadContent}
-          keyboardShouldPersistTaps="handled"
-          onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
-        >
-          {thread}
-        </ScrollView>
-        {controls}
-      </View>
-    );
-  }
-
   return (
-    <View style={styles.card}>
-      <View style={styles.head}>
-        <View style={styles.avatar} />
-        <View style={styles.headText}>
-          <Text style={styles.title}>{heading}</Text>
-          <Text style={styles.subtitle} numberOfLines={2}>
-            Javi only answers on this module
-          </Text>
-        </View>
-      </View>
-      {thread}
-      <View style={styles.cardControls}>{controls}</View>
+    <View style={styles.fullScreen}>
+      {header}
+      <ScrollView
+        ref={scrollRef}
+        style={styles.fullThread}
+        contentContainerStyle={styles.fullThreadContent}
+        keyboardShouldPersistTaps="handled"
+        onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
+      >
+        {thread}
+      </ScrollView>
+      {controls}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    marginTop: 22,
-    padding: spacing.lg,
-    borderRadius: 20,
-    backgroundColor: colors.primarySoft,
-    borderWidth: 1,
-    borderColor: colors.primary,
-  },
-  cardControls: {
-    marginTop: 14,
-  },
   fullScreen: {
     flex: 1,
   },
@@ -287,37 +256,6 @@ const styles = StyleSheet.create({
   fullThreadContent: {
     flexGrow: 1,
     paddingVertical: spacing.lg,
-  },
-  head: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: colors.primary,
-  },
-  headText: {
-    flex: 1,
-    minWidth: 0,
-  },
-  title: {
-    fontFamily: fonts.bold,
-    fontSize: 13.5,
-    lineHeight: 13.5 * 1.2,
-    color: colors.primaryDark,
-  },
-  subtitle: {
-    fontFamily: fonts.medium,
-    fontSize: 11,
-    lineHeight: 11 * 1.3,
-    color: colors.primaryDark,
-    marginTop: 3,
   },
   loading: {
     marginTop: spacing.md,

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,
   LayoutAnimation,
@@ -33,13 +33,19 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
  * The picked module lives in this screen's state. Tab screens stay mounted, so
  * it is kept while switching tabs and asked again only after the app restarts.
  */
-export default function TutorScreen() {
+export default function TutorScreen({ route }) {
   // Tab screen with no nav header, so it owns its top inset.
   const insets = useSafeAreaInsets();
   const { courses, modules, lessons, lastLessonId, loading, error, refresh } = useProgress();
   const [moduleId, setModuleId] = useState(null);
   // null until the learner taps a tier; until then the tier they are studying is open.
   const [openCourseId, setOpenCourseId] = useState(null);
+
+  // A lesson's "See the whole chat in Javi" opens this module. openedAt makes
+  // a second visit work even after Change cleared it.
+  useEffect(() => {
+    if (route.params?.moduleId) setModuleId(route.params.moduleId);
+  }, [route.params?.moduleId, route.params?.openedAt]);
 
   if (loading) return <ScreenState loading />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
@@ -59,7 +65,6 @@ export default function TutorScreen() {
           moduleId={module.id}
           topic={module.title}
           shownMessages={Infinity}
-          fullScreen
           emptyState
           header={
             <View style={styles.chatHead}>

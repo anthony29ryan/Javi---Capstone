@@ -1,18 +1,113 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
+import AuthButton from '../components/auth/AuthButton';
+import AuthToast from '../components/auth/AuthToast';
 import LessonBlocks from '../components/LessonBlocks';
+import Mascot from '../components/Mascot';
 import ScreenState from '../components/ScreenState';
-import TutorChat from '../components/TutorChat';
-import { levelLabel } from '../constants/levels';
+import Skeleton from '../components/Skeleton';
 import { useProgress } from '../context/ProgressContext';
 import { getLesson } from '../services/content';
 import { setLessonComplete } from '../services/progress';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
+// How close to the bottom counts as having read to the end.
+const END_SLACK = 24;
+
+// Floats above the content so it stays put; lessons are long, and without
+// this, getting back to the module means scrolling all the way up first.
+function BackButton({ top, onPress }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel="Go back"
+      style={({ pressed }) => [styles.back, { top }, pressed && styles.backPressed]}
+    >
+      <Text style={styles.backGlyph}>←</Text>
+    </Pressable>
+  );
+}
+
+// Indented to clear the floating back button, which reserves no space.
+function Crumb({ crumb, position }) {
+  return (
+    <View style={styles.crumbText}>
+      <Text style={styles.crumb} numberOfLines={1}>
+        {crumb}
+      </Text>
+      {position ? <Text style={styles.position}>{position}</Text> : null}
+    </View>
+  );
+}
+
+/** Frame 64. */
+function LessonSkeleton({ top, onBack }) {
+  return (
+    <View style={styles.screen}>
+      <View style={[styles.content, { paddingTop: top }]}>
+        <View style={[styles.crumbText, styles.skelCrumb]}>
+          <Skeleton style={styles.skelCrumbTop} />
+          <Skeleton style={styles.skelCrumbBottom} />
+        </View>
+        <View style={styles.skelTitleBlock}>
+          <Skeleton style={[styles.skelTitle, { width: '90%' }]} />
+          <Skeleton style={[styles.skelTitle, { width: '55%' }]} />
+          <Skeleton style={styles.skelMeta} />
+        </View>
+        <View style={styles.skelLines}>
+          {['100%', '96%', '88%', '64%'].map((width) => (
+            <Skeleton key={width} style={[styles.skelLine, { width }]} />
+          ))}
+        </View>
+        <Skeleton style={styles.skelCode} />
+        <Skeleton style={styles.skelCard} />
+      </View>
+      <BackButton top={top} onPress={onBack} />
+    </View>
+  );
+}
+
+/**
+ * Frames 71 and 97. Offline means the lesson's module was never downloaded;
+ * online, the server failed, and Firebase's own error code is shown rather
+ * than the design's made-up reference.
+ */
+function LessonError({ top, bottom, crumb, position, title, offline, code, onRetry, onBackToModule, onBack }) {
+  return (
+    <View style={styles.screen}>
+      <View style={[styles.content, styles.errorPage, { paddingTop: top, paddingBottom: bottom + spacing.xl }]}>
+        <Crumb crumb={crumb} position={position} />
+        <View style={styles.errorCentre}>
+          <Mascot variant={offline ? 'sleepy' : 'confused'} px={120} decorative animate={false} />
+          <Text style={styles.errorTitle}>
+            {offline ? 'This lesson is not on your phone yet' : 'Something went wrong on our side'}
+          </Text>
+          <Text style={styles.errorBody}>
+            {offline
+              ? `Only downloaded modules can be read offline. Connect to the internet to load ${title}.`
+              : `Javi could not load “${title}”. Your progress is safe. Try again in a minute.`}
+          </Text>
+          {!offline && code ? <Text style={styles.errorCode}>Error · {code}</Text> : null}
+        </View>
+        <AuthButton label="Try again" onPress={onRetry} />
+        <AuthButton
+          label="Back to module"
+          variant="secondary"
+          onPress={onBackToModule}
+          style={styles.errorBack}
+        />
+      </View>
+      <BackButton top={top} onPress={onBack} />
+    </View>
+  );
+}
+
 export default function LessonDetailScreen({ route, navigation }) {
-  const { lessonId } = route.params;
+  const { lessonId, lessonTitle } = route.params;
   const insets = useSafeAreaInsets();
   const {
     lessons,
@@ -27,16 +122,24 @@ export default function LessonDetailScreen({ route, navigation }) {
 
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  // { code } when the lesson failed to load.
+  const [loadError, setLoadError] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState('');
+  // The complete button unlocks once the learner has scrolled to the end.
+  const [reachedEnd, setReachedEnd] = useState(false);
+  const sizes = useRef({ view: 0, content: 0 });
 
-  useEffect(() => {
+  const load = useCallback(() => {
     setLoading(true);
+    setLoadError(null);
     getLesson(lessonId)
       .then(setLesson)
-      .catch((err) => setError(err.message))
+      .catch((err) => setLoadError({ code: err?.code ?? '' }))
       .finally(() => setLoading(false));
   }, [lessonId]);
+
+  useEffect(load, [load]);
 
   // Opening a lesson is what "Continue learning" resumes to, whether or not
   // it ends up being marked complete.
@@ -44,34 +147,72 @@ export default function LessonDetailScreen({ route, navigation }) {
     markLessonOpened(lessonId);
   }, [lessonId, markLessonOpened]);
 
-  if (loading) return <ScreenState loading />;
-  if (error) return <ScreenState error={error} />;
-  if (!lesson) return <ScreenState message="Lesson not found." />;
-
-  const module = modules.find((item) => item.id === lesson.moduleId);
-  const courseIndex = courses.findIndex((item) => item.id === module?.courseId);
-  const course = courses[courseIndex];
-  const stats = moduleProgress[lesson.moduleId] ?? { completed: 0, total: 0 };
+  // The lesson summary from context, so the crumb shows while loading or failed.
+  const summary = lessons.find((item) => item.id === lessonId);
+  const moduleId = lesson?.moduleId ?? summary?.moduleId;
+  const module = modules.find((item) => item.id === moduleId);
+  const course = courses.find((item) => item.id === module?.courseId);
+  const stats = moduleProgress[moduleId] ?? { completed: 0, total: 0 };
+  const crumb = [course?.title, module?.title].filter(Boolean).join(' · ');
 
   // Siblings in reading order, so "Lesson 3 of 5" and the prev/next pair agree
   // with the order the module list presents.
   const siblings = lessons
-    .filter((item) => item.moduleId === lesson.moduleId)
+    .filter((item) => item.moduleId === moduleId)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-  const position = siblings.findIndex((item) => item.id === lesson.id);
-  const previous = position > 0 ? siblings[position - 1] : null;
-  const next = position >= 0 && position < siblings.length - 1 ? siblings[position + 1] : null;
+  const index = siblings.findIndex((item) => item.id === lessonId);
+  const previous = index > 0 ? siblings[index - 1] : null;
+  const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : null;
+  const position = index >= 0 ? `Lesson ${index + 1} of ${siblings.length} · ${stats.completed} done` : '';
 
-  const summary = lessons.find((item) => item.id === lesson.id);
+  const top = insets.top + spacing.lg;
+  const goBack = () => navigation.goBack();
+
+  if (loading) return <LessonSkeleton top={top} onBack={goBack} />;
+  if (loadError) {
+    return (
+      <LessonError
+        top={top}
+        bottom={insets.bottom}
+        crumb={crumb}
+        position={position}
+        title={summary?.title ?? lessonTitle ?? 'this lesson'}
+        offline={offline}
+        code={loadError.code}
+        onRetry={load}
+        onBackToModule={() =>
+          course
+            ? navigation.navigate('Modules', { courseId: course.id, courseTitle: course.title })
+            : goBack()
+        }
+        onBack={goBack}
+      />
+    );
+  }
+  if (!lesson) return <ScreenState message="Lesson not found." />;
+
   const done = isLessonComplete(lesson.id);
+  const locked = !done && !reachedEnd;
+
+  // A lesson short enough to fit on screen has nothing to scroll to.
+  function checkFits() {
+    const { view, content } = sizes.current;
+    if (view && content && content <= view + END_SLACK) setReachedEnd(true);
+  }
+
+  function onScroll({ nativeEvent: { layoutMeasurement, contentOffset, contentSize } }) {
+    if (layoutMeasurement.height + contentOffset.y >= contentSize.height - END_SLACK) {
+      setReachedEnd(true);
+    }
+  }
 
   async function toggleComplete() {
     setSaving(true);
     try {
       await setLessonComplete(lesson.id, !done);
       await reloadProgress();
-    } catch (err) {
-      setError(err.message);
+    } catch {
+      setToast('Could not save. Try again.');
     } finally {
       setSaving(false);
     }
@@ -81,29 +222,37 @@ export default function LessonDetailScreen({ route, navigation }) {
     navigation.replace('LessonDetail', { lessonId: target.id, lessonTitle: target.title });
   }
 
+  const completeLabel = offline
+    ? 'Connect to save progress'
+    : done
+      ? 'Completed · undo'
+      : locked
+        ? 'Read to the end to finish'
+        : 'Mark lesson complete';
+  // Saving reads progress first, which fails offline; disabled says so up front.
+  const completeDisabled = saving || offline || locked;
+
   return (
     <View style={styles.screen}>
       <ScrollView
-        style={styles.container}
-        // So tapping Send or a suggestion works while the keyboard is open.
-        keyboardShouldPersistTaps="handled"
+        style={styles.screen}
         contentContainerStyle={[
           styles.content,
-          { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xxl },
+          { paddingTop: top, paddingBottom: insets.bottom + BAR_HEIGHT + spacing.xl },
         ]}
+        onScroll={onScroll}
+        scrollEventThrottle={100}
+        onLayout={(event) => {
+          sizes.current.view = event.nativeEvent.layout.height;
+          checkFits();
+        }}
+        onContentSizeChange={(width, height) => {
+          sizes.current.content = height;
+          checkFits();
+        }}
       >
-        {/* Indented to clear the floating back button, which is not in the
-            scroll view and so does not reserve space here. */}
-        <View style={styles.crumbText}>
-          <Text style={styles.crumb} numberOfLines={1}>
-            {[course?.title, module?.title].filter(Boolean).join(' · ')}
-          </Text>
-          <Text style={styles.position}>
-            Lesson {position + 1} of {siblings.length} · {stats.completed} done
-          </Text>
-        </View>
+        <Crumb crumb={crumb} position={position} />
 
-        <View>
         <Text style={styles.title}>{lesson.title}</Text>
         <Text style={styles.meta}>
           {summary?.minutes ?? 1} min read{course ? ` · ${course.title}` : ''}
@@ -115,24 +264,6 @@ export default function LessonDetailScreen({ route, navigation }) {
             codeLabel={module ? `Example · ${module.title}` : 'Example'}
           />
         </View>
-
-        <TutorChat moduleId={lesson.moduleId} topic={lesson.title} />
-
-        <Pressable
-          onPress={toggleComplete}
-          // Saving reads progress first, which fails offline; disabled says so up front.
-          disabled={saving || offline}
-          style={({ pressed }) => [
-            styles.complete,
-            done && styles.completeDone,
-            pressed && !offline && styles.completePressed,
-            offline && styles.completeOffline,
-          ]}
-        >
-          <Text style={[styles.completeLabel, done && styles.completeLabelDone]}>
-            {offline ? 'Connect to save progress' : done ? '✓ Completed' : 'Mark as complete'}
-          </Text>
-        </Pressable>
 
         <View style={styles.pager}>
           <Pressable
@@ -158,33 +289,69 @@ export default function LessonDetailScreen({ route, navigation }) {
             <Text style={[styles.pagerLabel, !next && styles.pagerLabelOff]}>Next →</Text>
           </Pressable>
         </View>
-        </View>
       </ScrollView>
 
-      {/* Outside the scroll view so it stays put. Lessons are long, and
-          without this, getting back to the module list means scrolling all
-          the way up first. */}
-      <Pressable
-        onPress={() => navigation.goBack()}
-        accessibilityRole="button"
-        accessibilityLabel="Go back"
-        style={({ pressed }) => [
-          styles.back,
-          { top: insets.top + spacing.lg },
-          pressed && styles.backPressed,
-        ]}
-      >
-        <Text style={styles.backGlyph}>←</Text>
-      </Pressable>
+      {/* Frame 26's pinned bar: Javi and the complete button, over a fade. */}
+      <View style={[styles.bar, { paddingBottom: insets.bottom + 16 }]} pointerEvents="box-none">
+        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+          <Defs>
+            <LinearGradient id="barFade" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor={colors.background} stopOpacity="0" />
+              <Stop offset="0.3" stopColor={colors.background} stopOpacity="1" />
+            </LinearGradient>
+          </Defs>
+          <Rect width="100%" height="100%" fill="url(#barFade)" />
+        </Svg>
+        <Pressable
+          onPress={() =>
+            navigation.navigate('AskJaviSheet', {
+              moduleId: lesson.moduleId,
+              moduleTitle: module?.title ?? 'this module',
+              topic: lesson.title,
+            })
+          }
+          accessibilityRole="button"
+          accessibilityLabel="Ask Javi about this lesson"
+          style={({ pressed }) => [styles.javi, pressed && styles.javiPressed]}
+        >
+          <View style={styles.javiFace}>
+            <Mascot variant="thinking" px={40} decorative animate={false} />
+          </View>
+        </Pressable>
+        <Pressable
+          onPress={toggleComplete}
+          disabled={completeDisabled}
+          accessibilityRole="button"
+          accessibilityState={{ disabled: completeDisabled }}
+          style={({ pressed }) => [
+            styles.complete,
+            locked && styles.completeLocked,
+            done && styles.completeDone,
+            offline && styles.completeOffline,
+            pressed && styles.completePressed,
+          ]}
+        >
+          <Text
+            style={[
+              styles.completeLabel,
+              locked && styles.completeLabelLocked,
+              done && styles.completeLabelDone,
+            ]}
+          >
+            {completeLabel}
+          </Text>
+        </Pressable>
+      </View>
+
+      <BackButton top={top} onPress={goBack} />
+      <AuthToast message={toast} onHide={() => setToast('')} />
     </View>
   );
 }
 
+const BAR_HEIGHT = 54 + 24;
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
   screen: {
     flex: 1,
     backgroundColor: colors.background,
@@ -206,7 +373,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // Above the lesson content that scrolls underneath it.
     zIndex: 2,
-    elevation: 2,
+    shadowColor: colors.text,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 14,
+    elevation: 3,
   },
   backPressed: {
     backgroundColor: colors.primarySoft,
@@ -252,40 +423,10 @@ const styles = StyleSheet.create({
   body: {
     marginTop: 18,
   },
-  complete: {
-    marginTop: 22,
-    height: 54,
-    borderRadius: 27,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.button,
-    borderWidth: 1,
-    borderColor: colors.button,
-  },
-  completeDone: {
-    backgroundColor: colors.primarySoft,
-    borderColor: colors.primary,
-  },
-  completeOffline: {
-    opacity: 0.5,
-  },
-  completePressed: {
-    opacity: 0.85,
-  },
-  completeLabel: {
-    fontFamily: fonts.bold,
-    fontSize: 13,
-    letterSpacing: 13 * 0.07,
-    textTransform: 'uppercase',
-    color: colors.white,
-  },
-  completeLabelDone: {
-    color: colors.primaryDark,
-  },
   pager: {
     flexDirection: 'row',
     gap: 10,
-    marginTop: spacing.md,
+    marginTop: 22,
   },
   pagerButton: {
     flex: 1,
@@ -311,5 +452,168 @@ const styles = StyleSheet.create({
   },
   pagerLabelOff: {
     color: colors.borderStrong,
+  },
+  bar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingTop: 24,
+    paddingHorizontal: 16,
+  },
+  javi: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: colors.text,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 3,
+  },
+  javiPressed: {
+    borderColor: colors.primary,
+  },
+  javiFace: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.primarySoft,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  complete: {
+    flex: 1,
+    minWidth: 0,
+    height: 54,
+    borderRadius: 27,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 12,
+    backgroundColor: colors.button,
+    borderWidth: 1,
+    borderColor: colors.button,
+  },
+  completeLocked: {
+    backgroundColor: colors.surfaceSunken,
+    borderColor: colors.surfaceSunken,
+  },
+  completeDone: {
+    backgroundColor: colors.surface,
+    borderColor: colors.primary,
+  },
+  completeOffline: {
+    opacity: 0.5,
+  },
+  completePressed: {
+    opacity: 0.85,
+  },
+  completeLabel: {
+    fontFamily: fonts.bold,
+    fontSize: 13,
+    letterSpacing: 13 * 0.07,
+    textTransform: 'uppercase',
+    color: colors.white,
+  },
+  completeLabelLocked: {
+    color: colors.textMuted,
+  },
+  completeLabelDone: {
+    color: colors.primaryDark,
+  },
+  skelCrumb: {
+    gap: 7,
+  },
+  skelCrumbTop: {
+    height: 10,
+    width: '60%',
+    borderRadius: 5,
+  },
+  skelCrumbBottom: {
+    height: 12,
+    width: '40%',
+    borderRadius: 5,
+  },
+  skelTitleBlock: {
+    gap: 10,
+    marginTop: 22,
+  },
+  skelTitle: {
+    height: 26,
+    borderRadius: 8,
+  },
+  skelMeta: {
+    height: 11,
+    width: '38%',
+    borderRadius: 5,
+    marginTop: 4,
+  },
+  skelLines: {
+    gap: 10,
+    marginTop: 24,
+  },
+  skelLine: {
+    height: 13,
+    borderRadius: 6,
+  },
+  skelCode: {
+    height: 150,
+    borderRadius: 18,
+    marginTop: 24,
+    backgroundColor: colors.codeBg,
+  },
+  skelCard: {
+    height: 104,
+    borderRadius: 18,
+    marginTop: 14,
+  },
+  errorPage: {
+    flex: 1,
+  },
+  errorCentre: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 24,
+    paddingHorizontal: 12,
+  },
+  errorTitle: {
+    fontFamily: fonts.bold,
+    fontSize: 20,
+    lineHeight: 20 * 1.3,
+    letterSpacing: -0.2,
+    color: colors.text,
+    textAlign: 'center',
+    marginTop: 22,
+    marginBottom: 8,
+  },
+  errorBody: {
+    ...type.body,
+    maxWidth: 290,
+    color: colors.textMuted,
+    textAlign: 'center',
+  },
+  errorCode: {
+    fontFamily: fonts.mono,
+    fontSize: 11.5,
+    color: colors.textMuted,
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: 10,
+    overflow: 'hidden',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginTop: 16,
+  },
+  errorBack: {
+    marginTop: 12,
   },
 });

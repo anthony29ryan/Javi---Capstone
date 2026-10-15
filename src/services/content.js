@@ -25,10 +25,11 @@ export async function getLesson(lessonId) {
   try {
     const snapshot = await getDoc(doc(db, 'lessons', lessonId));
     return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
-  } catch {
+  } catch (err) {
     const downloaded = await getDownloadedLesson(lessonId);
     if (downloaded) return downloaded;
-    throw new Error('Download this module while online to read it offline.');
+    // The original error, so the screen can tell offline from a server fault by its code.
+    throw err;
   }
 }
 

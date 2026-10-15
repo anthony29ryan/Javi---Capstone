@@ -25,8 +25,11 @@ const OFFSCREEN = 2000;
  * `children` is a function given `close`, which animates out and then calls
  * `onClosed` (the screen's navigation.goBack). Built on PanResponder rather
  * than react-native-gesture-handler, which the app does not otherwise need.
+ *
+ * `handleOnly` limits dragging to a strip around the grabber, for a sheet
+ * whose content scrolls: otherwise scrolling it back up would close the sheet.
  */
-export default function BottomSheet({ onClosed, style, children }) {
+export default function BottomSheet({ onClosed, style, handleOnly = false, children }) {
   const offset = useSharedValue(OFFSCREEN);
   const height = useSharedValue(0);
   const heightRef = useRef(0);
@@ -90,9 +93,15 @@ export default function BottomSheet({ onClosed, style, children }) {
       <Animated.View
         onLayout={onLayout}
         style={[styles.sheet, style, sheetStyle]}
-        {...pan.panHandlers}
+        {...(handleOnly ? null : pan.panHandlers)}
       >
-        <View style={styles.grabber} />
+        {handleOnly ? (
+          <View style={styles.handle} {...pan.panHandlers}>
+            <View style={styles.grabber} />
+          </View>
+        ) : (
+          <View style={styles.grabber} />
+        )}
         {children(close)}
       </Animated.View>
     </View>
@@ -114,6 +123,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 28,
     paddingTop: 12,
     paddingHorizontal: 20,
+  },
+  // Full width and taller than the bar, so it is easy to catch.
+  handle: {
+    marginTop: -12,
+    marginHorizontal: -20,
+    paddingTop: 12,
   },
   grabber: {
     width: 40,

@@ -35,6 +35,7 @@ import WeakLessonsScreen from '../screens/WeakLessonsScreen';
 import QuizzesScreen from '../screens/QuizzesScreen';
 import AvatarSheetScreen from '../screens/AvatarSheetScreen';
 import DownloadSheetScreen from '../screens/DownloadSheetScreen';
+import AskJaviSheetScreen from '../screens/AskJaviSheetScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModulesScreen from '../screens/ModulesScreen';
 import ProgressScreen from '../screens/ProgressScreen';
@@ -141,6 +142,7 @@ function AppStack({ needsSetup }) {
         options={SHEET_OPTIONS}
       />
       <Stack.Screen name="DownloadSheet" component={DownloadSheetScreen} options={SHEET_OPTIONS} />
+      <Stack.Screen name="AskJaviSheet" component={AskJaviSheetScreen} options={SHEET_OPTIONS} />
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'Quiz' }} />
       <Stack.Screen
         name="TracerList"
