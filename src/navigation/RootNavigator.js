@@ -129,7 +129,13 @@ function AppStack({ needsSetup }) {
       <Stack.Screen
         name="AvatarSheet"
         component={AvatarSheetScreen}
-        options={{ headerShown: false, presentation: 'transparentModal', animation: 'fade' }}
+        // Transparent, or the stack's page background hides Profile behind the sheet.
+        options={{
+          headerShown: false,
+          presentation: 'transparentModal',
+          animation: 'fade',
+          contentStyle: { backgroundColor: 'transparent' },
+        }}
       />
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'Quiz' }} />
       <Stack.Screen
