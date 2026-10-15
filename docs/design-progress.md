@@ -22,7 +22,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 60 done · 9 to do · 43 not built · 1 partly · 9 last
+Totals: 63 done · 6 to do · 43 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -95,8 +95,8 @@ Totals: 60 done · 9 to do · 43 not built · 1 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 43 | Settings | SettingsScreen | to do |  |
-| 44 | Log out · bottom sheet | with Settings | to do |  |
+| 43 | Settings | SettingsScreen | done | ebfb3e6 (text size scales lessons and quizzes only, kept on the phone; read-only Terms row; Notifications, Help and About not built) |
+| 44 | Log out · bottom sheet | with Settings | done | ebfb3e6 (honest copy: downloads and the reminder leave the phone) |
 | 45 | Notifications | — | not built |  |
 | 46 | Profile details | ProfileDetailsScreen | to do |  |
 | 47 | Change email | — | not built |  |
@@ -140,7 +140,7 @@ Totals: 60 done · 9 to do · 43 not built · 1 partly · 9 last
 | 75 | Tutor · Empty | with Tutor | done | a01ce13 |
 | 76 | Toast · Email verified | — | not built |  |
 | 77 | Toast · Link sent again | with Check your email | done | 2d8ffad |
-| 78 | Toast · Profile updated | with Settings | to do |  |
+| 78 | Toast · Profile updated | with Settings | done | ebfb3e6 |
 
 ## G · Form validation and sign-in errors
 
