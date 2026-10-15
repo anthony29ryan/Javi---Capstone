@@ -2,6 +2,7 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { colors, fonts, radius, spacing, type } from '../theme/colors';
+import { useScaledStyles, useTextSize } from '../context/TextSizeContext';
 
 /**
  * Lesson content is stored as an array of blocks. This renders them.
@@ -16,6 +17,7 @@ import { colors, fonts, radius, spacing, type } from '../theme/colors';
 const INLINE_PATTERN = /(\*\*[^*]+\*\*|`[^`]+`)/g;
 
 export function InlineText({ value, style }) {
+  const styles = useScaledStyles(baseStyles);
   const runs = String(value ?? '').split(INLINE_PATTERN).filter(Boolean);
 
   return (
@@ -42,6 +44,7 @@ export function InlineText({ value, style }) {
 }
 
 function CodeBlock({ value, language, label }) {
+  const styles = useScaledStyles(baseStyles);
   return (
     <View style={styles.codeBlock}>
       <View style={styles.codeHeader}>
@@ -59,6 +62,7 @@ function CodeBlock({ value, language, label }) {
 }
 
 function ListBlock({ items, ordered }) {
+  const styles = useScaledStyles(baseStyles);
   return (
     <View style={styles.list}>
       {items.map((item, index) => (
@@ -76,6 +80,7 @@ function ListBlock({ items, ordered }) {
  * error in the original source material, so it reads differently from a plain aside.
  */
 function NoteBlock({ title, variant, blocks }) {
+  const styles = useScaledStyles(baseStyles);
   const isCorrection = variant === 'correction';
 
   return (
@@ -154,7 +159,10 @@ function measureColumns(headers, rows) {
  * lists), so they scroll sideways rather than being squeezed to phone width.
  */
 function TableBlock({ headers, rows }) {
-  const widths = measureColumns(headers, rows);
+  const styles = useScaledStyles(baseStyles);
+  const { scale } = useTextSize();
+  // Bigger reading text needs wider columns to keep the same line breaks.
+  const widths = measureColumns(headers, rows).map((width) => Math.round(width * scale));
   if (widths.length === 0) return null;
 
   const renderRow = (cells, { key, header = false, first = false, alt = false }) => (
@@ -204,6 +212,7 @@ function TableBlock({ headers, rows }) {
 }
 
 function Block({ block, codeLabel }) {
+  const styles = useScaledStyles(baseStyles);
   switch (block.type) {
     case 'code':
       return <CodeBlock value={block.value} language={block.language} label={codeLabel} />;
@@ -247,6 +256,7 @@ function Block({ block, codeLabel }) {
 }
 
 export default function Blocks({ blocks, codeLabel }) {
+  const styles = useScaledStyles(baseStyles);
   return (
     <View style={styles.blocks}>
       {(blocks || []).map((block, index) => (
@@ -256,7 +266,7 @@ export default function Blocks({ blocks, codeLabel }) {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   blocks: {
     gap: spacing.lg,
   },

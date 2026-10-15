@@ -10,6 +10,7 @@ import OfflineBanner from '../components/OfflineBanner';
 import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';
 import { PASS_PERCENT, useProgress } from '../context/ProgressContext';
+import { useScaledStyles } from '../context/TextSizeContext';
 import { getModuleQuestions, gradeAnswer } from '../services/quizzes';
 import { recordModuleQuizCompletion } from '../services/progress';
 import { authColors } from '../theme/authTheme';
@@ -26,11 +27,15 @@ const KIND_LABELS = {
   output: 'What does this print?',
 };
 
+// The reading text the Settings text size applies to.
+const READING_STYLES = ['kind', 'prompt', 'choiceText', 'choiceTextCode', 'feedbackBody', 'reviewPrompt', 'reviewAnswer'];
+
 const letterFor = (index) => CHOICE_LETTERS[index] ?? String(index + 1);
 // Choices that read as code get the design's smaller size.
 const looksLikeCode = (label) => /[;(\[`]/.test(label);
 
 function Choice({ label, letter, state, onPress, disabled }) {
+  const reading = useScaledStyles(styles, READING_STYLES);
   const mark = state === 'correct' ? '✓' : state === 'wrong' ? '✕' : letter;
   return (
     <Pressable
@@ -67,8 +72,8 @@ function Choice({ label, letter, state, onPress, disabled }) {
       <InlineText
         value={label}
         style={[
-          styles.choiceText,
-          looksLikeCode(label) && styles.choiceTextCode,
+          reading.choiceText,
+          looksLikeCode(label) && reading.choiceTextCode,
           state === 'selected' && styles.textSelected,
           state === 'correct' && styles.textCorrect,
           state === 'wrong' && styles.textWrong,
@@ -140,6 +145,7 @@ export default function QuizScreen({ route, navigation }) {
   const { moduleId, title } = route.params;
   const insets = useSafeAreaInsets();
   const { lessons, modules, offline, reloadProgress } = useProgress();
+  const reading = useScaledStyles(styles, READING_STYLES);
 
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -307,10 +313,10 @@ export default function QuizScreen({ route, navigation }) {
                   {mark.correct ? 'Correct' : 'Missed'}
                 </Text>
               </View>
-              <InlineText value={question.prompt} style={styles.reviewPrompt} />
+              <InlineText value={question.prompt} style={reading.reviewPrompt} />
               <InlineText
                 value={`Answer: ${letterFor(mark.answer)} · ${question.choices[mark.answer] ?? ''}`}
-                style={styles.reviewAnswer}
+                style={reading.reviewAnswer}
               />
             </View>
           ))}
@@ -400,8 +406,8 @@ export default function QuizScreen({ route, navigation }) {
         </View>
       </View>
 
-      <Text style={styles.kind}>{KIND_LABELS[question.type] ?? 'Question'}</Text>
-      <InlineText value={question.prompt} style={styles.prompt} />
+      <Text style={reading.kind}>{KIND_LABELS[question.type] ?? 'Question'}</Text>
+      <InlineText value={question.prompt} style={reading.prompt} />
 
       {/* "What does this print?" questions carry the code to read in `code`;
           reuse the lesson code block so it looks the same as in a lesson. */}
@@ -443,7 +449,7 @@ export default function QuizScreen({ route, navigation }) {
           </View>
           <InlineText
             value={`The answer is ${letterFor(mark.answer)} · ${question.choices[mark.answer] ?? ''}`}
-            style={styles.feedbackBody}
+            style={reading.feedbackBody}
           />
         </View>
       ) : null}

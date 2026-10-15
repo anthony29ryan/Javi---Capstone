@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAuth } from '../context/AuthContext';
 import { ProgressProvider } from '../context/ProgressContext';
+import { TextSizeProvider } from '../context/TextSizeContext';
 import { colors, fonts } from '../theme/colors';
 import {
   Outfit_400Regular,
@@ -38,6 +39,7 @@ import AvatarSheetScreen from '../screens/AvatarSheetScreen';
 import DownloadSheetScreen from '../screens/DownloadSheetScreen';
 import AskJaviSheetScreen from '../screens/AskJaviSheetScreen';
 import QuitQuizSheetScreen from '../screens/QuitQuizSheetScreen';
+import LogOutSheetScreen from '../screens/LogOutSheetScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModulesScreen from '../screens/ModulesScreen';
 import ProgressScreen from '../screens/ProgressScreen';
@@ -181,6 +183,12 @@ function AppStack({ needsSetup }) {
       {/* Quiz draws its own header: a close button, the bar and the count. */}
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ headerShown: false }} />
       <Stack.Screen
+        name="LogOutSheet"
+        component={LogOutSheetScreen}
+        options={SHEET_OPTIONS}
+        layout={bare}
+      />
+      <Stack.Screen
         name="QuitQuizSheet"
         component={QuitQuizSheetScreen}
         options={SHEET_OPTIONS}
@@ -275,7 +283,9 @@ export default function RootNavigator() {
         <SplashView />
       ) : (
         <ProgressProvider>
-          <AppStack needsSetup={needsSetup} />
+          <TextSizeProvider>
+            <AppStack needsSetup={needsSetup} />
+          </TextSizeProvider>
         </ProgressProvider>
       )}
     </NavigationContainer>

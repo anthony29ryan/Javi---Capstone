@@ -43,7 +43,8 @@ function Section({ index, section }) {
  * The sign-up Terms popup (design frame 04). Both documents must be scrolled
  * to the end before the agree box can be ticked, and only then does "Agree
  * and continue" call onAccept. Stays mounted while hidden, so reading
- * progress survives closing and reopening it.
+ * progress survives closing and reopening it. Settings opens it without
+ * onAccept, as a read-only viewer.
  */
 export default function TermsSheet({ visible, initialTab = 'terms', onClose, onAccept }) {
   const { height } = useWindowDimensions();
@@ -146,40 +147,43 @@ export default function TermsSheet({ visible, initialTab = 'terms', onClose, onA
             </Text>
           </ScrollView>
 
-          <View style={styles.footer}>
-            <Text style={[styles.hint, bothRead && styles.hintDone]}>
-              {bothRead
-                ? 'You have read both documents.'
-                : `Scroll to the end of ${unread.join(' and ')} to continue.`}
-            </Text>
-            <Pressable
-              onPress={() => setChecked((value) => !value)}
-              disabled={!bothRead}
-              accessibilityRole="checkbox"
-              accessibilityState={{ checked, disabled: !bothRead }}
-              style={[styles.agreeRow, !bothRead && styles.agreeRowOff]}
-            >
-              <View style={[styles.box, checked && styles.boxOn]}>
-                {checked ? <Text style={styles.boxMark}>✓</Text> : null}
-              </View>
-              <Text style={styles.agreeLabel}>
-                I have read and agree to the Terms and Conditions and Privacy Policy
+          {/* Without onAccept it is a read-only viewer (Settings), so no agreement. */}
+          {onAccept ? (
+            <View style={styles.footer}>
+              <Text style={[styles.hint, bothRead && styles.hintDone]}>
+                {bothRead
+                  ? 'You have read both documents.'
+                  : `Scroll to the end of ${unread.join(' and ')} to continue.`}
               </Text>
-            </Pressable>
-            <Pressable
-              onPress={onAccept}
-              disabled={!canAccept}
-              accessibilityRole="button"
-              accessibilityState={{ disabled: !canAccept }}
-              style={({ pressed }) => [
-                styles.accept,
-                canAccept && styles.acceptOn,
-                canAccept && pressed && styles.acceptPressed,
-              ]}
-            >
-              <Text style={[styles.acceptLabel, canAccept && styles.acceptLabelOn]}>Agree and continue</Text>
-            </Pressable>
-          </View>
+              <Pressable
+                onPress={() => setChecked((value) => !value)}
+                disabled={!bothRead}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked, disabled: !bothRead }}
+                style={[styles.agreeRow, !bothRead && styles.agreeRowOff]}
+              >
+                <View style={[styles.box, checked && styles.boxOn]}>
+                  {checked ? <Text style={styles.boxMark}>✓</Text> : null}
+                </View>
+                <Text style={styles.agreeLabel}>
+                  I have read and agree to the Terms and Conditions and Privacy Policy
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={onAccept}
+                disabled={!canAccept}
+                accessibilityRole="button"
+                accessibilityState={{ disabled: !canAccept }}
+                style={({ pressed }) => [
+                  styles.accept,
+                  canAccept && styles.acceptOn,
+                  canAccept && pressed && styles.acceptPressed,
+                ]}
+              >
+                <Text style={[styles.acceptLabel, canAccept && styles.acceptLabelOn]}>Agree and continue</Text>
+              </Pressable>
+            </View>
+          ) : null}
         </View>
       </View>
     </Modal>

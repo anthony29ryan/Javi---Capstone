@@ -14,7 +14,6 @@ import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthBackButton from '../components/auth/AuthBackButton';
 import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
-import AuthToast from '../components/auth/AuthToast';
 import ScreenState from '../components/ScreenState';
 import { useAuth } from '../context/AuthContext';
 import { getPreferences, savePreferences } from '../services/preferences';
@@ -35,7 +34,6 @@ export default function ProfileDetailsScreen({ navigation }) {
   const [goals, setGoals] = useState(null);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
-  const [toast, setToast] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -85,7 +83,8 @@ export default function ProfileDetailsScreen({ navigation }) {
       await savePreferences({ goals, lastName: trimmedLast });
       // Through the context, so greetings pick up the new nickname at once.
       if (trimmedNick !== nickname) await updateNickname(trimmedNick);
-      setToast('Profile saved');
+      // Frame 78: back to Settings, which shows the confirmation.
+      navigation.popTo('Settings', { toast: 'Profile updated', toastAt: Date.now() });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -170,7 +169,6 @@ export default function ProfileDetailsScreen({ navigation }) {
         </ScrollView>
       </AuthAnimatedScreen>
 
-      <AuthToast message={toast} onHide={() => setToast('')} />
     </KeyboardAvoidingView>
   );
 }
