@@ -18,7 +18,8 @@ function suggestions(topic) {
   return [
     { label: 'Explain this', question: `Explain "${topic}" in simple terms.` },
     { label: 'Give me an example', question: `Give me a small Java example for "${topic}".` },
-    { label: 'Give me a hint', question: `Give me a hint to help me understand "${topic}" without giving everything away.` },
+    { label: 'Quiz me', question: `Ask me one short practice question about "${topic}", then check my answer.` },
+    { label: 'When do I use it?', question: `When and why would I use "${topic}" in a real Java program?` },
   ];
 }
 
@@ -113,7 +114,7 @@ export default function TutorChat({
           <Mascot variant="curious" px={120} decorative animate={false} />
           <Text style={styles.emptyTitle}>Ask your first question</Text>
           <Text style={styles.emptyBody}>
-            The tutor answers on this module only. Pick a starter below or type your own.
+            Javi answers on this module only. Pick a starter below or type your own.
           </Text>
         </View>
       ) : null}
@@ -135,7 +136,7 @@ export default function TutorChat({
 
       {/* Frame 104. */}
       {sending ? (
-        <View style={styles.thinkingRow} accessibilityLabel="The tutor is writing a reply">
+        <View style={styles.thinkingRow} accessibilityLabel="Javi is writing a reply">
           <View style={[styles.bubble, styles.bubbleTutor, styles.dots]}>
             {[1, 0.7, 0.45].map((opacity) => (
               <View key={opacity} style={{ opacity }}>
@@ -156,7 +157,7 @@ export default function TutorChat({
           <Text style={styles.errorBody}>
             {failure.connection
               ? 'Your question stays here. Send it again when you are back online.'
-              : 'The tutor could not answer right now. Try again in a moment.'}
+              : 'Javi could not answer right now. Try again in a moment.'}
           </Text>
           <Pressable
             onPress={() => send(failedText)}
@@ -207,10 +208,10 @@ export default function TutorChat({
           onSubmitEditing={() => send(text)}
           editable={!sending && !offline}
           maxLength={MAX_QUESTION_CHARS}
-          placeholder={offline ? 'Reconnect to ask the tutor' : 'Ask about this module…'}
+          placeholder={offline ? 'Reconnect to ask Javi' : 'Ask about this module…'}
           placeholderTextColor={colors.borderStrong}
           returnKeyType="send"
-          accessibilityLabel="Question for the tutor"
+          accessibilityLabel="Question for Javi"
           style={styles.input}
         />
         <Pressable
@@ -255,7 +256,7 @@ export default function TutorChat({
         <View style={styles.headText}>
           <Text style={styles.title}>{heading}</Text>
           <Text style={styles.subtitle} numberOfLines={2}>
-            The tutor only answers on this module
+            Javi only answers on this module
           </Text>
         </View>
       </View>

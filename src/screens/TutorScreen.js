@@ -67,7 +67,7 @@ export default function TutorScreen() {
                 <Mascot variant="thinking" px={40} decorative animate={false} style={styles.chatAvatarImage} />
               </View>
               <View style={styles.chatHeadText}>
-                <Text style={styles.chatTitle}>Java tutor</Text>
+                <Text style={styles.chatTitle}>Javi</Text>
                 <Text style={styles.chatSubtitle} numberOfLines={1}>
                   Answers on {module.title}
                 </Text>
@@ -102,11 +102,11 @@ export default function TutorScreen() {
       style={styles.container}
       contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
     >
-      <Text style={styles.title}>Java tutor</Text>
+      <Text style={styles.title}>Ask Javi</Text>
       <View style={styles.intro}>
         <Mascot variant="greeting" px={48} decorative animate={false} />
         <Text style={styles.introText}>
-          Which module do you want help with? The tutor answers on that module's lessons only.
+          Which module do you want help with? Javi answers on that module's lessons only.
         </Text>
       </View>
 

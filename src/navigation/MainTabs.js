@@ -55,6 +55,8 @@ export default function MainTabs() {
         // Every tab screen draws its own title in the page body, at the large
         // sizes the design calls for, so none of them want a nav header.
         headerShown: false,
+        // Only the chat's composer should rise with the keyboard, not the tab bar.
+        tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: colors.primaryDark,
         tabBarInactiveTintColor: colors.borderStrong,
         tabBarStyle: {
@@ -78,7 +80,7 @@ export default function MainTabs() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Courses" component={CoursesScreen} />
       <Tab.Screen name="Practice" component={PracticeScreen} />
-      <Tab.Screen name="Tutor" component={TutorScreen} />
+      <Tab.Screen name="Tutor" component={TutorScreen} options={{ tabBarLabel: 'Javi' }} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

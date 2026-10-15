@@ -270,7 +270,7 @@ export default function HomeScreen({ navigation }) {
           onPress={() => navigation.navigate('Practice')}
         />
         <Tile
-          eyebrow="Tutor"
+          eyebrow="Javi"
           title="Ask about code"
           // askTutor's real limit (DAILY_QUESTIONS in functions/index.js).
           meta="30 questions a day"
