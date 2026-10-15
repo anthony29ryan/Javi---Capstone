@@ -83,7 +83,7 @@ export default function TermsSheet({ visible, initialTab = 'terms', onClose, onA
   }
 
   return (
-    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent onRequestClose={onClose}>
+    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent navigationBarTranslucent onRequestClose={onClose}>
       <View style={styles.backdropWrap}>
         <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close" />
         <View style={[styles.card, { height: Math.min(600, height - 80) }]}>

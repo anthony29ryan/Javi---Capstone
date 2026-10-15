@@ -13,7 +13,10 @@ its screen.
 
 How we work through it: the next `to do` frame in order, one screen per
 commit, checked in Expo Go before moving on. A screen's state frames (the
-`with …` rows) are done together with that screen.
+`with …` rows) are done together with that screen. After the last light frame
+and before night mode comes a screen-size audit: every restyled screen at
+360dp width, on tablets, and at the largest font and display size, checked in
+Expo Go with Android's Display size and Font size settings.
 
 Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has

@@ -258,7 +258,10 @@ function AvatarSheet({ visible, onClose }) {
       transparent
       // Fade, so the backdrop stays put; only the sheet itself slides up.
       animationType="fade"
+      // Both, so the sheet reaches the bottom edge instead of stopping above
+      // Android's navigation bar (its padding already clears that bar).
       statusBarTranslucent
+      navigationBarTranslucent
       onRequestClose={onClose}
       onShow={() => {
         setPicked(avatar);
