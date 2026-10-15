@@ -29,6 +29,8 @@ export default function ProfileDetailsScreen({ navigation }) {
   const insets = useSafeAreaInsets();
 
   const [name, setName] = useState(user?.displayName ?? '');
+  // Lives only on the profile document, so it arrives with the goals below.
+  const [lastName, setLastName] = useState('');
   const [goals, setGoals] = useState(null);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
@@ -38,7 +40,9 @@ export default function ProfileDetailsScreen({ navigation }) {
     let cancelled = false;
     getPreferences()
       .then((preferences) => {
-        if (!cancelled) setGoals(preferences.goals ?? []);
+        if (cancelled) return;
+        setGoals(preferences.goals ?? []);
+        setLastName(preferences.lastName ?? '');
       })
       .catch((err) => {
         if (!cancelled) setError(err.message);
@@ -62,11 +66,17 @@ export default function ProfileDetailsScreen({ navigation }) {
       setError('Enter your first name.');
       return;
     }
+    // Accounts made before last names were asked for fill it in here.
+    const trimmedLast = lastName.trim();
+    if (!trimmedLast) {
+      setError('Enter your last name.');
+      return;
+    }
 
     setSaving(true);
     try {
       if (trimmed !== user?.displayName) await updateDisplayName(trimmed);
-      await savePreferences({ goals });
+      await savePreferences({ goals, lastName: trimmedLast });
       setToast('Profile saved');
     } catch (err) {
       setError(err.message);
@@ -108,6 +118,15 @@ export default function ProfileDetailsScreen({ navigation }) {
               setError('');
             }}
           />
+          <AuthTextField
+            placeholder="Last name"
+            value={lastName}
+            onChangeText={(value) => {
+              setLastName(value);
+              setError('');
+            }}
+            style={styles.lastName}
+          />
 
           <Text style={styles.label}>Why you are learning Java</Text>
           <View style={styles.chips}>
@@ -139,6 +158,9 @@ export default function ProfileDetailsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  lastName: {
+    marginTop: 12,
+  },
   container: {
     flex: 1,
     backgroundColor: authColors.bg,

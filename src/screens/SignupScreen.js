@@ -49,8 +49,9 @@ const BANNERS = {
  * The first problem with the form, as { field, message }, or null when it is
  * ready to send. One at a time, in the order the fields appear.
  */
-function firstProblem({ displayName, email, password, confirmPassword, agreed }) {
+function firstProblem({ displayName, lastName, email, password, confirmPassword, agreed }) {
   if (!displayName.trim()) return { field: 'name', message: 'Enter your first name.' };
+  if (!lastName.trim()) return { field: 'lastName', message: 'Enter your last name.' };
   if (!email.trim()) return { field: 'email', message: 'Enter your email address.' };
   if (!EMAIL_PATTERN.test(email.trim())) {
     return { field: 'email', message: 'That email looks incomplete. Use the full address, like name@email.com.' };
@@ -72,6 +73,7 @@ export default function SignupScreen({ navigation }) {
   const { signUp } = useAuth();
   const insets = useSafeAreaInsets();
   const [displayName, setDisplayName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -91,14 +93,14 @@ export default function SignupScreen({ navigation }) {
   const errorFor = (field) => (problem?.field === field ? problem.message : undefined);
 
   async function handleSignUp() {
-    const found = firstProblem({ displayName, email, password, confirmPassword, agreed });
+    const found = firstProblem({ displayName, lastName, email, password, confirmPassword, agreed });
     setProblem(found);
     setBanner(null);
     if (found) return;
 
     setSubmitting(true);
     try {
-      await signUp(email.trim(), password, displayName.trim(), TERMS_VERSION);
+      await signUp(email.trim(), password, displayName.trim(), lastName.trim(), TERMS_VERSION);
     } catch (err) {
       // Firebase's own messages are raw error codes, so map them to ones a
       // learner can act on.
@@ -155,6 +157,15 @@ export default function SignupScreen({ navigation }) {
               onChangeText={(value) => {
                 setDisplayName(value);
                 edited('name');
+              }}
+            />
+            <AuthTextField
+              placeholder="Last name"
+              value={lastName}
+              error={errorFor('lastName')}
+              onChangeText={(value) => {
+                setLastName(value);
+                edited('lastName');
               }}
             />
             <AuthTextField

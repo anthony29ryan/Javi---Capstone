@@ -104,11 +104,22 @@ describe('users', () => {
       setDoc(doc(dbAs('alice'), 'users/alice'), {
         email: 'alice@example.com',
         displayName: 'Alice',
+        lastName: 'Reyes',
         createdAt: serverTimestamp(),
         termsAcceptedAt: serverTimestamp(),
         termsVersion: '2026-10-15',
       })
     );
+  });
+
+  test('a last name must be 1 to 100 characters of text', async () => {
+    const ref = doc(dbAs('alice'), 'users/alice');
+    await seed((admin) => setDoc(doc(admin, 'users/alice'), { email: 'alice@example.com', displayName: 'Alice' }));
+    // Profile details saves it alongside the goals.
+    await assertSucceeds(setDoc(ref, { goals: [], lastName: 'Reyes' }, { merge: true }));
+    await assertFails(setDoc(ref, { lastName: '' }, { merge: true }));
+    await assertFails(setDoc(ref, { lastName: 'x'.repeat(101) }, { merge: true }));
+    await assertFails(setDoc(ref, { lastName: 7 }, { merge: true }));
   });
 
   test('terms acceptance must use the server clock and a short version string', async () => {
