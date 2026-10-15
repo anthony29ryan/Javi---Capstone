@@ -18,12 +18,9 @@ import AuthTextField, { FieldError } from '../components/auth/AuthTextField';
 import PasswordRules, { passwordMeetsAllRules } from '../components/auth/PasswordRules';
 import TermsSheet from '../components/auth/TermsSheet';
 import { TERMS_VERSION } from '../constants/legal';
+import { EMAIL_PATTERN } from '../constants/validation';
 import { useAuth } from '../context/AuthContext';
 import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
-
-// The design's own email check: something@something.tld, with at least two
-// letters after the last dot. Firebase still has the final say.
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const BANNERS = {
   taken: {
