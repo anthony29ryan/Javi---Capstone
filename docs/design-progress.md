@@ -19,7 +19,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 20 done · 45 to do · 46 not built · 2 partly · 9 last
+Totals: 22 done · 43 to do · 46 not built · 2 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -35,7 +35,7 @@ Totals: 20 done · 45 to do · 46 not built · 2 partly · 9 last
 | 08 | Notification permission | Android's own dialog | done | 289e43f |
 | 09 | Log in | LoginScreen | done | 00c4d64 |
 | 10 | Continue with Google | — | not built |  |
-| 11 | Forgot password | ForgotPasswordScreen | to do |  |
+| 11 | Forgot password | ForgotPasswordScreen | done | 388a1d4 |
 | 12 | Set a new password | — | not built |  |
 
 ## A2 · First-time tour
@@ -152,7 +152,7 @@ Totals: 20 done · 45 to do · 46 not built · 2 partly · 9 last
 | 85 | Log in · Signing in | with Log in | done | 00c4d64 |
 | 86 | Sign up · Field errors | with Sign up | partly | 92c72ee (one error at a time; the design shows all at once) |
 | 87 | Sign up · Email already used | with Sign up | done | 92c72ee |
-| 88 | Forgot password · Rate limited | with Forgot password | to do |  |
+| 88 | Forgot password · Rate limited | with Forgot password | done | 388a1d4 (shown when Firebase refuses; no 3-in-10-minutes claim) |
 | 89 | New password · Mismatch | — | not built |  |
 | 90 | Set up · Name missing | with Before you start | done | 289e43f (asks for a nickname) |
 | 91 | Profile details · Unsaved changes | with Profile details | to do |  |
