@@ -22,7 +22,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 67 done · 2 to do · 43 not built · 1 partly · 9 last
+Totals: 69 done · 0 to do · 43 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -101,7 +101,7 @@ Totals: 67 done · 2 to do · 43 not built · 1 partly · 9 last
 | 46 | Profile details | ProfileDetailsScreen | done | 3e5eb9c (first and last name plus nickname instead of one display name; goal chips removed; no Change email, 47 not built) |
 | 47 | Change email | — | not built |  |
 | 48 | Change password | ChangePasswordScreen | done | 17911ea (current-password check as OWASP ASVS / NIST ask; Firebase signs other devices out; known gap: no email alert after a change, needs an email service) |
-| 49 | Delete account | DeleteAccountScreen | to do |  |
+| 49 | Delete account | DeleteAccountScreen | done | da06720 (honest 30-day card instead of cannot be undone; no extra confirm popup; 50 not built) |
 | 50 | Account deleted | — | not built |  |
 | 51 | Help & feedback | — | not built |  |
 | 52 | About | — | not built |  |
@@ -161,7 +161,7 @@ Totals: 67 done · 2 to do · 43 not built · 1 partly · 9 last
 | 91 | Profile details · Unsaved changes | with Profile details | done | 3e5eb9c |
 | 92 | Change password · Wrong current | with Change password | done | 17911ea |
 | 93 | Change email · Already in use | — | not built |  |
-| 94 | Delete account · Wrong password | with Delete account | to do |  |
+| 94 | Delete account · Wrong password | with Delete account | done | da06720 |
 | 95 | Feedback · Not sent | — | not built |  |
 
 ## H · Runtime errors and warnings
