@@ -19,7 +19,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 38 done · 29 to do · 45 not built · 1 partly · 9 last
+Totals: 41 done · 27 to do · 44 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -57,8 +57,8 @@ Totals: 38 done · 29 to do · 45 not built · 1 partly · 9 last
 | 20 | Courses | CoursesScreen | done | 4e9c640 |
 | 21 | Practice | PracticeScreen | done | 1083617, 5c6116d |
 | 22 | Tutor | TutorScreen | done | a01ce13 (module picker first (accordion)) |
-| 23 | Profile | ProfileScreen | to do |  |
-| 24 | Profile · Choose avatar | — | not built |  |
+| 23 | Profile | ProfileScreen | done | 4ad2ad9 (Quizzes / Tracer panel; 2 badges locked until the code runner) |
+| 24 | Profile · Choose avatar | ProfileScreen sheet | done | 4ad2ad9 |
 
 ## C · Learning and quizzes
 
@@ -127,7 +127,7 @@ Totals: 38 done · 29 to do · 45 not built · 1 partly · 9 last
 | 65 | Courses · Loading | with Courses | done | 4e9c640 |
 | 66 | Module · Loading | with Module | to do |  |
 | 67 | Practice · Loading | with Practice | done | 5c6116d |
-| 68 | Profile · Loading | with Profile | to do |  |
+| 68 | Profile · Loading | with Profile | done | 4ad2ad9 |
 | 69 | Home · Offline, saved content | with Home | done | 2894257 (inline bar, not edge to edge) |
 | 70 | Courses · Error | with Courses | done | 4e9c640 (no saved-modules list; offline not claimed) |
 | 71 | Lesson · Offline | with Lesson | to do |  |
