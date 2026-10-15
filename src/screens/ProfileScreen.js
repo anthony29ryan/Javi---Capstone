@@ -4,6 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
 
+import AuthBackButton from '../components/auth/AuthBackButton';
 import Avatar from '../components/Avatar';
 import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';
@@ -225,7 +226,22 @@ function PracticePanel({ courses, modules, moduleScores, tracedIds, navigation }
   );
 }
 
+// Opened from Home's avatar, so it carries its own way back, floating so it
+// stays put while the page scrolls.
 export default function ProfileScreen({ navigation }) {
+  const insets = useSafeAreaInsets();
+  return (
+    <View style={styles.container}>
+      <ProfileBody navigation={navigation} />
+      <AuthBackButton
+        onPress={() => navigation.goBack()}
+        style={[styles.back, { top: insets.top + spacing.lg }]}
+      />
+    </View>
+  );
+}
+
+function ProfileBody({ navigation }) {
   const { user, callName } = useAuth();
   const insets = useSafeAreaInsets();
   const {
@@ -264,7 +280,8 @@ export default function ProfileScreen({ navigation }) {
     }, [offline])
   );
 
-  const top = insets.top + spacing.lg;
+  // Below the floating back button: 40px plus a 12px gap.
+  const top = insets.top + spacing.lg + 52;
   if (loading) return <ProfileSkeleton top={top} />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
 
@@ -288,7 +305,10 @@ export default function ProfileScreen({ navigation }) {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={[styles.content, { paddingTop: top }]}
+      contentContainerStyle={[
+        styles.content,
+        { paddingTop: top, paddingBottom: insets.bottom + spacing.xxl },
+      ]}
     >
       <View style={styles.identity}>
         <Pressable
@@ -308,7 +328,7 @@ export default function ProfileScreen({ navigation }) {
           <Text style={styles.mastery}>{masteryLabel(percent)}</Text>
         </View>
         <Pressable
-          onPress={() => navigation.navigate('Settings')}
+          onPress={() => navigation.navigate('MainTabs', { screen: 'Settings' })}
           accessibilityRole="button"
           accessibilityLabel="Settings"
           style={({ pressed }) => [styles.gear, pressed && styles.gearPressed]}
@@ -439,7 +459,16 @@ const styles = StyleSheet.create({
   content: {
     ...centeredColumn(contentWidth.content),
     paddingHorizontal: 20,
-    paddingBottom: spacing.xxl,
+  },
+  back: {
+    position: 'absolute',
+    left: 20,
+    zIndex: 2,
+    shadowColor: colors.text,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 14,
+    elevation: 3,
   },
   flex: {
     flex: 1,

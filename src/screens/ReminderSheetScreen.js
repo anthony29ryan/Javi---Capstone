@@ -40,7 +40,10 @@ export default function ReminderSheetScreen({ navigation, route }) {
     <BottomSheet
       onClosed={() =>
         result.current
-          ? navigation.popTo('Settings', { reminder: result.current, toastAt: Date.now() })
+          ? navigation.popTo('MainTabs', {
+              screen: 'Settings',
+              params: { reminder: result.current, toastAt: Date.now() },
+            })
           : navigation.goBack()
       }
       style={{ paddingBottom: insets.bottom + 20 }}

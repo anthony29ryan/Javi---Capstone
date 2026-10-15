@@ -30,7 +30,7 @@ import DeleteAccountScreen from '../screens/DeleteAccountScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import ProfileDetailsScreen from '../screens/ProfileDetailsScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import SetupScreen from '../screens/SetupScreen';
 import LessonDetailScreen from '../screens/LessonDetailScreen';
 import WeakLessonsScreen from '../screens/WeakLessonsScreen';
@@ -128,9 +128,10 @@ function AppStack({ needsSetup }) {
       <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
       <Stack.Screen name="Setup" component={SetupScreen} options={{ headerShown: false }} />
 
-      {/* Profile is a tab now, so it is not registered here too — a name in
-          both places makes navigate('Profile') ambiguous. */}
-      <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+      {/* Settings is a tab, so it is not registered here too — a name in
+          both places makes navigate('Settings') ambiguous. Profile opens
+          from Home's avatar. */}
+      <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
       <Stack.Screen
         name="ProfileDetails"
         component={ProfileDetailsScreen}

@@ -55,7 +55,10 @@ export default function ChangePasswordScreen({ navigation }) {
     setSaving(true);
     try {
       await changePassword(current, next);
-      navigation.popTo('Settings', { toast: 'Password updated', toastAt: Date.now() });
+      navigation.popTo('MainTabs', {
+        screen: 'Settings',
+        params: { toast: 'Password updated', toastAt: Date.now() },
+      });
     } catch (err) {
       if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
         setFieldErrors({

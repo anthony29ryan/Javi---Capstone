@@ -93,7 +93,7 @@ export default function DownloadSheetScreen({ navigation, route }) {
             style={styles.link}
             suppressHighlighting
             accessibilityRole="link"
-            onPress={() => navigation.navigate('Settings')}
+            onPress={() => navigation.navigate('MainTabs', { screen: 'Settings' })}
           >
             Remove all downloads in Settings
           </Text>

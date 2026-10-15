@@ -176,13 +176,11 @@ export default function SettingsScreen({ navigation, route }) {
         style={styles.container}
         contentContainerStyle={[
           styles.content,
-          { paddingTop: top, paddingBottom: insets.bottom + spacing.xxl },
+          { paddingTop: top, paddingBottom: spacing.xxl },
         ]}
       >
-        {/* Indented to clear the floating back button, which reserves no space. */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Settings</Text>
-        </View>
+        {/* A tab now, so no back button: the title sits flush. */}
+        <Text style={styles.title}>Settings</Text>
   
         <Text style={styles.sectionLabel}>Notifications</Text>
         <View style={styles.group}>
@@ -280,15 +278,6 @@ export default function SettingsScreen({ navigation, route }) {
         </View>
       </ScrollView>
 
-      {/* Outside the scroll view so it stays put. */}
-      <Pressable
-        onPress={() => navigation.goBack()}
-        accessibilityRole="button"
-        accessibilityLabel="Go back"
-        style={({ pressed }) => [styles.back, { top }, pressed && styles.backPressed]}
-      >
-        <Text style={styles.backGlyph}>←</Text>
-      </Pressable>
       <TermsSheet visible={termsOpen} onClose={() => setTermsOpen(false)} />
       <AuthToast message={toast} onHide={() => setToast('')} />
     </View>
@@ -303,38 +292,6 @@ const styles = StyleSheet.create({
   content: {
     ...centeredColumn(contentWidth.form),
     paddingHorizontal: spacing.xl,
-  },
-  header: {
-    // Clears the floating back button: 40px plus the design's 12px gap.
-    marginLeft: 52,
-    minHeight: 40,
-    justifyContent: 'center',
-  },
-  back: {
-    position: 'absolute',
-    left: spacing.xl,
-    zIndex: 2,
-    shadowColor: colors.text,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 14,
-    elevation: 3,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backPressed: {
-    backgroundColor: colors.primarySoft,
-  },
-  backGlyph: {
-    fontFamily: fonts.mono,
-    fontSize: 18,
-    color: colors.text,
   },
   title: {
     fontFamily: fonts.bold,

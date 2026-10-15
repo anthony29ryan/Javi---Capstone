@@ -37,7 +37,13 @@ export default function Avatar({ user, name, onPress, size = 38 }) {
   if (!onPress) return content;
 
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
+    <Pressable
+      onPress={onPress}
+      // Only Home's header avatar is tappable, and it opens Profile.
+      accessibilityRole="button"
+      accessibilityLabel="Profile"
+      style={({ pressed }) => pressed && styles.pressed}
+    >
       {content}
     </Pressable>
   );

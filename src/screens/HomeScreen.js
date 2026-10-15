@@ -232,7 +232,7 @@ export default function HomeScreen({ navigation }) {
             streak
           </Text>
         </View>
-        <Avatar user={user} name={callName} size={44} onPress={() => navigation.navigate('Settings')} />
+        <Avatar user={user} name={callName} size={44} onPress={() => navigation.navigate('Profile')} />
       </View>
 
       <OfflineBanner message="Showing lessons and progress saved on this phone." />

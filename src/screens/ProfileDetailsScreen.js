@@ -121,7 +121,10 @@ export default function ProfileDetailsScreen({ navigation }) {
       // Through the context, so greetings pick up the new nickname at once.
       if (trimmedNick !== nickname) await updateNickname(trimmedNick);
       // Frame 78: back to Settings, which shows the confirmation.
-      navigation.popTo('Settings', { toast: 'Profile updated', toastAt: Date.now() });
+      navigation.popTo('MainTabs', {
+        screen: 'Settings',
+        params: { toast: 'Profile updated', toastAt: Date.now() },
+      });
     } catch (err) {
       setSaveError(err.message);
     } finally {
