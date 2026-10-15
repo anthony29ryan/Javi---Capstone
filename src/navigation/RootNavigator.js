@@ -40,6 +40,7 @@ import DownloadSheetScreen from '../screens/DownloadSheetScreen';
 import AskJaviSheetScreen from '../screens/AskJaviSheetScreen';
 import LeaveSheetScreen from '../screens/LeaveSheetScreen';
 import LogOutSheetScreen from '../screens/LogOutSheetScreen';
+import ReminderSheetScreen from '../screens/ReminderSheetScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModulesScreen from '../screens/ModulesScreen';
 import ProgressScreen from '../screens/ProgressScreen';
@@ -182,6 +183,12 @@ function AppStack({ needsSetup }) {
       />
       {/* Quiz draws its own header: a close button, the bar and the count. */}
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="ReminderSheet"
+        component={ReminderSheetScreen}
+        options={SHEET_OPTIONS}
+        layout={bare}
+      />
       <Stack.Screen
         name="LogOutSheet"
         component={LogOutSheetScreen}

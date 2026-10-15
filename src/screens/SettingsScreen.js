@@ -97,9 +97,20 @@ export default function SettingsScreen({ navigation, route }) {
   const [toast, setToast] = useState('');
   const [termsOpen, setTermsOpen] = useState(false);
 
-  // Frame 78: Profile details comes back here with a message to show.
+  // Screens that send you back here say what changed: frame 78's Profile
+  // details and Change password pass a toast, the reminder sheet its result.
   useEffect(() => {
-    if (route.params?.toast) setToast(route.params.toast);
+    const reminder = route.params?.reminder;
+    if (reminder) {
+      setPreferences((current) => (current ? { ...current, ...reminder } : current));
+      setToast(
+        reminder.reminderEnabled
+          ? `Reminder set for ${reminder.reminderTime}`
+          : "Time saved. The reminder is off: notifications aren't allowed for Javi."
+      );
+    } else if (route.params?.toast) {
+      setToast(route.params.toast);
+    }
   }, [route.params?.toastAt]);
 
   const [preferences, setPreferences] = useState(null);
@@ -186,6 +197,15 @@ export default function SettingsScreen({ navigation, route }) {
             }
             onPress={toggleReminder}
             right={<Toggle on={Boolean(preferences?.reminderEnabled)} disabled={!preferences} />}
+            disabled={!preferences}
+          />
+          <Row
+            title="Reminder time"
+            subtitle={preferences ? `Daily at ${preferences.reminderTime}` : 'Connect to change your reminder'}
+            onPress={() =>
+              navigation.navigate('ReminderSheet', { reminderTime: preferences.reminderTime })
+            }
+            right={<Text style={styles.chevron}>›</Text>}
             disabled={!preferences}
             isLast
           />
