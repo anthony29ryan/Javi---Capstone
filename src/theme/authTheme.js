@@ -87,12 +87,6 @@ export const authFonts = {
 };
 
 export const authType = {
-  wordmark: {
-    fontFamily: authFonts.bold,
-    fontSize: 26,
-    letterSpacing: 26 * 0.16,
-    textTransform: 'uppercase',
-  },
   screenTitle: {
     fontFamily: authFonts.bold,
     fontSize: 27,

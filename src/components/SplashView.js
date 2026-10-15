@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import Mascot from './Mascot';
+import Wordmark from './Wordmark';
 import { colors, fonts } from '../theme/colors';
 
 const HOP_MS = 900;
@@ -57,9 +58,7 @@ export default function SplashView({ onSkip }) {
     <Pressable style={styles.screen} onPress={onSkip} disabled={!onSkip} accessible={false}>
       {/* No rise-in here: the mascot appears together with the wordmark. */}
       <Mascot variant="greeting" px={168} animate={false} />
-      <Text style={styles.wordmark} accessibilityLabel="Javi">
-        Ja<Text style={styles.wordmarkVi}>vi</Text>
-      </Text>
+      <Wordmark />
       <View style={styles.loader} accessibilityRole="progressbar" accessibilityLabel="Loading">
         <Text style={styles.brace}>{'{'}</Text>
         <View style={styles.dots}>
@@ -81,17 +80,6 @@ const styles = StyleSheet.create({
     gap: 28,
     padding: 24,
     backgroundColor: colors.background,
-  },
-  wordmark: {
-    fontFamily: fonts.wordmark,
-    fontSize: 48,
-    lineHeight: 56,
-    letterSpacing: -48 * 0.01,
-    paddingTop: 6,
-    color: colors.text,
-  },
-  wordmarkVi: {
-    color: colors.button,
   },
   loader: {
     flexDirection: 'row',

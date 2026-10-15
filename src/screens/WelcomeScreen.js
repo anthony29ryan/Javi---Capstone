@@ -1,41 +1,11 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Svg, { Circle, Defs, Pattern, Rect } from 'react-native-svg';
 
+import Mascot from '../components/Mascot';
+import Wordmark from '../components/Wordmark';
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthButton from '../components/auth/AuthButton';
 import { authColors, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
-
-const MASCOT_SIZE = 210;
-
-// Diagonal stripe placeholder for the not-yet-supplied mascot art. Built with
-// react-native-svg (already a dependency elsewhere in the app) since plain
-// StyleSheet has no way to draw a repeating diagonal pattern.
-function MascotPlaceholder() {
-  return (
-    <View style={styles.mascotWrap}>
-      <Svg width={MASCOT_SIZE} height={MASCOT_SIZE}>
-        <Defs>
-          <Pattern id="mascotStripes" patternUnits="userSpaceOnUse" width={18} height={18} patternTransform="rotate(135)">
-            <Rect width={9} height={18} fill={authColors.surface2} />
-          </Pattern>
-        </Defs>
-        <Circle
-          cx={MASCOT_SIZE / 2}
-          cy={MASCOT_SIZE / 2}
-          r={MASCOT_SIZE / 2 - 1}
-          fill="url(#mascotStripes)"
-          stroke={authColors.line}
-          strokeWidth={1}
-          strokeDasharray="4 4"
-        />
-      </Svg>
-      <View style={styles.mascotCaptionWrap} pointerEvents="none">
-        <Text style={styles.mascotCaption}>APP MASCOT{'\n'}DROP ART HERE</Text>
-      </View>
-    </View>
-  );
-}
 
 export default function WelcomeScreen({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -52,16 +22,17 @@ export default function WelcomeScreen({ navigation }) {
             { paddingTop: insets.top + 28, paddingBottom: insets.bottom + 32 },
           ]}
         >
-          <Text style={styles.wordmark}>JAVI</Text>
+          <Wordmark style={styles.wordmark} />
 
           <View style={styles.mascotArea}>
-            <MascotPlaceholder />
+            {/* No rise-in: coming from the splash it would read as a delay. */}
+            <Mascot variant="greeting" px={200} animate={false} />
           </View>
 
           <Text style={styles.headline}>Learn Java at your own pace</Text>
           <Text style={styles.body}>Ten minutes a day is enough. Start with one lesson today.</Text>
 
-          <AuthButton label="Sign Up" onPress={() => navigation.navigate('Signup')} />
+          <AuthButton label="Sign up" onPress={() => navigation.navigate('Signup')} />
 
           <Pressable
             onPress={() => navigation.navigate('Login')}
@@ -88,56 +59,34 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: 24,
     // Only the wordmark, mascot, and footer are centered per the design —
-    // the headline/body/button are a left-aligned, full-width block, so this
-    // wrapper stays at the default stretch alignment rather than centering
-    // everything.
+    // the headline, body and button are a left-aligned, full-width block, so
+    // this wrapper keeps the default stretch alignment.
   },
   wordmark: {
-    ...authType.wordmark,
-    color: authColors.ink,
     textAlign: 'center',
-    paddingTop: 8,
+    marginTop: 8,
   },
   mascotArea: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  mascotWrap: {
-    width: MASCOT_SIZE,
-    height: MASCOT_SIZE,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mascotCaptionWrap: {
-    position: 'absolute',
-    alignItems: 'center',
-  },
-  mascotCaption: {
-    fontFamily: 'JetBrainsMono_500Medium',
-    fontSize: 10,
-    letterSpacing: 10 * 0.08,
-    textTransform: 'uppercase',
-    color: authColors.muted,
-    textAlign: 'center',
-    lineHeight: 15,
+    paddingVertical: 22,
   },
   headline: {
     ...authType.welcomeHeadline,
     color: authColors.ink,
-    maxWidth: 300,
+    marginBottom: 12,
   },
   body: {
     ...authType.welcomeBody,
     color: authColors.ink2,
     maxWidth: 300,
-    marginTop: 8,
     marginBottom: 26,
   },
   footer: {
-    marginTop: 18,
+    marginTop: 12,
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 8,
   },
   footerPressed: {
     opacity: 0.6,
