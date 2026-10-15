@@ -22,7 +22,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 51 done · 18 to do · 43 not built · 1 partly · 9 last
+Totals: 60 done · 9 to do · 43 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -79,9 +79,9 @@ Totals: 51 done · 18 to do · 43 not built · 1 partly · 9 last
 | 34 | Code Tracer | TracerListScreen | done | 1083617 |
 | 35 | Trace | TracerScreen | done | 1083617, d62ff49 |
 | 36 | Trace result | TracerScreen | done | 0a61859 |
-| 37 | Quiz | QuizScreen | to do |  |
-| 38 | Quit quiz · bottom sheet | with Quiz | to do |  |
-| 39 | Quiz result | QuizScreen | to do |  |
+| 37 | Quiz | QuizScreen | done | 3f4c279 (pick then submit; no question explanations, so feedback names the right answer) |
+| 38 | Quit quiz · bottom sheet | with Quiz | done | 3f4c279 (honest copy: last score not best, checked answers still recorded) |
+| 39 | Quiz result | QuizScreen | done | 3f4c279 (What next card instead of Adaptive, which the app does not do; review missed first) |
 
 ## D · Progress and coming later
 
@@ -134,7 +134,7 @@ Totals: 51 done · 18 to do · 43 not built · 1 partly · 9 last
 | 69 | Home · Offline, saved content | with Home | done | 2894257 (inline bar, not edge to edge) |
 | 70 | Courses · Error | with Courses | done | 4e9c640 (no saved-modules list; offline not claimed) |
 | 71 | Lesson · Offline | with Lesson | done | 3c5b564 (honest copy: only downloaded modules read offline) |
-| 72 | Quiz · Offline | with Quiz | to do |  |
+| 72 | Quiz · Offline | with Quiz | done | 3f4c279 (server grades every answer, so offline shows a needs-internet page; questions read from the server) |
 | 73 | Tutor · Error | with Tutor | done | a01ce13 |
 | 74 | Practice · Empty | with Practice | done | 5c6116d (card inside the page; Code Tracer stays visible) |
 | 75 | Tutor · Empty | with Tutor | done | a01ce13 |
@@ -170,7 +170,7 @@ Totals: 51 done · 18 to do · 43 not built · 1 partly · 9 last
 |---|---|---|---|---|
 | 96 | Session expired | — | not built |  |
 | 97 | Lesson · Server error | with Lesson | done | 3c5b564 (real Firebase error code, not a made-up ref; Back to module instead of Report) |
-| 98 | Quiz result · Not synced | with Quiz result | to do |  |
+| 98 | Quiz result · Not synced | with Quiz result | done | 3f4c279 (banner with Try saving again) |
 | 99 | Challenge · Compile error | — | not built |  |
 | 100 | Challenge · Test failing | — | not built |  |
 | 101 | Challenge · Time limit | — | not built |  |
@@ -184,10 +184,10 @@ Totals: 51 done · 18 to do · 43 not built · 1 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 107 | Quiz result · Passed | with Quiz result | to do |  |
-| 108 | Quiz result · Below 75% | with Quiz result | to do |  |
-| 109 | Quiz · Correct answer | with Quiz | to do |  |
-| 110 | Quiz · Not quite | with Quiz | to do |  |
+| 107 | Quiz result · Passed | with Quiz result | done | 3f4c279 (pass at 75% everywhere, Quizzes badge too) |
+| 108 | Quiz result · Below 75% | with Quiz result | done | 3f4c279 |
+| 109 | Quiz · Correct answer | with Quiz | done | 3f4c279 |
+| 110 | Quiz · Not quite | with Quiz | done | 3f4c279 |
 | 111 | Lesson complete | — | not built |  |
 | 112 | Module complete | — | not built |  |
 | 113 | Tutor · Empty | with Tutor | done | a01ce13 |
