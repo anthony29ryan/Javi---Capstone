@@ -11,7 +11,17 @@ import AuthToast from '../components/auth/AuthToast';
 import { useAuth } from '../context/AuthContext';
 import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
 
-const RESEND_COOLDOWN_SECONDS = 30;
+// Firebase limits how often a verification email can be resent but does not
+// publish the window; 30 s proved too short. When it refuses anyway, the
+// button waits much longer so it is never tappable while it cannot work.
+const RESEND_COOLDOWN_SECONDS = 60;
+const RATE_LIMITED_COOLDOWN_SECONDS = 5 * 60;
+
+// "45s" under a minute, "4:59" from a minute up.
+function formatWait(seconds) {
+  if (seconds < 60) return `${seconds}s`;
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+}
 
 const NOTICES = {
   unverified: {
@@ -27,7 +37,7 @@ const NOTICES = {
   limit: {
     tone: 'danger',
     title: 'Too many emails sent',
-    body: 'Wait a few minutes before asking for another link. The newest link we sent still works.',
+    body: 'You can ask again when the timer ends. The newest link we sent still works.',
   },
   failed: {
     tone: 'danger',
@@ -96,6 +106,7 @@ export default function VerifyEmailScreen() {
       setCooldown(RESEND_COOLDOWN_SECONDS);
     } catch (err) {
       setNotice(noticeFor(err));
+      if (err.code === 'auth/too-many-requests') setCooldown(RATE_LIMITED_COOLDOWN_SECONDS);
     } finally {
       setSending(false);
     }
@@ -130,8 +141,8 @@ export default function VerifyEmailScreen() {
           <View style={styles.card}>
             <Text style={styles.cardEyebrow}>GOOD TO KNOW</Text>
             <Text style={styles.cardBody}>
-              The link works once and expires in 30 minutes. Open it on this phone so the app can
-              pick it up. Check spam if it has not arrived in a minute.
+              The link works once, and opening it on any device verifies your account. Check spam
+              if it has not arrived in a minute.
             </Text>
           </View>
 
@@ -142,7 +153,7 @@ export default function VerifyEmailScreen() {
           <View style={styles.actions}>
             <AuthButton label="I opened the link" onPress={handleCheck} loading={checking} />
             <AuthButton
-              label={counting ? `Resend link in ${cooldown}s` : 'Resend link'}
+              label={counting ? `Resend link in ${formatWait(cooldown)}` : 'Resend link'}
               variant="secondary"
               onPress={handleResend}
               loading={sending}
