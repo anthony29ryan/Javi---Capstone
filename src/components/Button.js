@@ -5,7 +5,7 @@ import Animated, { cubicBezier, useReducedMotion } from 'react-native-reanimated
 import { colors, fonts, spacing } from '../theme/colors';
 
 // Strong ease-out: the change lands almost immediately under the finger,
-// then settles. Shared with ListCard so every press in the app feels the same.
+// then settles.
 export const PRESS_EASING = cubicBezier(0.23, 1, 0.32, 1);
 export const PRESS_DURATION = '120ms';
 

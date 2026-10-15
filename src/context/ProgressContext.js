@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { getAllLessons, getAllModules, getCourses, getModuleLessons } from '../services/content';
 import {
@@ -6,7 +6,6 @@ import {
   loadSnapshot,
   refreshDownloads,
   removeAllModules,
-  removeModule,
   saveModule,
   saveSnapshot,
 } from '../services/offline';
@@ -48,6 +47,13 @@ export function ProgressProvider({ children }) {
   // True while showing the last saved snapshot because Firestore could not be reached.
   const [offline, setOffline] = useState(false);
   const [downloadedIds, setDownloadedIds] = useState(() => new Set());
+  // The batch from the download sheet: ids still to save (the first is in
+  // progress), how many the batch started with, and the id that failed.
+  const [downloadQueue, setDownloadQueue] = useState([]);
+  const [downloadTotal, setDownloadTotal] = useState(0);
+  const [downloadDone, setDownloadDone] = useState(0);
+  const [downloadFailed, setDownloadFailed] = useState(null);
+  const cancelRequested = useRef(false);
 
   const refresh = useCallback(async () => {
     // Screens show the spinner, not the old error, while a retry is in flight.
@@ -103,13 +109,40 @@ export function ProgressProvider({ children }) {
     setDownloadedIds((current) => new Set(current).add(moduleId));
   }, []);
 
-  const removeDownload = useCallback(async (moduleId) => {
-    await removeModule(moduleId);
-    setDownloadedIds((current) => {
-      const next = new Set(current);
-      next.delete(moduleId);
-      return next;
-    });
+  /**
+   * Saves modules one after another, so progress can be shown per module.
+   * Cancelling stops before the next one; the module in progress finishes,
+   * since a Firestore read cannot be abandoned halfway. Resolves to how many
+   * were saved.
+   */
+  const downloadModules = useCallback(
+    async (ids) => {
+      cancelRequested.current = false;
+      setDownloadFailed(null);
+      setDownloadTotal(ids.length);
+      setDownloadDone(0);
+      setDownloadQueue(ids);
+      let saved = 0;
+      for (const id of ids) {
+        if (cancelRequested.current) break;
+        try {
+          await downloadModule(id);
+        } catch {
+          setDownloadFailed(id);
+          break;
+        }
+        saved += 1;
+        setDownloadDone(saved);
+        setDownloadQueue((queue) => queue.slice(1));
+      }
+      setDownloadQueue([]);
+      return saved;
+    },
+    [downloadModule]
+  );
+
+  const cancelDownloads = useCallback(() => {
+    cancelRequested.current = true;
   }, []);
 
   const removeAllDownloads = useCallback(async () => {
@@ -184,7 +217,12 @@ export function ProgressProvider({ children }) {
       offline,
       downloadedIds,
       downloadModule,
-      removeDownload,
+      downloadModules,
+      cancelDownloads,
+      downloadQueue,
+      downloadTotal,
+      downloadDone,
+      downloadFailed,
       removeAllDownloads,
       reloadProgress,
       markLessonOpened,
@@ -216,7 +254,12 @@ export function ProgressProvider({ children }) {
     offline,
     downloadedIds,
     downloadModule,
-    removeDownload,
+    downloadModules,
+    cancelDownloads,
+    downloadQueue,
+    downloadTotal,
+    downloadDone,
+    downloadFailed,
     removeAllDownloads,
   ]);
 

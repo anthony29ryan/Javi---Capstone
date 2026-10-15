@@ -38,10 +38,6 @@ export async function saveModule(moduleId, lessons) {
   await AsyncStorage.setItem(MODULE_PREFIX + moduleId, JSON.stringify(lessons));
 }
 
-export async function removeModule(moduleId) {
-  await AsyncStorage.removeItem(MODULE_PREFIX + moduleId);
-}
-
 export async function removeAllModules() {
   await AsyncStorage.multiRemove(await moduleKeys());
 }

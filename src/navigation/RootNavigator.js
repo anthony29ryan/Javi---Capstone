@@ -34,7 +34,7 @@ import LessonDetailScreen from '../screens/LessonDetailScreen';
 import WeakLessonsScreen from '../screens/WeakLessonsScreen';
 import QuizzesScreen from '../screens/QuizzesScreen';
 import AvatarSheetScreen from '../screens/AvatarSheetScreen';
-import LessonsScreen from '../screens/LessonsScreen';
+import DownloadSheetScreen from '../screens/DownloadSheetScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModulesScreen from '../screens/ModulesScreen';
 import ProgressScreen from '../screens/ProgressScreen';
@@ -46,6 +46,15 @@ import VerifyEmailScreen from '../screens/VerifyEmailScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 
 const Stack = createNativeStackNavigator();
+
+// Bottom sheets drawn as see-through screens over the one below. Transparent,
+// or the stack's page background hides that screen behind the sheet.
+const SHEET_OPTIONS = {
+  headerShown: false,
+  presentation: 'transparentModal',
+  animation: 'fade',
+  contentStyle: { backgroundColor: 'transparent' },
+};
 
 // A light header on the same cream as the page keeps the status bar icons
 // readable on every screen and lets the coffee accent stay on buttons and
@@ -117,7 +126,6 @@ function AppStack({ needsSetup }) {
       <Stack.Screen name="Progress" component={ProgressScreen} options={{ title: 'My Progress' }} />
       {/* Modules draws its own back button and level tag, per the design. */}
       <Stack.Screen name="Modules" component={ModulesScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Lessons" component={LessonsScreen} />
       {/* LessonDetail draws its own back button and breadcrumb, per the design. */}
       <Stack.Screen
         name="LessonDetail"
@@ -129,14 +137,9 @@ function AppStack({ needsSetup }) {
       <Stack.Screen
         name="AvatarSheet"
         component={AvatarSheetScreen}
-        // Transparent, or the stack's page background hides Profile behind the sheet.
-        options={{
-          headerShown: false,
-          presentation: 'transparentModal',
-          animation: 'fade',
-          contentStyle: { backgroundColor: 'transparent' },
-        }}
+        options={SHEET_OPTIONS}
       />
+      <Stack.Screen name="DownloadSheet" component={DownloadSheetScreen} options={SHEET_OPTIONS} />
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'Quiz' }} />
       <Stack.Screen
         name="TracerList"

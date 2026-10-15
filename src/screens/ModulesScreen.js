@@ -1,8 +1,7 @@
-import { useState } from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Svg, { Path } from 'react-native-svg';
 import {
-  ActivityIndicator,
   FlatList,
   LayoutAnimation,
   Platform,
@@ -13,9 +12,11 @@ import {
   View,
 } from 'react-native';
 
+import AuthToast from '../components/auth/AuthToast';
 import LessonRow from '../components/LessonRow';
 import OfflineBanner from '../components/OfflineBanner';
 import ScreenState from '../components/ScreenState';
+import Skeleton from '../components/Skeleton';
 import { levelLabel } from '../constants/levels';
 import { scorePercent, useProgress } from '../context/ProgressContext';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
@@ -27,33 +28,66 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-function scoreNote(score) {
-  if (!score || !score.total) return 'Not taken';
-  return `Last ${scorePercent(score)}%`;
+const modulesLabel = (n) => `${n} module${n === 1 ? '' : 's'}`;
+
+// Frame 66: the page's shape in grey while progress loads.
+function ModuleSkeleton({ top, onBack }) {
+  return (
+    <View style={styles.screen}>
+      <View style={[styles.list, { paddingTop: top }]}>
+        <View style={styles.tagRow}>
+          <Skeleton style={styles.skelTag} />
+        </View>
+        <Skeleton style={styles.skelTitle} />
+        <Skeleton style={styles.skelBlurb} />
+        <Skeleton style={styles.skelProgress} />
+        {[0, 1, 2, 3].map((key) => (
+          <View key={key} style={styles.skelCard}>
+            <View style={styles.skelLines}>
+              <Skeleton style={styles.skelLabel} />
+              <Skeleton style={styles.skelName} />
+              <Skeleton style={styles.skelSummary} />
+            </View>
+            <Skeleton style={styles.skelBadge} />
+          </View>
+        ))}
+      </View>
+      <BackButton top={top} onPress={onBack} />
+    </View>
+  );
 }
 
-/** Download / downloading / downloaded toggle for one module's offline copy. */
-function DownloadButton({ downloaded, busy, onPress }) {
+function BackButton({ top, onPress }) {
   return (
     <Pressable
       onPress={onPress}
-      disabled={busy}
-      hitSlop={8}
       accessibilityRole="button"
-      accessibilityLabel={downloaded ? 'Remove download' : 'Download module'}
-      style={({ pressed }) => [styles.download, pressed && styles.downloadPressed]}
+      accessibilityLabel="Go back"
+      style={({ pressed }) => [styles.back, { top }, pressed && styles.backPressed]}
     >
-      {busy ? (
-        <ActivityIndicator size="small" color={colors.primaryDark} />
-      ) : (
-        <Ionicons
-          name={downloaded ? 'checkmark-circle' : 'cloud-download-outline'}
-          size={22}
-          color={downloaded ? colors.success : colors.borderStrong}
-        />
-      )}
+      <Text style={styles.backGlyph}>←</Text>
     </Pressable>
   );
+}
+
+// The design's download arrow.
+function DownloadGlyph() {
+  return (
+    <Svg width={20} height={20} viewBox="0 0 20 20" fill="none">
+      <Path
+        d="M10 3.5v9M6 8.5l4 4 4-4M4 16h12"
+        stroke={colors.text}
+        strokeWidth={1.8}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}
+
+function scoreNote(score) {
+  if (!score || !score.total) return 'Not taken';
+  return `Last ${scorePercent(score)}%`;
 }
 
 /**
@@ -80,9 +114,13 @@ export default function ModulesScreen({ route, navigation }) {
     loading,
     error,
     refresh,
+    offline,
     downloadedIds,
-    downloadModule,
-    removeDownload,
+    downloadQueue,
+    downloadTotal,
+    downloadDone,
+    downloadFailed,
+    cancelDownloads,
   } = useProgress();
 
   // null until the first render with data, then the id of whichever module the
@@ -91,10 +129,24 @@ export default function ModulesScreen({ route, navigation }) {
   // thing that made it unwieldy.
   const [openModuleId, setOpenModuleId] = useState(null);
   const [touched, setTouched] = useState(false);
-  const [busyModuleId, setBusyModuleId] = useState(null);
-  const [downloadErrors, setDownloadErrors] = useState({});
+  const [toast, setToast] = useState('');
 
-  if (loading) return <ScreenState loading />;
+  // Frame 56: once a batch for this course empties, say how many were saved.
+  const courseModuleIds = modules.filter((m) => m.courseId === courseId).map((m) => m.id);
+  const downloadingHere = downloadQueue.some((id) => courseModuleIds.includes(id));
+  const wasDownloading = useRef(false);
+  useEffect(() => {
+    if (downloadingHere) {
+      wasDownloading.current = true;
+      return;
+    }
+    if (!wasDownloading.current) return;
+    wasDownloading.current = false;
+    if (downloadDone > 0) setToast(`${modulesLabel(downloadDone)} saved for offline`);
+  }, [downloadingHere, downloadDone]);
+
+  const top = insets.top + spacing.lg;
+  if (loading) return <ModuleSkeleton top={top} onBack={() => navigation.goBack()} />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
 
   const courseIndex = courses.findIndex((item) => item.id === courseId);
@@ -125,23 +177,15 @@ export default function ModulesScreen({ route, navigation }) {
 
   const expandedId = touched ? openModuleId : suggestedOpenId;
 
-  async function toggleDownload(moduleId) {
-    setBusyModuleId(moduleId);
-    setDownloadErrors((current) => ({ ...current, [moduleId]: '' }));
-    const removing = downloadedIds.has(moduleId);
-    try {
-      if (removing) await removeDownload(moduleId);
-      else await downloadModule(moduleId);
-    } catch {
-      setDownloadErrors((current) => ({
-        ...current,
-        [moduleId]: removing
-          ? 'Could not remove the download. Try again.'
-          : 'Could not download. Check your connection and try again.',
-      }));
-    } finally {
-      setBusyModuleId(null);
-    }
+  const modulesById = Object.fromEntries(modules.map((module) => [module.id, module]));
+  const savedHere = courseModules.filter((module) => downloadedIds.has(module.id)).length;
+  const downloadPercent = downloadTotal ? Math.round((downloadDone / downloadTotal) * 100) : 0;
+  const firstQueued = modulesById[downloadQueue[0]]?.title ?? '';
+  const failedModule = downloadFailed ? modulesById[downloadFailed] : null;
+
+  function openDownloads() {
+    if (offline) setToast('Connect to the internet to download');
+    else navigation.navigate('DownloadSheet', { courseId });
   }
 
   function toggleModule(moduleId) {
@@ -159,7 +203,7 @@ export default function ModulesScreen({ route, navigation }) {
       style={styles.container}
       contentContainerStyle={[
         styles.list,
-        { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl },
+        { paddingTop: top, paddingBottom: insets.bottom + spacing.xl },
       ]}
       data={courseModules}
       keyExtractor={(item) => item.id}
@@ -167,8 +211,16 @@ export default function ModulesScreen({ route, navigation }) {
         <View style={styles.header}>
           {/* Indented to clear the floating back button, which is not in the
               list and so does not reserve space here. */}
-          <View style={styles.tagRow}>
+          <View style={[styles.tagRow, styles.tagRowWithButton]}>
             <Text style={styles.levelTag}>{levelLabel(courseIndex)}</Text>
+            <Pressable
+              onPress={openDownloads}
+              accessibilityRole="button"
+              accessibilityLabel="Download for offline"
+              style={({ pressed }) => [styles.downloadButton, pressed && styles.backPressed]}
+            >
+              <DownloadGlyph />
+            </Pressable>
           </View>
 
           <OfflineBanner />
@@ -178,6 +230,50 @@ export default function ModulesScreen({ route, navigation }) {
             <Text style={styles.courseBlurb}>{course.description}</Text>
           ) : null}
           <Text style={styles.courseProgress}>{stats.percent}% complete</Text>
+
+          {/* Frame 55. The percentage counts finished modules: each one is a
+              single read with no progress of its own. */}
+          {downloadingHere ? (
+            <View style={styles.progressCard} accessibilityRole="progressbar">
+              <View style={styles.progressTop}>
+                <View style={styles.flex}>
+                  <Text style={styles.progressTitle}>Downloading {modulesLabel(downloadTotal)}</Text>
+                  <Text style={styles.progressSub}>
+                    {firstQueued}
+                    {downloadQueue.length > 1 ? ` and ${downloadQueue.length - 1} more` : ''} ·{' '}
+                    {downloadPercent}%
+                  </Text>
+                </View>
+                <Pressable
+                  onPress={cancelDownloads}
+                  style={({ pressed }) => [styles.cancel, pressed && styles.cancelPressed]}
+                >
+                  <Text style={styles.cancelLabel}>Cancel</Text>
+                </Pressable>
+              </View>
+              <View style={styles.progressTrack}>
+                <View style={[styles.progressFill, { width: `${downloadPercent}%` }]} />
+              </View>
+            </View>
+          ) : null}
+
+          {failedModule && courseModuleIds.includes(failedModule.id) ? (
+            <Text style={styles.downloadError}>
+              Could not download {failedModule.title}. Check your connection and try again.
+            </Text>
+          ) : null}
+
+          {/* Frame 58: which modules still open without a connection. */}
+          {offline ? (
+            <View style={styles.offlineLine}>
+              <Text style={styles.offlineTick}>✓</Text>
+              <Text style={styles.offlineText}>
+                {savedHere
+                  ? `${modulesLabel(savedHere)} ${savedHere === 1 ? 'still opens' : 'still open'}. The rest need internet.`
+                  : 'Nothing in this course is saved on this phone. Lessons need internet until you download them.'}
+              </Text>
+            </View>
+          ) : null}
         </View>
       }
       renderItem={({ item }) => {
@@ -189,45 +285,39 @@ export default function ModulesScreen({ route, navigation }) {
 
         return (
           <View style={styles.card}>
-            {/* The download button sits beside the head, not inside it: a
-                labelled Pressable hides its children from screen readers. */}
-            <View style={styles.cardHeadRow}>
-              <Pressable
-                onPress={() => toggleModule(item.id)}
-                accessibilityRole="button"
-                accessibilityState={{ expanded }}
-                accessibilityLabel={`${item.title}, ${expanded ? 'collapse' : 'expand'}`}
-                style={({ pressed }) => [styles.cardHead, pressed && styles.cardHeadPressed]}
-              >
-                <View style={styles.cardHeadText}>
-                  <Text style={styles.moduleLabel}>Module {item.order}</Text>
-                  <Text style={styles.moduleTitle}>{item.title}</Text>
-                  {item.description ? (
-                    <Text style={styles.moduleSummary}>{item.description}</Text>
-                  ) : null}
+            <Pressable
+              onPress={() => toggleModule(item.id)}
+              accessibilityRole="button"
+              accessibilityState={{ expanded }}
+              accessibilityLabel={`${item.title}, ${expanded ? 'collapse' : 'expand'}`}
+              style={({ pressed }) => [styles.cardHead, pressed && styles.cardHeadPressed]}
+            >
+              <View style={styles.cardHeadText}>
+                <Text style={styles.moduleLabel}>Module {item.order}</Text>
+                <Text style={styles.moduleTitle}>{item.title}</Text>
+                {item.description ? (
+                  <Text style={styles.moduleSummary}>{item.description}</Text>
+                ) : null}
+                {downloadedIds.has(item.id) ? (
+                  <Text style={styles.savedLine}>✓ Saved offline</Text>
+                ) : downloadQueue.includes(item.id) ? (
+                  <Text style={styles.statusLine}>Downloading…</Text>
+                ) : offline ? (
+                  <Text style={styles.statusLine}>Needs internet</Text>
+                ) : null}
+              </View>
+              <View style={styles.cardHeadRight}>
+                <View style={styles.countBadge}>
+                  <Text style={styles.countBadgeText}>
+                    {moduleStats.completed}/{moduleStats.total}
+                  </Text>
                 </View>
-                <View style={styles.cardHeadRight}>
-                  <View style={styles.countBadge}>
-                    <Text style={styles.countBadgeText}>
-                      {moduleStats.completed}/{moduleStats.total}
-                    </Text>
-                  </View>
-                  {/* One chevron, turned: down when closed, up when open. A
-                      rotated glyph keeps the two states visually identical apart
-                      from direction, which two different characters would not. */}
-                  <Text style={[styles.chevron, expanded && styles.chevronOpen]}>›</Text>
-                </View>
-              </Pressable>
-              <DownloadButton
-                downloaded={downloadedIds.has(item.id)}
-                busy={busyModuleId === item.id}
-                onPress={() => toggleDownload(item.id)}
-              />
-            </View>
-
-            {downloadErrors[item.id] ? (
-              <Text style={styles.downloadError}>{downloadErrors[item.id]}</Text>
-            ) : null}
+                {/* One chevron, turned: down when closed, up when open. A
+                    rotated glyph keeps the two states visually identical apart
+                    from direction, which two different characters would not. */}
+                <Text style={[styles.chevron, expanded && styles.chevronOpen]}>›</Text>
+              </View>
+            </Pressable>
 
             {expanded ? (
               <>
@@ -262,18 +352,8 @@ export default function ModulesScreen({ route, navigation }) {
       />
 
       {/* Outside the list so it stays put while the modules scroll past. */}
-      <Pressable
-        onPress={() => navigation.goBack()}
-        accessibilityRole="button"
-        accessibilityLabel="Go back"
-        style={({ pressed }) => [
-          styles.back,
-          { top: insets.top + spacing.lg },
-          pressed && styles.backPressed,
-        ]}
-      >
-        <Text style={styles.backGlyph}>←</Text>
-      </Pressable>
+      <BackButton top={top} onPress={() => navigation.goBack()} />
+      <AuthToast message={toast} onHide={() => setToast('')} />
     </View>
   );
 }
@@ -357,19 +437,14 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     overflow: 'hidden',
   },
-  cardHeadRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
   cardHead: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     gap: spacing.md,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
-    paddingBottom: spacing.md,
+    paddingBottom: spacing.lg,
   },
   cardHeadPressed: {
     backgroundColor: colors.primarySoft,
@@ -411,24 +486,174 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     marginTop: 5,
   },
-  download: {
+  flex: {
+    flex: 1,
+    minWidth: 0,
+  },
+  tagRowWithButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  downloadButton: {
     width: 44,
     height: 44,
-    marginTop: spacing.lg,
-    marginRight: spacing.sm,
-    borderRadius: 14,
+    borderRadius: 22,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  downloadPressed: {
+  progressCard: {
+    gap: 10,
+    marginTop: 18,
+    paddingTop: 12,
+    paddingBottom: 14,
+    paddingLeft: 16,
+    paddingRight: 8,
+    borderRadius: 20,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  progressTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  progressTitle: {
+    fontFamily: fonts.semiBold,
+    fontSize: 14,
+    lineHeight: 14 * 1.3,
+    color: colors.text,
+  },
+  progressSub: {
+    fontFamily: fonts.regular,
+    fontSize: 12,
+    lineHeight: 12 * 1.35,
+    color: colors.textMuted,
+    marginTop: 4,
+  },
+  cancel: {
+    height: 44,
+    paddingHorizontal: 14,
+    borderRadius: 22,
+    justifyContent: 'center',
+  },
+  cancelPressed: {
+    backgroundColor: colors.surfaceSunken,
+  },
+  cancelLabel: {
+    fontFamily: fonts.semiBold,
+    fontSize: 12.5,
+    color: colors.textMuted,
+  },
+  progressTrack: {
+    height: 6,
+    marginRight: 8,
+    borderRadius: 3,
     backgroundColor: colors.primarySoft,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.primary,
   },
   downloadError: {
     fontFamily: fonts.regular,
-    fontSize: 12,
+    fontSize: 12.5,
+    lineHeight: 12.5 * 1.5,
     color: colors.error,
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.md,
+    marginTop: 12,
+  },
+  offlineLine: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 12,
+  },
+  offlineTick: {
+    fontFamily: fonts.bold,
+    fontSize: 13,
+    color: colors.primaryDark,
+  },
+  offlineText: {
+    flex: 1,
+    fontFamily: fonts.medium,
+    fontSize: 12.5,
+    lineHeight: 12.5 * 1.5,
+    color: colors.textMuted,
+  },
+  savedLine: {
+    fontFamily: fonts.semiBold,
+    fontSize: 11.5,
+    color: colors.primaryDark,
+    marginTop: 10,
+  },
+  statusLine: {
+    fontFamily: fonts.semiBold,
+    fontSize: 11.5,
+    color: colors.textMuted,
+    marginTop: 10,
+  },
+  skelTag: {
+    height: 11,
+    width: '38%',
+    borderRadius: 5,
+  },
+  skelTitle: {
+    height: 26,
+    width: '52%',
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  skelBlurb: {
+    height: 13,
+    width: '88%',
+    borderRadius: 6,
+  },
+  skelProgress: {
+    height: 11,
+    width: '28%',
+    borderRadius: 5,
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  skelCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    padding: 16,
+    borderRadius: 20,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  skelLines: {
+    flex: 1,
+    gap: 9,
+  },
+  skelLabel: {
+    height: 9,
+    width: '26%',
+    borderRadius: 4,
+  },
+  skelName: {
+    height: 16,
+    width: '66%',
+    borderRadius: 6,
+  },
+  skelSummary: {
+    height: 11,
+    width: '88%',
+    borderRadius: 5,
+  },
+  skelBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
   },
   countBadge: {
     width: 44,
