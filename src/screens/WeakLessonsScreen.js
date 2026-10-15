@@ -53,76 +53,84 @@ export default function WeakLessonsScreen({ navigation, route }) {
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={[
-        styles.content,
-        { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl },
-      ]}
-    >
-      <AuthBackButton onPress={() => navigation.goBack()} />
-      <Text style={styles.title}>Recommended for you</Text>
-
-      <View style={styles.intro}>
-        <Mascot variant="greeting" px={48} decorative animate={false} />
-        <Text style={styles.introText}>
-          Javi picked these modules because your recent quiz answers there were low. Review the
-          lessons, then retake the quiz.
-        </Text>
-      </View>
-
-      <View style={styles.cards}>
-        {sections.map(({ topic, module, lessons: moduleLessons }) => {
-          const expanded = openId === module.id;
-          return (
-            <View key={module.id} style={styles.card}>
-              <Pressable
-                onPress={() => toggle(module.id)}
-                accessibilityRole="button"
-                accessibilityState={{ expanded }}
-                accessibilityLabel={`${module.title}, ${expanded ? 'collapse' : 'expand'}`}
-                style={({ pressed }) => [styles.cardHead, pressed && styles.cardHeadPressed]}
-              >
-                <View style={styles.cardHeadText}>
-                  <Text style={styles.moduleTitle}>{module.title}</Text>
-                  <Text style={styles.moduleMeta}>
-                    {Math.round(topic.accuracy * 100)}% of recent answers right
-                  </Text>
-                </View>
-                <Text style={[styles.chevron, expanded && styles.chevronOpen]}>›</Text>
-              </Pressable>
-
-              {expanded ? (
-                <>
-                  {moduleLessons.map((lesson) => (
-                    <LessonRow
-                      key={lesson.id}
-                      lesson={lesson}
-                      done={isLessonComplete(lesson.id)}
+    <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={[
+          styles.content,
+          { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl },
+        ]}
+      >
+        {/* Holds the floating back button's place, so the title stays put. */}
+        <View style={styles.backSpace} />
+        <Text style={styles.title}>Recommended for you</Text>
+  
+        <View style={styles.intro}>
+          <Mascot variant="greeting" px={48} decorative animate={false} />
+          <Text style={styles.introText}>
+            Javi picked these modules because your recent quiz answers there were low. Review the
+            lessons, then retake the quiz.
+          </Text>
+        </View>
+  
+        <View style={styles.cards}>
+          {sections.map(({ topic, module, lessons: moduleLessons }) => {
+            const expanded = openId === module.id;
+            return (
+              <View key={module.id} style={styles.card}>
+                <Pressable
+                  onPress={() => toggle(module.id)}
+                  accessibilityRole="button"
+                  accessibilityState={{ expanded }}
+                  accessibilityLabel={`${module.title}, ${expanded ? 'collapse' : 'expand'}`}
+                  style={({ pressed }) => [styles.cardHead, pressed && styles.cardHeadPressed]}
+                >
+                  <View style={styles.cardHeadText}>
+                    <Text style={styles.moduleTitle}>{module.title}</Text>
+                    <Text style={styles.moduleMeta}>
+                      {Math.round(topic.accuracy * 100)}% of recent answers right
+                    </Text>
+                  </View>
+                  <Text style={[styles.chevron, expanded && styles.chevronOpen]}>›</Text>
+                </Pressable>
+  
+                {expanded ? (
+                  <>
+                    {moduleLessons.map((lesson) => (
+                      <LessonRow
+                        key={lesson.id}
+                        lesson={lesson}
+                        done={isLessonComplete(lesson.id)}
+                        onPress={() =>
+                          navigation.navigate('LessonDetail', {
+                            lessonId: lesson.id,
+                            lessonTitle: lesson.title,
+                          })
+                        }
+                      />
+                    ))}
+                    <Pressable
                       onPress={() =>
-                        navigation.navigate('LessonDetail', {
-                          lessonId: lesson.id,
-                          lessonTitle: lesson.title,
-                        })
+                        navigation.navigate('Quiz', { moduleId: module.id, title: module.title })
                       }
-                    />
-                  ))}
-                  <Pressable
-                    onPress={() =>
-                      navigation.navigate('Quiz', { moduleId: module.id, title: module.title })
-                    }
-                    style={({ pressed }) => [styles.quizRow, pressed && styles.quizRowPressed]}
-                  >
-                    <Text style={styles.quizLabel}>Retake quiz</Text>
-                    <Text style={styles.quizChevron}>›</Text>
-                  </Pressable>
-                </>
-              ) : null}
-            </View>
-          );
-        })}
-      </View>
-    </ScrollView>
+                      style={({ pressed }) => [styles.quizRow, pressed && styles.quizRowPressed]}
+                    >
+                      <Text style={styles.quizLabel}>Retake quiz</Text>
+                      <Text style={styles.quizChevron}>›</Text>
+                    </Pressable>
+                  </>
+                ) : null}
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
+      {/* Outside the list so it stays put while the page scrolls. */}
+      <AuthBackButton
+        onPress={() => navigation.goBack()}
+        style={[styles.back, { top: insets.top + spacing.lg }]}
+      />
+    </View>
   );
 }
 
@@ -134,6 +142,16 @@ const styles = StyleSheet.create({
   content: {
     ...centeredColumn(contentWidth.content),
     paddingHorizontal: 20,
+  },
+  backSpace: {
+    height: 40,
+  },
+  back: {
+    position: 'absolute',
+    left: 20,
+    // Above the cards that scroll underneath it.
+    zIndex: 2,
+    elevation: 2,
   },
   title: {
     ...type.screenTitle,

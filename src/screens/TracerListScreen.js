@@ -111,61 +111,68 @@ export default function TracerListScreen({ navigation }) {
     .sort((a, b) => rank(a) - rank(b));
 
   return (
-    <FlatList
-      style={styles.container}
-      contentContainerStyle={[
-        styles.list,
-        { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl },
-      ]}
-      data={sorted}
-      keyExtractor={(item) => item.id}
-      ListHeaderComponent={
-        <View style={styles.header}>
-          <View style={styles.backRow}>
-            <AuthBackButton onPress={() => navigation.goBack()} style={styles.back} />
-            <Text style={styles.eyebrow}>Practice</Text>
+    <View style={styles.container}>
+      <FlatList
+        style={styles.container}
+        contentContainerStyle={[
+          styles.list,
+          { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl },
+        ]}
+        data={sorted}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            {/* Indented to clear the floating back button below the list. */}
+            <View style={styles.backRow}>
+              <Text style={styles.eyebrow}>Practice</Text>
+            </View>
+            <Text style={styles.title}>Code Tracer</Text>
+            <Text style={styles.intro}>
+              Pick a short program to type. Lines appear one at a time, and any wrong character
+              turns red.
+            </Text>
+            {/* Level chips rather than the design's topic chips: with one program
+                per module there would be 21 topic chips. */}
+            <View style={styles.chips}>
+              <Chip label="All" selected={!courseFilter} onPress={() => setCourseFilter(null)} />
+              {courses.map((course) => (
+                <Chip
+                  key={course.id}
+                  label={course.title}
+                  selected={courseFilter === course.id}
+                  onPress={() => setCourseFilter(course.id)}
+                />
+              ))}
+            </View>
           </View>
-          <Text style={styles.title}>Code Tracer</Text>
-          <Text style={styles.intro}>
-            Pick a short program to type. Lines appear one at a time, and any wrong character
-            turns red.
-          </Text>
-          {/* Level chips rather than the design's topic chips: with one program
-              per module there would be 21 topic chips. */}
-          <View style={styles.chips}>
-            <Chip label="All" selected={!courseFilter} onPress={() => setCourseFilter(null)} />
-            {courses.map((course) => (
-              <Chip
-                key={course.id}
-                label={course.title}
-                selected={courseFilter === course.id}
-                onPress={() => setCourseFilter(course.id)}
-              />
-            ))}
-          </View>
-        </View>
-      }
-      renderItem={({ item }) => {
-        const module = moduleById.get(item.moduleId);
-        return (
-          <TraceCard
-            trace={item}
-            topic={module?.title ?? 'Java'}
-            level={courseTitles.get(module?.courseId)}
-            traced={isTraceComplete(item.id)}
-            open={openId === item.id}
-            onToggle={() => setOpenId(openId === item.id ? null : item.id)}
-            onStart={() =>
-              navigation.navigate('Tracer', {
-                trace: item,
-                topic: module?.title,
-                level: courseTitles.get(module?.courseId),
-              })
-            }
-          />
-        );
-      }}
-    />
+        }
+        renderItem={({ item }) => {
+          const module = moduleById.get(item.moduleId);
+          return (
+            <TraceCard
+              trace={item}
+              topic={module?.title ?? 'Java'}
+              level={courseTitles.get(module?.courseId)}
+              traced={isTraceComplete(item.id)}
+              open={openId === item.id}
+              onToggle={() => setOpenId(openId === item.id ? null : item.id)}
+              onStart={() =>
+                navigation.navigate('Tracer', {
+                  trace: item,
+                  topic: module?.title,
+                  level: courseTitles.get(module?.courseId),
+                })
+              }
+            />
+          );
+        }}
+      />
+      {/* Outside the list so it stays put while the page scrolls. */}
+      <AuthBackButton
+        onPress={() => navigation.goBack()}
+        style={[styles.back, { top: insets.top + spacing.lg }]}
+      />
+    </View>
   );
 }
 
@@ -183,11 +190,16 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   backRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.lg,
+    // The button's 40px plus the gap that used to sit beside it.
+    marginLeft: 40 + spacing.lg,
+    minHeight: 40,
+    justifyContent: 'center',
   },
   back: {
+    position: 'absolute',
+    left: spacing.xl,
+    // Above the cards that scroll underneath it.
+    zIndex: 2,
     shadowColor: colors.text,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.12,

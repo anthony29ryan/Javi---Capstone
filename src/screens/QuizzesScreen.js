@@ -48,45 +48,52 @@ export default function QuizzesScreen({ navigation }) {
   if (error) return <ScreenState error={error} onRetry={refresh} />;
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={[
-        styles.content,
-        { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl },
-      ]}
-    >
-      <View style={styles.topRow}>
-        <AuthBackButton onPress={() => navigation.goBack()} />
-        <Text style={styles.eyebrow}>Practice</Text>
-      </View>
-      <Text style={styles.title}>Quizzes</Text>
-      {/* The app keeps each module's latest score, not its best. */}
-      <Text style={styles.intro}>
-        {quizCount(modules.length)} across your modules. Your last score shows on each one.
-      </Text>
-
-      {courses.map((course) => {
-        const courseModules = modules.filter((module) => module.courseId === course.id);
-        if (!courseModules.length) return null;
-        return (
-          <View key={course.id} style={styles.group}>
-            <View style={styles.groupHead}>
-              <Text style={styles.groupTitle}>{course.title}</Text>
-              <View style={styles.groupRule} />
-              <Text style={styles.groupCount}>{quizCount(courseModules.length)}</Text>
+    <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={[
+          styles.content,
+          { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.xl },
+        ]}
+      >
+        {/* Indented to clear the floating back button below the list. */}
+        <View style={styles.topRow}>
+          <Text style={styles.eyebrow}>Practice</Text>
+        </View>
+        <Text style={styles.title}>Quizzes</Text>
+        {/* The app keeps each module's latest score, not its best. */}
+        <Text style={styles.intro}>
+          {quizCount(modules.length)} across your modules. Your last score shows on each one.
+        </Text>
+  
+        {courses.map((course) => {
+          const courseModules = modules.filter((module) => module.courseId === course.id);
+          if (!courseModules.length) return null;
+          return (
+            <View key={course.id} style={styles.group}>
+              <View style={styles.groupHead}>
+                <Text style={styles.groupTitle}>{course.title}</Text>
+                <View style={styles.groupRule} />
+                <Text style={styles.groupCount}>{quizCount(courseModules.length)}</Text>
+              </View>
+              {courseModules.map((module) => (
+                <QuizRow
+                  key={module.id}
+                  module={module}
+                  score={moduleScores[module.id]}
+                  onPress={() => navigation.navigate('Quiz', { moduleId: module.id, title: module.title })}
+                />
+              ))}
             </View>
-            {courseModules.map((module) => (
-              <QuizRow
-                key={module.id}
-                module={module}
-                score={moduleScores[module.id]}
-                onPress={() => navigation.navigate('Quiz', { moduleId: module.id, title: module.title })}
-              />
-            ))}
-          </View>
-        );
-      })}
-    </ScrollView>
+          );
+        })}
+      </ScrollView>
+      {/* Outside the list so it stays put while the page scrolls. */}
+      <AuthBackButton
+        onPress={() => navigation.goBack()}
+        style={[styles.back, { top: insets.top + spacing.lg }]}
+      />
+    </View>
   );
 }
 
@@ -100,9 +107,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   topRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+    // The button's 40px plus the design's 12px gap.
+    marginLeft: 52,
+    minHeight: 40,
+    justifyContent: 'center',
+  },
+  back: {
+    position: 'absolute',
+    left: 20,
+    // Above the cards that scroll underneath it.
+    zIndex: 2,
+    elevation: 2,
   },
   eyebrow: {
     ...type.sectionLabel,
