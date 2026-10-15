@@ -19,7 +19,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 5 done · 59 to do · 48 not built · 1 partly · 9 last
+Totals: 8 done · 56 to do · 47 not built · 2 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -27,8 +27,8 @@ Totals: 5 done · 59 to do · 48 not built · 1 partly · 9 last
 |---|---|---|---|---|
 | 01 | Splash | SplashView | done | b2c2de5 |
 | 02 | Welcome | WelcomeScreen | done | 316b4cc |
-| 03 | Sign up | SignupScreen | to do |  |
-| 04 | Sign up · Terms popup | — | not built |  |
+| 03 | Sign up | SignupScreen | done | 92c72ee |
+| 04 | Sign up · Terms popup | TermsSheet | done | 92c72ee |
 | 05 | Check your email | VerifyEmailScreen | to do |  |
 | 06 | Link expired | — | not built |  |
 | 07 | Before you start | SetupScreen | to do |  |
@@ -150,8 +150,8 @@ Totals: 5 done · 59 to do · 48 not built · 1 partly · 9 last
 | 83 | Log in · Google sign-in failed | — | not built |  |
 | 84 | Log in · No connection | with Log in | to do |  |
 | 85 | Log in · Signing in | with Log in | to do |  |
-| 86 | Sign up · Field errors | with Sign up | to do |  |
-| 87 | Sign up · Email already used | with Sign up | to do |  |
+| 86 | Sign up · Field errors | with Sign up | partly | 92c72ee (one error at a time; the design shows all at once) |
+| 87 | Sign up · Email already used | with Sign up | done | 92c72ee |
 | 88 | Forgot password · Rate limited | with Forgot password | to do |  |
 | 89 | New password · Mismatch | — | not built |  |
 | 90 | Set up · Name missing | with Before you start | to do |  |
