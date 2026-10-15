@@ -19,14 +19,14 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 4 done · 60 to do · 48 not built · 1 partly · 9 last
+Totals: 5 done · 59 to do · 48 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
 | 01 | Splash | SplashView | done | b2c2de5 |
-| 02 | Welcome | WelcomeScreen | to do |  |
+| 02 | Welcome | WelcomeScreen | done | 316b4cc |
 | 03 | Sign up | SignupScreen | to do |  |
 | 04 | Sign up · Terms popup | — | not built |  |
 | 05 | Check your email | VerifyEmailScreen | to do |  |
