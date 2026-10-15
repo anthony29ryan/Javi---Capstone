@@ -3,7 +3,9 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+import AuthAlert from '../components/auth/AuthAlert';
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
+import AuthBackButton from '../components/auth/AuthBackButton';
 import AuthButton from '../components/auth/AuthButton';
 import AuthToast from '../components/auth/AuthToast';
 import { useAuth } from '../context/AuthContext';
@@ -11,14 +13,43 @@ import { authColors, authRadius, authSpacing, authType, centeredColumn, contentW
 
 const RESEND_COOLDOWN_SECONDS = 30;
 
+const NOTICES = {
+  unverified: {
+    tone: 'warn',
+    title: 'Not verified yet',
+    body: 'Open the link in the email first, then tap I opened the link again.',
+  },
+  offline: {
+    tone: 'warn',
+    title: 'No internet connection',
+    body: 'Check Wi-Fi or mobile data, then try again.',
+  },
+  limit: {
+    tone: 'danger',
+    title: 'Too many emails sent',
+    body: 'Wait a few minutes before asking for another link. The newest link we sent still works.',
+  },
+  failed: {
+    tone: 'danger',
+    title: 'Something went wrong',
+    body: 'Try again in a moment.',
+  },
+};
+
+// Firebase's raw error codes, turned into one of the notices above.
+function noticeFor(err) {
+  if (err.code === 'auth/network-request-failed') return 'offline';
+  if (err.code === 'auth/too-many-requests') return 'limit';
+  return 'failed';
+}
+
 export default function VerifyEmailScreen() {
   const { user, logOut, refreshUser, resendVerification } = useAuth();
   const insets = useSafeAreaInsets();
 
   const [checking, setChecking] = useState(false);
   const [sending, setSending] = useState(false);
-  const [stillUnverified, setStillUnverified] = useState(false);
-  const [error, setError] = useState('');
+  const [notice, setNotice] = useState(null); // a key of NOTICES
   const [toast, setToast] = useState('');
 
   // Signing up already sent one email, so the resend button starts on cooldown.
@@ -39,8 +70,7 @@ export default function VerifyEmailScreen() {
   }, [counting]);
 
   async function handleCheck() {
-    setError('');
-    setStillUnverified(false);
+    setNotice(null);
     setChecking(true);
 
     try {
@@ -48,17 +78,16 @@ export default function VerifyEmailScreen() {
       // Verifying swaps this whole screen out from RootNavigator, so there is
       // nothing further to do here for the success case (and no time for a
       // toast to show before this component unmounts).
-      if (!verified) setStillUnverified(true);
+      if (!verified) setNotice('unverified');
     } catch (err) {
-      setError(err.message);
+      setNotice(noticeFor(err));
     } finally {
       setChecking(false);
     }
   }
 
   async function handleResend() {
-    setError('');
-    setStillUnverified(false);
+    setNotice(null);
     setSending(true);
 
     try {
@@ -66,7 +95,7 @@ export default function VerifyEmailScreen() {
       setToast('Link sent again');
       setCooldown(RESEND_COOLDOWN_SECONDS);
     } catch (err) {
-      setError(err.message);
+      setNotice(noticeFor(err));
     } finally {
       setSending(false);
     }
@@ -86,6 +115,10 @@ export default function VerifyEmailScreen() {
             },
           ]}
         >
+          {/* The account already exists, so going back means signing out,
+              the same as the "Wrong address?" link below. */}
+          <AuthBackButton onPress={logOut} style={styles.back} />
+
           <View style={styles.iconTile}>
             <Ionicons name="mail-unread-outline" size={38} color={authColors.accentDeep} />
           </View>
@@ -102,20 +135,14 @@ export default function VerifyEmailScreen() {
             </Text>
           </View>
 
-          {error ? (
-            <Text style={styles.notice}>{error}</Text>
-          ) : stillUnverified ? (
-            <Text style={styles.notice}>
-              That email is still not verified. Open the link first, then try again.
-            </Text>
-          ) : null}
+          {notice ? <AuthAlert {...NOTICES[notice]} style={styles.notice} /> : null}
 
           <View style={styles.spacer} />
 
           <View style={styles.actions}>
-            <AuthButton label="I Opened the Link" onPress={handleCheck} loading={checking} />
+            <AuthButton label="I opened the link" onPress={handleCheck} loading={checking} />
             <AuthButton
-              label={counting ? `Resend Link in ${cooldown}s` : 'Resend Link'}
+              label={counting ? `Resend link in ${cooldown}s` : 'Resend link'}
               variant="secondary"
               onPress={handleResend}
               loading={sending}
@@ -145,6 +172,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: authSpacing.screenH,
     alignItems: 'center',
   },
+  back: {
+    alignSelf: 'flex-start',
+  },
   iconTile: {
     width: 96,
     height: 96,
@@ -167,36 +197,36 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   email: {
-    ...authType.mono,
+    fontFamily: authFonts.semiBold,
+    fontSize: 15,
+    lineHeight: 15 * 1.4,
     color: authColors.ink,
     textAlign: 'center',
-    marginTop: 4,
+    marginTop: 6,
   },
   card: {
     alignSelf: 'stretch',
     borderRadius: authRadius.card,
     borderWidth: 1,
     borderColor: authColors.line,
+    backgroundColor: authColors.surface,
     padding: 16,
     marginTop: 24,
   },
   cardEyebrow: {
     ...authType.eyebrow,
     color: authColors.muted,
-    marginBottom: 6,
   },
   cardBody: {
     fontFamily: authFonts.regular,
     fontSize: 13,
-    lineHeight: 13 * 1.5,
+    lineHeight: 13 * 1.6,
     color: authColors.ink2,
+    marginTop: 9,
   },
   notice: {
-    ...authType.helper,
-    color: authColors.error,
-    textAlign: 'center',
-    marginTop: authSpacing.fieldGap,
     alignSelf: 'stretch',
+    marginTop: 16,
   },
   spacer: {
     flex: 1,
