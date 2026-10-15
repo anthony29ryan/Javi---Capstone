@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import Animated, { SlideInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
 
@@ -255,7 +256,9 @@ function AvatarSheet({ visible, onClose }) {
     <Modal
       visible={visible}
       transparent
-      animationType="slide"
+      // Fade, so the backdrop stays put; only the sheet itself slides up.
+      animationType="fade"
+      statusBarTranslucent
       onRequestClose={onClose}
       onShow={() => {
         setPicked(avatar);
@@ -264,7 +267,10 @@ function AvatarSheet({ visible, onClose }) {
     >
       <View style={styles.sheetWrap}>
         <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close" />
-        <View style={[styles.sheet, { paddingBottom: insets.bottom + 24 }]}>
+        <Animated.View
+          entering={SlideInDown.duration(260)}
+          style={[styles.sheet, { paddingBottom: insets.bottom + 24 }]}
+        >
           <View style={styles.grabber} />
           <Text style={styles.sheetTitle}>Choose your avatar</Text>
           <Text style={styles.sheetBody}>You can change this any time from your profile.</Text>
@@ -296,7 +302,7 @@ function AvatarSheet({ visible, onClose }) {
               style={styles.flex}
             />
           </View>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );
