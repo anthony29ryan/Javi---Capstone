@@ -19,7 +19,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 28 done · 37 to do · 46 not built · 2 partly · 9 last
+Totals: 32 done · 35 to do · 45 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -55,7 +55,7 @@ Totals: 28 done · 37 to do · 46 not built · 2 partly · 9 last
 |---|---|---|---|---|
 | 19 | Home | HomeScreen | done | 2894257 |
 | 20 | Courses | CoursesScreen | done | 4e9c640 |
-| 21 | Practice | PracticeScreen | partly | 1083617 (Code Tracer card only) |
+| 21 | Practice | PracticeScreen | done | 1083617, 5c6116d |
 | 22 | Tutor | TutorScreen | to do |  |
 | 23 | Profile | ProfileScreen | to do |  |
 | 24 | Profile · Choose avatar | — | not built |  |
@@ -68,7 +68,7 @@ Totals: 28 done · 37 to do · 46 not built · 2 partly · 9 last
 | 26 | Lesson | LessonDetailScreen | to do |  |
 | 27 | Lesson complete | — | not built |  |
 | 28 | Module complete | — | not built |  |
-| 29 | Quizzes | — | not built |  |
+| 29 | Quizzes | QuizzesScreen | done | 5c6116d (last score, not best) |
 | 30 | Code Challenges | — | not built |  |
 | 31 | Challenge | — | not built |  |
 | 32 | Full editor · Output open | — | not built |  |
@@ -126,14 +126,14 @@ Totals: 28 done · 37 to do · 46 not built · 2 partly · 9 last
 | 64 | Lesson · Loading | with Lesson | to do |  |
 | 65 | Courses · Loading | with Courses | done | 4e9c640 |
 | 66 | Module · Loading | with Module | to do |  |
-| 67 | Practice · Loading | with Practice | to do |  |
+| 67 | Practice · Loading | with Practice | done | 5c6116d |
 | 68 | Profile · Loading | with Profile | to do |  |
 | 69 | Home · Offline, saved content | with Home | done | 2894257 (inline bar, not edge to edge) |
 | 70 | Courses · Error | with Courses | done | 4e9c640 (no saved-modules list; offline not claimed) |
 | 71 | Lesson · Offline | with Lesson | to do |  |
 | 72 | Quiz · Offline | with Quiz | to do |  |
 | 73 | Tutor · Error | with Tutor | to do |  |
-| 74 | Practice · Empty | with Practice | to do |  |
+| 74 | Practice · Empty | with Practice | done | 5c6116d (card inside the page; Code Tracer stays visible) |
 | 75 | Tutor · Empty | with Tutor | to do |  |
 | 76 | Toast · Email verified | — | not built |  |
 | 77 | Toast · Link sent again | with Check your email | done | 2d8ffad |
