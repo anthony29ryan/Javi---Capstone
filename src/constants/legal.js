@@ -1,5 +1,5 @@
-// Terms and Privacy shown in the sign-up Terms popup. Kept as data so the
-// Settings > Terms & privacy screen can reuse it later.
+// Terms and Privacy, shown in the sign-up Terms popup and read-only from
+// Settings > Terms & privacy.
 //
 // Every claim here was checked against what the app actually does (tutor
 // always uses Gemini's free tier, the 30-day deletion window, no analytics).
@@ -9,7 +9,7 @@
 // A section's body is a list of parts: a string is a paragraph; an object is a
 // bullet list, with an optional bold label above it.
 
-export const TERMS_VERSION = '2026-10-15';
+export const TERMS_VERSION = '2026-10-15b';
 export const TERMS_UPDATED = '15 Oct 2026';
 export const LEGAL_CONTACT = 'support.javi@gmail.com';
 
@@ -138,9 +138,9 @@ export const LEGAL_DOCS = {
           {
             label: 'A. Account information',
             items: [
-              'your name and email address;',
+              'your name and email address, and the nickname and avatar you choose;',
               'your password, which is handled by Firebase Authentication and never stored by Javi in plain text;',
-              'the study goals and daily reminder time you choose at setup; and',
+              'the daily reminder time you choose at setup, and any study goals saved by earlier versions of the app; and',
               'when you accepted these documents, and which version.',
             ],
           },
