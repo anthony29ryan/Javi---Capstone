@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -46,13 +46,17 @@ function HopDot({ index, still }) {
   return <Animated.View style={[styles.dot, animated]} />;
 }
 
-/** Shown while the app works out who is signed in: mascot, wordmark, loader. */
-export default function SplashView() {
+/**
+ * Shown while the app works out who is signed in: mascot, wordmark, loader.
+ * `onSkip`, when given, lets a tap end the splash early.
+ */
+export default function SplashView({ onSkip }) {
   const still = useReducedMotion();
 
   return (
-    <View style={styles.screen}>
-      <Mascot variant="greeting" px={168} />
+    <Pressable style={styles.screen} onPress={onSkip} disabled={!onSkip} accessible={false}>
+      {/* No rise-in here: the mascot appears together with the wordmark. */}
+      <Mascot variant="greeting" px={168} animate={false} />
       <Text style={styles.wordmark} accessibilityLabel="Javi">
         Ja<Text style={styles.wordmarkVi}>vi</Text>
       </Text>
@@ -65,7 +69,7 @@ export default function SplashView() {
         </View>
         <Text style={styles.brace}>{'}'}</Text>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
+import { useAssets } from 'expo-asset';
 
 import { useAuth } from '../context/AuthContext';
 import { ProgressProvider } from '../context/ProgressContext';
@@ -18,6 +19,7 @@ import {
   Baloo2_800ExtraBold,
 } from '../theme/authTheme';
 import SplashView from '../components/SplashView';
+import { MASCOT_IMAGES } from '../components/Mascot';
 import MainTabs from './MainTabs';
 import { syncDailyReminder } from '../services/notifications';
 import { getPreferences } from '../services/preferences';
@@ -139,11 +141,11 @@ export default function RootNavigator() {
   const [needsSetup, setNeedsSetup] = useState(undefined);
   const verified = Boolean(user?.emailVerified);
 
-  // Keep the splash up for at least a second on launch so the branding is
-  // seen, even when sign-in resolves instantly.
+  // Keep the splash up for at least 3 seconds on launch so the branding is
+  // seen, even when sign-in resolves instantly. A tap skips the rest.
   const [minimumSplashDone, setMinimumSplashDone] = useState(false);
   useEffect(() => {
-    const timer = setTimeout(() => setMinimumSplashDone(true), 1000);
+    const timer = setTimeout(() => setMinimumSplashDone(true), 3000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -187,9 +189,14 @@ export default function RootNavigator() {
     Baloo2_800ExtraBold,
   });
 
-  // Plain background until the fonts are in: the splash's text needs them.
-  if (!authFontsLoaded) return <View style={styles.blank} />;
-  if (initializing || !minimumSplashDone) return <SplashView />;
+  // In Expo Go images download from the dev server, so without this the
+  // splash mascot appears after its wordmark.
+  const [mascotImages, mascotError] = useAssets(MASCOT_IMAGES);
+
+  // Plain background until fonts and mascot are in, so the splash appears whole.
+  if (!authFontsLoaded || (!mascotImages && !mascotError)) return <View style={styles.blank} />;
+  if (initializing) return <SplashView />;
+  if (!minimumSplashDone) return <SplashView onSkip={() => setMinimumSplashDone(true)} />;
 
   return (
     <NavigationContainer>

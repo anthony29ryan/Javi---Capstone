@@ -10,6 +10,9 @@ const IMAGES = {
   neutral: require('../../assets/mascot/neutral.png'),
 };
 
+// For preloading at launch, so a mascot never pops in after its screen.
+export const MASCOT_IMAGES = Object.values(IMAGES);
+
 const VARIANTS = {
   greeting: { image: IMAGES.happy, label: 'Javi the capybara smiling' }, // TODO: replace with greeting mascot → assets/mascot/greeting.png
   thinking: { image: IMAGES.neutral, label: 'Javi, the Java tutor' }, // TODO: replace with thinking mascot → assets/mascot/thinking.png
