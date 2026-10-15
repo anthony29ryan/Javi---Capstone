@@ -22,7 +22,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 63 done · 6 to do · 43 not built · 1 partly · 9 last
+Totals: 65 done · 4 to do · 43 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -98,7 +98,7 @@ Totals: 63 done · 6 to do · 43 not built · 1 partly · 9 last
 | 43 | Settings | SettingsScreen | done | ebfb3e6 (text size scales lessons and quizzes only, kept on the phone; read-only Terms row; Notifications, Help and About not built) |
 | 44 | Log out · bottom sheet | with Settings | done | ebfb3e6 (honest copy: downloads and the reminder leave the phone) |
 | 45 | Notifications | — | not built |  |
-| 46 | Profile details | ProfileDetailsScreen | to do |  |
+| 46 | Profile details | ProfileDetailsScreen | done | 3e5eb9c (first and last name plus nickname instead of one display name; goal chips removed; no Change email, 47 not built) |
 | 47 | Change email | — | not built |  |
 | 48 | Change password | ChangePasswordScreen | to do |  |
 | 49 | Delete account | DeleteAccountScreen | to do |  |
@@ -158,7 +158,7 @@ Totals: 63 done · 6 to do · 43 not built · 1 partly · 9 last
 | 88 | Forgot password · Rate limited | with Forgot password | done | 388a1d4 (shown when Firebase refuses; no 3-in-10-minutes claim) |
 | 89 | New password · Mismatch | — | not built |  |
 | 90 | Set up · Name missing | with Before you start | done | 289e43f (asks for a nickname) |
-| 91 | Profile details · Unsaved changes | with Profile details | to do |  |
+| 91 | Profile details · Unsaved changes | with Profile details | done | 3e5eb9c |
 | 92 | Change password · Wrong current | with Change password | to do |  |
 | 93 | Change email · Already in use | — | not built |  |
 | 94 | Delete account · Wrong password | with Delete account | to do |  |
