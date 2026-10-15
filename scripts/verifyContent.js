@@ -218,6 +218,8 @@ if (!Array.isArray(traces)) {
     if (!moduleIds.has(t.moduleId)) problems.push(`${at}: unknown moduleId "${t.moduleId}"`);
     modulesWithTrace.add(t.moduleId);
     if (!String(t.title || '').trim()) problems.push(`${at}: missing title`);
+    // Shown in the result screen's console; record it by running the program.
+    if (typeof t.output !== 'string' || !t.output.trim()) problems.push(`${at}: missing output`);
 
     const lines = Array.isArray(t.lines) ? t.lines : [];
     if (lines.length < TRACE_MIN_LINES || lines.length > TRACE_MAX_LINES) {

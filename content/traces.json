@@ -11,7 +11,8 @@
       "    System.out.println(\"line by line\");",
       "  }",
       "}"
-    ]
+    ],
+    "output": "Hello, Java!\nLearning line by line"
   },
   {
     "id": "data-types-trace",
@@ -29,7 +30,8 @@
       "    System.out.println(price + \" \" + passed);",
       "  }",
       "}"
-    ]
+    ],
+    "output": "21 A\n9.99 true"
   },
   {
     "id": "operators-trace",
@@ -46,7 +48,8 @@
       "    System.out.println(!(a == b) || a < 0);",
       "  }",
       "}"
-    ]
+    ],
+    "output": "3\n2\ntrue\ntrue"
   },
   {
     "id": "expressions-trace",
@@ -65,7 +68,8 @@
       "    System.out.println(count + \" \" + big);",
       "  }",
       "}"
-    ]
+    ],
+    "output": "11 5.5\n6 true"
   },
   {
     "id": "input-output-trace",
@@ -85,7 +89,8 @@
       "    in.close();",
       "  }",
       "}"
-    ]
+    ],
+    "output": "Your name: Ada\nYour age: 36\nAda is 36\n3.14"
   },
   {
     "id": "control-structures-trace",
@@ -107,7 +112,8 @@
       "    }",
       "  }",
       "}"
-    ]
+    ],
+    "output": "Pass\nC"
   },
   {
     "id": "loops-trace",
@@ -129,7 +135,8 @@
       "    System.out.println(\"n = \" + n);",
       "  }",
       "}"
-    ]
+    ],
+    "output": "for 1\nfor 2\nfor 3\nn = 5"
   },
   {
     "id": "strings-trace",
@@ -147,7 +154,8 @@
       "    System.out.println(word.equals(\"Java\"));",
       "  }",
       "}"
-    ]
+    ],
+    "output": "10\nJ\nJava\nJAVASCRIPT\n4\nfalse"
   },
   {
     "id": "arrays-trace",
@@ -167,7 +175,8 @@
       "    System.out.println(grid[1].length);",
       "  }",
       "}"
-    ]
+    ],
+    "output": "77\n3"
   },
   {
     "id": "predefined-functions-trace",
@@ -189,7 +198,8 @@
       "    System.out.println(area(2));",
       "  }",
       "}"
-    ]
+    ],
+    "output": "5\n7.0\n12.566370614359172"
   },
   {
     "id": "recursion-trace",
@@ -207,7 +217,8 @@
       "    System.out.println(factorial(5));",
       "  }",
       "}"
-    ]
+    ],
+    "output": "120"
   },
   {
     "id": "oop-trace",
@@ -227,7 +238,8 @@
       "    rex.bark();",
       "  }",
       "}"
-    ]
+    ],
+    "output": "Rex says woof"
   },
   {
     "id": "classes-and-methods-trace",
@@ -248,7 +260,8 @@
       "    System.out.println(acc.getBalance());",
       "  }",
       "}"
-    ]
+    ],
+    "output": "50.0"
   },
   {
     "id": "object-and-methods-trace",
@@ -270,7 +283,8 @@
       "    System.out.println(b.size + \" \" + count);",
       "  }",
       "}"
-    ]
+    ],
+    "output": "1 1"
   },
   {
     "id": "inheritance-polymorphism-interfaces-trace",
@@ -292,7 +306,8 @@
       "    System.out.println(a.sound());",
       "  }",
       "}"
-    ]
+    ],
+    "output": "meow"
   },
   {
     "id": "exception-handling-trace",
@@ -313,7 +328,8 @@
       "    }",
       "  }",
       "}"
-    ]
+    ],
+    "output": "Cannot divide\nDone"
   },
   {
     "id": "file-io-trace",
@@ -335,7 +351,8 @@
       "    System.out.println(Files.exists(file));",
       "  }",
       "}"
-    ]
+    ],
+    "output": "Hello file\ntrue"
   },
   {
     "id": "enums-nested-classes-trace",
@@ -356,7 +373,8 @@
       "    }",
       "  }",
       "}"
-    ]
+    ],
+    "output": "1\nNot S"
   },
   {
     "id": "regular-expressions-trace",
@@ -376,7 +394,8 @@
       "    System.out.println(code.matches(\"\\\\w+\"));",
       "  }",
       "}"
-    ]
+    ],
+    "output": "1\n22\n333\ntrue"
   },
   {
     "id": "concurrency-trace",
@@ -394,7 +413,8 @@
       "    System.out.println(\"Finished\");",
       "  }",
       "}"
-    ]
+    ],
+    "output": "Working\nFinished"
   },
   {
     "id": "generics-trace",
@@ -416,6 +436,7 @@
       "    System.out.println(box.get().length());",
       "  }",
       "}"
-    ]
+    ],
+    "output": "4"
   }
 ]

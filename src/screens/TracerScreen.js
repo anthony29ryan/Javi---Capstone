@@ -135,8 +135,6 @@ export default function TracerScreen({ route, navigation }) {
   };
 
   if (elapsedMs !== null) {
-    const accuracy =
-      charactersTyped > 0 ? Math.max(0, Math.round((1 - mistakes / charactersTyped) * 100)) : 100;
     return (
       <ScrollView
         style={styles.container}
@@ -149,24 +147,37 @@ export default function TracerScreen({ route, navigation }) {
           <Text style={styles.verdict}>
             {mistakes === 0
               ? 'A clean run, with no mistakes.'
-              : `${mistakes} ${mistakes === 1 ? 'slip' : 'slips'}, all fixed before moving on.`}
+              : `${mistakes} ${mistakes === 1 ? 'slip' : 'slips'} needed fixing along the way.`}
           </Text>
         </View>
 
-        <View style={styles.grid}>
-          <Stat label="Time" value={formatDuration(elapsedMs)} large />
-          <Stat label="Lines" value={String(trace.lines.length)} large />
+        <View style={styles.stats}>
           <Stat label="Mistakes" value={String(mistakes)} alert={mistakes > 0} large />
-          <Stat label="Accuracy" value={`${accuracy}%`} large />
+          <Stat label="Time" value={formatDuration(elapsedMs)} large />
         </View>
+
+        {/* Drills loaded before `output` was published have none to show. */}
+        {trace.output ? (
+          <View>
+            <Text style={styles.sectionLabel}>Output</Text>
+            <View style={styles.console}>
+              <View style={styles.consoleHeader}>
+                <Text style={styles.consoleLabel}>Console</Text>
+                <Text style={styles.consoleExit}>exit 0</Text>
+              </View>
+              <Text style={styles.consoleOutput}>{trace.output}</Text>
+            </View>
+          </View>
+        ) : null}
 
         <View>
           <Text style={styles.sectionLabel}>What you typed</Text>
           <View style={styles.listing}>
             {trace.lines.map((line, i) => (
-              <Text key={i} style={styles.listingLine}>
-                {line}
-              </Text>
+              <View key={i} style={styles.codeRow}>
+                <Text style={[styles.codeNumber, styles.listingText]}>{i + 1}</Text>
+                <Text style={[styles.codeText, styles.listingText]}>{line}</Text>
+              </View>
             ))}
           </View>
         </View>
@@ -264,6 +275,8 @@ export default function TracerScreen({ route, navigation }) {
 }
 
 const codeLineHeight = 16 * 2.2;
+// The design's terminal green for program output.
+const consoleGreen = '#8FE3C0';
 
 const styles = StyleSheet.create({
   container: {
@@ -422,28 +435,50 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     marginTop: 6,
   },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
   sectionLabel: {
     ...type.sectionLabel,
     color: colors.borderStrong,
     marginBottom: spacing.sm,
   },
-  listing: {
-    padding: spacing.lg,
+  console: {
     borderRadius: 18,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.codeBg,
+    overflow: 'hidden',
   },
-  listingLine: {
+  consoleHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.codeLine,
+  },
+  consoleLabel: {
+    ...type.sectionLabel,
+    color: colors.codeLabel,
+  },
+  consoleExit: {
     fontFamily: fonts.mono,
+    fontSize: 11,
+    color: consoleGreen,
+  },
+  consoleOutput: {
+    padding: spacing.lg,
+    fontFamily: fonts.mono,
+    fontSize: 14,
+    lineHeight: 14 * 1.7,
+    color: consoleGreen,
+  },
+  listing: {
+    paddingVertical: spacing.lg,
+    paddingRight: spacing.lg,
+    borderRadius: 18,
+    backgroundColor: colors.codeBg,
+  },
+  listingText: {
     fontSize: 12.5,
     lineHeight: 12.5 * 1.8,
-    color: colors.text,
   },
   errorText: {
     ...type.small,
