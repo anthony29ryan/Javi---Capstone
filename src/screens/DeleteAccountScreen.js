@@ -1,13 +1,5 @@
 import { useState } from 'react';
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
@@ -20,42 +12,34 @@ import {
   permanentDeletionDate,
 } from '../constants/accountDeletion';
 import { useAuth } from '../context/AuthContext';
-import { authColors, authRadius, authSpacing, authType, authFonts, centeredColumn, contentWidth } from '../theme/authTheme';
+import { authColors, authFonts, authSpacing, authType, centeredColumn, contentWidth } from '../theme/authTheme';
 
 const CONFIRM_WORD = 'DELETE';
 
+/**
+ * Frame 49, with frame 94's wrong-password message. The design's card says
+ * "This cannot be undone", but logging in within the window restores the
+ * account, so the card says when it goes instead. The list matches what
+ * scripts/purgeDeletedAccounts.js removes.
+ */
 export default function DeleteAccountScreen({ navigation }) {
   const { scheduleAccountDeletion } = useAuth();
   const insets = useSafeAreaInsets();
 
   const [password, setPassword] = useState('');
   const [confirmText, setConfirmText] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  // A refusal that is not about the password itself.
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState(false);
 
   // Exact match on purpose: typing "delete" in lowercase must not count.
   const confirmed = confirmText.trim() === CONFIRM_WORD;
+  const ready = confirmed && password.length > 0;
 
-  function handleDelete() {
+  async function handleDelete() {
     setError('');
-
-    if (!password) {
-      setError('Enter your password to confirm.');
-      return;
-    }
-
-    // One last chance to back out before anything is scheduled.
-    Alert.alert(
-      'Are you sure?',
-      `Your account will be deleted on ${formatDeletionDate(permanentDeletionDate(new Date()))}. Log in before then to restore it.`,
-      [
-        { text: 'No', style: 'cancel' },
-        { text: 'Yes, delete', style: 'destructive', onPress: scheduleDeletion },
-      ]
-    );
-  }
-
-  async function scheduleDeletion() {
+    setPasswordError('');
     setDeleting(true);
     try {
       // Scheduling the deletion signs the user out, which swaps the whole
@@ -63,14 +47,18 @@ export default function DeleteAccountScreen({ navigation }) {
       // nothing to navigate to here on success.
       await scheduleAccountDeletion(password);
     } catch (err) {
-      setError(
-        err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password'
-          ? 'That password is not right.'
-          : err.message
-      );
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
+        setPasswordError('That password is not right. Your account was not deleted.');
+      } else if (err.code === 'auth/too-many-requests') {
+        setError('Too many tries. Wait a few minutes, then try again.');
+      } else {
+        setError(err.message);
+      }
       setDeleting(false);
     }
   }
+
+  const top = insets.top + authSpacing.screenTop;
 
   return (
     <KeyboardAvoidingView
@@ -78,17 +66,24 @@ export default function DeleteAccountScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <AuthAnimatedScreen>
-        <ScrollView contentContainerStyle={[
+        <ScrollView
+          contentContainerStyle={[
             styles.content,
-            { paddingTop: insets.top + authSpacing.screenTop, paddingBottom: insets.bottom + authSpacing.screenBottom },
-          ]} keyboardShouldPersistTaps="handled">
-          <AuthBackButton onPress={() => navigation.goBack()} />
+            { paddingTop: top, paddingBottom: insets.bottom + authSpacing.screenBottom },
+          ]}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Indented to clear the floating back button, which reserves no space. */}
+          <View style={styles.header}>
+            <Text style={styles.title}>Delete account</Text>
+          </View>
 
-          <Text style={styles.title}>Delete account</Text>
-          <View style={styles.warning}>
-            <Text style={styles.warningBody}>
-              Your account and all your progress will be permanently deleted after{' '}
-              {DELETION_WINDOW_DAYS} days. Log in before then to restore it.
+          <View style={styles.card}>
+            <Text style={styles.kicker}>Deleted in {DELETION_WINDOW_DAYS} days</Text>
+            <Text style={styles.cardBody}>
+              Deleting removes your lesson progress, quiz answers and scores, streak and badges, your
+              Javi conversations and your profile. Log in before{' '}
+              {formatDeletionDate(permanentDeletionDate(new Date()))} to restore everything.
             </Text>
           </View>
 
@@ -99,8 +94,10 @@ export default function DeleteAccountScreen({ navigation }) {
             value={password}
             onChangeText={(value) => {
               setPassword(value);
+              setPasswordError('');
               setError('');
             }}
+            error={passwordError}
           />
 
           <Text style={styles.label}>Type {CONFIRM_WORD} to confirm</Text>
@@ -113,7 +110,6 @@ export default function DeleteAccountScreen({ navigation }) {
               setConfirmText(value);
               setError('');
             }}
-            style={styles.confirmField}
           />
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -122,8 +118,8 @@ export default function DeleteAccountScreen({ navigation }) {
             label="Delete My Account"
             onPress={handleDelete}
             loading={deleting}
-            disabled={!confirmed}
-            style={[styles.destructive, !confirmed && styles.destructiveOff]}
+            disabled={!ready}
+            style={[styles.destructive, !ready && styles.destructiveOff]}
           />
           <AuthButton
             label="Keep My Account"
@@ -133,6 +129,8 @@ export default function DeleteAccountScreen({ navigation }) {
           />
         </ScrollView>
       </AuthAnimatedScreen>
+
+      <AuthBackButton onPress={() => navigation.goBack()} style={[styles.back, { top }]} />
     </KeyboardAvoidingView>
   );
 }
@@ -147,33 +145,56 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: authSpacing.screenH,
   },
+  back: {
+    position: 'absolute',
+    left: authSpacing.screenH,
+    zIndex: 2,
+    shadowColor: authColors.ink,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 14,
+    elevation: 3,
+  },
+  header: {
+    // Clears the floating back button: 40px plus the design's 12px gap.
+    marginLeft: 52,
+    minHeight: 40,
+    justifyContent: 'center',
+  },
   title: {
-    ...authType.screenTitle,
+    fontFamily: authFonts.bold,
+    fontSize: 22,
+    lineHeight: 22 * 1.2,
+    letterSpacing: -0.22,
     color: authColors.ink,
-    marginTop: 26,
-    marginBottom: 18,
   },
-  warning: {
-    borderRadius: authRadius.card,
+  card: {
+    marginTop: 22,
+    padding: 18,
+    borderRadius: 20,
+    backgroundColor: authColors.errorSoft,
     borderWidth: 1,
-    borderColor: authColors.error,
-    padding: 16,
-    marginBottom: 22,
+    borderColor: authColors.errorLine,
   },
-  warningBody: {
-    fontFamily: authFonts.regular,
+  kicker: {
+    fontFamily: authFonts.bold,
     fontSize: 13,
-    lineHeight: 13 * 1.5,
-    color: authColors.ink2,
+    letterSpacing: 13 * 0.06,
+    textTransform: 'uppercase',
+    color: authColors.error,
+  },
+  cardBody: {
+    fontFamily: authFonts.regular,
+    fontSize: 13.5,
+    lineHeight: 13.5 * 1.7,
+    color: authColors.ink,
+    marginTop: 12,
   },
   label: {
     ...authType.eyebrow,
     color: authColors.muted,
     marginBottom: 8,
-    marginTop: 14,
-  },
-  confirmField: {
-    marginBottom: 4,
+    marginTop: 22,
   },
   error: {
     ...authType.helper,
