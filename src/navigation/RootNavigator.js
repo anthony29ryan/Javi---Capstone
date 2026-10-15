@@ -121,9 +121,9 @@ function AppStack({ needsSetup }) {
       <Stack.Screen
         name="TracerList"
         component={TracerListScreen}
-        options={{ title: 'Code Tracer' }}
+        options={{ headerShown: false }}
       />
-      <Stack.Screen name="Tracer" component={TracerScreen} options={{ title: 'Code Tracer' }} />
+      <Stack.Screen name="Tracer" component={TracerScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

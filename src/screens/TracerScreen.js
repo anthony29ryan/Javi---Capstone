@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -8,34 +8,87 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import AuthBackButton from '../components/auth/AuthBackButton';
 import Button from '../components/Button';
 import { useProgress } from '../context/ProgressContext';
 import { recordTraceCompletion } from '../services/progress';
-import { lineMatches, mismatchIndex, straightenQuotes } from '../services/tracer';
-import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
+import { countsAsSlip, lineMatches, mismatchIndex, straightenQuotes } from '../services/tracer';
+import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 function formatDuration(ms) {
   const seconds = Math.round(ms / 1000);
   return seconds < 60 ? `${seconds}s` : `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
 }
 
-// shortcut: plain layout until the Code Tracer design from Claude Design is
-// brought in; restyle this screen then.
+function Header({ onBack, right }) {
+  return (
+    <View style={styles.header}>
+      <AuthBackButton onPress={onBack} />
+      <Text style={styles.headerLabel}>Code Tracer</Text>
+      {right ? <Text style={styles.headerRight}>{right}</Text> : null}
+    </View>
+  );
+}
+
+function Stat({ label, value, alert, large }) {
+  return (
+    <View style={styles.stat}>
+      <Text style={styles.statLabel}>{label}</Text>
+      <Text style={[styles.statValue, large && styles.statValueLarge, alert && styles.statValueAlert]}>
+        {value}
+      </Text>
+    </View>
+  );
+}
+
+/**
+ * The line being typed, drawn over its own target text: typed characters are
+ * bright, characters from the first mistake on are red, the next character to
+ * type carries the caret, and the rest of the line waits dimmed. Characters
+ * typed past the end of the line are shown in red after it.
+ */
+function CurrentLine({ target, typed }) {
+  const expected = target.trim();
+  const indent = target.slice(0, target.length - target.trimStart().length);
+  const attempt = typed.trimStart();
+  const wrongAt = mismatchIndex(typed, target);
+  const extra = attempt.length > expected.length ? attempt.slice(expected.length) : '';
+
+  return (
+    <Text style={styles.codeText} accessibilityLiveRegion="polite">
+      {indent}
+      {[...expected].map((char, i) => {
+        let style = styles.charPending;
+        if (i < attempt.length) style = wrongAt !== -1 && i >= wrongAt ? styles.charWrong : styles.charDone;
+        else if (i === attempt.length) style = styles.charCaret;
+        return (
+          <Text key={i} style={style}>
+            {char}
+          </Text>
+        );
+      })}
+      {extra ? <Text style={styles.charWrong}>{extra}</Text> : null}
+      {attempt.length >= expected.length && !extra ? <Text style={styles.charCaret}> </Text> : null}
+    </Text>
+  );
+}
+
 export default function TracerScreen({ route, navigation }) {
-  const { trace } = route.params;
+  const { trace, topic, level } = route.params;
   const { reloadProgress } = useProgress();
+  const insets = useSafeAreaInsets();
 
   const [lineIndex, setLineIndex] = useState(0);
   const [typed, setTyped] = useState('');
+  // Kept in memory only: nothing about a drill run is written to `attempts`.
+  const [charactersTyped, setCharactersTyped] = useState(0);
+  const [mistakes, setMistakes] = useState(0);
   const [elapsedMs, setElapsedMs] = useState(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
   const startedAt = useRef(Date.now());
-
-  useEffect(() => {
-    navigation.setOptions({ title: trace.title });
-  }, [trace.title]);
 
   async function saveCompletion() {
     setSaving(true);
@@ -50,9 +103,23 @@ export default function TracerScreen({ route, navigation }) {
     }
   }
 
+  function restart() {
+    setLineIndex(0);
+    setTyped('');
+    setCharactersTyped(0);
+    setMistakes(0);
+    setElapsedMs(null);
+    setSaveError('');
+    startedAt.current = Date.now();
+  }
+
   function handleChange(raw) {
     const text = straightenQuotes(raw);
-    if (!lineMatches(text, trace.lines[lineIndex])) {
+    const target = trace.lines[lineIndex];
+    setCharactersTyped((count) => count + Math.max(0, text.length - typed.length));
+    if (countsAsSlip(typed, text, target)) setMistakes((count) => count + 1);
+
+    if (!lineMatches(text, target)) {
       setTyped(text);
       return;
     }
@@ -66,87 +133,141 @@ export default function TracerScreen({ route, navigation }) {
     saveCompletion();
   }
 
+  const eyebrow = [topic, level].filter(Boolean).join(' · ');
+  const screenPadding = {
+    paddingTop: insets.top + spacing.lg,
+    paddingBottom: insets.bottom + spacing.xl,
+  };
+
   if (elapsedMs !== null) {
+    const accuracy =
+      charactersTyped > 0 ? Math.max(0, Math.round((1 - mistakes / charactersTyped) * 100)) : 100;
     return (
-      <View style={styles.doneContainer}>
-        <Text style={styles.doneLabel}>Drill complete</Text>
-        <Text style={styles.doneTime}>{formatDuration(elapsedMs)}</Text>
-        <Text style={styles.doneHint}>{trace.lines.length} lines typed</Text>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={[styles.content, screenPadding]}
+      >
+        <Header onBack={() => navigation.goBack()} />
+        <View>
+          <Text style={styles.completeEyebrow}>Trace complete</Text>
+          <Text style={styles.resultTitle}>{trace.title}</Text>
+          <Text style={styles.verdict}>
+            {mistakes === 0
+              ? 'A clean run, with no mistakes.'
+              : `${mistakes} ${mistakes === 1 ? 'slip' : 'slips'}, all fixed before moving on.`}
+          </Text>
+        </View>
+
+        <View style={styles.grid}>
+          <Stat label="Time" value={formatDuration(elapsedMs)} large />
+          <Stat label="Lines" value={String(trace.lines.length)} large />
+          <Stat label="Mistakes" value={String(mistakes)} alert={mistakes > 0} large />
+          <Stat label="Accuracy" value={`${accuracy}%`} large />
+        </View>
+
+        <View>
+          <Text style={styles.sectionLabel}>What you typed</Text>
+          <View style={styles.listing}>
+            {trace.lines.map((line, i) => (
+              <Text key={i} style={styles.listingLine}>
+                {line}
+              </Text>
+            ))}
+          </View>
+        </View>
+
         {saveError ? (
           <>
             <Text style={styles.errorText}>{saveError}</Text>
             <Button label="Try again" variant="secondary" loading={saving} onPress={saveCompletion} />
           </>
         ) : null}
+        <Button label="Type it again" disabled={saving} onPress={restart} />
         <Button
-          label="Back to drills"
+          label="Back"
+          variant="secondary"
           disabled={saving}
           onPress={() => navigation.goBack()}
-          style={styles.doneButton}
         />
-      </View>
+      </ScrollView>
     );
   }
 
   const target = trace.lines[lineIndex];
-  const attempt = typed.trimStart();
-  const wrongAt = mismatchIndex(typed, target);
-  const correctPart = wrongAt === -1 ? attempt : attempt.slice(0, wrongAt);
-  const wrongPart = wrongAt === -1 ? '' : attempt.slice(wrongAt);
+  const remaining = trace.lines.length - lineIndex - 1;
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.progress}>
-          Line {lineIndex + 1} of {trace.lines.length}
-        </Text>
-
-        <View style={styles.code}>
-          {trace.lines.map((line, i) => (
-            <Text
-              key={i}
-              style={[
-                styles.codeLine,
-                i < lineIndex && styles.codeLineDone,
-                i === lineIndex && styles.codeLineCurrent,
-                i > lineIndex && styles.codeLineUpcoming,
-              ]}
-            >
-              {line}
-            </Text>
-          ))}
+      <ScrollView
+        contentContainerStyle={[styles.content, styles.drillContent, screenPadding]}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View>
+          <Header
+            onBack={() => navigation.goBack()}
+            right={`Line ${lineIndex + 1} / ${trace.lines.length}`}
+          />
+          <View style={styles.track}>
+            <View
+              style={[styles.trackFill, { width: `${(lineIndex / trace.lines.length) * 100}%` }]}
+            />
+          </View>
         </View>
 
-        <Text style={styles.label}>Type the highlighted line</Text>
-        <Text style={styles.target}>{target.trim()}</Text>
-        {/* Green up to the first wrong character, red from there on. */}
-        <Text style={styles.feedback} accessibilityLiveRegion="polite">
-          <Text style={styles.feedbackRight}>{correctPart}</Text>
-          <Text style={styles.feedbackWrong}>{wrongPart}</Text>
-        </Text>
+        <View>
+          <Text style={styles.drillTitle}>{trace.title}</Text>
+          {eyebrow ? <Text style={styles.drillEyebrow}>{eyebrow}</Text> : null}
+        </View>
 
-        <TextInput
-          style={styles.input}
-          value={typed}
-          onChangeText={handleChange}
-          autoFocus
-          autoCorrect={false}
-          autoCapitalize="none"
-          autoComplete="off"
-          spellCheck={false}
-          // Keep the keyboard up between lines; Enter does nothing on its own.
-          submitBehavior="submit"
-          accessibilityLabel={`Type line ${lineIndex + 1}: ${target.trim()}`}
-          placeholder="Start typing…"
-          placeholderTextColor={colors.textMuted}
-        />
+        <View style={styles.stats}>
+          <Stat label="Typed" value={String(charactersTyped)} />
+          <Stat label="Mistakes" value={String(mistakes)} alert={mistakes > 0} />
+        </View>
+
+        <View style={styles.panel}>
+          {trace.lines.slice(0, lineIndex).map((line, i) => (
+            <View key={i} style={styles.codeRow}>
+              <Text style={styles.codeNumber}>{i + 1}</Text>
+              <Text style={[styles.codeText, styles.codeDone]}>{line}</Text>
+            </View>
+          ))}
+          <View style={styles.codeRow}>
+            <Text style={styles.codeNumber}>{lineIndex + 1}</Text>
+            <CurrentLine target={target} typed={typed} />
+          </View>
+          {remaining > 0 ? (
+            <Text style={styles.moreLines}>
+              {remaining} more {remaining === 1 ? 'line' : 'lines'}
+            </Text>
+          ) : null}
+
+          {/* Invisible and covering the panel, so tapping the code brings the
+              keyboard back; the panel itself shows what was typed. */}
+          <TextInput
+            style={styles.input}
+            value={typed}
+            onChangeText={handleChange}
+            autoFocus
+            autoCorrect={false}
+            autoCapitalize="none"
+            autoComplete="off"
+            spellCheck={false}
+            caretHidden
+            contextMenuHidden
+            // Keep the keyboard up between lines; Enter does nothing on its own.
+            submitBehavior="submit"
+            accessibilityLabel={`Type line ${lineIndex + 1}: ${target.trim()}`}
+          />
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
+
+const codeLineHeight = 16 * 2.2;
 
 const styles = StyleSheet.create({
   container: {
@@ -155,92 +276,181 @@ const styles = StyleSheet.create({
   },
   content: {
     ...centeredColumn(contentWidth.content),
-    padding: spacing.xl,
-    gap: spacing.md,
+    paddingHorizontal: spacing.xl,
+    gap: 18,
   },
-  progress: {
-    ...type.small,
-    color: colors.textMuted,
+  drillContent: {
+    flexGrow: 1,
   },
-  code: {
-    padding: spacing.lg,
-    borderRadius: radius.md,
-    backgroundColor: colors.codeBg,
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.lg,
   },
-  codeLine: {
-    fontFamily: fonts.mono,
-    fontSize: 12,
-    lineHeight: 20,
-    color: colors.codeText,
-  },
-  codeLineDone: {
-    color: colors.success,
-  },
-  codeLineCurrent: {
-    backgroundColor: colors.codeLine,
-  },
-  codeLineUpcoming: {
-    color: colors.codeLabel,
-  },
-  label: {
+  headerLabel: {
     ...type.sectionLabel,
+    fontSize: 11,
+    letterSpacing: 11 * 0.12,
+    color: colors.borderStrong,
+    flex: 1,
+  },
+  headerRight: {
+    fontFamily: fonts.semiBold,
+    fontSize: 11.5,
     color: colors.textMuted,
   },
-  target: {
-    fontFamily: fonts.mono,
-    fontSize: 14,
+  track: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.surfaceSunken,
+    marginTop: spacing.lg,
+    overflow: 'hidden',
+  },
+  trackFill: {
+    height: '100%',
+    borderRadius: 3,
+    backgroundColor: colors.primary,
+  },
+  drillTitle: {
+    fontFamily: fonts.bold,
+    fontSize: 22,
+    lineHeight: 22 * 1.25,
+    letterSpacing: -22 * 0.02,
     color: colors.text,
   },
-  feedback: {
-    fontFamily: fonts.mono,
-    fontSize: 14,
-    minHeight: 20,
+  drillEyebrow: {
+    ...type.sectionLabel,
+    color: colors.borderStrong,
+    marginTop: 6,
   },
-  feedbackRight: {
-    color: colors.success,
+  stats: {
+    flexDirection: 'row',
+    gap: spacing.sm,
   },
-  feedbackWrong: {
-    color: colors.error,
-    backgroundColor: colors.errorBg,
-  },
-  input: {
-    fontFamily: fonts.mono,
-    fontSize: 14,
-    padding: spacing.md,
-    borderRadius: radius.md,
+  stat: {
+    flex: 1,
+    flexBasis: '40%',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    color: colors.text,
   },
-  doneContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: spacing.xl,
-    gap: spacing.md,
-    backgroundColor: colors.background,
-  },
-  doneLabel: {
+  statLabel: {
     ...type.sectionLabel,
-    color: colors.textMuted,
+    color: colors.borderStrong,
   },
-  doneTime: {
-    fontFamily: fonts.bold,
-    fontSize: 40,
+  statValue: {
+    fontFamily: fonts.mono,
+    fontSize: 16,
     color: colors.text,
+    marginTop: spacing.xs,
   },
-  doneHint: {
-    ...type.small,
+  statValueLarge: {
+    fontSize: 22,
+  },
+  statValueAlert: {
+    color: colors.error,
+  },
+  panel: {
+    flexGrow: 1,
+    minHeight: 220,
+    paddingVertical: 20,
+    paddingRight: spacing.lg,
+    borderRadius: 20,
+    backgroundColor: colors.codeBg,
+  },
+  codeRow: {
+    flexDirection: 'row',
+  },
+  codeNumber: {
+    width: 40,
+    paddingRight: spacing.md,
+    textAlign: 'right',
+    fontFamily: fonts.mono,
+    fontSize: 13,
+    lineHeight: codeLineHeight,
+    color: colors.codeLabel,
+  },
+  codeText: {
+    flex: 1,
+    fontFamily: fonts.mono,
+    fontSize: 16,
+    lineHeight: codeLineHeight,
+    color: colors.codeText,
+  },
+  codeDone: {
+    opacity: 0.6,
+  },
+  charDone: {
+    color: colors.codeText,
+  },
+  // The design's exact red and caret colours were in the part of the file
+  // that could not be read; these are chosen to stay legible on the dark panel.
+  charWrong: {
+    color: '#FF8A80',
+    backgroundColor: 'rgba(255,138,128,.18)',
+  },
+  charPending: {
+    color: 'rgba(231,233,245,.35)',
+  },
+  charCaret: {
+    color: colors.white,
+    backgroundColor: colors.primary,
+  },
+  moreLines: {
+    ...type.sectionLabel,
+    fontSize: 11,
+    color: 'rgba(231,233,245,.4)',
+    marginTop: spacing.md,
+    paddingLeft: 40,
+  },
+  input: {
+    ...StyleSheet.absoluteFillObject,
+    color: 'transparent',
+    backgroundColor: 'transparent',
+  },
+  completeEyebrow: {
+    ...type.sectionLabel,
+    color: colors.primaryDark,
+  },
+  resultTitle: {
+    ...type.screenTitle,
+    color: colors.text,
+    marginTop: 6,
+  },
+  verdict: {
+    ...type.body,
     color: colors.textMuted,
+    marginTop: 6,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  sectionLabel: {
+    ...type.sectionLabel,
+    color: colors.borderStrong,
+    marginBottom: spacing.sm,
+  },
+  listing: {
+    padding: spacing.lg,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  listingLine: {
+    fontFamily: fonts.mono,
+    fontSize: 12.5,
+    lineHeight: 12.5 * 1.8,
+    color: colors.text,
   },
   errorText: {
     ...type.small,
     color: colors.error,
     textAlign: 'center',
-  },
-  doneButton: {
-    alignSelf: 'stretch',
-    marginTop: spacing.md,
   },
 });

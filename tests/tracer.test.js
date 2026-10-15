@@ -5,7 +5,7 @@
 const assert = require('node:assert');
 const { test } = require('node:test');
 
-const { mismatchIndex, lineMatches, straightenQuotes } = require('../src/services/tracer.js');
+const { mismatchIndex, lineMatches, straightenQuotes, countsAsSlip } = require('../src/services/tracer.js');
 
 const target = '    int count = 5;';
 
@@ -44,4 +44,12 @@ test('curly quotes from a phone keyboard become straight ones', () => {
   const typed = straightenQuotes('System.out.println(“Hi” + ‘!’);');
   assert.strictEqual(typed, `System.out.println("Hi" + '!');`);
   assert.ok(lineMatches(typed, `    System.out.println("Hi" + '!');`));
+});
+
+test('a slip counts once until the line is right again', () => {
+  assert.ok(countsAsSlip('int c', 'int x', target));
+  assert.ok(!countsAsSlip('int x', 'int xy', target)); // still wrong: no new slip
+  assert.ok(!countsAsSlip('int x', 'int ', target)); // backspacing fixes it
+  assert.ok(countsAsSlip('int c', 'int cz', target)); // slipping again counts
+  assert.ok(!countsAsSlip('int c', 'int co', target));
 });

@@ -35,3 +35,12 @@ export function mismatchIndex(typed, target) {
 export function lineMatches(typed, target) {
   return typed.trim() === target.trim();
 }
+
+/**
+ * True when this keystroke is a new mistake: the line was a correct prefix
+ * before it and is wrong after it. Typing on past a typo adds nothing, so one
+ * slip counts once; fixing it and slipping again counts again.
+ */
+export function countsAsSlip(previous, next, target) {
+  return mismatchIndex(previous, target) === -1 && mismatchIndex(next, target) !== -1;
+}

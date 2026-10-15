@@ -81,20 +81,31 @@ export default function PracticeScreen({ navigation }) {
             <StatCard label="Average" value={average === null ? '—' : `${average}%`} />
             <StatCard label="Attempts" value={String(attempted.length)} />
           </View>
-          {/* shortcut: plain entry card until the Code Tracer design is brought in. */}
           <Pressable
             onPress={() => navigation.navigate('TracerList')}
-            style={({ pressed }) => [styles.quizCard, pressed && styles.quizCardPressed]}
+            accessibilityRole="button"
+            style={({ pressed }) => [styles.wayCard, pressed && styles.quizCardPressed]}
           >
-            <View style={styles.quizBody}>
-              <Text style={styles.quizEyebrow}>Typing drill</Text>
-              <Text style={styles.quizName}>Code Tracer</Text>
-              <Text style={styles.quizMeta}>
+            <View style={styles.wayTop}>
+              <View style={styles.wayTile}>
+                <Text style={styles.wayTileGlyph}>i++</Text>
+              </View>
+              <View style={styles.quizBody}>
+                <Text style={styles.wayName}>Code Tracer</Text>
+                <Text style={styles.wayBlurb}>
+                  Type short programs line by line. Mistakes show in red.
+                </Text>
+              </View>
+              <Text style={styles.wayChevron}>›</Text>
+            </View>
+            <View style={styles.wayFooter}>
+              <Text style={styles.wayCount}>
                 {/* shortcut: one drill per module, so the module count is the drill
                     count; ids of renamed drills stay in completedTraces and would
-                    overcount. Count against the traces list when the design lands. */}
+                    overcount. Count against the traces list if that ever happens. */}
                 {`${progress?.completedTraces?.length ?? 0} of ${modules.length} done`}
               </Text>
+              <Text style={styles.wayAction}>Pick a program</Text>
             </View>
           </Pressable>
         </>
@@ -194,6 +205,68 @@ const styles = StyleSheet.create({
     ...type.small,
     color: colors.textMuted,
     marginTop: 5,
+  },
+  wayCard: {
+    padding: spacing.lg,
+    gap: 14,
+    borderRadius: 22,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  wayTop: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 14,
+  },
+  wayTile: {
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primarySoft,
+  },
+  wayTileGlyph: {
+    fontFamily: fonts.mono,
+    fontSize: 14,
+    color: colors.primaryDark,
+  },
+  wayName: {
+    fontFamily: fonts.bold,
+    fontSize: 17,
+    lineHeight: 17 * 1.25,
+    color: colors.text,
+  },
+  wayBlurb: {
+    fontFamily: fonts.regular,
+    fontSize: 12.5,
+    lineHeight: 12.5 * 1.5,
+    color: colors.textMuted,
+    marginTop: spacing.xs,
+  },
+  wayChevron: {
+    fontSize: 16,
+    color: colors.borderStrong,
+  },
+  wayFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: spacing.md,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
+  },
+  wayCount: {
+    ...type.sectionLabel,
+    fontSize: 10.5,
+    letterSpacing: 10.5 * 0.08,
+    color: colors.borderStrong,
+  },
+  wayAction: {
+    fontFamily: fonts.semiBold,
+    fontSize: 11.5,
+    color: colors.primaryDark,
   },
   badge: {
     paddingVertical: 10,
