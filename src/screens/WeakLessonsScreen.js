@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import {
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated';
 
 import AuthBackButton from '../components/auth/AuthBackButton';
-import Collapsible, { Chevron } from '../components/Collapsible';
+import Collapsible, { Chevron, useKeepInPlace } from '../components/Collapsible';
 import LessonRow from '../components/LessonRow';
 import Mascot from '../components/Mascot';
 import { useProgress } from '../context/ProgressContext';
@@ -39,14 +39,21 @@ export default function WeakLessonsScreen({ navigation, route }) {
 
   // The weakest module starts open.
   const [openId, setOpenId] = useState(sections[0]?.topic.topic ?? null);
+  const anchor = useKeepInPlace();
 
   function toggle(moduleId) {
+    anchor.beforeToggle(
+      openId,
+      moduleId,
+      sections.map((section) => section.module.id)
+    );
     setOpenId((current) => (current === moduleId ? null : moduleId));
   }
 
   return (
     <View style={styles.container}>
-      <ScrollView
+      <Animated.ScrollView
+        {...anchor.scrollProps}
         style={styles.container}
         contentContainerStyle={[
           styles.content,
@@ -86,7 +93,7 @@ export default function WeakLessonsScreen({ navigation, route }) {
                   <Chevron open={expanded} />
                 </Pressable>
   
-                <Collapsible open={expanded}>
+                <Collapsible open={expanded} onHeight={anchor.onHeight(module.id)}>
                   {moduleLessons.map((lesson) => (
                     <LessonRow
                       key={lesson.id}
@@ -114,7 +121,7 @@ export default function WeakLessonsScreen({ navigation, route }) {
             );
           })}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
       {/* Outside the list so it stays put while the page scrolls. */}
       <AuthBackButton
         onPress={() => navigation.goBack()}

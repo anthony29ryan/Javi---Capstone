@@ -2,16 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import AuthToast from '../components/auth/AuthToast';
-import Collapsible, { Chevron } from '../components/Collapsible';
+import Collapsible, { Chevron, useKeepInPlace } from '../components/Collapsible';
 import LessonRow from '../components/LessonRow';
 import OfflineBanner from '../components/OfflineBanner';
 import ScreenState from '../components/ScreenState';
@@ -123,6 +117,7 @@ export default function ModulesScreen({ route, navigation }) {
   // thing that made it unwieldy.
   const [openModuleId, setOpenModuleId] = useState(null);
   const [touched, setTouched] = useState(false);
+  const anchor = useKeepInPlace();
   const [toast, setToast] = useState('');
   // A batch that just ended, held on screen briefly so its 100% is seen.
   const [finished, setFinished] = useState(null);
@@ -203,6 +198,7 @@ export default function ModulesScreen({ route, navigation }) {
   }
 
   function toggleModule(moduleId) {
+    anchor.beforeToggle(expandedId, moduleId, courseModuleIds);
     setTouched(true);
     setOpenModuleId((current) => {
       const effective = touched ? current : suggestedOpenId;
@@ -212,7 +208,8 @@ export default function ModulesScreen({ route, navigation }) {
 
   return (
     <View style={styles.screen}>
-      <FlatList
+      <Animated.FlatList
+      {...anchor.scrollProps}
       style={styles.container}
       contentContainerStyle={[
         styles.list,
@@ -343,7 +340,7 @@ export default function ModulesScreen({ route, navigation }) {
               </View>
             </Pressable>
 
-            <Collapsible open={expanded}>
+            <Collapsible open={expanded} onHeight={anchor.onHeight(item.id)}>
               {moduleLessons.map((lesson) => (
                 <LessonRow
                   key={lesson.id}

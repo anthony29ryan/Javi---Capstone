@@ -9,7 +9,7 @@ import {
   saveModule,
   saveSnapshot,
 } from '../services/offline';
-import { getProgress, recordLessonOpened } from '../services/progress';
+import { getProgress, recordLessonOpened, setLessonComplete } from '../services/progress';
 import { liveStreak } from '../services/streak';
 
 const ProgressContext = createContext(undefined);
@@ -174,6 +174,16 @@ export function ProgressProvider({ children }) {
     }
   }, []);
 
+  /**
+   * Saves a lesson's done state, then applies what was saved locally instead
+   * of re-reading the whole progress document: one server trip fewer, which
+   * is most of the wait on the Mark complete button. Throws if saving fails.
+   */
+  const markLessonComplete = useCallback(async (lessonId, complete) => {
+    const changes = await setLessonComplete(lessonId, complete);
+    setProgress((current) => (current ? { ...current, ...changes } : current));
+  }, []);
+
   const value = useMemo(() => {
     const completedSet = new Set(progress?.completedLessons ?? []);
     const completedTraces = new Set(progress?.completedTraces ?? []);
@@ -226,6 +236,7 @@ export function ProgressProvider({ children }) {
       removeAllDownloads,
       reloadProgress,
       markLessonOpened,
+      markLessonComplete,
       lastLessonId: progress?.lastLessonId ?? null,
       progress,
       courses,
@@ -251,6 +262,7 @@ export function ProgressProvider({ children }) {
     refresh,
     reloadProgress,
     markLessonOpened,
+    markLessonComplete,
     offline,
     downloadedIds,
     downloadModule,

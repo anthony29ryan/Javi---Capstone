@@ -3,14 +3,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated';
 
-import Collapsible, { Chevron } from '../components/Collapsible';
+import Collapsible, { Chevron, useKeepInPlace } from '../components/Collapsible';
 import Mascot from '../components/Mascot';
 import ScreenState from '../components/ScreenState';
 import TutorChat from '../components/TutorChat';
@@ -34,6 +34,7 @@ export default function TutorScreen({ route }) {
   const [moduleId, setModuleId] = useState(null);
   // null until the learner taps a tier; until then the tier they are studying is open.
   const [openCourseId, setOpenCourseId] = useState(null);
+  const anchor = useKeepInPlace();
 
   // A lesson's "See the whole chat in Javi" opens this module. openedAt makes
   // a second visit work even after Change cleared it.
@@ -92,11 +93,17 @@ export default function TutorScreen({ route }) {
   const expandedCourseId = openCourseId ?? studyingCourseId;
 
   function toggleCourse(courseId) {
+    anchor.beforeToggle(
+      expandedCourseId,
+      courseId,
+      courses.map((course) => course.id)
+    );
     setOpenCourseId(expandedCourseId === courseId ? '' : courseId);
   }
 
   return (
-    <ScrollView
+    <Animated.ScrollView
+      {...anchor.scrollProps}
       style={styles.container}
       contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
     >
@@ -126,7 +133,7 @@ export default function TutorScreen({ route }) {
               <Chevron open={expanded} />
             </Pressable>
 
-            <Collapsible open={expanded}>
+            <Collapsible open={expanded} onHeight={anchor.onHeight(course.id)}>
               {modules
                 .filter((item) => item.courseId === course.id)
                 .map((item) => (
@@ -148,7 +155,7 @@ export default function TutorScreen({ route }) {
           </View>
         );
       })}
-    </ScrollView>
+    </Animated.ScrollView>
   );
 }
 

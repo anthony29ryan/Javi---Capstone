@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthButton from '../components/auth/AuthButton';
@@ -10,7 +10,6 @@ import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';
 import { useProgress } from '../context/ProgressContext';
 import { getLesson } from '../services/content';
-import { setLessonComplete } from '../services/progress';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 // How close to the bottom counts as having read to the end.
@@ -115,7 +114,7 @@ export default function LessonDetailScreen({ route, navigation }) {
     moduleProgress,
     isLessonComplete,
     markLessonOpened,
-    reloadProgress,
+    markLessonComplete,
     offline,
   } = useProgress();
 
@@ -208,8 +207,7 @@ export default function LessonDetailScreen({ route, navigation }) {
   async function toggleComplete() {
     setSaving(true);
     try {
-      await setLessonComplete(lesson.id, !done);
-      await reloadProgress();
+      await markLessonComplete(lesson.id, !done);
     } catch {
       setToast('Could not save. Try again.');
     } finally {
@@ -324,15 +322,22 @@ export default function LessonDetailScreen({ route, navigation }) {
             pressed && styles.completePressed,
           ]}
         >
-          <Text
-            style={[
-              styles.completeLabel,
-              locked && styles.completeLabelLocked,
-              done && styles.completeLabelDone,
-            ]}
-          >
-            {completeLabel}
-          </Text>
+          {saving ? (
+            <ActivityIndicator
+              color={done ? colors.primaryDark : colors.white}
+              accessibilityLabel="Saving"
+            />
+          ) : (
+            <Text
+              style={[
+                styles.completeLabel,
+                locked && styles.completeLabelLocked,
+                done && styles.completeLabelDone,
+              ]}
+            >
+              {completeLabel}
+            </Text>
+          )}
         </Pressable>
       </View>
 

@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated';
 
 import AuthBackButton from '../components/auth/AuthBackButton';
 import Button from '../components/Button';
-import Collapsible from '../components/Collapsible';
+import Collapsible, { useKeepInPlace } from '../components/Collapsible';
 import ScreenState from '../components/ScreenState';
 import { useProgress } from '../context/ProgressContext';
 import { getTraces } from '../services/content';
@@ -23,7 +24,7 @@ function Chip({ label, selected, onPress }) {
   );
 }
 
-function TraceCard({ trace, topic, level, traced, open, onToggle, onStart }) {
+function TraceCard({ trace, topic, level, traced, open, onToggle, onHeight, onStart }) {
   const characters = trace.lines.reduce((sum, line) => sum + line.trim().length, 0);
 
   return (
@@ -55,7 +56,7 @@ function TraceCard({ trace, topic, level, traced, open, onToggle, onStart }) {
         </View>
       </Pressable>
 
-      <Collapsible open={open}>
+      <Collapsible open={open} onHeight={onHeight}>
         {/* The gap lives inside, so a closed card adds no space below its head. */}
         <View style={styles.openBody}>
           <View style={styles.preview}>
@@ -81,6 +82,7 @@ export default function TracerListScreen({ navigation }) {
   const [error, setError] = useState('');
   const [courseFilter, setCourseFilter] = useState(null);
   const [openId, setOpenId] = useState(null);
+  const anchor = useKeepInPlace();
 
   const load = useCallback(() => {
     setLoading(true);
@@ -114,7 +116,8 @@ export default function TracerListScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <FlatList
+      <Animated.FlatList
+        {...anchor.scrollProps}
         style={styles.container}
         contentContainerStyle={[
           styles.list,
@@ -157,7 +160,11 @@ export default function TracerListScreen({ navigation }) {
               level={courseTitles.get(module?.courseId)}
               traced={isTraceComplete(item.id)}
               open={openId === item.id}
-              onToggle={() => setOpenId(openId === item.id ? null : item.id)}
+              onToggle={() => {
+                anchor.beforeToggle(openId, item.id, sorted.map((trace) => trace.id));
+                setOpenId(openId === item.id ? null : item.id);
+              }}
+              onHeight={anchor.onHeight(item.id)}
               onStart={() =>
                 navigation.navigate('Tracer', {
                   trace: item,

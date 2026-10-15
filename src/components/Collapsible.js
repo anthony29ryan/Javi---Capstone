@@ -1,9 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   interpolate,
   interpolateColor,
+  scrollTo,
+  useAnimatedReaction,
+  useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -31,7 +34,7 @@ function useOpenProgress(open) {
  * height can be measured even while closed; the outer view animates from 0 to
  * that height and clips the rest.
  */
-export default function Collapsible({ open, children }) {
+export default function Collapsible({ open, onHeight, children }) {
   const progress = useOpenProgress(open);
   const contentHeight = useSharedValue(0);
 
@@ -51,12 +54,66 @@ export default function Collapsible({ open, children }) {
         style={styles.content}
         onLayout={(event) => {
           contentHeight.value = event.nativeEvent.layout.height;
+          onHeight?.(event.nativeEvent.layout.height);
         }}
       >
         {children}
       </View>
     </Animated.View>
   );
+}
+
+/**
+ * Keeps a tapped section still when the open one above it closes. Without
+ * this, the closing section shrinks above it and drags it up the screen.
+ *
+ * Spread `scrollProps` on the list (an Animated.ScrollView or FlatList), and
+ * pass `onHeight(id)` to each Collapsible. Call `beforeToggle(openId,
+ * tappedId, ids)` (ids in list order) before switching: when the open section
+ * sits above the tapped one, the list scrolls up by its height, frame by frame
+ * on the UI thread with the collapse's own timing, so the two cancel out.
+ */
+export function useKeepInPlace() {
+  const ref = useAnimatedRef();
+  // Kept from the list's own events rather than useScrollViewOffset, which
+  // warns while a screen still shows its skeleton and the list is not there.
+  const offset = useRef(0);
+  const heights = useRef({});
+  const start = useSharedValue(0);
+  const distance = useSharedValue(0);
+  const shift = useSharedValue(1);
+
+  useAnimatedReaction(
+    () => shift.value,
+    (value, previous) => {
+      if (previous === null) return;
+      scrollTo(ref, 0, Math.max(0, start.value - distance.value * value), false);
+    }
+  );
+
+  const track = (event) => {
+    offset.current = event.nativeEvent.contentOffset.y;
+  };
+
+  return {
+    scrollProps: {
+      ref,
+      onScroll: track,
+      onMomentumScrollEnd: track,
+      onScrollEndDrag: track,
+      scrollEventThrottle: 16,
+    },
+    onHeight: (id) => (height) => {
+      heights.current[id] = height;
+    },
+    beforeToggle(openId, tappedId, ids) {
+      if (!openId || openId === tappedId || ids.indexOf(openId) > ids.indexOf(tappedId)) return;
+      start.value = offset.current;
+      distance.value = heights.current[openId] ?? 0;
+      shift.value = 0;
+      shift.value = withTiming(1, TIMING);
+    },
+  };
 }
 
 /** The accordion's ›, turning from pointing down (closed) to up (open). */

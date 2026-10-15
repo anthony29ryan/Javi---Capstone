@@ -45,25 +45,28 @@ export async function recordLessonOpened(lessonId) {
  * counts as activity — un-marking must not extend a streak, or the streak
  * becomes something you can farm by toggling a checkbox.
  */
+/** Returns the fields it saved, so the app can update without re-reading. */
 export async function setLessonComplete(lessonId, complete) {
   const userId = auth.currentUser.uid;
   const existing = await readProgress(userId);
 
-  if (existing.completedLessons.includes(lessonId) === complete) return;
+  if (existing.completedLessons.includes(lessonId) === complete) {
+    return { completedLessons: existing.completedLessons };
+  }
 
-  const completedLessons = complete
-    ? [...existing.completedLessons, lessonId]
-    : existing.completedLessons.filter((id) => id !== lessonId);
+  const changes = {
+    completedLessons: complete
+      ? [...existing.completedLessons, lessonId]
+      : existing.completedLessons.filter((id) => id !== lessonId),
+    ...(complete ? { streak: advanceStreak(existing.streak) } : {}),
+  };
 
   await setDoc(
     doc(db, 'progress', userId),
-    {
-      completedLessons,
-      ...(complete ? { streak: advanceStreak(existing.streak) } : {}),
-      updatedAt: serverTimestamp(),
-    },
+    { ...changes, updatedAt: serverTimestamp() },
     { merge: true }
   );
+  return changes;
 }
 
 export async function recordModuleQuizCompletion(moduleId, correct, total) {
