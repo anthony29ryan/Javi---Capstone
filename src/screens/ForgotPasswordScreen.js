@@ -3,17 +3,38 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } fr
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import AuthAlert from '../components/auth/AuthAlert';
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthBackButton from '../components/auth/AuthBackButton';
 import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
+import { EMAIL_PATTERN } from '../constants/validation';
 import { useAuth } from '../context/AuthContext';
 import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
 
-const EMAIL_PATTERN = /.+@.+\..+/;
 const RESEND_COOLDOWN_SECONDS = 120;
 const MAX_SENDS_PER_MONTH = 3;
 const MONTH_MS = 30 * 24 * 60 * 60 * 1000;
+
+const BANNERS = {
+  // Firebase does not publish its limits, so this names no numbers.
+  limit: {
+    tone: 'danger',
+    title: 'Too many reset requests',
+    body: 'Wait a few minutes before asking again. Check your inbox and spam for a link we already sent.',
+  },
+  offline: {
+    tone: 'warn',
+    title: 'No internet connection',
+    body: 'Check Wi-Fi or mobile data, then try again. What you typed is kept.',
+    action: 'Try again',
+  },
+  failed: {
+    tone: 'danger',
+    title: 'Could not send the link',
+    body: 'Something went wrong on our side. Try again in a moment.',
+  },
+};
 
 const historyKey = (email) => `passwordResetSends:${email.toLowerCase()}`;
 
@@ -98,7 +119,8 @@ export default function ForgotPasswordScreen({ navigation, route }) {
   // Log in hands over whatever was already typed there, so the user does not
   // retype an address they just entered.
   const [email, setEmail] = useState(route.params?.email ?? '');
-  const [error, setError] = useState('');
+  const [fieldError, setFieldError] = useState('');
+  const [banner, setBanner] = useState(null); // a key of BANNERS
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
   const [sentTo, setSentTo] = useState('');
@@ -143,11 +165,15 @@ export default function ForgotPasswordScreen({ navigation, route }) {
   }, []);
 
   async function handleSend() {
-    setError('');
+    setBanner(null);
 
     const trimmed = email.trim();
+    if (!trimmed) {
+      setFieldError('Enter the email on your account.');
+      return;
+    }
     if (!EMAIL_PATTERN.test(trimmed)) {
-      setError('Enter the email on your account.');
+      setFieldError('That email looks incomplete. Use the full address, like name@email.com.');
       return;
     }
 
@@ -179,7 +205,9 @@ export default function ForgotPasswordScreen({ navigation, route }) {
       setSentTo(trimmed);
       setCooldown(RESEND_COOLDOWN_SECONDS);
     } catch (err) {
-      setError(err.message);
+      if (err.code === 'auth/too-many-requests') setBanner('limit');
+      else if (err.code === 'auth/network-request-failed') setBanner('offline');
+      else setBanner('failed');
     } finally {
       setSubmitting(false);
     }
@@ -187,7 +215,9 @@ export default function ForgotPasswordScreen({ navigation, route }) {
 
   function handleEmailChange(value) {
     setEmail(value);
-    setError('');
+    setFieldError('');
+    // The limit banner stays: only waiting lifts it.
+    if (banner !== 'limit') setBanner(null);
 
     // A different address makes the previous send irrelevant, so drop back to
     // the initial state instead of offering to resend to the old one.
@@ -214,12 +244,21 @@ export default function ForgotPasswordScreen({ navigation, route }) {
             Enter the email on your account and we will send a reset link.
           </Text>
 
+          {banner ? (
+            <AuthAlert
+              {...BANNERS[banner]}
+              onAction={banner === 'offline' ? handleSend : undefined}
+              style={styles.banner}
+            />
+          ) : null}
+
           <AuthTextField
             placeholder="Email address"
             autoCapitalize="none"
             autoComplete="email"
             keyboardType="email-address"
             value={email}
+            error={fieldError || undefined}
             onChangeText={handleEmailChange}
           />
 
@@ -233,11 +272,9 @@ export default function ForgotPasswordScreen({ navigation, route }) {
             </View>
           ) : null}
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
-
           {sent ? (
             <AuthButton
-              label={counting ? `Resend Link in ${formatCountdown(cooldown)}` : 'Resend Link'}
+              label={counting ? `Resend link in ${formatCountdown(cooldown)}` : 'Resend link'}
               variant="secondary"
               onPress={handleSend}
               loading={submitting}
@@ -247,7 +284,8 @@ export default function ForgotPasswordScreen({ navigation, route }) {
             />
           ) : (
             <AuthButton
-              label="Send Reset Link"
+              label="Send reset link"
+              loadingLabel="Sending…"
               onPress={handleSend}
               loading={submitting}
               style={styles.submit}
@@ -301,11 +339,8 @@ const styles = StyleSheet.create({
     ...authType.mono,
     color: authColors.ink,
   },
-  error: {
-    ...authType.helper,
-    color: authColors.error,
-    marginTop: 14,
-    marginHorizontal: 4,
+  banner: {
+    marginBottom: 16,
   },
   submit: {
     marginTop: 22,
