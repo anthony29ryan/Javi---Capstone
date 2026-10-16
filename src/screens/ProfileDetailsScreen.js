@@ -16,9 +16,32 @@ import AuthBackButton from '../components/auth/AuthBackButton';
 import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
 import ScreenState from '../components/ScreenState';
+import Skeleton from '../components/Skeleton';
 import { useAuth } from '../context/AuthContext';
 import { getPreferences, savePreferences } from '../services/preferences';
 import { authColors, authRadius, authSpacing, authType, authFonts, centeredColumn, contentWidth } from '../theme/authTheme';
+
+// The form's shape in grey while the profile loads; labels stay real.
+function DetailsSkeleton({ top, onBack }) {
+  return (
+    <View style={styles.container}>
+      <View style={[styles.content, { paddingTop: top }]}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Profile details</Text>
+        </View>
+        <Text style={styles.label}>Your name</Text>
+        <Skeleton style={styles.skelField} />
+        <Skeleton style={[styles.skelField, styles.lastName]} />
+        <Text style={styles.label}>What should we call you?</Text>
+        <Skeleton style={styles.skelField} />
+        <Text style={styles.label}>Email</Text>
+        <Skeleton style={styles.skelField} />
+        <Skeleton style={[styles.skelField, styles.submit, styles.skelButton]} />
+      </View>
+      <AuthBackButton onPress={onBack} style={[styles.back, { top }]} />
+    </View>
+  );
+}
 
 /** Frame 46, with frame 91's "Discard your changes?" sheet on leaving with edits. */
 export default function ProfileDetailsScreen({ navigation }) {
@@ -132,9 +155,9 @@ export default function ProfileDetailsScreen({ navigation }) {
     }
   }
 
-  if (!loaded) return loadError ? <ScreenState error={loadError} /> : <ScreenState loading />;
-
   const top = insets.top + authSpacing.screenTop;
+  if (loadError && !loaded) return <ScreenState error={loadError} />;
+  if (!loaded) return <DetailsSkeleton top={top} onBack={() => navigation.goBack()} />;
 
   return (
     <KeyboardAvoidingView
@@ -271,5 +294,12 @@ const styles = StyleSheet.create({
   },
   submit: {
     marginTop: 24,
+  },
+  skelField: {
+    height: 56,
+    borderRadius: authRadius.field,
+  },
+  skelButton: {
+    borderRadius: 28,
   },
 });

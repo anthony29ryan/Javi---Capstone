@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthToast from '../components/auth/AuthToast';
 import TermsSheet from '../components/auth/TermsSheet';
-import ScreenState from '../components/ScreenState';
+import Skeleton from '../components/Skeleton';
 import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
 import { useTextSize } from '../context/TextSizeContext';
@@ -49,6 +49,44 @@ function Row({ title, subtitle, onPress, right, isLast, destructive, disabled })
       </View>
       {right}
     </Pressable>
+  );
+}
+
+function SkeletonRow({ toggle, isLast }) {
+  return (
+    <View style={[styles.row, !isLast && styles.rowDivider]}>
+      <View style={[styles.rowBody, styles.skelLines]}>
+        <Skeleton style={styles.skelTitle} />
+        <Skeleton style={styles.skelSubtitle} />
+      </View>
+      {toggle ? <Skeleton style={styles.skelToggle} /> : null}
+    </View>
+  );
+}
+
+// The first three sections in grey while preferences load.
+function SettingsSkeleton({ top }) {
+  return (
+    <View style={styles.container}>
+      <View style={[styles.content, { paddingTop: top }]}>
+        <Text style={styles.title}>Settings</Text>
+        <Text style={styles.sectionLabel}>Notifications</Text>
+        <View style={styles.group}>
+          <SkeletonRow toggle />
+          <SkeletonRow isLast />
+        </View>
+        <Text style={styles.sectionLabel}>Reading</Text>
+        <View style={[styles.sizeCard, styles.skelLines]}>
+          <Skeleton style={styles.skelTitle} />
+          <Skeleton style={styles.skelSegments} />
+        </View>
+        <Text style={styles.sectionLabel}>Offline</Text>
+        <View style={styles.group}>
+          <SkeletonRow />
+          <SkeletonRow isLast />
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -166,9 +204,8 @@ export default function SettingsScreen({ navigation, route }) {
 
   // A failed preferences read (usually offline) only disables the reminder row,
   // so downloads and log-out stay reachable without a connection.
-  if (!preferences && !error) return <ScreenState loading />;
-
   const top = insets.top + spacing.lg;
+  if (!preferences && !error) return <SettingsSkeleton top={top} />;
 
   return (
     <View style={styles.container}>
@@ -360,6 +397,28 @@ const styles = StyleSheet.create({
     fontFamily: fonts.mono,
     fontSize: 15,
     color: colors.error,
+  },
+  skelLines: {
+    gap: 8,
+  },
+  skelTitle: {
+    height: 14,
+    width: '55%',
+    borderRadius: 6,
+  },
+  skelSubtitle: {
+    height: 10,
+    width: '75%',
+    borderRadius: 5,
+  },
+  skelToggle: {
+    width: 46,
+    height: 27,
+    borderRadius: 14,
+  },
+  skelSegments: {
+    height: 52,
+    borderRadius: 14,
   },
   sizeCard: {
     padding: spacing.lg,

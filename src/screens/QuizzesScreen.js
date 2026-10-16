@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthBackButton from '../components/auth/AuthBackButton';
 import ScreenState from '../components/ScreenState';
+import Skeleton from '../components/Skeleton';
 import { PASS_PERCENT, scorePercent, useProgress } from '../context/ProgressContext';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
@@ -42,8 +43,7 @@ export default function QuizzesScreen({ navigation }) {
   const { courses, modules, moduleScores, loading, error, refresh } = useProgress();
   const insets = useSafeAreaInsets();
 
-  if (loading) return <ScreenState loading />;
-  if (error) return <ScreenState error={error} onRetry={refresh} />;
+  if (!loading && error) return <ScreenState error={error} onRetry={refresh} />;
 
   return (
     <View style={styles.container}>
@@ -60,10 +60,34 @@ export default function QuizzesScreen({ navigation }) {
         </View>
         <Text style={styles.title}>Quizzes</Text>
         {/* The app keeps each module's latest score, not its best. */}
-        <Text style={styles.intro}>
-          {quizCount(modules.length)} across your modules. Your last score shows on each one.
-        </Text>
-  
+        {loading ? (
+          <Skeleton style={styles.skelIntro} />
+        ) : (
+          <Text style={styles.intro}>
+            {quizCount(modules.length)} across your modules. Your last score shows on each one.
+          </Text>
+        )}
+
+        {/* The page's shape in grey while progress loads. */}
+        {loading ? (
+          <View style={styles.group}>
+            <View style={styles.groupHead}>
+              <Skeleton style={styles.skelGroupTitle} />
+              <View style={styles.groupRule} />
+            </View>
+            {[0, 1, 2, 3].map((key) => (
+              <View key={key} style={styles.quizCard}>
+                <View style={[styles.quizBody, styles.skelLines]}>
+                  <Skeleton style={styles.skelEyebrow} />
+                  <Skeleton style={styles.skelName} />
+                  <Skeleton style={styles.skelMeta} />
+                </View>
+                <Skeleton style={styles.skelBadge} />
+              </View>
+            ))}
+          </View>
+        ) : null}
+
         {courses.map((course) => {
           const courseModules = modules.filter((module) => module.courseId === course.id);
           if (!courseModules.length) return null;
@@ -211,5 +235,39 @@ const styles = StyleSheet.create({
     fontSize: 8.5,
     color: colors.textMuted,
     marginTop: spacing.xs,
+  },
+  skelIntro: {
+    height: 14,
+    width: '85%',
+    borderRadius: 6,
+    marginTop: 4,
+  },
+  skelGroupTitle: {
+    height: 12,
+    width: 90,
+    borderRadius: 5,
+  },
+  skelLines: {
+    gap: 8,
+  },
+  skelEyebrow: {
+    height: 9,
+    width: '30%',
+    borderRadius: 4,
+  },
+  skelName: {
+    height: 16,
+    width: '65%',
+    borderRadius: 6,
+  },
+  skelMeta: {
+    height: 10,
+    width: '45%',
+    borderRadius: 5,
+  },
+  skelBadge: {
+    width: 56,
+    height: 50,
+    borderRadius: radius.md,
   },
 });

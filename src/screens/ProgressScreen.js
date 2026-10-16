@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import ProgressRing from '../components/ProgressRing';
 import ScreenState from '../components/ScreenState';
+import Skeleton from '../components/Skeleton';
 import { useProgress } from '../context/ProgressContext';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
@@ -66,6 +67,40 @@ function ModuleRow({ title, stats, score, isLast }) {
   );
 }
 
+// The stats and the tier list in grey while progress loads.
+function ProgressSkeleton() {
+  return (
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.statRow}>
+          {[0, 1].map((key) => (
+            <View key={key} style={[styles.statCard, styles.skelLines]}>
+              <Skeleton style={styles.skelValue} />
+              <Skeleton style={styles.skelMeta} />
+            </View>
+          ))}
+        </View>
+        <View style={styles.progressBlock}>
+          <View style={styles.progressTrack} />
+          <Skeleton style={styles.skelMeta} />
+        </View>
+        <Text style={styles.sectionLabel}>By tier</Text>
+        <View style={styles.group}>
+          {[0, 1, 2].map((key) => (
+            <View key={key} style={[styles.row, key < 2 && styles.rowDivider]}>
+              <Skeleton style={styles.skelRing} />
+              <View style={[styles.rowBody, styles.skelLines]}>
+                <Skeleton style={styles.skelTitle} />
+                <Skeleton style={styles.skelMeta} />
+              </View>
+            </View>
+          ))}
+        </View>
+      </View>
+    </View>
+  );
+}
+
 export default function ProgressScreen() {
   const {
     courses,
@@ -82,7 +117,7 @@ export default function ProgressScreen() {
     refresh,
   } = useProgress();
 
-  if (loading) return <ScreenState loading />;
+  if (loading) return <ProgressSkeleton />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
 
   return (
@@ -260,5 +295,28 @@ const styles = StyleSheet.create({
   emptyText: {
     ...type.small,
     color: colors.textMuted,
+  },
+  skelLines: {
+    gap: 8,
+  },
+  skelValue: {
+    height: 30,
+    width: '45%',
+    borderRadius: 8,
+  },
+  skelTitle: {
+    height: 14,
+    width: '50%',
+    borderRadius: 6,
+  },
+  skelMeta: {
+    height: 10,
+    width: '65%',
+    borderRadius: 5,
+  },
+  skelRing: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
 });

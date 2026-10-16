@@ -7,6 +7,7 @@ import AuthBackButton from '../components/auth/AuthBackButton';
 import Button from '../components/Button';
 import Collapsible, { useKeepInPlace } from '../components/Collapsible';
 import ScreenState from '../components/ScreenState';
+import Skeleton from '../components/Skeleton';
 import { useProgress } from '../context/ProgressContext';
 import { getTraces } from '../services/content';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
@@ -74,6 +75,23 @@ function TraceCard({ trace, topic, level, traced, open, onToggle, onHeight, onSt
   );
 }
 
+function TraceSkeletons() {
+  return (
+    <View style={styles.skelList}>
+      {[0, 1, 2, 3].map((key) => (
+        <View key={key} style={[styles.card, styles.cardHead]}>
+          <View style={styles.radio} />
+          <View style={[styles.cardBody, styles.skelLines]}>
+            <Skeleton style={styles.skelEyebrow} />
+            <Skeleton style={styles.skelTitle} />
+            <Skeleton style={styles.skelMeta} />
+          </View>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 export default function TracerListScreen({ navigation }) {
   const { courses, modules, isTraceComplete } = useProgress();
   const insets = useSafeAreaInsets();
@@ -95,9 +113,8 @@ export default function TracerListScreen({ navigation }) {
 
   useEffect(load, [load]);
 
-  if (loading) return <ScreenState loading />;
-  if (error) return <ScreenState error={error} onRetry={load} />;
-  if (traces.length === 0) {
+  if (!loading && error) return <ScreenState error={error} onRetry={load} />;
+  if (!loading && traces.length === 0) {
     return <ScreenState message="No drills yet." hint="Content has not been published." />;
   }
 
@@ -125,6 +142,8 @@ export default function TracerListScreen({ navigation }) {
         ]}
         data={sorted}
         keyExtractor={(item) => item.id}
+        // While the drills load, the real header stays and the cards are grey.
+        ListEmptyComponent={loading ? <TraceSkeletons /> : null}
         ListHeaderComponent={
           <View style={styles.header}>
             {/* Indented to clear the floating back button below the list. */}
@@ -295,6 +314,27 @@ const styles = StyleSheet.create({
   cardBody: {
     flex: 1,
     minWidth: 0,
+  },
+  skelList: {
+    gap: 12,
+  },
+  skelLines: {
+    gap: 8,
+  },
+  skelEyebrow: {
+    height: 9,
+    width: '40%',
+    borderRadius: 4,
+  },
+  skelTitle: {
+    height: 16,
+    width: '60%',
+    borderRadius: 6,
+  },
+  skelMeta: {
+    height: 10,
+    width: '45%',
+    borderRadius: 5,
   },
   cardEyebrow: {
     ...type.sectionLabel,

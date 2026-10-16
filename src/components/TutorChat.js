@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import Mascot from './Mascot';
 import Skeleton from './Skeleton';
@@ -105,7 +105,21 @@ export default function TutorChat({
 
   const thread = (
     <>
-      {loadingThread ? <ActivityIndicator color={colors.primary} style={styles.loading} /> : null}
+      {/* A short exchange in grey while the saved chat loads. */}
+      {loadingThread ? (
+        <>
+          <View style={[styles.bubble, styles.bubbleTutor, styles.skelBubble, { width: '72%' }]}>
+            <Skeleton style={styles.skelLine} />
+            <Skeleton style={[styles.skelLine, { width: '60%' }]} />
+          </View>
+          <Skeleton style={[styles.bubble, styles.skelLearner]} />
+          <View style={[styles.bubble, styles.bubbleTutor, styles.skelBubble, { width: '80%' }]}>
+            <Skeleton style={styles.skelLine} />
+            <Skeleton style={styles.skelLine} />
+            <Skeleton style={[styles.skelLine, { width: '45%' }]} />
+          </View>
+        </>
+      ) : null}
 
       {emptyState && !loadingThread && messages.length === 0 ? (
         <View style={styles.empty}>
@@ -257,8 +271,17 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingVertical: spacing.lg,
   },
-  loading: {
-    marginTop: spacing.md,
+  skelBubble: {
+    gap: 8,
+  },
+  skelLine: {
+    height: 11,
+    borderRadius: 5,
+  },
+  skelLearner: {
+    alignSelf: 'flex-end',
+    width: '46%',
+    height: 44,
   },
   empty: {
     flexGrow: 1,

@@ -13,11 +13,51 @@ import Animated from 'react-native-reanimated';
 import Collapsible, { Chevron, useKeepInPlace } from '../components/Collapsible';
 import Mascot from '../components/Mascot';
 import ScreenState from '../components/ScreenState';
+import Skeleton from '../components/Skeleton';
 import TutorChat from '../components/TutorChat';
 import { levelLabel } from '../constants/levels';
 import { useProgress } from '../context/ProgressContext';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
+
+function Intro() {
+  return (
+    <View style={styles.intro}>
+      <Mascot variant="greeting" px={48} decorative animate={false} />
+      <Text style={styles.introText}>
+        Which module do you want help with? Javi answers on that module's lessons only.
+      </Text>
+    </View>
+  );
+}
+
+// The module picker's shape in grey while progress loads; the first tier is open.
+function TutorSkeleton({ top }) {
+  return (
+    <View style={styles.container}>
+      <View style={[styles.content, { paddingTop: top }]}>
+        <Text style={styles.title}>Ask Javi</Text>
+        <Intro />
+        {[0, 1, 2].map((key) => (
+          <View key={key} style={styles.card}>
+            <View style={[styles.cardHead, styles.skelLines]}>
+              <Skeleton style={styles.skelLabel} />
+              <Skeleton style={styles.skelTitle} />
+            </View>
+            {key === 0
+              ? [0, 1, 2, 3].map((row) => (
+                  <View key={row} style={styles.moduleRow}>
+                    <View style={styles.dot} />
+                    <Skeleton style={styles.skelModule} />
+                  </View>
+                ))
+              : null}
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
 
 /**
  * The Java tutor tab. The tutor only answers on one module at a time, so the
@@ -42,7 +82,7 @@ export default function TutorScreen({ route }) {
     if (route.params?.moduleId) setModuleId(route.params.moduleId);
   }, [route.params?.moduleId, route.params?.openedAt]);
 
-  if (loading) return <ScreenState loading />;
+  if (loading) return <TutorSkeleton top={insets.top + spacing.lg} />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
   if (modules.length === 0) {
     return <ScreenState message="No modules yet." hint="Content has not been published." />;
@@ -108,12 +148,7 @@ export default function TutorScreen({ route }) {
       contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
     >
       <Text style={styles.title}>Ask Javi</Text>
-      <View style={styles.intro}>
-        <Mascot variant="greeting" px={48} decorative animate={false} />
-        <Text style={styles.introText}>
-          Which module do you want help with? Javi answers on that module's lessons only.
-        </Text>
-      </View>
+      <Intro />
 
       {courses.map((course, courseIndex) => {
         const expanded = expandedCourseId === course.id;
@@ -254,6 +289,26 @@ const styles = StyleSheet.create({
   rowChevron: {
     fontSize: 16,
     color: colors.borderStrong,
+  },
+  skelLines: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: 8,
+  },
+  skelLabel: {
+    height: 9,
+    width: '35%',
+    borderRadius: 4,
+  },
+  skelTitle: {
+    height: 16,
+    width: '50%',
+    borderRadius: 6,
+  },
+  skelModule: {
+    height: 12,
+    width: '60%',
+    borderRadius: 5,
   },
   chatHead: {
     flexDirection: 'row',
