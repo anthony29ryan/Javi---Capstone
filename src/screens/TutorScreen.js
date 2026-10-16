@@ -12,6 +12,7 @@ import Animated from 'react-native-reanimated';
 
 import Collapsible, { Chevron, useKeepInPlace } from '../components/Collapsible';
 import Mascot from '../components/Mascot';
+import PopIn from '../components/PopIn';
 import ScreenState from '../components/ScreenState';
 import TutorChat from '../components/TutorChat';
 import { levelLabel } from '../constants/levels';
@@ -62,7 +63,7 @@ export default function TutorScreen({ route }) {
           shownMessages={Infinity}
           emptyState
           header={
-            <View style={styles.chatHead}>
+            <PopIn index={0} style={styles.chatHead}>
               <View style={styles.chatAvatar}>
                 <Mascot variant="thinking" px={40} decorative animate={false} style={styles.chatAvatarImage} />
               </View>
@@ -80,7 +81,7 @@ export default function TutorScreen({ route }) {
               >
                 Change
               </Text>
-            </View>
+            </PopIn>
           }
         />
       </KeyboardAvoidingView>
@@ -107,18 +108,20 @@ export default function TutorScreen({ route }) {
       style={styles.container}
       contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
     >
-      <Text style={styles.title}>Ask Javi</Text>
-      <View style={styles.intro}>
+      <PopIn index={0}>
+        <Text style={styles.title}>Ask Javi</Text>
+      </PopIn>
+      <PopIn index={1} style={styles.intro}>
         <Mascot variant="greeting" px={48} decorative animate={false} />
         <Text style={styles.introText}>
           Which module do you want help with? Javi answers on that module's lessons only.
         </Text>
-      </View>
+      </PopIn>
 
       {courses.map((course, courseIndex) => {
         const expanded = expandedCourseId === course.id;
         return (
-          <View key={course.id} style={styles.card}>
+          <PopIn key={course.id} index={2 + courseIndex} style={styles.card}>
             <Pressable
               onPress={() => toggleCourse(course.id)}
               accessibilityRole="button"
@@ -152,7 +155,7 @@ export default function TutorScreen({ route }) {
                   </Pressable>
                 ))}
             </Collapsible>
-          </View>
+          </PopIn>
         );
       })}
     </Animated.ScrollView>

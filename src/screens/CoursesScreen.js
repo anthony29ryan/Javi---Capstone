@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthButton from '../components/auth/AuthButton';
 import Mascot from '../components/Mascot';
+import PopIn from '../components/PopIn';
 import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';
 import { levelLabel, levelTheme } from '../constants/levels';
@@ -136,18 +137,24 @@ export default function CoursesScreen({ navigation }) {
       keyExtractor={(item) => item.id}
       // The handoff dropped this screen's subheading and enlarged the title;
       // the paragraph that used to sit here is gone deliberately.
-      ListHeaderComponent={<Text style={styles.pageTitle}>Courses</Text>}
+      ListHeaderComponent={
+        <PopIn index={0}>
+          <Text style={styles.pageTitle}>Courses</Text>
+        </PopIn>
+      }
       renderItem={({ item, index }) => (
-        <LevelCard
-          course={item}
-          index={index}
-          courseModules={modules.filter((module) => module.courseId === item.id)}
-          moduleProgress={moduleProgress}
-          stats={courseProgress[item.id] ?? NO_STATS}
-          onPress={() =>
-            navigation.navigate('Modules', { courseId: item.id, courseTitle: item.title })
-          }
-        />
+        <PopIn index={index + 1}>
+          <LevelCard
+            course={item}
+            index={index}
+            courseModules={modules.filter((module) => module.courseId === item.id)}
+            moduleProgress={moduleProgress}
+            stats={courseProgress[item.id] ?? NO_STATS}
+            onPress={() =>
+              navigation.navigate('Modules', { courseId: item.id, courseTitle: item.title })
+            }
+          />
+        </PopIn>
       )}
     />
   );

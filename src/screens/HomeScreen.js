@@ -7,6 +7,7 @@ import AuthToast from '../components/auth/AuthToast';
 import Avatar from '../components/Avatar';
 import Mascot from '../components/Mascot';
 import OfflineBanner from '../components/OfflineBanner';
+import PopIn from '../components/PopIn';
 import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';
 import { useAuth } from '../context/AuthContext';
@@ -232,7 +233,7 @@ export default function HomeScreen({ navigation }) {
         style={styles.container}
         contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       >
-        <View style={styles.header}>
+        <PopIn index={0} style={styles.header}>
           <Mascot variant="greeting" px={48} decorative animate={false} style={styles.mascot} />
           <View style={styles.headerText}>
             <Text style={styles.greeting} numberOfLines={1}>
@@ -244,44 +245,46 @@ export default function HomeScreen({ navigation }) {
             </Text>
           </View>
           <Avatar user={user} name={callName} size={44} onPress={() => navigation.navigate('Profile')} />
-        </View>
+        </PopIn>
 
         <OfflineBanner message="Showing lessons and progress saved on this phone." />
 
-        {next ? (
-          <View style={styles.hero}>
-            <Text style={styles.heroEyebrow}>Continue learning</Text>
-            <Text style={styles.heroTitle}>{next.title}</Text>
-            <Text style={styles.heroCrumb}>
-              {[nextCourse?.title, nextModule?.title].filter(Boolean).join(' · ')}
-            </Text>
-
-            <View style={styles.heroTrack}>
-              <View style={[styles.heroFill, { width: `${nextModuleStats?.percent ?? 0}%` }]} />
-            </View>
-
-            <View style={styles.heroFooter}>
-              <Text style={styles.heroProgress}>
-                {nextModuleStats?.completed ?? 0} of {nextModuleStats?.total ?? 0} lessons in this
-                module
+        <PopIn index={1}>
+          {next ? (
+            <View style={styles.hero}>
+              <Text style={styles.heroEyebrow}>Continue learning</Text>
+              <Text style={styles.heroTitle}>{next.title}</Text>
+              <Text style={styles.heroCrumb}>
+                {[nextCourse?.title, nextModule?.title].filter(Boolean).join(' · ')}
               </Text>
-              <Pressable
-                onPress={() => openLesson(next)}
-                style={({ pressed }) => [styles.resume, pressed && styles.pressed]}
-              >
-                <Text style={styles.resumeLabel}>Resume</Text>
-              </Pressable>
-            </View>
-          </View>
-        ) : (
-          <View style={styles.hero}>
-            <Text style={styles.heroEyebrow}>All caught up</Text>
-            <Text style={styles.heroTitle}>Every lesson done</Text>
-            <Text style={styles.heroCrumb}>Revisit a module quiz to keep your scores sharp.</Text>
-          </View>
-        )}
 
-        <View style={styles.tiles}>
+              <View style={styles.heroTrack}>
+                <View style={[styles.heroFill, { width: `${nextModuleStats?.percent ?? 0}%` }]} />
+              </View>
+
+              <View style={styles.heroFooter}>
+                <Text style={styles.heroProgress}>
+                  {nextModuleStats?.completed ?? 0} of {nextModuleStats?.total ?? 0} lessons in this
+                  module
+                </Text>
+                <Pressable
+                  onPress={() => openLesson(next)}
+                  style={({ pressed }) => [styles.resume, pressed && styles.pressed]}
+                >
+                  <Text style={styles.resumeLabel}>Resume</Text>
+                </Pressable>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.hero}>
+              <Text style={styles.heroEyebrow}>All caught up</Text>
+              <Text style={styles.heroTitle}>Every lesson done</Text>
+              <Text style={styles.heroCrumb}>Revisit a module quiz to keep your scores sharp.</Text>
+            </View>
+          )}
+        </PopIn>
+
+        <PopIn index={2} style={styles.tiles}>
           <Tile
             eyebrow="Practice"
             title={nextModule ? `${nextModule.title} quiz` : 'Module quiz'}
@@ -301,11 +304,11 @@ export default function HomeScreen({ navigation }) {
             subtleInk="rgba(255,255,255,.62)"
             onPress={() => navigation.navigate('Tutor')}
           />
-        </View>
+        </PopIn>
 
         {recsLoading || recommendations.length > 0 ? (
           <>
-            <View style={styles.sectionHeader}>
+            <PopIn index={3} style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Recommended for you</Text>
               <Text
                 style={styles.sectionAll}
@@ -318,7 +321,7 @@ export default function HomeScreen({ navigation }) {
               >
                 All
               </Text>
-            </View>
+            </PopIn>
 
             <View style={styles.recommendations}>
               {recsLoading ? (
@@ -328,27 +331,32 @@ export default function HomeScreen({ navigation }) {
                   <RecSkeleton />
                 </>
               ) : null}
-              {recsLoading ? null : recommendations.map((lesson) => (
-                <Pressable
-                  key={lesson.id}
-                  onPress={() => openLesson(lesson)}
-                  style={({ pressed }) => [styles.recRow, pressed && styles.recRowPressed]}
-                >
-                  <View style={styles.recGlyphTile}>
-                    <Text style={styles.recGlyph}>{glyphFor(lesson.moduleId)}</Text>
-                  </View>
-                  <View style={styles.recBody}>
-                    <Text style={styles.recTitle}>{lesson.title}</Text>
-                    <Text style={styles.recMeta} numberOfLines={1}>
-                      {modulesById[lesson.moduleId]?.title ?? 'Module'} · {lesson.minutes} min
-                    </Text>
-                  </View>
-                  <Text style={styles.recChevron}>›</Text>
-                </Pressable>
+              {recsLoading ? null : recommendations.map((lesson, i) => (
+                <PopIn key={lesson.id} index={4 + i}>
+                  <Pressable
+                    onPress={() => openLesson(lesson)}
+                    style={({ pressed }) => [styles.recRow, pressed && styles.recRowPressed]}
+                  >
+                    <View style={styles.recGlyphTile}>
+                      <Text style={styles.recGlyph}>{glyphFor(lesson.moduleId)}</Text>
+                    </View>
+                    <View style={styles.recBody}>
+                      <Text style={styles.recTitle}>{lesson.title}</Text>
+                      <Text style={styles.recMeta} numberOfLines={1}>
+                        {modulesById[lesson.moduleId]?.title ?? 'Module'} · {lesson.minutes} min
+                      </Text>
+                    </View>
+                    <Text style={styles.recChevron}>›</Text>
+                  </Pressable>
+                </PopIn>
               ))}
             </View>
 
-            {recsLoading ? null : <Text style={styles.recWhy}>{recWhy}</Text>}
+            {recsLoading ? null : (
+              <PopIn index={7}>
+                <Text style={styles.recWhy}>{recWhy}</Text>
+              </PopIn>
+            )}
           </>
         ) : null}
       </ScrollView>

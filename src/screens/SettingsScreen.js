@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthToast from '../components/auth/AuthToast';
 import TermsSheet from '../components/auth/TermsSheet';
+import PopIn from '../components/PopIn';
 import ScreenState from '../components/ScreenState';
 import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
@@ -180,102 +181,114 @@ export default function SettingsScreen({ navigation, route }) {
         ]}
       >
         {/* A tab now, so no back button: the title sits flush. */}
-        <Text style={styles.title}>Settings</Text>
+        <PopIn index={0}>
+          <Text style={styles.title}>Settings</Text>
+        </PopIn>
   
-        <Text style={styles.sectionLabel}>Notifications</Text>
-        <View style={styles.group}>
-          <Row
-            title="Daily study reminder"
-            subtitle={
-              !preferences
-                ? 'Connect to change your reminder'
-                : preferences.reminderEnabled
-                  ? `Daily nudge at ${preferences.reminderTime}`
-                  : 'Off — no reminder scheduled'
-            }
-            onPress={toggleReminder}
-            right={<Toggle on={Boolean(preferences?.reminderEnabled)} disabled={!preferences} />}
-            disabled={!preferences}
-          />
-          <Row
-            title="Reminder time"
-            subtitle={preferences ? `Daily at ${preferences.reminderTime}` : 'Connect to change your reminder'}
-            onPress={() =>
-              navigation.navigate('ReminderSheet', { reminderTime: preferences.reminderTime })
-            }
-            right={<Text style={styles.chevron}>›</Text>}
-            disabled={!preferences}
-            isLast
-          />
-        </View>
+        <PopIn index={1}>
+          <Text style={styles.sectionLabel}>Notifications</Text>
+          <View style={styles.group}>
+            <Row
+              title="Daily study reminder"
+              subtitle={
+                !preferences
+                  ? 'Connect to change your reminder'
+                  : preferences.reminderEnabled
+                    ? `Daily nudge at ${preferences.reminderTime}`
+                    : 'Off — no reminder scheduled'
+              }
+              onPress={toggleReminder}
+              right={<Toggle on={Boolean(preferences?.reminderEnabled)} disabled={!preferences} />}
+              disabled={!preferences}
+            />
+            <Row
+              title="Reminder time"
+              subtitle={preferences ? `Daily at ${preferences.reminderTime}` : 'Connect to change your reminder'}
+              onPress={() =>
+                navigation.navigate('ReminderSheet', { reminderTime: preferences.reminderTime })
+              }
+              right={<Text style={styles.chevron}>›</Text>}
+              disabled={!preferences}
+              isLast
+            />
+          </View>
+        </PopIn>
   
-        <Text style={styles.sectionLabel}>Reading</Text>
-        <TextSizePicker />
+        <PopIn index={2}>
+          <Text style={styles.sectionLabel}>Reading</Text>
+          <TextSizePicker />
+        </PopIn>
   
-        <Text style={styles.sectionLabel}>Offline</Text>
-        <View style={styles.group}>
-          <Row
-            title="Downloaded modules"
-            subtitle={
-              downloadCount
-                ? `${downloadCount} module${downloadCount === 1 ? '' : 's'} · ${Math.max(1, Math.round(downloadBytes / 1024))} KB`
-                : 'None yet. Download a module from its course page.'
-            }
-            disabled={!downloadCount}
-          />
-          <Row
-            title="Delete all downloads"
-            onPress={confirmDeleteDownloads}
-            destructive
-            disabled={!downloadCount}
-            isLast
-          />
-        </View>
+        <PopIn index={3}>
+          <Text style={styles.sectionLabel}>Offline</Text>
+          <View style={styles.group}>
+            <Row
+              title="Downloaded modules"
+              subtitle={
+                downloadCount
+                  ? `${downloadCount} module${downloadCount === 1 ? '' : 's'} · ${Math.max(1, Math.round(downloadBytes / 1024))} KB`
+                  : 'None yet. Download a module from its course page.'
+              }
+              disabled={!downloadCount}
+            />
+            <Row
+              title="Delete all downloads"
+              onPress={confirmDeleteDownloads}
+              destructive
+              disabled={!downloadCount}
+              isLast
+            />
+          </View>
+        </PopIn>
   
-        <Text style={styles.sectionLabel}>Support</Text>
-        <View style={styles.group}>
-          <Row
-            title="Terms & privacy"
-            subtitle="Read the terms and privacy policy"
-            onPress={() => setTermsOpen(true)}
-            right={<Text style={styles.chevron}>›</Text>}
-            isLast
-          />
-        </View>
+        <PopIn index={4}>
+          <Text style={styles.sectionLabel}>Support</Text>
+          <View style={styles.group}>
+            <Row
+              title="Terms & privacy"
+              subtitle="Read the terms and privacy policy"
+              onPress={() => setTermsOpen(true)}
+              right={<Text style={styles.chevron}>›</Text>}
+              isLast
+            />
+          </View>
+        </PopIn>
   
-        <Text style={styles.sectionLabel}>Account</Text>
-        <View style={styles.group}>
-          <Row
-            title="Night study mode"
-            // The handoff defines a full dark palette, but applying it means
-            // re-checking every screen in a second theme, so it is deliberately
-            // not wired up rather than half-applied.
-            subtitle="Coming later — the app is light-only for now"
-            right={<Toggle on={false} disabled />}
-            disabled
-          />
-          <Row
-            title="Profile details"
-            subtitle={user?.email}
-            onPress={() => navigation.navigate('ProfileDetails')}
-            right={<Text style={styles.chevron}>›</Text>}
-          />
-          <Row
-            title="Change password"
-            subtitle="Set a new password for this account"
-            onPress={() => navigation.navigate('ChangePassword')}
-            right={<Text style={styles.chevron}>›</Text>}
-          />
-          <Row title="Log out" onPress={() => navigation.navigate('LogOutSheet')} />
-          <Row
-            title="Delete account"
-            subtitle="Removes your progress and quiz history"
-            onPress={() => navigation.navigate('DeleteAccount')}
-            right={<Text style={styles.chevronDestructive}>›</Text>}
-            destructive
-            isLast
-          />
-        </View>
+        <PopIn index={5}>
+          <Text style={styles.sectionLabel}>Account</Text>
+          <View style={styles.group}>
+            <Row
+              title="Night study mode"
+              // The handoff defines a full dark palette, but applying it means
+              // re-checking every screen in a second theme, so it is deliberately
+              // not wired up rather than half-applied.
+              subtitle="Coming later — the app is light-only for now"
+              right={<Toggle on={false} disabled />}
+              disabled
+            />
+            <Row
+              title="Profile details"
+              subtitle={user?.email}
+              onPress={() => navigation.navigate('ProfileDetails')}
+              right={<Text style={styles.chevron}>›</Text>}
+            />
+            <Row
+              title="Change password"
+              subtitle="Set a new password for this account"
+              onPress={() => navigation.navigate('ChangePassword')}
+              right={<Text style={styles.chevron}>›</Text>}
+            />
+            <Row title="Log out" onPress={() => navigation.navigate('LogOutSheet')} />
+            <Row
+              title="Delete account"
+              subtitle="Removes your progress and quiz history"
+              onPress={() => navigation.navigate('DeleteAccount')}
+              right={<Text style={styles.chevronDestructive}>›</Text>}
+              destructive
+              isLast
+            />
+          </View>
+        </PopIn>
       </ScrollView>
 
       <TermsSheet visible={termsOpen} onClose={() => setTermsOpen(false)} />
