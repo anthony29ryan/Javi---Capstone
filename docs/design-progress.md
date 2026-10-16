@@ -57,7 +57,7 @@ Totals: 71 done · 0 to do · 43 not built · 1 partly · 9 last
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
 | 19 | Home | HomeScreen | done | 2894257, a54f547 (1a Sticker home from the Home options board; terracotta continue sticker; honest shortcut lines; quiz sticker opens that module's quiz) |
-| 20 | Courses | CoursesScreen | done | 4e9c640 |
+| 20 | Courses | CoursesScreen | done | 4e9c640, d6873f6 (1g Sticker levels from the Home and Courses options board; app colours kept, not periwinkle; cream Beginner text; module count caption) |
 | 21 | Tutor | TutorScreen | done | a01ce13 (module picker first (accordion)) |
 | 22 | Practice | PracticeScreen | done | 1083617, 5c6116d |
 | 23 | Settings (tab) | SettingsScreen | done | b33a2bb (code-glyph stickers in terracotta, centre label Javi; the part of the Javi button above the bar may not take taps on Android) |
