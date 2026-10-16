@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import Mascot from './Mascot';
-import PopIn from './PopIn';
 import Skeleton from './Skeleton';
 import { useProgress } from '../context/ProgressContext';
 import { askTutor, getTutorThread } from '../services/tutor';
@@ -11,8 +10,6 @@ import { colors, fonts, radius, spacing } from '../theme/colors';
 
 const MAX_QUESTION_CHARS = 500; // keep in step with functions/index.js
 const DAILY_QUESTIONS = 30; // keep in step with DAILY_QUESTIONS in functions/index.js
-// How many of the newest messages pop in one by one on the Javi tab.
-const POPPED_MESSAGES = 6;
 
 // Callable errors that mean the request never reached the tutor.
 const CONNECTION_CODES = ['functions/unavailable', 'functions/deadline-exceeded'];
@@ -104,9 +101,6 @@ export default function TutorChat({
   }
 
   const shown = messages.slice(-shownMessages);
-  // On the Javi tab the newest few messages pop in one after another; older
-  // ones, scrolled out of view, go with the first. Elsewhere PopIn is static.
-  const popIndex = (i) => 1 + Math.max(0, i - (shown.length - POPPED_MESSAGES));
   const failedText = messages.find((message) => message.failed)?.text;
 
   const thread = (
@@ -114,19 +108,18 @@ export default function TutorChat({
       {loadingThread ? <ActivityIndicator color={colors.primary} style={styles.loading} /> : null}
 
       {emptyState && !loadingThread && messages.length === 0 ? (
-        <PopIn index={1} style={styles.empty}>
+        <View style={styles.empty}>
           <Mascot variant="curious" px={120} decorative animate={false} />
           <Text style={styles.emptyTitle}>Ask your first question</Text>
           <Text style={styles.emptyBody}>
             Javi answers on this module only. Pick a starter below or type your own.
           </Text>
-        </PopIn>
+        </View>
       ) : null}
 
       {shown.map((message, index) => (
-        <PopIn
+        <View
           key={index}
-          index={popIndex(index)}
           style={[
             styles.bubble,
             message.role === 'learner' ? styles.bubbleLearner : styles.bubbleTutor,
@@ -136,7 +129,7 @@ export default function TutorChat({
           <Text style={[styles.bubbleText, message.role === 'learner' && styles.bubbleTextLearner]}>
             {message.text}
           </Text>
-        </PopIn>
+        </View>
       ))}
 
       {/* Frame 104. */}

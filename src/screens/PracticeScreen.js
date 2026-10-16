@@ -3,7 +3,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthButton from '../components/auth/AuthButton';
 import Mascot from '../components/Mascot';
-import PopIn from '../components/PopIn';
 import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';
 import { scorePercent, useProgress } from '../context/ProgressContext';
@@ -112,17 +111,15 @@ export default function PracticeScreen({ navigation }) {
       style={styles.container}
       contentContainerStyle={[styles.content, { paddingTop: top }]}
     >
-      <PopIn index={0}>
-        <Text style={styles.title}>Practice</Text>
-      </PopIn>
-      <PopIn index={1} style={styles.stats}>
+      <Text style={styles.title}>Practice</Text>
+      <View style={styles.stats}>
         <StatCard label="Average" value={average === null ? '—' : `${average}%`} />
         <StatCard label="Quizzes taken" value={String(taken.length)} />
-      </PopIn>
+      </View>
 
       {/* Frame 74, kept inside the page so Code Tracer stays in reach. */}
       {taken.length === 0 ? (
-        <PopIn index={2} style={styles.empty}>
+        <View style={styles.empty}>
           <Mascot variant="curious" px={96} decorative animate={false} />
           <Text style={styles.emptyTitle}>No quiz attempts yet</Text>
           <Text style={styles.emptyBody}>
@@ -135,40 +132,34 @@ export default function PracticeScreen({ navigation }) {
             }
             style={styles.emptyButton}
           />
-        </PopIn>
+        </View>
       ) : null}
 
-      <PopIn index={3}>
-        <Text style={styles.sectionLabel}>Ways to practice</Text>
-      </PopIn>
+      <Text style={styles.sectionLabel}>Ways to practice</Text>
       <View style={styles.ways}>
-        <PopIn index={4}>
-          <WayCard
-            glyph="?"
-            name="Quiz"
-            blurb="Multiple choice and fill-in questions for each module."
-            count={quizCount(modules.length)}
-            action={lowestTitle ? `Retry ${lowestTitle}` : 'Pick a quiz'}
-            onPress={() => navigation.navigate('Quizzes')}
-          />
-        </PopIn>
-        <PopIn index={5}>
-          <WayCard
-            glyph="i++"
-            name="Code Tracer"
-            blurb="Type short programs line by line. Mistakes show in red."
-            // shortcut: one drill per module, so the module count is the drill
-            // count; ids of renamed drills stay in completedTraces and would
-            // overcount. Count against the traces list if that ever happens.
-            count={`${progress?.completedTraces?.length ?? 0} of ${modules.length} done`}
-            action="Pick a program"
-            onPress={() => navigation.navigate('TracerList')}
-          />
-        </PopIn>
+        <WayCard
+          glyph="?"
+          name="Quiz"
+          blurb="Multiple choice and fill-in questions for each module."
+          count={quizCount(modules.length)}
+          action={lowestTitle ? `Retry ${lowestTitle}` : 'Pick a quiz'}
+          onPress={() => navigation.navigate('Quizzes')}
+        />
+        <WayCard
+          glyph="i++"
+          name="Code Tracer"
+          blurb="Type short programs line by line. Mistakes show in red."
+          // shortcut: one drill per module, so the module count is the drill
+          // count; ids of renamed drills stay in completedTraces and would
+          // overcount. Count against the traces list if that ever happens.
+          count={`${progress?.completedTraces?.length ?? 0} of ${modules.length} done`}
+          action="Pick a program"
+          onPress={() => navigation.navigate('TracerList')}
+        />
 
         {/* The design's challenge, playground and project cards need a cloud
             Java runner that does not exist yet, so one card says so. */}
-        <PopIn index={6} style={[styles.wayCard, styles.wayTop]}>
+        <View style={[styles.wayCard, styles.wayTop]}>
           <View style={[styles.wayTile, styles.laterTile]}>
             <Text style={[styles.wayTileGlyph, styles.laterGlyph]}>{'{ }'}</Text>
           </View>
@@ -181,7 +172,7 @@ export default function PracticeScreen({ navigation }) {
               Write and run your own Java once the cloud runner is ready.
             </Text>
           </View>
-        </PopIn>
+        </View>
       </View>
     </ScrollView>
   );

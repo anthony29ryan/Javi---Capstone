@@ -10,12 +10,10 @@ import Animated, {
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
-  withDelay,
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
 
-import { TabEnterContext } from '../components/PopIn';
 import { colors } from '../theme/colors';
 import { swipeTarget } from './swipeTarget';
 
@@ -24,8 +22,6 @@ import { swipeTarget } from './swipeTarget';
 const SLIDE = { duration: 320, easing: Easing.bezier(0.45, 0, 0.2, 1) };
 const SPRING_BACK = { duration: 300, easing: Easing.bezier(0.3, 1.4, 0.5, 1) };
 const FADE = { duration: 120 };
-// Long enough for every PopIn section's stagger to finish.
-const POP_CLOCK_MS = 1000;
 // While dragging, only the current screen moves, at this share of the finger.
 const DRAG_SHARE = 0.35;
 // Extra damping when dragging past the first or last tab.
@@ -35,10 +31,8 @@ const END_DAMPING = 0.3;
 function Scene({ routeKey, render, visible, onTop, sliding, register }) {
   const x = useSharedValue(0);
   const op = useSharedValue(1);
-  // The PopIn clock: at its end everything is shown, as on first launch.
-  const enter = useSharedValue(POP_CLOCK_MS);
   // Registered on mount, before the parent's transition effect in the same commit.
-  useEffect(() => register(routeKey, { x, op, enter }), []);
+  useEffect(() => register(routeKey, { x, op }), []);
 
   const style = useAnimatedStyle(() => ({
     transform: [{ translateX: x.value }],
@@ -56,7 +50,7 @@ function Scene({ routeKey, render, visible, onTop, sliding, register }) {
         sliding && onTop && styles.sliding,
       ]}
     >
-      <TabEnterContext.Provider value={enter}>{render()}</TabEnterContext.Provider>
+      {render()}
     </Animated.View>
   );
 }
@@ -103,18 +97,12 @@ function SlideTabNavigator({ id, initialRouteName, children, screenOptions, tabB
     // off to the side before it becomes visible and never flashes in place.
     const from0 = (value) => withTiming(value, { duration: 0 });
     if (reduceMotion) {
-      incoming.enter.value = POP_CLOCK_MS;
       incoming.x.value = 0;
       incoming.op.value = withSequence(from0(0), withTiming(1, FADE));
       outgoing.op.value = withTiming(0, FADE);
     } else {
       incoming.op.value = 1;
       incoming.x.value = withSequence(from0(dir * width), withTiming(0, SLIDE));
-      // The sections stay hidden while it slides, then pop in once it lands.
-      incoming.enter.value = withSequence(
-        from0(0),
-        withDelay(SLIDE.duration, withTiming(POP_CLOCK_MS, { duration: POP_CLOCK_MS, easing: Easing.linear }))
-      );
       // From wherever the drag left it.
       outgoing.x.value = withTiming(-dir * width * 0.3, SLIDE);
       outgoing.op.value = withTiming(0.5, SLIDE);
