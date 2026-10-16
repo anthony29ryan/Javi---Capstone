@@ -55,7 +55,10 @@ export default function AuthButton({
 const styles = StyleSheet.create({
   primary: {
     alignSelf: 'stretch',
-    height: 56,
+    // Grows past 56 when large text wraps the label.
+    minHeight: 56,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     borderRadius: authRadius.primaryButton,
     // The deeper tone at rest and the lighter one while pressed, so a press
     // reads as the button lighting up rather than it already looking pressed.
@@ -77,7 +80,9 @@ const styles = StyleSheet.create({
   },
   secondary: {
     alignSelf: 'stretch',
-    height: 52,
+    minHeight: 52,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     borderRadius: authRadius.secondaryButton,
     backgroundColor: authColors.surface,
     borderWidth: 1,

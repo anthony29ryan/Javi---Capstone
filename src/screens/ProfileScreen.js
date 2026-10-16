@@ -550,6 +550,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
+    gap: 12,
   },
   sectionLabel: {
     ...type.sectionLabel,
@@ -563,6 +564,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   progressMeta: {
+    flexShrink: 1,
     ...type.small,
     color: colors.textMuted,
     textAlign: 'right',
@@ -656,6 +658,7 @@ const styles = StyleSheet.create({
   },
   countRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'baseline',
     gap: 6,
     marginTop: 9,

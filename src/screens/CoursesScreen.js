@@ -228,6 +228,7 @@ const styles = StyleSheet.create({
   },
   caption: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     gap: 12,
   },

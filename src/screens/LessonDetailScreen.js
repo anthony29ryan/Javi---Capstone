@@ -493,7 +493,8 @@ const styles = StyleSheet.create({
   complete: {
     flex: 1,
     minWidth: 0,
-    height: 54,
+    minHeight: 54,
+    paddingVertical: 10,
     borderRadius: 27,
     alignItems: 'center',
     justifyContent: 'center',

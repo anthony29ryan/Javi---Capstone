@@ -11,7 +11,7 @@ export default function LessonRow({ lesson, done, onPress }) {
       style={({ pressed }) => [styles.lessonRow, pressed && styles.lessonRowPressed]}
     >
       <View style={[styles.dot, done && styles.dotDone]}>
-        <Text style={[styles.dotMark, done && styles.dotMarkDone]}>
+        <Text maxFontSizeMultiplier={1.2} style={[styles.dotMark, done && styles.dotMarkDone]}>
           {done ? '✓' : (lesson.order ?? '·')}
         </Text>
       </View>

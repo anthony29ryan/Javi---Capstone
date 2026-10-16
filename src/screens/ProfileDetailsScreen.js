@@ -268,7 +268,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   readOnly: {
-    height: 56,
+    minHeight: 56,
+    paddingVertical: 12,
     borderRadius: authRadius.field,
     backgroundColor: authColors.surface2,
     borderWidth: 1,

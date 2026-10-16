@@ -261,7 +261,7 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.header}>
           <Mascot variant="greeting" px={48} decorative animate={false} style={styles.mascot} />
           <View style={styles.headerText}>
-            <Text style={styles.greeting} numberOfLines={1}>
+            <Text style={styles.greeting} numberOfLines={2}>
               {greeting()}, {name}
             </Text>
             <Text style={styles.streakLine}>

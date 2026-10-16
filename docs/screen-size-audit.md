@@ -32,6 +32,47 @@ and on the tablet anything stretched or stuck to one side.
 Mark each cell **✓** (fine) or **✗** with a short note in the Notes column.
 Leave it blank if not checked yet. No "|" inside a cell.
 
+## Code pass
+
+Read through the code for layouts that break at these sizes (no device run).
+
+**Fixed:**
+- Buttons grow when large text wraps their label, instead of clipping it.
+- Profile's course line and practice count wrap instead of spilling past the
+  card.
+- Modules' lesson-count badge widens for "10/12".
+- Modules' level tag can shrink.
+- Courses' two counts wrap.
+- Home's greeting gets two lines; a long name was already cut off at normal
+  size on a 360dp phone.
+- The lesson's complete button grows when its label wraps.
+- Profile details' email box grows for long emails.
+- Lesson and module numbers in their small circles stop growing at 1.2×.
+- Bottom sheets stay 560 wide on tablets.
+
+**Known issues, for the first fix batch:**
+- Tablet: floating back buttons sit at the window's left edge while the
+  content column is centred (Module, Lesson, Quizzes, Code Tracer, Profile,
+  Profile details, Change password, Delete account, Weak lessons).
+- Tablet: the lesson's pinned bottom bar and toasts span the full width.
+- Largest font: the download sheet has no scroll, so seven modules can push
+  its title off the top.
+- Largest font: the Terms popup leaves little room for the text itself.
+- Largest font: the two-column stickers (Home shortcuts, Practice modes) and
+  Profile's three-column badges break long words mid-word.
+- Largest font: lesson table columns are sized for the in-app text size only.
+
+**Check on device:**
+- Home: the Javi mascot on the Ask Javi sticker may overlap the title.
+- Home: the "Recommended for you" header row may run out of room.
+- Profile: the "Practice" heading and its tabs may run out of room.
+- Code Tracer: a trace at the largest size wraps long Java lines.
+- Lesson and quiz text: the in-app Extra large size multiplies with the
+  phone's 1.5×, so quiz prompts get very big.
+- Text cut to one line at 1.5×: Profile name and level names, Quiz header,
+  lesson breadcrumb, Javi chat subtitle, Code Tracer eyebrow, Home
+  recommendation meta.
+
 ## Start
 
 | Screen | 360dp | Tablet | Largest font | Notes |

@@ -178,7 +178,9 @@ export default function TutorScreen({ route }) {
                     style={({ pressed }) => [styles.moduleRow, pressed && styles.rowPressed]}
                   >
                     <View style={styles.dot}>
-                      <Text style={styles.dotMark}>{item.order}</Text>
+                      <Text maxFontSizeMultiplier={1.2} style={styles.dotMark}>
+                        {item.order}
+                      </Text>
                     </View>
                     <Text style={styles.moduleTitle} numberOfLines={2}>
                       {item.title}

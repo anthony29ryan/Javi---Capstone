@@ -427,6 +427,7 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   levelTag: {
+    flexShrink: 1,
     fontFamily: fonts.semiBold,
     fontSize: 11,
     letterSpacing: 11 * 0.12,
@@ -665,8 +666,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   countBadge: {
-    width: 44,
-    height: 44,
+    minWidth: 44,
+    minHeight: 44,
+    paddingHorizontal: 6,
     borderRadius: 14,
     backgroundColor: colors.primarySoft,
     alignItems: 'center',

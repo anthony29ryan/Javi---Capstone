@@ -118,6 +118,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(20,22,34,.45)',
   },
   sheet: {
+    width: '100%',
+    maxWidth: 560,
+    alignSelf: 'center',
     backgroundColor: colors.surface,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
