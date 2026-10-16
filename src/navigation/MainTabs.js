@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Image, Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Animated, {
   Easing,
+  interpolate,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
+  withSequence,
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,10 +18,10 @@ import SettingsScreen from '../screens/SettingsScreen';
 import TutorScreen from '../screens/TutorScreen';
 import { authColors } from '../theme/authTheme';
 import { colors, fonts } from '../theme/colors';
+import { createSlideTabNavigator } from './SlideTabs';
 
-// The "top" tab navigator is React Navigation's swipeable one; it sits at the
-// bottom here, so the pages follow the finger like a pager.
-const Tab = createMaterialTopTabNavigator();
+// Our own tab navigator, for the design's slide-in screens and swipe.
+const Tab = createSlideTabNavigator();
 
 // Code-voice glyphs rather than UI icons, as in the design's "code-glyph
 // stickers" bar. Tutor has none: it is Javi's face in the raised centre.
@@ -33,54 +34,58 @@ const TABS = {
 };
 
 const TAB_HEIGHT = 62;
-// The design's pop: a quick overshoot, like a sticker pressed on.
-const POP = { duration: 200, easing: Easing.bezier(0.3, 1.6, 0.5, 1) };
-// How long a tap owns the stickers before swipes drive them again.
-const TAP_MS = 250;
+// Design 1a's stamp: 420ms, peaking 60% of the way through.
+const STAMP_EASING = Easing.bezier(0.3, 1.3, 0.5, 1);
 // A fixed-size chip cannot grow with the largest font settings.
 const MAX_FONT_SCALE = 1.2;
 
 /**
- * 0 → 1 as the tab becomes active. A swipe drives it from the pager's
- * position, so a half-way drag leaves two stickers half-way; a tap plays the
- * pop instead (taps jump, so the position has nothing in between to show).
+ * 0 → 1 each time the tab becomes active: the sticker is stamped on, growing
+ * from 60% past full size with twice its tilt, then settling. Instant on first
+ * mount and under Reduce motion.
  */
-function useActiveProgress({ index, focused, position, tappedRef }) {
+function useStamp(focused) {
   const reduceMotion = useReducedMotion();
-  const progress = useSharedValue(focused ? 1 : 0);
+  const stamp = useSharedValue(1);
+  const mounted = useRef(false);
 
   useEffect(() => {
-    const id = position.addListener(({ value }) => {
-      if (!tappedRef.current) progress.value = Math.max(0, 1 - Math.abs(value - index));
-    });
-    return () => position.removeListener(id);
-  }, [position, index]);
-
-  useEffect(() => {
-    if (!tappedRef.current) return;
-    const target = focused ? 1 : 0;
-    progress.value = reduceMotion ? target : withTiming(target, POP);
+    if (!mounted.current || !focused || reduceMotion) {
+      mounted.current = true;
+      stamp.value = 1;
+      return;
+    }
+    stamp.value = withSequence(
+      withTiming(0, { duration: 0 }),
+      withTiming(0.6, { duration: 252, easing: STAMP_EASING }),
+      withTiming(1, { duration: 168, easing: STAMP_EASING })
+    );
   }, [focused, reduceMotion]);
 
-  return progress;
+  return stamp;
 }
 
 /**
  * One tab as an outlined sticker. The design's hard drop shadow (no blur) has
  * no Android equivalent, so it is an ink copy of the chip drawn 3px lower.
  */
-function StickerTab({ routeName, index, focused, position, tappedRef, onPress, onLongPress }) {
+function StickerTab({ routeName, focused, onPress, onLongPress }) {
   const tab = TABS[routeName];
-  const progress = useActiveProgress({ index, focused, position, tappedRef });
+  const stamp = useStamp(focused);
   const centre = routeName === 'Tutor';
+  const rest = centre ? -3 : -2;
 
-  const lift = useAnimatedStyle(() => ({
-    transform: [
-      { translateY: progress.value * (centre ? -3 : -2) },
-      { rotate: `${progress.value * tab.tilt}deg` },
-    ],
-  }));
-  const shown = useAnimatedStyle(() => ({ opacity: progress.value }));
+  const lift = useAnimatedStyle(() =>
+    focused
+      ? {
+          transform: [
+            { translateY: interpolate(stamp.value, [0, 0.6, 1], [0, -4, rest]) },
+            { rotate: `${interpolate(stamp.value, [0, 0.6, 1], [0, tab.tilt * 2, tab.tilt])}deg` },
+            { scale: interpolate(stamp.value, [0, 0.6, 1], [0.6, 1.12, 1]) },
+          ],
+        }
+      : { transform: [] }
+  );
 
   return (
     <Pressable
@@ -100,7 +105,7 @@ function StickerTab({ routeName, index, focused, position, tappedRef, onPress, o
             </View>
           </Animated.View>
           <View style={styles.javiLabel}>
-            <Animated.View style={[styles.labelFill, shown]} />
+            {focused ? <View style={styles.labelFill} /> : null}
             <Text
               maxFontSizeMultiplier={MAX_FONT_SCALE}
               style={[styles.label, focused && styles.textOn]}
@@ -111,8 +116,8 @@ function StickerTab({ routeName, index, focused, position, tappedRef, onPress, o
         </>
       ) : (
         <Animated.View style={[styles.sticker, lift]}>
-          <Animated.View style={[styles.stickerShadow, shown]} />
-          <Animated.View style={[styles.stickerFill, shown]} />
+          {focused ? <View style={styles.stickerShadow} /> : null}
+          {focused ? <View style={styles.stickerFill} /> : null}
           <Text
             maxFontSizeMultiplier={MAX_FONT_SCALE}
             style={[styles.glyph, focused && styles.textOn]}
@@ -131,11 +136,9 @@ function StickerTab({ routeName, index, focused, position, tappedRef, onPress, o
   );
 }
 
-/** The sticker bar, drawn by us since the swipeable navigator's own bar is a top bar. */
-function StickerBar({ state, navigation, position }) {
+/** The sticker bar under the tab screens. */
+function StickerBar({ state, navigation }) {
   const insets = useSafeAreaInsets();
-  const tappedRef = useRef(false);
-  const tapTimer = useRef(null);
 
   // Only the Javi chat's composer should rise with the keyboard, not the bar.
   const [keyboardOpen, setKeyboardOpen] = useState(false);
@@ -145,7 +148,6 @@ function StickerBar({ state, navigation, position }) {
     return () => {
       shown.remove();
       hidden.remove();
-      clearTimeout(tapTimer.current);
     };
   }, []);
 
@@ -153,13 +155,7 @@ function StickerBar({ state, navigation, position }) {
 
   function press(route, focused) {
     const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
-    if (focused || event.defaultPrevented) return;
-    tappedRef.current = true;
-    clearTimeout(tapTimer.current);
-    tapTimer.current = setTimeout(() => {
-      tappedRef.current = false;
-    }, TAP_MS);
-    navigation.navigate(route.name, route.params);
+    if (!focused && !event.defaultPrevented) navigation.navigate(route.name, route.params);
   }
 
   return (
@@ -170,10 +166,7 @@ function StickerBar({ state, navigation, position }) {
           <StickerTab
             key={route.key}
             routeName={route.name}
-            index={index}
             focused={focused}
-            position={position}
-            tappedRef={tappedRef}
             onPress={() => press(route, focused)}
             onLongPress={() => navigation.emit({ type: 'tabLongPress', target: route.key })}
           />
@@ -185,22 +178,10 @@ function StickerBar({ state, navigation, position }) {
 
 export default function MainTabs() {
   return (
-    <Tab.Navigator
-      tabBarPosition="bottom"
-      tabBar={(props) => <StickerBar {...props} />}
-      screenOptions={{
-        swipeEnabled: true,
-        // Each tab loads when it, or a neighbour, is first shown, so a swipe
-        // reveals real content without loading all five at launch.
-        lazy: true,
-        lazyPreloadDistance: 1,
-        // Taps jump straight there; only swipes slide.
-        animationEnabled: false,
-      }}
-    >
+    <Tab.Navigator tabBar={(props) => <StickerBar {...props} />}>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Courses" component={CoursesScreen} />
-      <Tab.Screen name="Tutor" component={TutorScreen} options={{ tabBarLabel: 'Javi' }} />
+      <Tab.Screen name="Tutor" component={TutorScreen} />
       <Tab.Screen name="Practice" component={PracticeScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
