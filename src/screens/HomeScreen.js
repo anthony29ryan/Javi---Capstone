@@ -20,6 +20,8 @@ import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } fr
 const QUIZ_STICKER = '#FFC97E';
 const JAVI_STICKER = '#EBC2B3';
 const INK = authColors.ink;
+// The Flow's Continue card sets its text in the page cream.
+const CREAM = colors.background;
 const RECOMMENDATION_COUNT = 3;
 
 // Code-voice glyphs, the same register as the tab bar. Matched on the module
@@ -50,13 +52,21 @@ function greeting() {
 /**
  * The design's sticker: ink outline, a slight tilt and a hard drop shadow.
  * Android has no blur-free shadow, so the shadow is an ink copy drawn `drop`
- * px lower, with that much space kept below.
+ * px lower, with that much space kept below. Pressed, the face sinks onto it,
+ * leaving a 1px edge, as the design's stickers do.
  */
-function Sticker({ background, tilt, drop, corner, style, faceStyle, children }) {
+function Sticker({ background, tilt, drop, corner, pressed, style, faceStyle, children }) {
   return (
     <View style={[{ marginBottom: drop, transform: [{ rotate: `${tilt}deg` }] }, style]}>
       <View style={[styles.stickerShadow, { top: drop, bottom: -drop, borderRadius: corner }]} />
-      <View style={[styles.stickerFace, { backgroundColor: background, borderRadius: corner }, faceStyle]}>
+      <View
+        style={[
+          styles.stickerFace,
+          { backgroundColor: background, borderRadius: corner },
+          pressed && { transform: [{ translateY: drop - 1 }] },
+          faceStyle,
+        ]}
+      >
         {children}
       </View>
     </View>
@@ -65,13 +75,15 @@ function Sticker({ background, tilt, drop, corner, style, faceStyle, children })
 
 function Tile({ glyph, title, meta, background, tilt, onPress, children }) {
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.tile, pressed && styles.pressed]}>
-      <Sticker background={background} tilt={tilt} drop={4} corner={20} faceStyle={styles.tileFace}>
-        {children}
-        <Text style={styles.tileGlyph}>{glyph}</Text>
-        <Text style={styles.tileTitle}>{title}</Text>
-        <Text style={styles.tileMeta}>{meta}</Text>
-      </Sticker>
+    <Pressable onPress={onPress} style={styles.tile}>
+      {({ pressed }) => (
+        <Sticker background={background} tilt={tilt} drop={4} corner={20} pressed={pressed} faceStyle={styles.tileFace}>
+          {children}
+          <Text style={styles.tileGlyph}>{glyph}</Text>
+          <Text style={styles.tileTitle}>{title}</Text>
+          <Text style={styles.tileMeta}>{meta}</Text>
+        </Sticker>
+      )}
     </Pressable>
   );
 }
@@ -266,39 +278,47 @@ export default function HomeScreen({ navigation }) {
 
         <OfflineBanner message="Showing lessons and progress saved on this phone." />
 
-        <Sticker background={colors.primary} tilt={-1} drop={5} corner={24} style={styles.hero} faceStyle={styles.heroFace}>
-          <Text style={styles.heroEyebrow}>{next ? 'Continue learning' : 'All caught up'}</Text>
-          <Text style={styles.heroTitle}>{next ? next.title : 'Every lesson done'}</Text>
-          <Text style={styles.heroCrumb}>
-            {next
-              ? [nextCourse?.title, nextModule?.title].filter(Boolean).join(' · ')
-              : 'Revisit a module quiz to keep your scores sharp.'}
-          </Text>
-          {next ? (
-            <>
-              <View style={styles.segments}>
-                {nextModuleLessons.map((lesson) => (
-                  <View
-                    key={lesson.id}
-                    style={[styles.segment, isLessonComplete(lesson.id) && styles.segmentDone]}
-                  />
-                ))}
-              </View>
-              <View style={styles.heroFooter}>
-                <Text style={styles.heroProgress}>
-                  {nextModuleStats?.completed ?? 0} of {nextModuleStats?.total ?? 0} lessons in this
-                  module
-                </Text>
-                <Pressable
-                  onPress={() => openLesson(next)}
-                  style={({ pressed }) => [styles.resume, pressed && styles.pressed]}
-                >
-                  <Text style={styles.resumeLabel}>Resume</Text>
-                </Pressable>
-              </View>
-            </>
-          ) : null}
-        </Sticker>
+        {/* The whole card opens the lesson, like its Resume pill. */}
+        <Pressable
+          onPress={next ? () => openLesson(next) : undefined}
+          disabled={!next}
+          accessibilityRole={next ? 'button' : undefined}
+          accessibilityLabel={next ? `Resume ${next.title}` : undefined}
+          style={styles.hero}
+        >
+          {({ pressed }) => (
+            <Sticker background={colors.primary} tilt={-1} drop={5} corner={24} pressed={pressed} faceStyle={styles.heroFace}>
+              <Text style={styles.heroEyebrow}>{next ? 'Continue learning' : 'All caught up'}</Text>
+              <Text style={styles.heroTitle}>{next ? next.title : 'Every lesson done'}</Text>
+              <Text style={styles.heroCrumb}>
+                {next
+                  ? [nextCourse?.title, nextModule?.title].filter(Boolean).join(' · ')
+                  : 'Revisit a module quiz to keep your scores sharp.'}
+              </Text>
+              {next ? (
+                <>
+                  <View style={styles.segments}>
+                    {nextModuleLessons.map((lesson) => (
+                      <View
+                        key={lesson.id}
+                        style={[styles.segment, isLessonComplete(lesson.id) && styles.segmentDone]}
+                      />
+                    ))}
+                  </View>
+                  <View style={styles.heroFooter}>
+                    <Text style={styles.heroProgress}>
+                      {nextModuleStats?.completed ?? 0} of {nextModuleStats?.total ?? 0} lessons in this
+                      module
+                    </Text>
+                    <View style={styles.resume}>
+                      <Text style={styles.resumeLabel}>Resume</Text>
+                    </View>
+                  </View>
+                </>
+              ) : null}
+            </Sticker>
+          )}
+        </Pressable>
 
         <View style={styles.tiles}>
           <Tile
@@ -439,21 +459,21 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 10.5,
     letterSpacing: 10.5 * 0.12,
-    color: INK,
+    color: CREAM,
   },
   heroTitle: {
     fontFamily: authFonts.extraBold,
     fontSize: 23,
     lineHeight: 23 * 1.2,
     letterSpacing: -0.23,
-    color: INK,
+    color: CREAM,
     marginTop: 10,
   },
   heroCrumb: {
     fontFamily: fonts.semiBold,
     fontSize: 13,
     lineHeight: 13 * 1.3,
-    color: INK,
+    color: CREAM,
     marginTop: 8,
   },
   segments: {
@@ -465,10 +485,10 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 8,
     borderRadius: 4,
-    backgroundColor: 'rgba(46,49,65,.22)',
+    backgroundColor: 'rgba(247,245,240,.3)',
   },
   segmentDone: {
-    backgroundColor: INK,
+    backgroundColor: CREAM,
   },
   heroFooter: {
     flexDirection: 'row',
@@ -481,12 +501,12 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: fonts.semiBold,
     fontSize: 12.5,
-    color: INK,
+    color: CREAM,
   },
   resume: {
-    height: 42,
-    paddingHorizontal: 18,
-    borderRadius: 21,
+    height: 44,
+    paddingHorizontal: 20,
+    borderRadius: 22,
     justifyContent: 'center',
     backgroundColor: INK,
   },
@@ -496,9 +516,6 @@ const styles = StyleSheet.create({
     letterSpacing: 12 * 0.06,
     textTransform: 'uppercase',
     color: colors.white,
-  },
-  pressed: {
-    opacity: 0.85,
   },
   tiles: {
     flexDirection: 'row',
