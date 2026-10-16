@@ -13,11 +13,13 @@ import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
 import { pickWeakLessons } from '../services/recommendations';
 import { getWeakTopics } from '../services/weakTopics';
+import { authColors, authFonts } from '../theme/authTheme';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
-const PRACTICE_TILE_BG = '#FFC97E';
-const PRACTICE_TILE_INK = '#3F414E';
-const TUTOR_TILE_BG = '#333242';
+// Shortcut sticker colours from the Home options board (1a).
+const QUIZ_STICKER = '#FFC97E';
+const JAVI_STICKER = '#EBC2B3';
+const INK = authColors.ink;
 const RECOMMENDATION_COUNT = 3;
 
 // Code-voice glyphs, the same register as the tab bar. Matched on the module
@@ -45,19 +47,31 @@ function greeting() {
   return 'Good evening';
 }
 
-function Tile({ eyebrow, title, meta, background, ink, subtleInk, onPress }) {
+/**
+ * The design's sticker: ink outline, a slight tilt and a hard drop shadow.
+ * Android has no blur-free shadow, so the shadow is an ink copy drawn `drop`
+ * px lower, with that much space kept below.
+ */
+function Sticker({ background, tilt, drop, corner, style, faceStyle, children }) {
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.tile,
-        { backgroundColor: background },
-        pressed && styles.pressed,
-      ]}
-    >
-      <Text style={[styles.tileEyebrow, { color: subtleInk }]}>{eyebrow}</Text>
-      <Text style={[styles.tileTitle, { color: ink }]}>{title}</Text>
-      <Text style={[styles.tileMeta, { color: subtleInk }]}>{meta}</Text>
+    <View style={[{ marginBottom: drop, transform: [{ rotate: `${tilt}deg` }] }, style]}>
+      <View style={[styles.stickerShadow, { top: drop, bottom: -drop, borderRadius: corner }]} />
+      <View style={[styles.stickerFace, { backgroundColor: background, borderRadius: corner }, faceStyle]}>
+        {children}
+      </View>
+    </View>
+  );
+}
+
+function Tile({ glyph, title, meta, background, tilt, onPress, children }) {
+  return (
+    <Pressable onPress={onPress} style={({ pressed }) => [styles.tile, pressed && styles.pressed]}>
+      <Sticker background={background} tilt={tilt} drop={4} corner={20} faceStyle={styles.tileFace}>
+        {children}
+        <Text style={styles.tileGlyph}>{glyph}</Text>
+        <Text style={styles.tileTitle}>{title}</Text>
+        <Text style={styles.tileMeta}>{meta}</Text>
+      </Sticker>
     </Pressable>
   );
 }
@@ -192,6 +206,8 @@ export default function HomeScreen({ navigation }) {
   const nextModule = next ? modulesById[next.moduleId] : null;
   const nextCourse = nextModule ? coursesById[nextModule.courseId] : null;
   const nextModuleStats = next ? moduleProgress[next.moduleId] : null;
+  // One progress segment per lesson in the Continue module.
+  const nextModuleLessons = next ? ordered.filter((lesson) => lesson.moduleId === next.moduleId) : [];
 
   // Every pick in refill order. The list only changes when a quiz changes the
   // weak modules or a lesson is finished (the key). Until then, every lesson
@@ -243,64 +259,72 @@ export default function HomeScreen({ navigation }) {
               streak
             </Text>
           </View>
-          <Avatar user={user} name={callName} size={44} onPress={() => navigation.navigate('Profile')} />
+          <View style={styles.avatarRing}>
+            <Avatar user={user} name={callName} size={40} onPress={() => navigation.navigate('Profile')} />
+          </View>
         </View>
 
         <OfflineBanner message="Showing lessons and progress saved on this phone." />
 
-        {next ? (
-          <View style={styles.hero}>
-            <Text style={styles.heroEyebrow}>Continue learning</Text>
-            <Text style={styles.heroTitle}>{next.title}</Text>
-            <Text style={styles.heroCrumb}>
-              {[nextCourse?.title, nextModule?.title].filter(Boolean).join(' · ')}
-            </Text>
-
-            <View style={styles.heroTrack}>
-              <View style={[styles.heroFill, { width: `${nextModuleStats?.percent ?? 0}%` }]} />
-            </View>
-
-            <View style={styles.heroFooter}>
-              <Text style={styles.heroProgress}>
-                {nextModuleStats?.completed ?? 0} of {nextModuleStats?.total ?? 0} lessons in this
-                module
-              </Text>
-              <Pressable
-                onPress={() => openLesson(next)}
-                style={({ pressed }) => [styles.resume, pressed && styles.pressed]}
-              >
-                <Text style={styles.resumeLabel}>Resume</Text>
-              </Pressable>
-            </View>
-          </View>
-        ) : (
-          <View style={styles.hero}>
-            <Text style={styles.heroEyebrow}>All caught up</Text>
-            <Text style={styles.heroTitle}>Every lesson done</Text>
-            <Text style={styles.heroCrumb}>Revisit a module quiz to keep your scores sharp.</Text>
-          </View>
-        )}
+        <Sticker background={colors.primary} tilt={-1} drop={5} corner={24} style={styles.hero} faceStyle={styles.heroFace}>
+          <Text style={styles.heroEyebrow}>{next ? 'Continue learning' : 'All caught up'}</Text>
+          <Text style={styles.heroTitle}>{next ? next.title : 'Every lesson done'}</Text>
+          <Text style={styles.heroCrumb}>
+            {next
+              ? [nextCourse?.title, nextModule?.title].filter(Boolean).join(' · ')
+              : 'Revisit a module quiz to keep your scores sharp.'}
+          </Text>
+          {next ? (
+            <>
+              <View style={styles.segments}>
+                {nextModuleLessons.map((lesson) => (
+                  <View
+                    key={lesson.id}
+                    style={[styles.segment, isLessonComplete(lesson.id) && styles.segmentDone]}
+                  />
+                ))}
+              </View>
+              <View style={styles.heroFooter}>
+                <Text style={styles.heroProgress}>
+                  {nextModuleStats?.completed ?? 0} of {nextModuleStats?.total ?? 0} lessons in this
+                  module
+                </Text>
+                <Pressable
+                  onPress={() => openLesson(next)}
+                  style={({ pressed }) => [styles.resume, pressed && styles.pressed]}
+                >
+                  <Text style={styles.resumeLabel}>Resume</Text>
+                </Pressable>
+              </View>
+            </>
+          ) : null}
+        </Sticker>
 
         <View style={styles.tiles}>
           <Tile
-            eyebrow="Practice"
+            glyph="?"
             title={nextModule ? `${nextModule.title} quiz` : 'Module quiz'}
-            meta="Test what you have read"
-            background={PRACTICE_TILE_BG}
-            ink={PRACTICE_TILE_INK}
-            subtleInk="rgba(63,65,78,.72)"
-            onPress={() => navigation.navigate('Practice')}
+            // QUIZ_LENGTH in QuizScreen; smaller banks give fewer.
+            meta="Up to 20 questions"
+            background={QUIZ_STICKER}
+            tilt={1.5}
+            onPress={() =>
+              nextModule
+                ? navigation.navigate('Quiz', { moduleId: nextModule.id, title: nextModule.title })
+                : navigation.navigate('Practice')
+            }
           />
           <Tile
-            eyebrow="Javi"
-            title="Ask about code"
+            glyph=">_"
+            title="Ask Javi"
             // askTutor's real limit (DAILY_QUESTIONS in functions/index.js).
             meta="30 questions a day"
-            background={TUTOR_TILE_BG}
-            ink={colors.white}
-            subtleInk="rgba(255,255,255,.62)"
+            background={JAVI_STICKER}
+            tilt={-1.5}
             onPress={() => navigation.navigate('Tutor')}
-          />
+          >
+            <Mascot variant="thinking" px={46} decorative animate={false} style={styles.tileJavi} />
+          </Tile>
         </View>
 
         {recsLoading || recommendations.length > 0 ? (
@@ -389,99 +413,129 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     marginTop: 6,
   },
+  avatarRing: {
+    borderWidth: 2,
+    borderColor: INK,
+    borderRadius: radius.pill,
+  },
+  stickerShadow: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    backgroundColor: INK,
+  },
+  stickerFace: {
+    borderWidth: 2,
+    borderColor: INK,
+  },
   hero: {
     marginTop: 20,
-    padding: 20,
-    borderRadius: radius.xl,
-    backgroundColor: colors.primary,
-    shadowColor: '#2E3141',
-    shadowOffset: { width: 0, height: 14 },
-    shadowOpacity: 0.16,
-    shadowRadius: 30,
-    elevation: 6,
+  },
+  heroFace: {
+    padding: 18,
   },
   heroEyebrow: {
     ...type.sectionLabel,
-    letterSpacing: 1.4,
-    color: 'rgba(255,255,255,.82)',
+    fontFamily: fonts.bold,
+    fontSize: 10.5,
+    letterSpacing: 10.5 * 0.12,
+    color: INK,
   },
   heroTitle: {
-    fontFamily: fonts.bold,
-    fontSize: 20,
-    lineHeight: 20 * 1.3,
-    color: colors.white,
-    marginTop: 12,
-    marginBottom: 4,
+    fontFamily: authFonts.extraBold,
+    fontSize: 23,
+    lineHeight: 23 * 1.2,
+    letterSpacing: -0.23,
+    color: INK,
+    marginTop: 10,
   },
   heroCrumb: {
-    fontFamily: fonts.medium,
-    fontSize: 12.5,
-    lineHeight: 12.5 * 1.4,
-    color: 'rgba(255,255,255,.85)',
+    fontFamily: fonts.semiBold,
+    fontSize: 13,
+    lineHeight: 13 * 1.3,
+    color: INK,
+    marginTop: 8,
   },
-  heroTrack: {
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: 'rgba(255,255,255,.28)',
-    overflow: 'hidden',
-    marginTop: spacing.lg,
-    marginBottom: 14,
+  segments: {
+    flexDirection: 'row',
+    gap: 5,
+    marginTop: 14,
   },
-  heroFill: {
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: colors.white,
+  segment: {
+    flex: 1,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'rgba(46,49,65,.22)',
+  },
+  segmentDone: {
+    backgroundColor: INK,
   },
   heroFooter: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: spacing.md,
+    marginTop: 14,
   },
   heroProgress: {
     flex: 1,
-    fontFamily: fonts.medium,
-    fontSize: 11.5,
-    color: 'rgba(255,255,255,.85)',
+    fontFamily: fonts.semiBold,
+    fontSize: 12.5,
+    color: INK,
   },
   resume: {
-    paddingVertical: 12,
-    paddingHorizontal: 22,
-    borderRadius: 22,
-    backgroundColor: colors.white,
+    height: 42,
+    paddingHorizontal: 18,
+    borderRadius: 21,
+    justifyContent: 'center',
+    backgroundColor: INK,
   },
   resumeLabel: {
     fontFamily: fonts.bold,
     fontSize: 12,
-    letterSpacing: 12 * 0.07,
+    letterSpacing: 12 * 0.06,
     textTransform: 'uppercase',
-    color: colors.primaryDark,
+    color: colors.white,
   },
   pressed: {
     opacity: 0.85,
   },
   tiles: {
     flexDirection: 'row',
-    gap: spacing.md,
-    marginTop: 14,
+    gap: 14,
+    marginTop: 18,
   },
   tile: {
     flex: 1,
-    padding: spacing.lg,
-    borderRadius: 20,
+    minWidth: 0,
   },
-  tileEyebrow: {
-    ...type.sectionLabel,
+  tileFace: {
+    padding: 14,
+    gap: 6,
+    overflow: 'hidden',
+  },
+  tileJavi: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
+  tileGlyph: {
+    fontFamily: fonts.mono,
+    fontSize: 18,
+    lineHeight: 22,
+    color: INK,
   },
   tileTitle: {
-    ...type.cardTitle,
-    marginTop: 10,
+    fontFamily: authFonts.extraBold,
+    fontSize: 15,
+    lineHeight: 15 * 1.2,
+    color: INK,
   },
   tileMeta: {
-    fontFamily: fonts.medium,
+    fontFamily: fonts.semiBold,
     fontSize: 11.5,
     lineHeight: 11.5 * 1.3,
-    marginTop: spacing.xs,
+    color: INK,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -518,17 +572,19 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   recGlyphTile: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
-    backgroundColor: colors.primarySoft,
+    width: 42,
+    height: 42,
+    borderRadius: 13,
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: INK,
     alignItems: 'center',
     justifyContent: 'center',
   },
   recGlyph: {
     fontFamily: fonts.mono,
-    fontSize: 15,
-    color: colors.primaryDark,
+    fontSize: 12.5,
+    color: INK,
   },
   recBody: {
     flex: 1,
