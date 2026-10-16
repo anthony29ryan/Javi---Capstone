@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
@@ -37,6 +37,10 @@ function useOpenProgress(open) {
 export default function Collapsible({ open, onHeight, children }) {
   const progress = useOpenProgress(open);
   const contentHeight = useSharedValue(0);
+  // Built on first open, then kept: building every closed section up front
+  // held a screen's opening slide back until all of them were done.
+  const [built, setBuilt] = useState(open);
+  if (open && !built) setBuilt(true);
 
   const style = useAnimatedStyle(() => ({
     height: contentHeight.value * progress.value,
@@ -57,7 +61,7 @@ export default function Collapsible({ open, onHeight, children }) {
           onHeight?.(event.nativeEvent.layout.height);
         }}
       >
-        {children}
+        {built ? children : null}
       </View>
     </Animated.View>
   );
