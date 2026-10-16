@@ -5,67 +5,71 @@ import AuthButton from '../components/auth/AuthButton';
 import Mascot from '../components/Mascot';
 import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';
+import Sticker from '../components/Sticker';
 import { levelLabel, levelTheme } from '../constants/levels';
 import { useProgress } from '../context/ProgressContext';
+import { authFonts } from '../theme/authTheme';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 const NO_STATS = { completed: 0, total: 0, percent: 0 };
 
-/** Where the learner is in a tier, the design's left caption. */
-function whereNext(courseModules, moduleProgress, completed) {
-  if (completed === 0 && courseModules.length) return `Starts with ${courseModules[0].title}`;
-  const current = courseModules.find((module) => {
-    const stats = moduleProgress[module.id] ?? NO_STATS;
-    return stats.completed < stats.total;
-  });
-  return current ? `Module ${current.order} · ${current.title}` : 'All modules done';
-}
+// The board's alternating tilt for the level stickers.
+const TILTS = [-1, 1, -1];
 
 function LevelCard({ course, index, courseModules, moduleProgress, stats, onPress }) {
   const theme = levelTheme(index);
+  const modulesDone = courseModules.filter((module) => {
+    const moduleStats = moduleProgress[module.id] ?? NO_STATS;
+    return moduleStats.total > 0 && moduleStats.completed === moduleStats.total;
+  }).length;
 
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.card,
-        { backgroundColor: theme.background },
-        theme.elevated && styles.cardElevated,
-        pressed && styles.cardPressed,
-      ]}
-    >
-      <View style={styles.cardTop}>
-        <Text style={[styles.eyebrow, { color: theme.eyebrowInk }]}>{levelLabel(index)}</Text>
-        <Text style={[styles.percent, { color: theme.subtleInk }]}>{stats.percent}%</Text>
-      </View>
-
-      <Text style={[styles.title, { color: theme.ink }]}>{course.title}</Text>
-      {course.description ? (
-        <Text style={[styles.description, { color: theme.subtleInk }]}>{course.description}</Text>
-      ) : null}
-
-      {/* One segment per module, each filled to that module's progress. */}
-      <View style={styles.segments}>
-        {courseModules.map((module) => (
-          <View key={module.id} style={[styles.segment, { backgroundColor: theme.track }]}>
-            <View
-              style={[
-                styles.segment,
-                { width: `${moduleProgress[module.id]?.percent ?? 0}%`, backgroundColor: theme.fill },
-              ]}
-            />
+    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={course.title}>
+      {({ pressed }) => (
+        <Sticker
+          background={theme.background}
+          tilt={TILTS[index % TILTS.length]}
+          drop={5}
+          corner={24}
+          pressed={pressed}
+          faceStyle={styles.cardFace}
+        >
+          <View style={styles.cardTop}>
+            <Text style={[styles.eyebrow, { color: theme.eyebrowInk }]}>{levelLabel(index)}</Text>
+            <View style={[styles.chip, { backgroundColor: theme.chipBackground }]}>
+              <Text style={[styles.chipLabel, { color: theme.chipInk }]}>{stats.percent}%</Text>
+            </View>
           </View>
-        ))}
-      </View>
 
-      <View style={styles.caption}>
-        <Text style={[styles.captionText, styles.captionWhere, { color: theme.subtleInk }]} numberOfLines={1}>
-          {whereNext(courseModules, moduleProgress, stats.completed)}
-        </Text>
-        <Text style={[styles.captionText, { color: theme.subtleInk }]}>
-          {stats.completed} of {stats.total} lessons
-        </Text>
-      </View>
+          <Text style={[styles.title, { color: theme.ink }]}>{course.title}</Text>
+          {course.description ? (
+            <Text style={[styles.description, { color: theme.subtleInk }]}>{course.description}</Text>
+          ) : null}
+
+          {/* One segment per module, each filled to that module's progress. */}
+          <View style={styles.segments}>
+            {courseModules.map((module) => (
+              <View key={module.id} style={[styles.segment, { backgroundColor: theme.track }]}>
+                <View
+                  style={[
+                    styles.segment,
+                    { width: `${moduleProgress[module.id]?.percent ?? 0}%`, backgroundColor: theme.fill },
+                  ]}
+                />
+              </View>
+            ))}
+          </View>
+
+          <View style={styles.caption}>
+            <Text style={[styles.captionText, { color: theme.ink }]}>
+              {modulesDone} of {courseModules.length} modules
+            </Text>
+            <Text style={[styles.captionText, { color: theme.subtleInk }]}>
+              {stats.completed} of {stats.total} lessons
+            </Text>
+          </View>
+        </Sticker>
+      )}
     </Pressable>
   );
 }
@@ -162,26 +166,16 @@ const styles = StyleSheet.create({
     ...centeredColumn(contentWidth.content),
     paddingHorizontal: 20,
     paddingBottom: spacing.xl,
-    gap: 14,
+    gap: 18,
   },
   pageTitle: {
     ...type.pageTitle,
     color: colors.text,
     marginBottom: 18,
   },
-  card: {
-    padding: 20,
-    borderRadius: radius.xl,
-  },
-  cardElevated: {
-    shadowColor: '#2E3141',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.16,
-    shadowRadius: 26,
-    elevation: 6,
-  },
-  cardPressed: {
-    opacity: 0.9,
+  cardFace: {
+    padding: 18,
+    gap: 8,
   },
   cardTop: {
     flexDirection: 'row',
@@ -190,29 +184,33 @@ const styles = StyleSheet.create({
   },
   eyebrow: {
     ...type.sectionLabel,
-    letterSpacing: 1.4,
+    fontFamily: fonts.bold,
+    fontSize: 10.5,
+    letterSpacing: 10.5 * 0.12,
   },
-  percent: {
-    fontFamily: fonts.semiBold,
-    fontSize: 11,
+  chip: {
+    paddingVertical: 5,
+    paddingHorizontal: 9,
+    borderRadius: 10,
+  },
+  chipLabel: {
+    fontFamily: authFonts.extraBold,
+    fontSize: 12,
   },
   title: {
-    fontFamily: fonts.bold,
-    fontSize: 22,
-    lineHeight: 22 * 1.2,
-    marginTop: 12,
-    marginBottom: 6,
+    fontFamily: authFonts.extraBold,
+    fontSize: 24,
+    lineHeight: 24 * 1.15,
   },
   description: {
     fontFamily: fonts.medium,
     fontSize: 13,
-    lineHeight: 13 * 1.5,
-    maxWidth: 250,
+    lineHeight: 13 * 1.45,
   },
   segments: {
     flexDirection: 'row',
     gap: 5,
-    marginTop: 18,
+    marginTop: 6,
   },
   segment: {
     flex: 1,
@@ -224,15 +222,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 12,
-    marginTop: 12,
   },
   captionText: {
-    fontFamily: fonts.medium,
+    fontFamily: fonts.semiBold,
     fontSize: 12,
     lineHeight: 12 * 1.3,
-  },
-  captionWhere: {
-    flex: 1,
   },
   skelCard: {
     padding: 20,

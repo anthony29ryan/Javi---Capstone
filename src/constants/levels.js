@@ -1,3 +1,4 @@
+import { authColors } from '../theme/authTheme';
 import { colors } from '../theme/colors';
 
 /**
@@ -10,23 +11,27 @@ import { colors } from '../theme/colors';
  */
 export const LEVEL_TAGS = ['Foundations', 'Objects', 'Systems'];
 
+// Beginner's text is the page cream, as on Home's terracotta Continue sticker.
 export const LEVEL_THEMES = [
   {
     background: colors.primary,
-    ink: colors.white,
-    subtleInk: 'rgba(255,255,255,.85)',
-    eyebrowInk: 'rgba(255,255,255,.82)',
-    track: 'rgba(255,255,255,.28)',
-    fill: colors.white,
-    elevated: true,
+    ink: colors.background,
+    subtleInk: colors.background,
+    eyebrowInk: colors.background,
+    track: 'rgba(247,245,240,.3)',
+    fill: colors.background,
+    chipBackground: authColors.ink,
+    chipInk: colors.white,
   },
   {
     background: '#FFC97E',
-    ink: '#3F414E',
-    subtleInk: 'rgba(63,65,78,.78)',
-    eyebrowInk: 'rgba(63,65,78,.7)',
-    track: 'rgba(63,65,78,.16)',
-    fill: '#3F414E',
+    ink: authColors.ink,
+    subtleInk: 'rgba(46,49,65,.78)',
+    eyebrowInk: authColors.ink,
+    track: 'rgba(46,49,65,.2)',
+    fill: authColors.ink,
+    chipBackground: authColors.ink,
+    chipInk: colors.white,
   },
   {
     background: '#333242',
@@ -35,6 +40,8 @@ export const LEVEL_THEMES = [
     eyebrowInk: 'rgba(255,255,255,.6)',
     track: 'rgba(255,255,255,.16)',
     fill: colors.white,
+    chipBackground: colors.background,
+    chipInk: '#333242',
   },
 ];
 

@@ -9,6 +9,7 @@ import Mascot from '../components/Mascot';
 import OfflineBanner from '../components/OfflineBanner';
 import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';
+import Sticker from '../components/Sticker';
 import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
 import { pickWeakLessons } from '../services/recommendations';
@@ -47,30 +48,6 @@ function greeting() {
   if (hour < 12) return 'Good morning';
   if (hour < 18) return 'Good afternoon';
   return 'Good evening';
-}
-
-/**
- * The design's sticker: ink outline, a slight tilt and a hard drop shadow.
- * Android has no blur-free shadow, so the shadow is an ink copy drawn `drop`
- * px lower, with that much space kept below. Pressed, the face sinks onto it,
- * leaving a 1px edge, as the design's stickers do.
- */
-function Sticker({ background, tilt, drop, corner, pressed, style, faceStyle, children }) {
-  return (
-    <View style={[{ marginBottom: drop, transform: [{ rotate: `${tilt}deg` }] }, style]}>
-      <View style={[styles.stickerShadow, { top: drop, bottom: -drop, borderRadius: corner }]} />
-      <View
-        style={[
-          styles.stickerFace,
-          { backgroundColor: background, borderRadius: corner },
-          pressed && { transform: [{ translateY: drop - 1 }] },
-          faceStyle,
-        ]}
-      >
-        {children}
-      </View>
-    </View>
-  );
 }
 
 function Tile({ glyph, title, meta, background, tilt, onPress, children }) {
@@ -437,16 +414,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: INK,
     borderRadius: radius.pill,
-  },
-  stickerShadow: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    backgroundColor: INK,
-  },
-  stickerFace: {
-    borderWidth: 2,
-    borderColor: INK,
   },
   hero: {
     marginTop: 20,
