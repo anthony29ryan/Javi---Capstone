@@ -155,21 +155,8 @@ export default function ModulesScreen({ route, navigation }) {
   }, [downloadPercent, fill]);
   const fillStyle = useAnimatedStyle(() => ({ width: `${fill.value}%` }));
 
-  // Like LessonDetail, slide in the light skeleton and build the full list
-  // after: the stack waits for the first render before it starts the slide.
-  const [slid, setSlid] = useState(false);
-  useEffect(() => {
-    const off = navigation.addListener('transitionEnd', () => setSlid(true));
-    // In case the event never comes, so the skeleton cannot stick.
-    const fallback = setTimeout(() => setSlid(true), 600);
-    return () => {
-      off();
-      clearTimeout(fallback);
-    };
-  }, [navigation]);
-
   const top = insets.top + spacing.lg;
-  if (loading || !slid) return <ModuleSkeleton top={top} onBack={() => navigation.goBack()} />;
+  if (loading) return <ModuleSkeleton top={top} onBack={() => navigation.goBack()} />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
 
   const courseIndex = courses.findIndex((item) => item.id === courseId);
