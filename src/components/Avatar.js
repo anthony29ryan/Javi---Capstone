@@ -1,9 +1,10 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import { AVATARS } from '../constants/art';
 import { useAuth } from '../context/AuthContext';
 import { colors, fonts, radius } from '../theme/colors';
+import Text from './AppText';
 
 function initialFor(user, name) {
   const source = name || user?.displayName || user?.email || '?';

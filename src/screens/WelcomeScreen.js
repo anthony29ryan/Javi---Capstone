@@ -1,6 +1,7 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import Text from '../components/AppText';
 import Mascot from '../components/Mascot';
 import Wordmark from '../components/Wordmark';
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';

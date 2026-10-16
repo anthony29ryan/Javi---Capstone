@@ -1,6 +1,7 @@
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { authColors, authRadius, authFonts } from '../../theme/authTheme';
+import Text from '../AppText';
 
 export default function AuthBackButton({ onPress, style }) {
   return (

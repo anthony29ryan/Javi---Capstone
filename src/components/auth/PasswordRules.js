@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { authColors, authType } from '../../theme/authTheme';
+import Text from '../AppText';
 
 // Firebase's own list of characters that count as a "symbol". Checking
 // against this exact set rather than "anything not a letter or digit" avoids

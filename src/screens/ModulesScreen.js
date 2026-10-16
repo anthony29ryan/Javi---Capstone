@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
+import Text from '../components/AppText';
 import AuthToast from '../components/auth/AuthToast';
 import Collapsible, { Chevron, useKeepInPlace } from '../components/Collapsible';
 import LessonRow from '../components/LessonRow';

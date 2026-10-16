@@ -1,6 +1,7 @@
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { colors, fonts } from '../theme/colors';
+import Text from './AppText';
 
 /** The "Javi" wordmark: Baloo 2, with "vi" in the button terracotta. */
 export default function Wordmark({ size = 48, style }) {

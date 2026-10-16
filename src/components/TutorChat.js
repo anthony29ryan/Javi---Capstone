@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
+import Text, { AppTextInput as TextInput } from './AppText';
 import Mascot from './Mascot';
 import Skeleton from './Skeleton';
 import { useProgress } from '../context/ProgressContext';

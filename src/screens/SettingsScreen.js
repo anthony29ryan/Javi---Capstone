@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import Text from '../components/AppText';
 import AuthToast from '../components/auth/AuthToast';
 import TermsSheet from '../components/auth/TermsSheet';
 import Skeleton from '../components/Skeleton';

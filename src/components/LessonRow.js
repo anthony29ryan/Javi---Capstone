@@ -1,6 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { colors, fonts, spacing } from '../theme/colors';
+import Text from './AppText';
 
 /** One lesson inside a module card: its number (or a tick), title and minutes. */
 export default function LessonRow({ lesson, done, onPress }) {

@@ -1,6 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { authColors, authFonts } from '../../theme/authTheme';
+import Text from '../AppText';
 
 const TONES = {
   danger: { bg: authColors.errorSoft, border: authColors.errorLine, fg: authColors.error, dot: authColors.error },

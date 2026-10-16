@@ -1,6 +1,7 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
 import { authColors, authRadius, authType } from '../../theme/authTheme';
+import Text from '../AppText';
 
 /**
  * Buttons for the auth flow. variant: 'primary' (filled pill) | 'secondary'

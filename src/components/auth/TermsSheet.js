@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 
 import { LEGAL_CONTACT, LEGAL_DOCS, TERMS_UPDATED } from '../../constants/legal';
 import { authColors, authFonts } from '../../theme/authTheme';
+import Text from '../AppText';
 
 const TABS = [
   ['terms', 'Terms'],

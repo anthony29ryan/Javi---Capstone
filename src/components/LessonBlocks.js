@@ -1,8 +1,9 @@
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { colors, fonts, radius, spacing, type } from '../theme/colors';
 import { useScaledStyles, useTextSize } from '../context/TextSizeContext';
+import Text from './AppText';
 
 /**
  * Lesson content is stored as an array of blocks. This renders them.

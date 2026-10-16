@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { BackHandler, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import Text from '../components/AppText';
 import AuthButton from '../components/auth/AuthButton';
 import Blocks, { InlineText } from '../components/LessonBlocks';
 import Mascot from '../components/Mascot';

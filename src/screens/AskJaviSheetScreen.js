@@ -1,6 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import Text from '../components/AppText';
 import BottomSheet from '../components/BottomSheet';
 import Mascot from '../components/Mascot';
 import TutorChat from '../components/TutorChat';

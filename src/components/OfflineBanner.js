@@ -1,8 +1,9 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { useProgress } from '../context/ProgressContext';
 import { authColors } from '../theme/authTheme';
 import { fonts, radius, spacing } from '../theme/colors';
+import Text from './AppText';
 
 /**
  * The design's amber "You are offline" bar: says what the screen is showing

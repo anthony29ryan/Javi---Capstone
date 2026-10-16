@@ -3,11 +3,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider } from './src/context/AuthContext';
 import RootNavigator from './src/navigation/RootNavigator';
-import { lockPhonesToPortrait } from './src/services/orientation';
+import { lockToPortrait } from './src/services/orientation';
 
-// Runs once, as early as possible, so a phone held sideways at launch turns
+// Runs once, as early as possible, so a device held sideways at launch turns
 // upright before the user has time to notice.
-lockPhonesToPortrait();
+lockToPortrait();
 
 export default function App() {
   return (

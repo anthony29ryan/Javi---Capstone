@@ -4,12 +4,11 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
-  TextInput,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import Text, { AppTextInput as TextInput } from '../components/AppText';
 import AuthBackButton from '../components/auth/AuthBackButton';
 import Button from '../components/Button';
 import { useProgress } from '../context/ProgressContext';

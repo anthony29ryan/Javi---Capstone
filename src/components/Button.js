@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import Animated, { cubicBezier, useReducedMotion } from 'react-native-reanimated';
 
 import { colors, fonts, spacing } from '../theme/colors';
+import Text from './AppText';
 
 // Strong ease-out: the change lands almost immediately under the finger,
 // then settles.

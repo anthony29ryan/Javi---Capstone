@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { colors, fonts, radius, spacing, type } from '../theme/colors';
+import Text, { AppTextInput as TextInput } from './AppText';
 
 /**
  * Labeled text input shared by the auth and profile forms. Keeping the label

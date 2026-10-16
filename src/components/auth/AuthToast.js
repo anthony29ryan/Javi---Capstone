@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { authColors, authRadius } from '../../theme/authTheme';
+import Text from '../AppText';
 
 const VISIBLE_MS = 1800;
 const POP_MS = 200;

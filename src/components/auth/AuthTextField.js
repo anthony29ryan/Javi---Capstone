@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { authColors, authFonts, authRadius, authType } from '../../theme/authTheme';
+import Text, { AppTextInput as TextInput } from '../AppText';
 
 /** The design's inline field error: a small red "!" and the message. */
 export function FieldError({ message, style }) {

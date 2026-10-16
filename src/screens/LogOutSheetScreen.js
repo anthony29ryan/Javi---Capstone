@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import Text from '../components/AppText';
 import AuthButton from '../components/auth/AuthButton';
 import BottomSheet from '../components/BottomSheet';
 import { useAuth } from '../context/AuthContext';

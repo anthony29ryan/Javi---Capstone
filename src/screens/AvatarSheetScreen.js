@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
 
+import Text from '../components/AppText';
 import AuthButton from '../components/auth/AuthButton';
 import BottomSheet from '../components/BottomSheet';
 import { AVATAR_IDS, AVATARS } from '../constants/art';

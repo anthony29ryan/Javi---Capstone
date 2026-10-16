@@ -4,12 +4,12 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 
+import Text from '../components/AppText';
 import Collapsible, { Chevron, useKeepInPlace } from '../components/Collapsible';
 import Mascot from '../components/Mascot';
 import ScreenState from '../components/ScreenState';

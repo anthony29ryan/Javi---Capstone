@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import Text from '../components/AppText';
 import AuthButton from '../components/auth/AuthButton';
 import BottomSheet from '../components/BottomSheet';
 import { useProgress } from '../context/ProgressContext';

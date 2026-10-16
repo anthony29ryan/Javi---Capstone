@@ -2,12 +2,12 @@ import { useState } from 'react';
 import {
   Pressable,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 
+import Text from '../components/AppText';
 import AuthBackButton from '../components/auth/AuthBackButton';
 import Collapsible, { Chevron, useKeepInPlace } from '../components/Collapsible';
 import LessonRow from '../components/LessonRow';

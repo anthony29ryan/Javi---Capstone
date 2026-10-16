@@ -1,5 +1,6 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
+import Text from '../components/AppText';
 import ProgressRing from '../components/ProgressRing';
 import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';

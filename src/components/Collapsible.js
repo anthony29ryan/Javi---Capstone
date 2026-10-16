@@ -13,6 +13,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { colors, fonts } from '../theme/colors';
+import { MAX_FONT_SCALE } from './AppText';
 
 const TIMING = { duration: 250, easing: Easing.inOut(Easing.cubic) };
 
@@ -127,7 +128,11 @@ export function Chevron({ open }) {
     color: interpolateColor(progress.value, [0, 1], [colors.borderStrong, colors.primaryDark]),
     transform: [{ rotate: `${interpolate(progress.value, [0, 1], [90, -90])}deg` }],
   }));
-  return <Animated.Text style={[styles.chevron, style]}>›</Animated.Text>;
+  return (
+    <Animated.Text maxFontSizeMultiplier={MAX_FONT_SCALE} style={[styles.chevron, style]}>
+      ›
+    </Animated.Text>
+  );
 }
 
 const styles = StyleSheet.create({

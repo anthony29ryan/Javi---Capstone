@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { authColors, authFonts, authRadius } from '../theme/authTheme';
+import Text from './AppText';
 
 const PRESETS = [
   { time: '07:00', label: 'Morning' },
