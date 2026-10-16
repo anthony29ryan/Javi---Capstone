@@ -127,11 +127,11 @@ Totals: 71 done · 0 to do · 43 not built · 1 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 65 | Home · Loading | with Home | done | 2894257 |
+| 65 | Home · Loading | with Home | done | 2894257, b1957ce (sticker outlines from the updated frame) |
 | 66 | Lesson · Loading | with Lesson | done | 3c5b564 |
-| 67 | Courses · Loading | with Courses | done | 4e9c640 |
+| 67 | Courses · Loading | with Courses | done | 4e9c640, b1957ce (sticker outlines from the updated frame) |
 | 68 | Module · Loading | with Module | done | 0a1bd8d |
-| 69 | Practice · Loading | with Practice | done | 5c6116d, 06d4f0a (2x2 tiles) |
+| 69 | Practice · Loading | with Practice | done | 5c6116d, 06d4f0a (2x2 tiles), b1957ce (sticker outlines; the design frame is still the old list) |
 | 70 | Profile · Loading | with Profile | done | 4ad2ad9 |
 | 71 | Home · Offline, saved content | with Home | done | 2894257 (inline bar, not edge to edge) |
 | 72 | Courses · Error | with Courses | done | 4e9c640 (no saved-modules list; offline not claimed) |
