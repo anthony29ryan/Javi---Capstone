@@ -8,7 +8,7 @@ import Avatar from '../components/Avatar';
 import Mascot from '../components/Mascot';
 import OfflineBanner from '../components/OfflineBanner';
 import ScreenState from '../components/ScreenState';
-import Skeleton from '../components/Skeleton';
+import Skeleton, { SkeletonSticker } from '../components/Skeleton';
 import Sticker from '../components/Sticker';
 import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
@@ -83,16 +83,36 @@ function HomeSkeleton({ top }) {
     <View style={styles.container}>
       <View style={[styles.content, { paddingTop: top }]}>
         <View style={styles.header}>
+          <Skeleton style={styles.skelAvatar} />
           <View style={styles.skelLines}>
             <Skeleton style={styles.skelGreeting} />
             <Skeleton style={styles.skelStreak} />
           </View>
           <Skeleton style={styles.skelAvatar} />
         </View>
-        <Skeleton style={styles.skelHero} />
+        <SkeletonSticker tilt={-1} style={[styles.hero, styles.skelHero]}>
+          <Skeleton style={[styles.skelBar, { height: 10, width: '34%' }]} />
+          <Skeleton style={[styles.skelBar, { height: 24, width: '62%', borderRadius: 8 }]} />
+          <Skeleton style={[styles.skelBar, { height: 12, width: '40%' }]} />
+          <View style={[styles.segments, styles.skelSegments]}>
+            {[0, 1, 2].map((key) => (
+              <Skeleton key={key} style={styles.segment} />
+            ))}
+          </View>
+          <View style={styles.heroFooter}>
+            <Skeleton style={[styles.skelBar, { height: 12, width: '46%' }]} />
+            <Skeleton style={styles.skelResume} />
+          </View>
+        </SkeletonSticker>
         <View style={styles.tiles}>
-          <Skeleton style={styles.skelTile} />
-          <Skeleton style={styles.skelTile} />
+          <SkeletonSticker tilt={1.5} style={styles.skelTile}>
+            <Skeleton style={[styles.skelBar, { height: 14, width: '70%' }]} />
+            <Skeleton style={[styles.skelBar, { height: 10, width: '84%' }]} />
+          </SkeletonSticker>
+          <SkeletonSticker tilt={-1.5} style={styles.skelTile}>
+            <Skeleton style={[styles.skelBar, { height: 14, width: '62%' }]} />
+            <Skeleton style={[styles.skelBar, { height: 10, width: '76%' }]} />
+          </SkeletonSticker>
         </View>
         <Skeleton style={styles.skelHeading} />
         <View style={styles.recommendations}>
@@ -616,15 +636,30 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: 22,
   },
+  // Frame 63's outlined sticker shapes.
   skelHero: {
-    marginTop: 20,
-    height: 184,
-    borderRadius: radius.xl,
+    padding: 18,
+    gap: 12,
+    borderRadius: 24,
+  },
+  skelBar: {
+    borderRadius: 6,
+  },
+  skelSegments: {
+    marginTop: 4,
+  },
+  skelResume: {
+    width: 104,
+    height: 44,
+    borderRadius: 22,
   },
   skelTile: {
     flex: 1,
-    height: 94,
+    height: 96,
+    padding: 14,
+    gap: 8,
     borderRadius: 20,
+    justifyContent: 'flex-end',
   },
   skelHeading: {
     marginTop: 26,
@@ -634,9 +669,9 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   skelGlyph: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
+    width: 42,
+    height: 42,
+    borderRadius: 13,
   },
   skelRecTitle: {
     height: 14,

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -33,3 +34,19 @@ export default function Skeleton({ style }) {
 
   return <Animated.View style={[{ backgroundColor: colors.surfaceSunken }, style, pulse]} />;
 }
+
+/**
+ * A sticker's outline while it loads: white, a light 2px border and the real
+ * sticker's tilt, with no hard shadow. Skeleton bars go inside.
+ */
+export function SkeletonSticker({ tilt = 0, style, children }) {
+  return <View style={[styles.sticker, { transform: [{ rotate: `${tilt}deg` }] }, style]}>{children}</View>;
+}
+
+const styles = StyleSheet.create({
+  sticker: {
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: 'rgba(46,49,65,.12)',
+  },
+});

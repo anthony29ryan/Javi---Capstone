@@ -6,7 +6,7 @@ import AuthButton from '../components/auth/AuthButton';
 import AuthToast from '../components/auth/AuthToast';
 import Mascot from '../components/Mascot';
 import ScreenState from '../components/ScreenState';
-import Skeleton from '../components/Skeleton';
+import Skeleton, { SkeletonSticker } from '../components/Skeleton';
 import Sticker from '../components/Sticker';
 import { scorePercent, useProgress } from '../context/ProgressContext';
 import { authColors, authFonts } from '../theme/authTheme';
@@ -50,17 +50,23 @@ function PracticeSkeleton({ top }) {
   return (
     <View style={styles.container}>
       <View style={[styles.content, { paddingTop: top }]}>
-        <Text style={styles.title}>Practice</Text>
+        <View style={styles.header}>
+          <Text style={[styles.title, styles.headerTitle]}>Practice</Text>
+          <View style={styles.stats}>
+            <SkeletonSticker tilt={-3} style={[styles.skelStat, { width: 64 }]} />
+            <SkeletonSticker tilt={3} style={[styles.skelStat, { width: 100 }]} />
+          </View>
+        </View>
         {[0, 1].map((row) => (
           <View key={row} style={styles.modeRow}>
-            {[0, 1].map((key) => (
-              <View key={key} style={[styles.mode, styles.skelTile]}>
+            {[-1.5, 1.5].map((tilt) => (
+              <SkeletonSticker key={tilt} tilt={tilt} style={[styles.mode, styles.skelTile]}>
                 <Skeleton style={styles.skelGlyph} />
                 <View style={styles.modeText}>
                   <Skeleton style={styles.skelName} />
                   <Skeleton style={styles.skelLine} />
                 </View>
-              </View>
+              </SkeletonSticker>
             ))}
           </View>
         ))}
@@ -288,13 +294,14 @@ const styles = StyleSheet.create({
     fontSize: 11.5,
     lineHeight: 11.5 * 1.35,
   },
+  skelStat: {
+    height: 28,
+    borderRadius: 12,
+  },
   skelTile: {
     minHeight: 150,
     padding: 16,
     borderRadius: 22,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
     justifyContent: 'space-between',
   },
   skelGlyph: {

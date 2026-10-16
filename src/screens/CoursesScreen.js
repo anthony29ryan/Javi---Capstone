@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AuthButton from '../components/auth/AuthButton';
 import Mascot from '../components/Mascot';
 import ScreenState from '../components/ScreenState';
-import Skeleton from '../components/Skeleton';
+import Skeleton, { SkeletonSticker } from '../components/Skeleton';
 import Sticker from '../components/Sticker';
 import { levelLabel, levelTheme } from '../constants/levels';
 import { useProgress } from '../context/ProgressContext';
@@ -80,17 +80,24 @@ function CoursesSkeleton({ top }) {
     <View style={styles.container}>
       <View style={[styles.list, { paddingTop: top }]}>
         <Text style={styles.pageTitle}>Courses</Text>
-        {[0, 1, 2].map((key) => (
-          <View key={key} style={styles.skelCard}>
-            <Skeleton style={styles.skelEyebrow} />
-            <Skeleton style={styles.skelTitle} />
-            <Skeleton style={styles.skelLine} />
-            <View style={[styles.segments, styles.skelSegments]}>
+        {TILTS.map((tilt, key) => (
+          <SkeletonSticker key={key} tilt={tilt} style={styles.skelCard}>
+            <View style={styles.cardTop}>
+              <Skeleton style={[styles.skelBar, { height: 10, width: '38%' }]} />
+              <Skeleton style={styles.skelChip} />
+            </View>
+            <Skeleton style={[styles.skelBar, { height: 24, width: '48%', borderRadius: 8 }]} />
+            <Skeleton style={[styles.skelBar, { height: 12, width: '84%' }]} />
+            <View style={styles.segments}>
               {[0, 1, 2, 3, 4].map((segment) => (
                 <Skeleton key={segment} style={styles.segment} />
               ))}
             </View>
-          </View>
+            <View style={styles.caption}>
+              <Skeleton style={[styles.skelBar, { height: 10, width: '32%' }]} />
+              <Skeleton style={[styles.skelBar, { height: 10, width: '30%' }]} />
+            </View>
+          </SkeletonSticker>
         ))}
       </View>
     </View>
@@ -228,32 +235,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 12 * 1.3,
   },
+  // Frame 65's outlined sticker shapes.
   skelCard: {
-    padding: 20,
-    borderRadius: radius.xl,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
+    padding: 18,
+    borderRadius: 24,
     gap: 10,
   },
-  skelEyebrow: {
-    height: 10,
-    width: '36%',
+  skelBar: {
     borderRadius: 5,
   },
-  skelTitle: {
-    height: 22,
-    width: '48%',
-    borderRadius: 8,
-    marginTop: 4,
-  },
-  skelLine: {
-    height: 12,
-    width: '82%',
-    borderRadius: 6,
-  },
-  skelSegments: {
-    marginTop: 10,
+  skelChip: {
+    width: 44,
+    height: 20,
+    borderRadius: 10,
   },
   errorCard: {
     padding: 22,
