@@ -29,14 +29,23 @@ function StatSticker({ label, background, tilt }) {
   );
 }
 
-function ModeSticker({ glyph, name, line, background, ink = INK, tilt, onPress }) {
+function ModeSticker({ glyph, name, description, line, background, ink = INK, tilt, onPress }) {
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={name} style={styles.mode}>
       {({ pressed }) => (
-        <Sticker background={background} tilt={tilt} drop={4} corner={22} pressed={pressed} faceStyle={styles.modeFace}>
+        <Sticker
+          background={background}
+          tilt={tilt}
+          drop={4}
+          corner={22}
+          pressed={pressed}
+          style={styles.fill}
+          faceStyle={styles.modeFace}
+        >
           <Text style={[styles.modeGlyph, { color: ink }]}>{glyph}</Text>
           <View style={styles.modeText}>
             <Text style={[styles.modeName, { color: ink }]}>{name}</Text>
+            <Text style={[styles.modeDescription, { color: ink }]}>{description}</Text>
             <Text style={[styles.modeLine, { color: ink }]}>{line}</Text>
           </View>
         </Sticker>
@@ -51,19 +60,21 @@ function PracticeSkeleton({ top }) {
     <View style={styles.container}>
       <View style={[styles.content, { paddingTop: top }]}>
         <Text style={styles.title}>Practice</Text>
-        {[0, 1].map((row) => (
-          <View key={row} style={styles.modeRow}>
-            {[0, 1].map((key) => (
-              <View key={key} style={[styles.mode, styles.skelTile]}>
-                <Skeleton style={styles.skelGlyph} />
-                <View style={styles.modeText}>
-                  <Skeleton style={styles.skelName} />
-                  <Skeleton style={styles.skelLine} />
+        <View style={styles.grid}>
+          {[0, 1].map((row) => (
+            <View key={row} style={styles.modeRow}>
+              {[0, 1].map((key) => (
+                <View key={key} style={[styles.mode, styles.skelTile]}>
+                  <Skeleton style={styles.skelGlyph} />
+                  <View style={styles.modeText}>
+                    <Skeleton style={styles.skelName} />
+                    <Skeleton style={styles.skelLine} />
+                  </View>
                 </View>
-              </View>
-            ))}
-          </View>
-        ))}
+              ))}
+            </View>
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -141,47 +152,54 @@ export default function PracticeScreen({ navigation }) {
           </View>
         ) : null}
 
-        <View style={styles.modeRow}>
-          <ModeSticker
-            glyph="?"
-            name="Quiz"
-            line={lowestTitle ? `Retry ${lowestTitle}` : quizCount(modules.length)}
-            background={colors.primary}
-            ink={CREAM}
-            tilt={-1.5}
-            onPress={() => navigation.navigate('Quizzes')}
-          />
-          <ModeSticker
-            glyph="i++"
-            name="Code Tracer"
-            // shortcut: one drill per module, so the module count is the drill
-            // count; ids of renamed drills stay in completedTraces and would
-            // overcount. Count against the traces list if that ever happens.
-            line={`${progress?.completedTraces?.length ?? 0} of ${modules.length} done`}
-            background={TRACER_STICKER}
-            tilt={1.5}
-            onPress={() => navigation.navigate('TracerList')}
-          />
-        </View>
-        {/* Drawn ahead of time: both need a cloud Java runner that does not
-            exist yet, so a tap says so instead of opening anything. */}
-        <View style={styles.modeRow}>
-          <ModeSticker
-            glyph="{ }"
-            name="Code Challenges"
-            line="Coming later"
-            background={CHALLENGE_STICKER}
-            tilt={-1.5}
-            onPress={() => setToast('Coding challenges are coming later')}
-          />
-          <ModeSticker
-            glyph="main"
-            name="Playground"
-            line="Coming later"
-            background={PLAYGROUND_STICKER}
-            tilt={1.5}
-            onPress={() => setToast('The playground is coming later')}
-          />
+        {/* Stretches to the tab bar so the stickers fill the page. */}
+        <View style={styles.grid}>
+          <View style={styles.modeRow}>
+            <ModeSticker
+              glyph="?"
+              name="Quiz"
+              description="Multiple choice and fill-in questions for each module."
+              line={lowestTitle ? `Retry ${lowestTitle}` : quizCount(modules.length)}
+              background={colors.primary}
+              ink={CREAM}
+              tilt={-1.5}
+              onPress={() => navigation.navigate('Quizzes')}
+            />
+            <ModeSticker
+              glyph="i++"
+              name="Code Tracer"
+              description="Type short programs line by line. Mistakes show in red."
+              // shortcut: one drill per module, so the module count is the drill
+              // count; ids of renamed drills stay in completedTraces and would
+              // overcount. Count against the traces list if that ever happens.
+              line={`${progress?.completedTraces?.length ?? 0} of ${modules.length} done`}
+              background={TRACER_STICKER}
+              tilt={1.5}
+              onPress={() => navigation.navigate('TracerList')}
+            />
+          </View>
+          {/* Drawn ahead of time: both need a cloud Java runner that does not
+              exist yet, so a tap says so instead of opening anything. */}
+          <View style={styles.modeRow}>
+            <ModeSticker
+              glyph="{ }"
+              name="Code Challenges"
+              description="Write short methods and run them against test cases."
+              line="Coming later"
+              background={CHALLENGE_STICKER}
+              tilt={-1.5}
+              onPress={() => setToast('Coding challenges are coming later')}
+            />
+            <ModeSticker
+              glyph="main"
+              name="Playground"
+              description="Write any Java and run it on the cloud service."
+              line="Coming later"
+              background={PLAYGROUND_STICKER}
+              tilt={1.5}
+              onPress={() => setToast('The playground is coming later')}
+            />
+          </View>
         </View>
       </ScrollView>
       <AuthToast message={toast} onHide={() => setToast('')} />
@@ -196,6 +214,7 @@ const styles = StyleSheet.create({
   },
   content: {
     ...centeredColumn(contentWidth.content),
+    flexGrow: 1,
     paddingHorizontal: 20,
     paddingBottom: spacing.xl,
     gap: 14,
@@ -255,7 +274,12 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     marginTop: 20,
   },
+  grid: {
+    flex: 1,
+    gap: 14,
+  },
   modeRow: {
+    flex: 1,
     flexDirection: 'row',
     gap: 14,
   },
@@ -263,7 +287,11 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
+  fill: {
+    flex: 1,
+  },
   modeFace: {
+    flex: 1,
     minHeight: 150,
     padding: 16,
     gap: 12,
@@ -271,9 +299,9 @@ const styles = StyleSheet.create({
   },
   modeGlyph: {
     fontFamily: fonts.mono,
-    fontSize: 26,
-    lineHeight: 30,
-    letterSpacing: -1.3,
+    fontSize: 40,
+    lineHeight: 44,
+    letterSpacing: -2,
   },
   modeText: {
     gap: 5,
@@ -282,6 +310,12 @@ const styles = StyleSheet.create({
     fontFamily: authFonts.extraBold,
     fontSize: 16,
     lineHeight: 16 * 1.15,
+  },
+  modeDescription: {
+    fontFamily: fonts.medium,
+    fontSize: 12.5,
+    lineHeight: 12.5 * 1.45,
+    opacity: 0.8,
   },
   modeLine: {
     fontFamily: fonts.semiBold,
