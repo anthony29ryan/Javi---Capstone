@@ -59,7 +59,7 @@ Totals: 71 done · 0 to do · 43 not built · 1 partly · 9 last
 | 19 | Home | HomeScreen | done | 2894257, a54f547 (1a Sticker home from the Home options board; terracotta continue sticker; honest shortcut lines; quiz sticker opens that module's quiz) |
 | 20 | Courses | CoursesScreen | done | 4e9c640, d6873f6 (1g Sticker levels from the Home and Courses options board; app colours kept, not periwinkle; cream Beginner text; module count caption) |
 | 21 | Tutor | TutorScreen | done | a01ce13 (module picker first (accordion)) |
-| 22 | Practice | PracticeScreen | done | 1083617, 5c6116d |
+| 22 | Practice | PracticeScreen | done | 1083617, 5c6116d, 06d4f0a (1c Sticker board from the Practice options board; Challenges and Playground drawn with a coming-later toast; Mini-projects dropped; quizzes taken not attempts) |
 | 23 | Settings (tab) | SettingsScreen | done | b33a2bb (code-glyph stickers in terracotta, centre label Javi; the part of the Javi button above the bar may not take taps on Android) |
 | 24 | Profile · from Home | ProfileScreen | done | 4ad2ad9, b33a2bb (opens from Home's avatar, with a back button; Quizzes / Tracer panel; 2 badges locked until the code runner) |
 | 25 | Profile · Choose avatar | ProfileScreen sheet | done | 4ad2ad9 |
@@ -131,7 +131,7 @@ Totals: 71 done · 0 to do · 43 not built · 1 partly · 9 last
 | 66 | Lesson · Loading | with Lesson | done | 3c5b564 |
 | 67 | Courses · Loading | with Courses | done | 4e9c640 |
 | 68 | Module · Loading | with Module | done | 0a1bd8d |
-| 69 | Practice · Loading | with Practice | done | 5c6116d |
+| 69 | Practice · Loading | with Practice | done | 5c6116d, 06d4f0a (2x2 tiles) |
 | 70 | Profile · Loading | with Profile | done | 4ad2ad9 |
 | 71 | Home · Offline, saved content | with Home | done | 2894257 (inline bar, not edge to edge) |
 | 72 | Courses · Error | with Courses | done | 4e9c640 (no saved-modules list; offline not claimed) |
