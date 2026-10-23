@@ -9,8 +9,8 @@
 // A section's body is a list of parts: a string is a paragraph; an object is a
 // bullet list, with an optional bold label above it.
 
-export const TERMS_VERSION = '2026-10-16';
-export const TERMS_UPDATED = '16 Oct 2026';
+export const TERMS_VERSION = '2026-10-21';
+export const TERMS_UPDATED = '21 Oct 2026';
 export const LEGAL_CONTACT = 'support.javi@gmail.com';
 
 const APP_NAME = 'Javi: An AI-Powered Android Application for Java Learning ("Javi," "the Application," "we," "our," or "us")';
@@ -140,6 +140,7 @@ export const LEGAL_DOCS = {
             items: [
               'your name and email address, and the nickname and avatar you choose;',
               'your password, which is handled by Firebase Authentication and never stored by Javi in plain text;',
+              'if you continue with Google instead, the name, email address and profile picture link on your Google account, which Google shares with Firebase Authentication. Javi uses only the name and email, and never sees your Google password;',
               'the daily reminder time you choose at setup, and any study goals saved by earlier versions of the app; and',
               'when you accepted these documents, and which version.',
             ],

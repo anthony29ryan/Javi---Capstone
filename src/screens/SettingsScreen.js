@@ -131,7 +131,7 @@ function TextSizePicker() {
 }
 
 export default function SettingsScreen({ navigation, route }) {
-  const { user } = useAuth();
+  const { user, hasPassword } = useAuth();
   const insets = useSafeAreaInsets();
   const [toast, setToast] = useState('');
   const [termsOpen, setTermsOpen] = useState(false);
@@ -304,12 +304,15 @@ export default function SettingsScreen({ navigation, route }) {
             onPress={() => navigation.navigate('ProfileDetails')}
             right={<Text style={styles.chevron}>›</Text>}
           />
-          <Row
-            title="Change password"
-            subtitle="Set a new password for this account"
-            onPress={() => navigation.navigate('ChangePassword')}
-            right={<Text style={styles.chevron}>›</Text>}
-          />
+          {/* A Google-only account has no password to change. */}
+          {hasPassword ? (
+            <Row
+              title="Change password"
+              subtitle="Set a new password for this account"
+              onPress={() => navigation.navigate('ChangePassword')}
+              right={<Text style={styles.chevron}>›</Text>}
+            />
+          ) : null}
           <Row title="Log out" onPress={() => navigation.navigate('LogOutSheet')} />
           <Row
             title="Delete account"

@@ -25,7 +25,7 @@ const CONFIRM_WORD = 'DELETE';
  * scripts/purgeDeletedAccounts.js removes.
  */
 export default function DeleteAccountScreen({ navigation }) {
-  const { scheduleAccountDeletion } = useAuth();
+  const { scheduleAccountDeletion, hasPassword } = useAuth();
   const insets = useSafeAreaInsets();
 
   const [password, setPassword] = useState('');
@@ -37,7 +37,8 @@ export default function DeleteAccountScreen({ navigation }) {
 
   // Exact match on purpose: typing "delete" in lowercase must not count.
   const confirmed = confirmText.trim() === CONFIRM_WORD;
-  const ready = confirmed && password.length > 0;
+  // A Google-only account confirms by picking the Google account on Delete instead.
+  const ready = confirmed && (!hasPassword || password.length > 0);
 
   async function handleDelete() {
     setError('');
@@ -51,6 +52,10 @@ export default function DeleteAccountScreen({ navigation }) {
     } catch (err) {
       if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
         setPasswordError('That password is not right. Your account was not deleted.');
+      } else if (err.code === 'auth/cancelled') {
+        setError('Google was not confirmed. Your account was not deleted.');
+      } else if (err.code === 'auth/user-mismatch') {
+        setError('Pick the Google account you signed in with. Your account was not deleted.');
       } else if (err.code === 'auth/too-many-requests') {
         setError('Too many tries. Wait a few minutes, then try again.');
       } else {
@@ -94,18 +99,22 @@ export default function DeleteAccountScreen({ navigation }) {
             </Text>
           </View>
 
-          <Text style={styles.label}>Your password</Text>
-          <AuthTextField
-            placeholder="Password"
-            secureTextEntry
-            value={password}
-            onChangeText={(value) => {
-              setPassword(value);
-              setPasswordError('');
-              setError('');
-            }}
-            error={passwordError}
-          />
+          {hasPassword ? (
+            <>
+              <Text style={styles.label}>Your password</Text>
+              <AuthTextField
+                placeholder="Password"
+                secureTextEntry
+                value={password}
+                onChangeText={(value) => {
+                  setPassword(value);
+                  setPasswordError('');
+                  setError('');
+                }}
+                error={passwordError}
+              />
+            </>
+          ) : null}
 
           <Text style={styles.label}>Type {CONFIRM_WORD} to confirm</Text>
           <AuthTextField

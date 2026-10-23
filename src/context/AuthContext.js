@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import {
   EmailAuthProvider,
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   reauthenticateWithCredential,
   sendEmailVerification,
   sendPasswordResetEmail,
+  signInWithCredential,
   signInWithEmailAndPassword,
   signOut,
   updatePassword,
@@ -15,6 +17,7 @@ import { deleteField, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'fi
 
 import { permanentDeletionDate } from '../constants/accountDeletion';
 import { auth, db } from '../services/firebase';
+import { forgetGoogleAccount, pickGoogleAccount } from '../services/googleSignIn';
 import { cancelDailyReminder } from '../services/notifications';
 import { clearOfflineData } from '../services/offline';
 
@@ -34,6 +37,9 @@ export function AuthProvider({ children }) {
   // owns the signed-in state. The listener below stands aside so the app
   // does not flash open for an account that is about to be signed out again.
   const logInInProgress = useRef(false);
+  // The names from the Google account picked last, kept until a first-time
+  // Google user accepts the Terms and their profile is written.
+  const pendingGoogleNames = useRef(null);
 
   useEffect(() => {
     return onAuthStateChanged(auth, async (firebaseUser) => {
@@ -44,11 +50,20 @@ export function AuthProvider({ children }) {
       const profile = firebaseUser ? await readProfile(firebaseUser.uid).catch(() => null) : null;
       if (profile?.deletionRequestedAt) {
         // A session saved on this device from before the account was deleted
-        // on another one. Only typing the password restores an account, so
+        // on another one. Only logging in again restores an account, so
         // end the session rather than quietly cancelling the deletion. The
         // sign-out calls this listener again with no user.
         await cancelDailyReminder();
         await clearOfflineData();
+        await forgetGoogleAccount();
+        await signOut(auth);
+        return;
+      }
+      if (profile && !profile.exists && !hasPasswordProvider(firebaseUser)) {
+        // A Google sign-in saved while the Terms popup was still open (the app
+        // was closed there). No consent was recorded, so the app stays shut;
+        // the next Google sign-in shows the Terms again.
+        await forgetGoogleAccount();
         await signOut(auth);
         return;
       }
@@ -108,19 +123,71 @@ export function AuthProvider({ children }) {
    * After the window the account is treated as gone even if the purge script
    * has not run yet, so the sign-in is undone and this throws.
    */
-  async function logIn(email, password) {
+  function logIn(email, password) {
+    return openSession(() => signInWithEmailAndPassword(auth, email, password));
+  }
+
+  /**
+   * "Continue with Google": creates the account the first time and signs in
+   * after that. It returns what logIn returns, plus `cancelled` when the user
+   * backs out of the account picker, and `needsTerms` for a first-time user.
+   * That user is signed in to Firebase, but the app stays closed until
+   * acceptGoogleTerms() or declineGoogleTerms().
+   */
+  async function signInWithGoogle() {
+    const account = await pickGoogleAccount();
+    if (!account) return { cancelled: true };
+    pendingGoogleNames.current = account;
+    const credential = GoogleAuthProvider.credential(account.idToken);
+    return openSession(() => signInWithCredential(auth, credential), { requireProfile: true });
+  }
+
+  /** Accept on the Terms popup for a first-time Google user: writes the profile the way signUp does. */
+  async function acceptGoogleTerms(termsVersion) {
+    const newUser = auth.currentUser;
+    const { givenName, familyName } = pendingGoogleNames.current ?? {};
+    const displayName = givenName || newUser.displayName || newUser.email.split('@')[0];
+    await updateProfile(newUser, { displayName });
+    await setDoc(doc(db, 'users', newUser.uid), {
+      email: newUser.email,
+      displayName,
+      // Some Google accounts have no family name, and the rules refuse an empty one.
+      ...(familyName ? { lastName: familyName } : {}),
+      createdAt: serverTimestamp(),
+      termsAcceptedAt: serverTimestamp(),
+      termsVersion,
+    });
+    setUser(newUser);
+  }
+
+  /**
+   * The Terms popup closed without Accept, so the account Firebase just made
+   * is deleted: nothing is kept for someone who did not consent.
+   */
+  async function declineGoogleTerms() {
+    await forgetGoogleAccount();
+    await auth.currentUser.delete().catch(() => signOut(auth));
+  }
+
+  /**
+   * Runs a Firebase sign-in, then reads the profile before the app opens.
+   * With requireProfile, an account that has no profile yet returns `needsTerms`.
+   */
+  async function openSession(signIn, { requireProfile = false } = {}) {
     logInInProgress.current = true;
     try {
-      const { user: signedInUser } = await signInWithEmailAndPassword(auth, email, password);
+      const { user: signedInUser } = await signIn();
 
       let pendingDeletion = null;
       let name = null;
       try {
         const {
+          exists,
           deletionRequestedAt: requestedAt,
           nickname: savedNickname,
           avatar: savedAvatar,
         } = await readProfile(signedInUser.uid);
+        if (requireProfile && !exists) return { needsTerms: true };
         setNickname(savedNickname);
         name = savedNickname || signedInUser.displayName;
         setAvatar(savedAvatar);
@@ -133,6 +200,7 @@ export function AuthProvider({ children }) {
       } catch (err) {
         // Whatever went wrong, do not leave a half-finished sign-in behind:
         // the account either opens fully restored or not at all.
+        await forgetGoogleAccount();
         await signOut(auth);
         throw err;
       }
@@ -156,8 +224,9 @@ export function AuthProvider({ children }) {
    * Welcome back's Log out: ends the half-open session and leaves the account
    * scheduled. Nothing was set up on this phone yet, so there is nothing to clear.
    */
-  function keepDeleted() {
-    return signOut(auth);
+  async function keepDeleted() {
+    await forgetGoogleAccount();
+    await signOut(auth);
   }
 
   /**
@@ -181,6 +250,7 @@ export function AuthProvider({ children }) {
   async function logOut() {
     await cancelDailyReminder();
     await clearOfflineData();
+    await forgetGoogleAccount();
     await signOut(auth);
   }
 
@@ -188,11 +258,21 @@ export function AuthProvider({ children }) {
    * Firebase refuses to change a password or delete an account on a session
    * that has been signed in for a while, so both flows prove the password
    * again first. That is also what stops someone changing the password on an
-   * unlocked phone they picked up.
+   * unlocked phone they picked up. A Google-only account has no password, so
+   * picking the Google account again is the proof instead.
    */
-  function reauthenticate(password) {
-    const credential = EmailAuthProvider.credential(auth.currentUser.email, password);
-    return reauthenticateWithCredential(auth.currentUser, credential);
+  async function reauthenticate(password) {
+    if (hasPasswordProvider(auth.currentUser)) {
+      const credential = EmailAuthProvider.credential(auth.currentUser.email, password);
+      return reauthenticateWithCredential(auth.currentUser, credential);
+    }
+    const account = await pickGoogleAccount();
+    if (!account) {
+      const err = new Error('Google confirmation was cancelled.');
+      err.code = 'auth/cancelled';
+      throw err;
+    }
+    return reauthenticateWithCredential(auth.currentUser, GoogleAuthProvider.credential(account.idToken));
   }
 
   async function changePassword(currentPassword, newPassword) {
@@ -218,6 +298,7 @@ export function AuthProvider({ children }) {
     );
     await cancelDailyReminder();
     await clearOfflineData();
+    await forgetGoogleAccount();
     await signOut(auth);
   }
 
@@ -246,6 +327,11 @@ export function AuthProvider({ children }) {
         initializing,
         signUp,
         logIn,
+        signInWithGoogle,
+        acceptGoogleTerms,
+        declineGoogleTerms,
+        // False for an account that only signs in with Google: there is no password to change or type.
+        hasPassword: Boolean(user && hasPasswordProvider(auth.currentUser)),
         logOut,
         updateDisplayName,
         nickname,
@@ -272,16 +358,22 @@ export function AuthProvider({ children }) {
 }
 
 /**
- * The profile fields needed at sign-in, from one read: when the user asked for
- * the account to be deleted, their nickname and their avatar (each null if unset).
+ * The profile fields needed at sign-in, from one read: whether the profile
+ * exists, when the user asked for the account to be deleted, their nickname
+ * and their avatar (each null if unset).
  */
 async function readProfile(userId) {
   const data = (await getDoc(doc(db, 'users', userId))).data();
   return {
+    exists: data !== undefined,
     deletionRequestedAt: data?.deletionRequestedAt?.toDate() ?? null,
     nickname: data?.nickname ?? null,
     avatar: data?.avatar ?? null,
   };
+}
+
+function hasPasswordProvider(firebaseUser) {
+  return Boolean(firebaseUser?.providerData.some((provider) => provider.providerId === 'password'));
 }
 
 export function useAuth() {
