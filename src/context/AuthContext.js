@@ -40,9 +40,33 @@ export function AuthProvider({ children }) {
   // The names from the Google account picked last, kept until a first-time
   // Google user accepts the Terms and their profile is written.
   const pendingGoogleNames = useRef(null);
+  // Session expired: the email of an account Firebase signed out on its own
+  // (a revoked session, e.g. the password changed on another device), for the
+  // sheet on Welcome. null when there is nothing to tell.
+  const [expiredEmail, setExpiredEmail] = useState(null);
+  // True between the app asking to sign out and the listener seeing it, so
+  // the app's own sign-outs are never mistaken for an expired session.
+  const signingOut = useRef(false);
+  // The listener's closure would only ever see the first `user`; this tracks
+  // the latest, including sign-ins that call setUser while the listener stands aside.
+  const userRef = useRef(null);
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
+  // Every sign-out the app makes goes through here.
+  function endSession() {
+    signingOut.current = true;
+    return signOut(auth);
+  }
 
   useEffect(() => {
     return onAuthStateChanged(auth, async (firebaseUser) => {
+      // Before the logInInProgress check, so a sign-out during a log-in still clears the flag.
+      if (!firebaseUser) {
+        if (userRef.current && !signingOut.current) setExpiredEmail(userRef.current.email ?? '');
+        signingOut.current = false;
+      }
       if (logInInProgress.current) return;
 
       // A failed read counts as "not pending" here, so a network blip on
@@ -56,7 +80,7 @@ export function AuthProvider({ children }) {
         await cancelDailyReminder();
         await clearOfflineData();
         await forgetGoogleAccount();
-        await signOut(auth);
+        await endSession();
         return;
       }
       if (profile && !profile.exists && !hasPasswordProvider(firebaseUser)) {
@@ -64,7 +88,7 @@ export function AuthProvider({ children }) {
         // was closed there). No consent was recorded, so the app stays shut;
         // the next Google sign-in shows the Terms again.
         await forgetGoogleAccount();
-        await signOut(auth);
+        await endSession();
         return;
       }
 
@@ -166,7 +190,7 @@ export function AuthProvider({ children }) {
    */
   async function declineGoogleTerms() {
     await forgetGoogleAccount();
-    await auth.currentUser.delete().catch(() => signOut(auth));
+    await auth.currentUser.delete().catch(() => endSession());
   }
 
   /**
@@ -201,7 +225,7 @@ export function AuthProvider({ children }) {
         // Whatever went wrong, do not leave a half-finished sign-in behind:
         // the account either opens fully restored or not at all.
         await forgetGoogleAccount();
-        await signOut(auth);
+        await endSession();
         throw err;
       }
 
@@ -226,7 +250,7 @@ export function AuthProvider({ children }) {
    */
   async function keepDeleted() {
     await forgetGoogleAccount();
-    await signOut(auth);
+    await endSession();
   }
 
   /**
@@ -251,7 +275,7 @@ export function AuthProvider({ children }) {
     await cancelDailyReminder();
     await clearOfflineData();
     await forgetGoogleAccount();
-    await signOut(auth);
+    await endSession();
   }
 
   /**
@@ -299,7 +323,7 @@ export function AuthProvider({ children }) {
     await cancelDailyReminder();
     await clearOfflineData();
     await forgetGoogleAccount();
-    await signOut(auth);
+    await endSession();
   }
 
   async function updateNickname(value) {
@@ -333,6 +357,8 @@ export function AuthProvider({ children }) {
         // False for an account that only signs in with Google: there is no password to change or type.
         hasPassword: Boolean(user && hasPasswordProvider(auth.currentUser)),
         logOut,
+        expiredEmail,
+        clearExpired: () => setExpiredEmail(null),
         updateDisplayName,
         nickname,
         updateNickname,

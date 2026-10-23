@@ -23,7 +23,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 82 done · 0 to do · 31 not built · 1 partly · 9 last
+Totals: 84 done · 0 to do · 29 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -89,7 +89,7 @@ Totals: 82 done · 0 to do · 31 not built · 1 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 41 | Streak | — | not built |  |
+| 41 | Streak | StreakScreen | done | (opens from Home's streak line and the Lesson complete streak tile; the calendar reads a new `days` list on the streak, last 42 study days, so history from before it shows only the then-current run; studied cells in the deeper terracotta and missed-day numbers in ink, for contrast; footer adds challenges, which also count) |
 | 42 | Playground | PlaygroundScreen | done | (starts empty; the 4 samples load on tap and ask before replacing edited code; Clear asks first; an optional Input box for Scanner programs; code kept on the phone; floating back button; runs do not count toward the streak; the first run unlocks First Compile) |
 | 43 | Mini-projects | — | not built |  |
 
@@ -171,7 +171,7 @@ Totals: 82 done · 0 to do · 31 not built · 1 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 98 | Session expired | — | not built |  |
+| 98 | Session expired | SessionExpiredSheetScreen | done | (shown when Firebase signs the user out on its own, e.g. a revoked session after a password change elsewhere; never after the app's own Log out or Delete account; sits over Welcome, not Home, since a sign-out leaves Home, so it can be closed; body names the real cause instead of "after 30 days away"; Log in again opens Login with the email filled in) |
 | 99 | Lesson · Server error | with Lesson | done | 3c5b564 (real Firebase error code, not a made-up ref; Back to module instead of Report) |
 | 100 | Quiz result · Not synced | with Quiz result | done | 3f4c279 (banner with Try saving again) |
 | 101 | Challenge · Compile error | with Challenge | done | (real compiler message; one fixed What to fix line per error kind, not per challenge) |

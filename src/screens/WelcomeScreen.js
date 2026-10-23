@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -6,10 +7,18 @@ import Mascot from '../components/Mascot';
 import Wordmark from '../components/Wordmark';
 import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
 import AuthButton from '../components/auth/AuthButton';
+import { useAuth } from '../context/AuthContext';
 import { authColors, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
 
 export default function WelcomeScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { expiredEmail } = useAuth();
+
+  // Firebase ended the session on its own; the sheet says so. It clears
+  // expiredEmail when it closes, so this does not open it twice.
+  useEffect(() => {
+    if (expiredEmail !== null) navigation.navigate('SessionExpiredSheet');
+  }, [expiredEmail, navigation]);
 
   return (
     <View style={styles.container}>

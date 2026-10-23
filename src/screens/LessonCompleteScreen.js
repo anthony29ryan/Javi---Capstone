@@ -61,7 +61,11 @@ export default function LessonCompleteScreen({ route, navigation }) {
 
         <View style={styles.stats}>
           <Stat label="This module" value={`${stats.completed} of ${stats.total}`} />
-          <Stat label="Streak" value={`${streak.current} day${streak.current === 1 ? '' : 's'}`} />
+          <Stat
+            label="Streak ›"
+            value={`${streak.current} day${streak.current === 1 ? '' : 's'}`}
+            onPress={() => navigation.navigate('Streak')}
+          />
         </View>
 
         {next ? (

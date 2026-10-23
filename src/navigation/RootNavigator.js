@@ -36,6 +36,8 @@ import SetupScreen from '../screens/SetupScreen';
 import LessonDetailScreen from '../screens/LessonDetailScreen';
 import LessonCompleteScreen from '../screens/LessonCompleteScreen';
 import ModuleCompleteScreen from '../screens/ModuleCompleteScreen';
+import StreakScreen from '../screens/StreakScreen';
+import SessionExpiredSheetScreen from '../screens/SessionExpiredSheetScreen';
 import WeakLessonsScreen from '../screens/WeakLessonsScreen';
 import QuizzesScreen from '../screens/QuizzesScreen';
 import AvatarSheetScreen from '../screens/AvatarSheetScreen';
@@ -117,6 +119,12 @@ function AuthStack() {
       <Stack.Screen name="Signup" component={SignupScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="RestoreAccount" component={RestoreAccountScreen} />
+      <Stack.Screen
+        name="SessionExpiredSheet"
+        component={SessionExpiredSheetScreen}
+        options={SHEET_OPTIONS}
+        layout={bare}
+      />
     </Stack.Navigator>
   );
 }
@@ -179,6 +187,7 @@ function AppStack({ needsSetup }) {
         component={ModuleCompleteScreen}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="Streak" component={StreakScreen} options={{ headerShown: false }} />
       <Stack.Screen name="WeakLessons" component={WeakLessonsScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Quizzes" component={QuizzesScreen} options={{ headerShown: false }} />
       <Stack.Screen
