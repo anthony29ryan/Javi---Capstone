@@ -29,6 +29,7 @@ import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import DeleteAccountScreen from '../screens/DeleteAccountScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
+import HelpScreen from '../screens/HelpScreen';
 import ProfileDetailsScreen from '../screens/ProfileDetailsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SetupScreen from '../screens/SetupScreen';
@@ -146,6 +147,7 @@ function AppStack({ needsSetup }) {
         component={DeleteAccountScreen}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="Help" component={HelpScreen} options={{ headerShown: false }} />
 
       <Stack.Screen
         name="EditProfile"

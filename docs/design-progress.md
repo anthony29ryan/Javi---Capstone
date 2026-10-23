@@ -23,7 +23,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 77 done · 0 to do · 37 not built · 1 partly · 9 last
+Totals: 78 done · 0 to do · 35 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -106,7 +106,7 @@ Totals: 77 done · 0 to do · 37 not built · 1 partly · 9 last
 | 50 | Delete account | DeleteAccountScreen | done | da06720 (honest 30-day card instead of cannot be undone; no extra confirm popup; 51 not built) |
 | 51 | Account deleted | — | not built |  |
 | 52 | Welcome back · Restore | RestoreAccountScreen | done | 54e8792 (two choices, Restore or Keep it deleted; Start fresh left out, it needs a Cloud Function) |
-| 53 | Help & feedback | — | not built |  |
+| 53 | Help & feedback | HelpScreen | done | (from a Settings row; replay tour, FAQ rewritten to match the app; no feedback form, a tappable support address instead) |
 | 54 | About | — | not built |  |
 | 55 | Terms & privacy | — | not built |  |
 
@@ -165,7 +165,7 @@ Totals: 77 done · 0 to do · 37 not built · 1 partly · 9 last
 | 94 | Change password · Wrong current | with Change password | done | 17911ea |
 | 95 | Change email · Already in use | — | not built |  |
 | 96 | Delete account · Wrong password | with Delete account | done | da06720 |
-| 97 | Feedback · Not sent | — | not built |  |
+| 97 | Feedback · Not sent | — | skipped | (decided against: Help has no feedback form) |
 
 ## H · Runtime errors and warnings
 

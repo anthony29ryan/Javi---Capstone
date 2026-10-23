@@ -273,6 +273,12 @@ export default function SettingsScreen({ navigation, route }) {
         <Text style={styles.sectionLabel}>Support</Text>
         <View style={styles.group}>
           <Row
+            title="Help & feedback"
+            subtitle="Common questions and the app tour"
+            onPress={() => navigation.navigate('Help')}
+            right={<Text style={styles.chevron}>›</Text>}
+          />
+          <Row
             title="Terms & privacy"
             subtitle="Read the terms and privacy policy"
             onPress={() => setTermsOpen(true)}

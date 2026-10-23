@@ -197,7 +197,7 @@ export default function MainTabs({ route, navigation }) {
       .catch(() => {});
   }, []);
 
-  // Help & feedback replays it by navigating here with { tour: true }.
+  // Help & feedback replays it by popping back here with { tour: true }.
   useEffect(() => {
     if (!route.params?.tour) return;
     setTourQueued(true);
