@@ -1,0 +1,34 @@
+{
+  "id": "expressions-overview",
+  "moduleId": "expressions",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "This is a short lesson, and it is mostly a name for something you have already been doing. But it introduces one idea worth having explicitly: **every expression has a type, and that type is decided before the result is stored.**"
+    },
+    {
+      "type": "text",
+      "value": "That single fact explains the integer-division bug from Lesson 3, and most of the surprises still ahead of you."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Define an expression and identify one in code",
+        "Distinguish integral from floating-point expressions",
+        "Apply the two rules for evaluating mixed expressions",
+        "Trace a logical expression to its boolean result"
+      ]
+    }
+  ]
+}

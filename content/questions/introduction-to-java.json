@@ -1,0 +1,382 @@
+[
+  {
+    "id": "introduction-to-java-01",
+    "lessonId": "introduction-to-java-1-the-java-environment",
+    "type": "mcq",
+    "prompt": "What does the Java compiler (`javac`) turn your source code into?",
+    "choices": [
+      "Machine code for your processor",
+      "Bytecode",
+      "A file of comments",
+      "A web page"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "introduction-to-java-02",
+    "lessonId": "introduction-to-java-1-the-java-environment",
+    "type": "truefalse",
+    "prompt": "The same compiled Java program can run on Windows, macOS, and Linux because each platform supplies its own JVM to run the bytecode.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "introduction-to-java-03",
+    "lessonId": "introduction-to-java-2-your-first-java-program",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"Hi\");\nSystem.out.print(\"A\");\nSystem.out.print(\"B\");",
+    "choices": [
+      "Hi AB",
+      "HiAB",
+      "Hi\nA\nB",
+      "Hi\nAB"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "introduction-to-java-04",
+    "lessonId": "introduction-to-java-2-your-first-java-program",
+    "type": "mcq",
+    "prompt": "In `System.out.println(\"First Java Application\");`, what is `\"First Java Application\"`?",
+    "choices": [
+      "The name of the class",
+      "A comment",
+      "A literal string passed as an argument",
+      "A reserved word"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "introduction-to-java-05",
+    "lessonId": "introduction-to-java-3-identifiers",
+    "type": "mcq",
+    "prompt": "Which of these is a valid identifier?",
+    "choices": [
+      "2ndPlace",
+      "my-total",
+      "student age",
+      "_count"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "introduction-to-java-06",
+    "lessonId": "introduction-to-java-3-identifiers",
+    "type": "truefalse",
+    "prompt": "`number` and `Number` are the same identifier in Java.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "introduction-to-java-07",
+    "lessonId": "introduction-to-java-4-reserved-words",
+    "type": "mcq",
+    "prompt": "Which word is reserved in Java even though the language never uses it?",
+    "choices": [
+      "goto",
+      "final",
+      "static",
+      "import"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "introduction-to-java-08",
+    "lessonId": "introduction-to-java-5-the-main-method-in-detail",
+    "type": "mcq",
+    "prompt": "In the heading `public static void main(String[] args)`, what does `void` mean?",
+    "choices": [
+      "The method can be called without creating an object",
+      "The method does not return a value",
+      "Any class can call the method",
+      "The method takes no arguments"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "introduction-to-java-09",
+    "lessonId": "introduction-to-java-5-the-main-method-in-detail",
+    "type": "mcq",
+    "prompt": "In the heading `public static void main(String[] args)`, what does `static` mean?",
+    "choices": [
+      "The method's code can never be changed",
+      "The method does not return any value",
+      "The method can be called without first creating an object of the class",
+      "The method can only be called from inside its own class"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "introduction-to-java-10",
+    "lessonId": "introduction-to-java-6-compiling-and-running",
+    "type": "mcq",
+    "prompt": "You compiled `Greeter.java` with `javac Greeter.java`. Which command runs the compiled class?",
+    "choices": [
+      "java Greeter.class",
+      "java Greeter",
+      "javac Greeter.class",
+      "run Greeter"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "introduction-to-java-11",
+    "lessonId": "introduction-to-java-6-compiling-and-running",
+    "type": "mcq",
+    "prompt": "What do you need to compile Java programs, and not only run them?",
+    "choices": [
+      "The JDK",
+      "The JRE only",
+      "A web browser",
+      "Only the JVM"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "introduction-to-java-12",
+    "lessonId": "introduction-to-java-7-two-kinds-of-error",
+    "type": "mcq",
+    "prompt": "This code is meant to print the sum of `a` and `b`. It compiles, but prints `Sum: 42`. What kind of error is this?",
+    "code": "int a = 6;\nint b = 7;\nSystem.out.println(\"Sum: \" + (a * b));",
+    "choices": [
+      "Syntax error",
+      "Missing semicolon",
+      "Logical error",
+      "Reserved word error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "introduction-to-java-13",
+    "lessonId": "introduction-to-java-7-two-kinds-of-error",
+    "type": "truefalse",
+    "prompt": "When the compiler finds a syntax error, it still produces a program you can run.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "introduction-to-java-14",
+    "lessonId": "introduction-to-java-8-comments",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "// System.out.println(\"One\");\nSystem.out.println(\"Two\"); // prints Two\n/* System.out.println(\"Three\"); */",
+    "choices": [
+      "One\nTwo\nThree",
+      "Two",
+      "Two prints Two",
+      "One\nTwo"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "introduction-to-java-15",
+    "lessonId": "introduction-to-java-9-packages-and-the-import-statement",
+    "type": "mcq",
+    "prompt": "Where must `import` statements appear?",
+    "choices": [
+      "Inside the main method",
+      "At the end of the file",
+      "Before the class declaration",
+      "Anywhere inside the class"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "introduction-to-java-16",
+    "lessonId": "introduction-to-java-9-packages-and-the-import-statement",
+    "type": "mcq",
+    "prompt": "Which statement imports every class in the `java.util` package?",
+    "choices": [
+      "import java.util;",
+      "include java.util.*;",
+      "import *.java.util;",
+      "import java.util.*;"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "introduction-to-java-17",
+    "lessonId": "introduction-to-java-1-the-java-environment",
+    "type": "mcq",
+    "prompt": "Which part translates Java bytecode into machine language and executes it?",
+    "choices": [
+      "The Java compiler (javac)",
+      "The Java Virtual Machine (JVM)",
+      "The text editor",
+      "A development environment"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "introduction-to-java-18",
+    "lessonId": "introduction-to-java-1-the-java-environment",
+    "type": "mcq",
+    "prompt": "Which of these is a development environment?",
+    "choices": [
+      "javac",
+      "Bytecode",
+      "IntelliJ IDEA",
+      "The JVM"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "introduction-to-java-19",
+    "lessonId": "introduction-to-java-2-your-first-java-program",
+    "type": "truefalse",
+    "prompt": "In Java, the semicolon at the end of a statement is optional.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "introduction-to-java-20",
+    "lessonId": "introduction-to-java-2-your-first-java-program",
+    "type": "mcq",
+    "prompt": "What is the difference between `print` and `println`?",
+    "choices": [
+      "`println` moves to the next line after printing; `print` does not",
+      "`print` moves to the next line after printing; `println` does not",
+      "`println` can only print text inside quotation marks",
+      "There is no difference"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "introduction-to-java-21",
+    "lessonId": "introduction-to-java-3-identifiers",
+    "type": "mcq",
+    "prompt": "Why is `my-total` not a valid identifier?",
+    "choices": [
+      "It begins with a digit",
+      "It contains a hyphen",
+      "It is a reserved keyword",
+      "It starts with a lowercase letter"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "introduction-to-java-22",
+    "lessonId": "introduction-to-java-3-identifiers",
+    "type": "truefalse",
+    "prompt": "An identifier can begin with a dollar sign (`$`).",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "introduction-to-java-23",
+    "lessonId": "introduction-to-java-4-reserved-words",
+    "type": "mcq",
+    "prompt": "Which of these can be used as a variable name?",
+    "choices": [
+      "class",
+      "int",
+      "while",
+      "total"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "introduction-to-java-24",
+    "lessonId": "introduction-to-java-6-compiling-and-running",
+    "type": "mcq",
+    "prompt": "A file contains `public class FirstJavaProgram`. What must the file be named?",
+    "choices": [
+      "FirstJavaProgram.java",
+      "firstjavaprogram.java",
+      "FirstJavaProgram.class",
+      "Main.java"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "introduction-to-java-25",
+    "lessonId": "introduction-to-java-8-comments",
+    "type": "truefalse",
+    "prompt": "The compiler ignores comments, so they are not executed when the program runs.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "introduction-to-java-26",
+    "lessonId": "introduction-to-java-2-your-first-java-program",
+    "type": "mcq",
+    "prompt": "Which escape sequence inside a string produces a tab?",
+    "choices": [
+      "\\n",
+      "\\\\",
+      "\\t",
+      "\\\""
+    ],
+    "answer": 2
+  },
+  {
+    "id": "introduction-to-java-27",
+    "lessonId": "introduction-to-java-9-packages-and-the-import-statement",
+    "type": "mcq",
+    "prompt": "Which of these classes can be used with no `import` statement?",
+    "choices": [
+      "Scanner",
+      "Date",
+      "String",
+      "ArrayList"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "introduction-to-java-28",
+    "lessonId": "introduction-to-java-5-the-main-method-in-detail",
+    "type": "output",
+    "prompt": "The program below is run with the command `java Greet Ana`. What does it print?",
+    "code": "public class Greet {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, \" + args[0] + \"!\");\n    }\n}",
+    "choices": [
+      "Hello, args[0]!",
+      "Hello, !",
+      "Hello, Greet!",
+      "Hello, Ana!"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "introduction-to-java-29",
+    "lessonId": "introduction-to-java-7-two-kinds-of-error",
+    "type": "mcq",
+    "prompt": "This code compiles. What happens when it runs?\n`int total = 10; int count = 0; System.out.println(total / count);`",
+    "choices": [
+      "It throws ArithmeticException while running",
+      "It does not compile",
+      "It prints Infinity",
+      "It prints 0"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "introduction-to-java-30",
+    "lessonId": "introduction-to-java-8-comments",
+    "type": "truefalse",
+    "prompt": "A comment that starts with a slash and two asterisks is a documentation comment that Javadoc can read.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  }
+]

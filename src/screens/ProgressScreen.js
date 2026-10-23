@@ -1,9 +1,11 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
+import Text from '../components/AppText';
 import ProgressRing from '../components/ProgressRing';
 import ScreenState from '../components/ScreenState';
+import Skeleton from '../components/Skeleton';
 import { useProgress } from '../context/ProgressContext';
-import { colors, radius, spacing, type } from '../theme/colors';
+import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 function StatCard({ value, unit, label }) {
   return (
@@ -66,6 +68,40 @@ function ModuleRow({ title, stats, score, isLast }) {
   );
 }
 
+// The stats and the tier list in grey while progress loads.
+function ProgressSkeleton() {
+  return (
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.statRow}>
+          {[0, 1].map((key) => (
+            <View key={key} style={[styles.statCard, styles.skelLines]}>
+              <Skeleton style={styles.skelValue} />
+              <Skeleton style={styles.skelMeta} />
+            </View>
+          ))}
+        </View>
+        <View style={styles.progressBlock}>
+          <View style={styles.progressTrack} />
+          <Skeleton style={styles.skelMeta} />
+        </View>
+        <Text style={styles.sectionLabel}>By tier</Text>
+        <View style={styles.group}>
+          {[0, 1, 2].map((key) => (
+            <View key={key} style={[styles.row, key < 2 && styles.rowDivider]}>
+              <Skeleton style={styles.skelRing} />
+              <View style={[styles.rowBody, styles.skelLines]}>
+                <Skeleton style={styles.skelTitle} />
+                <Skeleton style={styles.skelMeta} />
+              </View>
+            </View>
+          ))}
+        </View>
+      </View>
+    </View>
+  );
+}
+
 export default function ProgressScreen() {
   const {
     courses,
@@ -79,10 +115,11 @@ export default function ProgressScreen() {
     courseProgress,
     loading,
     error,
+    refresh,
   } = useProgress();
 
-  if (loading) return <ScreenState loading />;
-  if (error) return <ScreenState error={error} />;
+  if (loading) return <ProgressSkeleton />;
+  if (error) return <ScreenState error={error} onRetry={refresh} />;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -140,6 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   content: {
+    ...centeredColumn(contentWidth.content),
     padding: spacing.lg,
     paddingBottom: spacing.xxl,
   },
@@ -157,14 +195,14 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 30,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.primary,
     letterSpacing: -0.5,
   },
   statUnit: {
     fontSize: 17,
     color: colors.textMuted,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   statLabel: {
     ...type.small,
@@ -222,7 +260,7 @@ const styles = StyleSheet.create({
   },
   rowTitle: {
     fontSize: 15,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     color: colors.text,
   },
   rowMeta: {
@@ -232,12 +270,12 @@ const styles = StyleSheet.create({
   },
   ringText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.primary,
   },
   ringTextSmall: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.primary,
   },
   scorePill: {
@@ -248,7 +286,7 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     ...type.small,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.primary,
   },
   notAttempted: {
@@ -258,5 +296,28 @@ const styles = StyleSheet.create({
   emptyText: {
     ...type.small,
     color: colors.textMuted,
+  },
+  skelLines: {
+    gap: 8,
+  },
+  skelValue: {
+    height: 30,
+    width: '45%',
+    borderRadius: 8,
+  },
+  skelTitle: {
+    height: 14,
+    width: '50%',
+    borderRadius: 6,
+  },
+  skelMeta: {
+    height: 10,
+    width: '65%',
+    borderRadius: 5,
+  },
+  skelRing: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
 });

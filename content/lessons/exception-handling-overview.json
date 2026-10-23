@@ -1,0 +1,39 @@
+{
+  "id": "exception-handling-overview",
+  "moduleId": "exception-handling",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Everything you have written so far assumed the happy path. The user types a number when you ask for a number. The array index is in range. The file exists."
+    },
+    {
+      "type": "text",
+      "value": "Real programs do not get that. Real users type `\"banana\"` into a number field. Real files go missing. Real division sometimes divides by zero."
+    },
+    {
+      "type": "text",
+      "value": "When that happens, Java does not quietly return a wrong answer. It **throws an exception**, and if nobody catches it, your program crashes. This lesson is about catching it."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Explain what an exception is and when Java throws one",
+        "Distinguish checked exceptions from unchecked (runtime) exceptions",
+        "Handle errors with `try`, `catch`, and `finally`",
+        "Order multiple `catch` blocks correctly",
+        "Create and throw your own exception type"
+      ]
+    }
+  ]
+}

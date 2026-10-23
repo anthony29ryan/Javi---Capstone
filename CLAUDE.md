@@ -16,9 +16,13 @@ development. Prefer explanations alongside code, and favor clarity over cleverne
 
 - **Client:** Expo (React Native), JavaScript
 - **Backend:** Firebase — Auth, Firestore, Cloud Functions, notifications
-- **AI tutor:** Claude or OpenAI API, called from a Cloud Function (never from the client)
-- **Code execution:** Piston or Judge0 API, called from a Cloud Function
-- **Trained model:** TensorFlow.js (tfjs-node), loaded and run inside a Cloud Function
+- **AI tutor:** Gemini 3.5 Flash Lite (Google AI Studio free-tier key), called from a Cloud Function (never from the client)
+- **Code execution:** Judge0 CE on RapidAPI, pay as you go, called from a Cloud Function. Only
+  `functions/codeRunner.js` knows the provider. JDoodle's free 20 runs a day proved too few, and
+  the public Piston API went whitelist-only in Feb 2026. Spend is capped in `functions/index.js`:
+  20 challenge checks + 10 playground runs per user a day, 5 runs a minute per user, and 300 Judge0
+  calls a day / 1,350 a month (~$9.45) for the whole app. Change those numbers, not the logic.
+- **Trained model:** TensorFlow.js (`@tensorflow/tfjs`, pure JS — no native build), loaded and run inside a Cloud Function
 - **Video demos:** embedded YouTube
 
 There is no custom Node/Express server. Firebase Cloud Functions are the only backend layer.
@@ -42,6 +46,30 @@ Core collections: `users`, `courses`, `modules`, `lessons`, `questions`, `attemp
   number) — this is also the feature source for the trained personalization model, so don't
   change its shape without accounting for that.
 - `progress` tracks completed lessons, test scores, and streaks per user.
+
+## Course content
+
+Content is authored as JSON under `content/` and pushed to Firestore by a script; the app
+reads it from Firestore at runtime and nothing is bundled.
+
+```
+content/courses.json · modules.json · lessons/*.json  ->  scripts/publishContent.js  ->  Firestore
+```
+
+- `npm run content:verify` checks the files and exits non-zero if anything is wrong.
+- `npm run content:publish` verifies, then publishes. It upserts every local course, module,
+  lesson, question and trace and **deletes any Firestore one that no longer exists locally**,
+  which is what keeps the two in step and what makes a rollback work.
+- Publishing also writes `meta/lessonIndex`: every lesson's id, module, title, order and
+  reading minutes, plus a `publishedAt` time. The app reads this one document on launch
+  instead of every lesson, and re-fetches offline downloads only when `publishedAt` changes.
+  The app shows a load error until this document exists, so publish after a fresh setup.
+- Lesson bodies are an array of blocks (`text`, `code`, `heading`, `list`, `note`, `table`,
+  `image`, `video`) rendered by `src/components/LessonBlocks.js`. A block type with no case
+  there renders as blank space, so add both together.
+
+**Read the `publish-content` skill before publishing, regenerating, or rolling back content.**
+It covers the safety steps, what to test afterwards, and how to undo it.
 
 ## Conventions
 
@@ -96,6 +124,6 @@ toward these unless asked — they were cut to protect the core deliverables.
 
 ## Note on Expo version
 
-This project was scaffolded with a newer Expo SDK than older training data may reflect. Consult
-the versioned docs at https://docs.expo.dev/versions/v57.0.0/ before relying on remembered API
-shapes for Expo-specific code.
+This project is on Expo SDK 54 (see `expo` in package.json). Consult the versioned docs at
+https://docs.expo.dev/versions/v54.0.0/ before relying on remembered API shapes for
+Expo-specific code, and update this link whenever the SDK is upgraded.

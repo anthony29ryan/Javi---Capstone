@@ -1,0 +1,20 @@
+{
+  "id": "data-types-key-takeaways",
+  "moduleId": "data-types",
+  "title": "Key takeaways",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "Java has **eight primitive types**; in practice you will mostly use `int`, `double`, and `boolean`.",
+        "**Declare** a variable before using it; a variable holds one value at a time and may change.",
+        "**`final`** creates a constant, assignable exactly once, conventionally named in `ALL_CAPS`.",
+        "**Widening** (small → large) happens automatically; **narrowing** (large → small) requires an explicit cast.",
+        "Casting to an integer type **truncates**: it does not round.",
+        "`'A'` is a `char`; `\"A\"` is a `String`. Suffix `long` literals with `L` and `float` literals with `f`."
+      ]
+    }
+  ]
+}

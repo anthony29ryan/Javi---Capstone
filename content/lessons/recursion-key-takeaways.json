@@ -1,0 +1,20 @@
+{
+  "id": "recursion-key-takeaways",
+  "moduleId": "recursion",
+  "title": "Key takeaways",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "A **recursive** method calls itself on a **smaller** version of the same problem.",
+        "Every recursive method needs a **base case** that returns without recursing, and every call must move toward it.",
+        "Missing or unreachable base cases produce **`StackOverflowError`**.",
+        "Work placed **before** the recursive call runs on the way down; work placed **after** runs on the way back up.",
+        "Recursion costs memory and time because every call allocates its own parameters and locals.",
+        "Choose by the shape of the problem: **iteration** for counting and traversal, **recursion** for nested and self-referential structures."
+      ]
+    }
+  ]
+}

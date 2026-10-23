@@ -1,0 +1,38 @@
+{
+  "id": "inheritance-polymorphism-interfaces-3-constructors-in-a-derived-class",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Constructors in a derived class",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**A derived class has its own constructors. It does not inherit any constructors from the base class.**",
+        "In a derived class constructor, **the typical first action is to call a constructor of the base class**, using `super`."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "One way of defining a constructor is by calling another constructor **in the same class**, using `this`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public Person() {\n    this(\"No name yet\");        // calls the other constructor in this class\n}\n\npublic Person(String initialName) {\n    name = initialName;\n}"
+    },
+    {
+      "type": "text",
+      "value": "**Any use of `super` must be the first action in a constructor definition. A constructor definition therefore cannot contain both a call using `super` and a call using `this`.** If you want both, use `this` to call a constructor that has `super` as its first action."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Undergraduate extends Student {\n    private int level;\n\n    public Undergraduate(String name, int studentNumber, int level) {\n        super(name, studentNumber);     // must be first\n        this.level = level;\n    }\n\n    @Override\n    public void writeOutput() {\n        super.writeOutput();            // reuse the parent's version, then add to it\n        System.out.println(\"Student Level: \" + level);\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "`super` has two jobs: **`super(...)`** calls the parent's constructor, and **`super.method()`** calls the parent's version of a method you have overridden. The second is how you extend behavior rather than replacing it."
+    }
+  ]
+}

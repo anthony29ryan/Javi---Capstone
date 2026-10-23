@@ -1,0 +1,21 @@
+{
+  "id": "introduction-to-java-key-takeaways",
+  "moduleId": "introduction-to-java",
+  "title": "Key takeaways",
+  "order": 12,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "Java compiles to **bytecode**, which the **JVM** executes: that indirection is what makes Java portable.",
+        "Use the **JDK** to write Java; the **JRE** only runs it.",
+        "Every program lives in a **class**, and execution begins at **`main`**.",
+        "The file name must match the public class name, and every statement ends with a semicolon.",
+        "**Identifiers** are case sensitive, cannot start with a digit, and cannot be reserved words.",
+        "**Syntax errors** stop the build; **logical errors** let the program run and give wrong answers; **runtime errors** crash the program while it runs.",
+        "**Comments** are ignored by the compiler: write them to explain *why*."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "data-types-overview",
+  "moduleId": "data-types",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A program that cannot remember anything cannot do anything. Variables are how your program holds on to a score, a name, a price, a yes-or-no answer."
+    },
+    {
+      "type": "text",
+      "value": "Java is strict about this in a way some languages are not: before you store a value, you must say exactly what *kind* of value it is. That feels like extra work at first. It is the reason the compiler can catch your mistakes before your users do."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Name Java's eight primitive data types and choose the right one",
+        "Declare and initialize variables",
+        "Create named constants with `final`",
+        "Apply widening conversion and explicit casting",
+        "Predict what is lost when a value is narrowed"
+      ]
+    }
+  ]
+}

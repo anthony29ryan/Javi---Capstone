@@ -1,0 +1,83 @@
+{
+  "id": "introduction-to-java-5-the-main-method-in-detail",
+  "moduleId": "introduction-to-java",
+  "title": "The main() method in detail",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Every Java application must include a class containing one `main` method. When you run a Java program, execution always begins there."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static void main(String[] args) {\n    // statements go here\n}"
+    },
+    {
+      "type": "text",
+      "value": "The method has two parts: the **heading** and the **body**."
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "`public static void main(String[] args)` is the heading.",
+        "The statements enclosed between the braces form the **body**, containing the declarations and execution of the program."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Every word in that heading is doing a job:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Keyword",
+        "Meaning"
+      ],
+      "rows": [
+        [
+          "`public`",
+          "An access modifier. The heading must be public so the Java interpreter can call it and run the class."
+        ],
+        [
+          "`static`",
+          "Means the method can be called without first creating an object of the class."
+        ],
+        [
+          "`void`",
+          "Indicates that `main` does not return any value when it is called."
+        ],
+        [
+          "`main`",
+          "The method name. The JVM always executes `main` first."
+        ],
+        [
+          "`String[] args`",
+          "The type of argument that can be passed to `main`, an array of strings from the command line."
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "You will write this line in every program for a long time before you need to think about it. That is fine. Copy it now; `static` will make full sense in the Intermediate tier."
+    },
+    {
+      "type": "heading",
+      "value": "What is `args`?"
+    },
+    {
+      "type": "text",
+      "value": "`String[] args` holds any words typed after the class name when the program is run. This program greets whoever is named on the command line:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Greet {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, \" + args[0] + \"!\");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Running `java Greet Ana` prints `Hello, Ana!`. If you run `java Greet` with no words, `args[0]` does not exist and the program stops with an error, which is a third kind of error described in Lesson 7."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "id": "input-output-3-displaying-output",
+  "moduleId": "input-output",
+  "title": "Displaying output",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Java provides simple output statements that send output to the standard output device, the display screen:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.print(\"This is a text.\");\nSystem.out.println(\"This is a text.\");"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**`print()`** displays output and leaves the insertion point on the current line.",
+        "**`println()`** moves the insertion point to the following line after the output is displayed."
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Concatenation"
+    },
+    {
+      "type": "text",
+      "value": "To display a string containing variables, join them with the plus sign:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String name = \"Jess Diaz\";\nSystem.out.println(\"Hello! My name is \" + name + \".\");\n\nint kilo = 2;\nSystem.out.println(kilo + \" kilos of sugar.\");"
+    },
+    {
+      "type": "text",
+      "value": "The output of `print` and `println` is always in string format, the `+` converts numbers to text automatically."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Watch the mixing",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Because `+` means both addition and concatenation, order matters:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "System.out.println(\"Total: \" + 2 + 3);     // Total: 23   ← concatenation, left to right\nSystem.out.println(\"Total: \" + (2 + 3));   // Total: 5    ← parentheses force addition first"
+        },
+        {
+          "type": "text",
+          "value": "Once one operand is a String, every `+` after it concatenates."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "value": "`println()` with nothing between the parentheses prints only a line break, which gives you a blank line:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"A\");\nSystem.out.println();      // blank line\nSystem.out.println(\"B\");"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "A\n\nB"
+    }
+  ]
+}

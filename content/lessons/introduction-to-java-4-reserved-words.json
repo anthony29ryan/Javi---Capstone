@@ -1,0 +1,103 @@
+{
+  "id": "introduction-to-java-4-reserved-words",
+  "moduleId": "introduction-to-java",
+  "title": "Reserved words",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Reserved words** (or keywords) have special predefined meaning and cannot be used to name variables, classes, methods, or identifiers. The Java compiler recognizes all of the following:"
+    },
+    {
+      "type": "table",
+      "headers": [],
+      "rows": [
+        [
+          "`abstract`",
+          "`continue`",
+          "`for`",
+          "`new`",
+          "`switch`"
+        ],
+        [
+          "`assert`",
+          "`default`",
+          "`goto`",
+          "`package`",
+          "`synchronized`"
+        ],
+        [
+          "`boolean`",
+          "`do`",
+          "`if`",
+          "`private`",
+          "`this`"
+        ],
+        [
+          "`break`",
+          "`double`",
+          "`implements`",
+          "`protected`",
+          "`throw`"
+        ],
+        [
+          "`byte`",
+          "`else`",
+          "`import`",
+          "`public`",
+          "`throws`"
+        ],
+        [
+          "`case`",
+          "`enum`",
+          "`instanceof`",
+          "`return`",
+          "`transient`"
+        ],
+        [
+          "`catch`",
+          "`extends`",
+          "`int`",
+          "`short`",
+          "`try`"
+        ],
+        [
+          "`char`",
+          "`final`",
+          "`interface`",
+          "`static`",
+          "`void`"
+        ],
+        [
+          "`class`",
+          "`finally`",
+          "`long`",
+          "`strictfp`",
+          "`volatile`"
+        ],
+        [
+          "`const`",
+          "`float`",
+          "`native`",
+          "`super`",
+          "`while`"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Do not memorize this list. Your editor will colour these differently, and the compiler will tell you immediately if you misuse one."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Two oddities: `goto` and `const` are reserved but **unused**: Java claims the words so nobody can name a variable with them, but the language has no `goto` statement and uses `final` instead of `const`."
+        }
+      ]
+    }
+  ]
+}

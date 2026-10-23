@@ -1,0 +1,21 @@
+{
+  "id": "enums-nested-classes-key-takeaways",
+  "moduleId": "enums-nested-classes",
+  "title": "Key takeaways",
+  "order": 9,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "An **enum** is a fixed set of constants; invalid values become **compile errors** rather than run-time surprises.",
+        "Instance methods: `toString()`, `ordinal()`, `equals()`, `compareTo()`. Static: `valueOf()`, `values()`.",
+        "**`==` is correct for enums**; `<` and `>` are not. Use `compareTo()` for ordering.",
+        "`valueOf()` is case-sensitive and throws `IllegalArgumentException`, **always guard user input**.",
+        "In a switch on an enum, case labels are **unqualified**.",
+        "Enums can carry **fields, constructors, and methods**: usually better than a switch elsewhere.",
+        "**Nested classes** come in four kinds; nest only when the class is an implementation detail of its container."
+      ]
+    }
+  ]
+}

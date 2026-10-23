@@ -1,0 +1,38 @@
+{
+  "id": "oop-overview",
+  "moduleId": "oop",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "You have spent eleven lessons writing **procedures**: data in variables, logic in methods, everything coordinated by `main`. That approach works, and it stops working at a predictable point, when a program has enough moving parts that no one can hold it in their head."
+    },
+    {
+      "type": "text",
+      "value": "Object-oriented programming is the response. Instead of data over here and the code that touches it over there, you bundle them together into objects that know their own information and how to act on it."
+    },
+    {
+      "type": "text",
+      "value": "This is a **map lesson**. Every concept here gets a full lesson of its own later in the tier. Read it to know what the words mean and how the pieces relate; do not expect to be able to write it all yet."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Explain what object-oriented programming is and why it exists",
+        "Distinguish an object's attributes, state, and behaviors",
+        "Describe the relationship between a class and an object",
+        "Summarise inheritance, interfaces, and packages at a conceptual level"
+      ]
+    }
+  ]
+}

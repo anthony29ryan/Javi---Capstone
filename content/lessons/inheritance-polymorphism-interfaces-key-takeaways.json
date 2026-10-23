@@ -1,0 +1,20 @@
+{
+  "id": "inheritance-polymorphism-interfaces-key-takeaways",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Key takeaways",
+  "order": 10,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**`extends`** creates an *is a* relationship; the subclass inherits fields and public methods but not constructors.",
+        "**Overriding** replaces a method with an identical signature; mark it **`@Override`** so the compiler checks you.",
+        "**`super(...)`** must come first in a constructor; **`super.method()`** reuses the parent's behavior.",
+        "**Polymorphism** means the **object's** class decides which method runs, not the variable's type: resolved at run time by **dynamic binding**.",
+        "**Interfaces** specify what a class *can do* and support multiple implementation; **abstract classes** share code among closely related classes. Neither can be instantiated.",
+        "Reach for inheritance only when the relationship really is *is a*."
+      ]
+    }
+  ]
+}

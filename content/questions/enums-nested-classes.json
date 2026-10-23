@@ -1,0 +1,334 @@
+[
+  {
+    "id": "enums-nested-classes-01",
+    "lessonId": "enums-nested-classes-1-enumerations",
+    "type": "mcq",
+    "prompt": "What is an enumeration?",
+    "choices": [
+      "A data type with a fixed set of constants",
+      "A kind of loop",
+      "A list that can grow",
+      "A type of method"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "enums-nested-classes-02",
+    "lessonId": "enums-nested-classes-1-enumerations",
+    "type": "mcq",
+    "prompt": "Why is an enum safer than using Strings such as \"Midterm\"?",
+    "choices": [
+      "Strings cannot be compared",
+      "An invalid value becomes a compile error",
+      "Enums run faster",
+      "Enums need no declaration"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "enums-nested-classes-03",
+    "lessonId": "enums-nested-classes-1-enumerations",
+    "type": "mcq",
+    "prompt": "Which is a valid assignment, given `enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }`?",
+    "choices": [
+      "Period p = Period.PIZZA;",
+      "Period p = \"MIDTERM\";",
+      "Period p = Period.MIDTERM;",
+      "Period p = 1;"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "enums-nested-classes-04",
+    "lessonId": "enums-nested-classes-1-enumerations",
+    "type": "mcq",
+    "prompt": "By convention, how are enum constants written?",
+    "choices": [
+      "camelCase",
+      "Title Case",
+      "lowercase",
+      "ALL_CAPS"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "enums-nested-classes-05",
+    "lessonId": "enums-nested-classes-1-enumerations",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }\n\npublic static boolean isFinalExam(Period p) {\n    return p == Period.FINAL;\n}\n\nSystem.out.println(isFinalExam(Period.FINAL));",
+    "choices": [
+      "true",
+      "false",
+      "FINAL",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "enums-nested-classes-06",
+    "lessonId": "enums-nested-classes-1-enumerations",
+    "type": "mcq",
+    "prompt": "Where can an enum NOT be declared?",
+    "choices": [
+      "Next to `main` in a class",
+      "Inside a method",
+      "In its own file",
+      "Inside a class"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "enums-nested-classes-07",
+    "lessonId": "enums-nested-classes-2-enum-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }\n\nSystem.out.println(Period.MIDTERM.ordinal());",
+    "choices": [
+      "0",
+      "2",
+      "1",
+      "MIDTERM"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "enums-nested-classes-08",
+    "lessonId": "enums-nested-classes-2-enum-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }\n\nSystem.out.println(Period.valueOf(\"PRELIM\"));",
+    "choices": [
+      "0",
+      "Compile error",
+      "prelim",
+      "PRELIM"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "enums-nested-classes-09",
+    "lessonId": "enums-nested-classes-2-enum-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }\n\nSystem.out.println(Period.values().length);",
+    "choices": [
+      "4",
+      "3",
+      "5",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "enums-nested-classes-10",
+    "lessonId": "enums-nested-classes-2-enum-methods",
+    "type": "mcq",
+    "prompt": "What does `Period.valueOf(\"midterm\")` do?",
+    "choices": [
+      "Returns null",
+      "Throws IllegalArgumentException, because it is case-sensitive",
+      "Returns MIDTERM",
+      "Returns -1"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "enums-nested-classes-11",
+    "lessonId": "enums-nested-classes-2-enum-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "enum Period { PRELIM, MIDTERM, PREFINAL, FINAL }\n\nSystem.out.println(Period.PRELIM.compareTo(Period.FINAL));",
+    "choices": [
+      "3",
+      "0",
+      "-3",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "enums-nested-classes-12",
+    "lessonId": "enums-nested-classes-2-enum-methods",
+    "type": "mcq",
+    "prompt": "Which should you use to put two enum constants in order?",
+    "choices": [
+      "valueOf()",
+      "< and >",
+      "toString()",
+      "compareTo()"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "enums-nested-classes-13",
+    "lessonId": "enums-nested-classes-3-a-worked-example",
+    "type": "mcq",
+    "prompt": "A program reads a grading period and calls `Period.valueOf(input.toUpperCase())` inside a `try` block that catches `IllegalArgumentException`. What happens when the user types `Pizza`?",
+    "choices": [
+      "`valueOf` throws IllegalArgumentException, which the program catches",
+      "The program crashes with no message",
+      "It selects the last period",
+      "It selects the first period"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "enums-nested-classes-14",
+    "lessonId": "enums-nested-classes-3-a-worked-example",
+    "type": "mcq",
+    "prompt": "What does `Period.values()` return?",
+    "choices": [
+      "The number of constants",
+      "An array of the enum constants",
+      "A single String",
+      "The first constant"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "enums-nested-classes-15",
+    "lessonId": "enums-nested-classes-4-enums-in-a-switch",
+    "type": "mcq",
+    "prompt": "How should a case label be written in a `switch` over an enum `Size`?",
+    "choices": [
+      "case Size.LARGE:",
+      "case \"LARGE\":",
+      "case LARGE:",
+      "case 1:"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "enums-nested-classes-16",
+    "lessonId": "enums-nested-classes-4-enums-in-a-switch",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "enum Size { REGULAR, LARGE, PARTY }\n\nSize s = Size.LARGE;\nswitch (s) {\n    case REGULAR: System.out.println(\"381.00\"); break;\n    case LARGE:   System.out.println(\"602.00\"); break;\n    case PARTY:   System.out.println(\"799.00\"); break;\n}",
+    "choices": [
+      "381.00",
+      "Nothing",
+      "799.00",
+      "602.00"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "enums-nested-classes-17",
+    "lessonId": "enums-nested-classes-4-enums-in-a-switch",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "enum Size { REGULAR, LARGE, PARTY }\n\nSize s = Size.LARGE;\ndouble price = switch (s) {\n    case REGULAR -> 381.00;\n    case LARGE -> 602.00;\n    case PARTY -> 799.00;\n};\nSystem.out.println(price);",
+    "choices": [
+      "602.0",
+      "381.0",
+      "799.0",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "enums-nested-classes-18",
+    "lessonId": "enums-nested-classes-5-type-safety-and-enums-with-fields",
+    "type": "mcq",
+    "prompt": "What does \"type-safe\" mean for an enum?",
+    "choices": [
+      "The enum is stored on disk",
+      "Only the allowed values can be used",
+      "The enum cannot be changed",
+      "The enum has no methods"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "enums-nested-classes-19",
+    "lessonId": "enums-nested-classes-5-type-safety-and-enums-with-fields",
+    "type": "mcq",
+    "prompt": "An enum with fields has a constructor. How is it declared?",
+    "choices": [
+      "It must be public",
+      "It must be static",
+      "It is always private",
+      "Enums cannot have constructors"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "enums-nested-classes-20",
+    "lessonId": "enums-nested-classes-5-type-safety-and-enums-with-fields",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "enum PizzaSize {\n    REGULAR(\"Regular\", 381.00),\n    LARGE(\"Large\", 602.00),\n    PARTY(\"Party\", 799.00);\n\n    private final String label;\n    private final double price;\n\n    PizzaSize(String label, double price) {\n        this.label = label;\n        this.price = price;\n    }\n\n    public double getPrice() { return price; }\n    public double priceWithVat() { return price * 1.12; }\n}\n\nSystem.out.println(PizzaSize.LARGE.getPrice());",
+    "choices": [
+      "LARGE",
+      "381.0",
+      "799.0",
+      "602.0"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "enums-nested-classes-21",
+    "lessonId": "enums-nested-classes-5-type-safety-and-enums-with-fields",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "enum PizzaSize {\n    REGULAR(\"Regular\", 381.00),\n    LARGE(\"Large\", 602.00),\n    PARTY(\"Party\", 799.00);\n\n    private final String label;\n    private final double price;\n\n    PizzaSize(String label, double price) {\n        this.label = label;\n        this.price = price;\n    }\n\n    public double getPrice() { return price; }\n    public double priceWithVat() { return price * 1.12; }\n}\n\nSystem.out.printf(\"%.2f%n\", PizzaSize.REGULAR.priceWithVat());",
+    "choices": [
+      "381.00",
+      "426.00",
+      "381.12",
+      "426.72"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "enums-nested-classes-22",
+    "lessonId": "enums-nested-classes-6-nested-classes",
+    "type": "mcq",
+    "prompt": "How many kinds of nested class are there?",
+    "choices": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "enums-nested-classes-23",
+    "lessonId": "enums-nested-classes-6-nested-classes",
+    "type": "mcq",
+    "prompt": "Can an inner class read the private fields of its top-level class?",
+    "choices": [
+      "Yes",
+      "No",
+      "Only if they are static",
+      "Only if they are public"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "enums-nested-classes-24",
+    "lessonId": "enums-nested-classes-6-nested-classes",
+    "type": "mcq",
+    "prompt": "What is needed to create an object of a non-static inner class?",
+    "choices": [
+      "A static method",
+      "An object of the outer class",
+      "An import statement",
+      "Nothing special"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "enums-nested-classes-25",
+    "lessonId": "enums-nested-classes-common-mistakes",
+    "type": "truefalse",
+    "prompt": "Comparing enum constants with `==` is correct.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  }
+]

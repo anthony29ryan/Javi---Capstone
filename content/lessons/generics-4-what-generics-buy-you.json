@@ -1,0 +1,56 @@
+{
+  "id": "generics-4-what-generics-buy-you",
+  "moduleId": "generics",
+  "title": "What generics buy you",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Without generics, a container holds `Object` and every retrieval needs a cast:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "List rawList = new ArrayList();        // raw type\nrawList.add(\"hello\");\nrawList.add(42);                       // nothing stops this\n\nString s = (String) rawList.get(1);    // compiles, ClassCastException at run time"
+    },
+    {
+      "type": "text",
+      "value": "With generics, the mistake never reaches run time:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "List<String> list = new ArrayList<>();\nlist.add(\"hello\");\nlist.add(42);                          // compile error, caught immediately\n\nString s = list.get(0);                // no cast needed"
+    },
+    {
+      "type": "text",
+      "value": "**Generics move an entire category of error from run time to compile time**, which is the same argument as Lesson 18 made for enums, applied to types rather than values."
+    },
+    {
+      "type": "heading",
+      "value": "A first look at a collection"
+    },
+    {
+      "type": "text",
+      "value": "`ArrayList<String>` is a list that grows as you add to it, and the type in the angle brackets says what it may hold. This course does not cover the Collections Framework, but the few methods below show why generics matter: the compiler knows `get` returns a `String`, so you can call `String` methods on it with no cast:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.ArrayList;\n\nArrayList<String> names = new ArrayList<>();\nnames.add(\"Ana\");\nnames.add(\"Jess\");\n\nSystem.out.println(names.size());              // 2\nSystem.out.println(names.get(1));              // Jess\nSystem.out.println(names.get(0).toUpperCase());   // ANA"
+    },
+    {
+      "type": "heading",
+      "value": "Bounded type parameters"
+    },
+    {
+      "type": "text",
+      "value": "A type parameter can be limited, just as a wildcard can. `<T extends Comparable<T>>` means T must be a type that can be compared with itself. Inside the method the compiler then allows `compareTo`, which an unrestricted `T` would not:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static <T extends Comparable<T>> T larger(T a, T b) {\n    return a.compareTo(b) >= 0 ? a : b;\n}\n\nSystem.out.println(larger(3, 9));                 // 9\nSystem.out.println(larger(\"apple\", \"banana\"));    // banana"
+    }
+  ]
+}

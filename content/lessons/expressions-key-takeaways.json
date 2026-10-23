@@ -1,0 +1,20 @@
+{
+  "id": "expressions-key-takeaways",
+  "moduleId": "expressions",
+  "title": "Key takeaways",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "An **expression** evaluates to a single value, and that value has a type.",
+        "**Integral** expressions are all-integer; **floating-point** expressions are all-decimal; **mixed** expressions contain both and return a decimal.",
+        "Rules apply **one operator at a time**, in precedence order, not to the expression as a whole.",
+        "An integer division that has already happened cannot be undone by a `double` later in the expression.",
+        "**Logical expressions** return booleans, and `&&` binds tighter than `||`.",
+        "Parentheses override all of it, and are worth using."
+      ]
+    }
+  ]
+}

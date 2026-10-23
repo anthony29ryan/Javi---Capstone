@@ -1,32 +1,16 @@
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 import { auth, db } from './firebase';
+import { advanceStreak } from './streak';
 
 const EMPTY_PROGRESS = {
   completedLessons: [],
+  completedTraces: [],
+  completedChallenges: [],
   moduleScores: {},
   streak: { current: 0, longest: 0, lastActiveDate: null },
+  lastLessonId: null,
 };
-
-function todayString() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function yesterdayString() {
-  return new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-}
-
-function advanceStreak(streak) {
-  const today = todayString();
-  if (streak.lastActiveDate === today) return streak;
-
-  const current = streak.lastActiveDate === yesterdayString() ? streak.current + 1 : 1;
-  return {
-    current,
-    longest: Math.max(streak.longest || 0, current),
-    lastActiveDate: today,
-  };
-}
 
 async function readProgress(userId) {
   const snapshot = await getDoc(doc(db, 'progress', userId));
@@ -37,18 +21,70 @@ export async function getProgress() {
   return readProgress(auth.currentUser.uid);
 }
 
-export async function recordLessonQuizCompletion(lessonId) {
+/**
+ * Remembers which lesson was opened last, so "Continue learning" can point at
+ * where the learner actually was rather than at the first thing they have not
+ * finished.
+ *
+ * Deliberately does not touch the streak: opening a lesson is not the same as
+ * studying one, and a streak you can extend by tapping into a page and out
+ * again is not measuring anything.
+ */
+export async function recordLessonOpened(lessonId) {
+  await setDoc(
+    doc(db, 'progress', auth.currentUser.uid),
+    { lastLessonId: lessonId, updatedAt: serverTimestamp() },
+    { merge: true }
+  );
+}
+
+/**
+ * Marks a lesson done, or undoes that.
+ *
+ * Lessons are completed by the learner saying so on the lesson screen; there
+ * are no per-lesson quizzes, so nothing else decides this. Only completing
+ * counts as activity — un-marking must not extend a streak, or the streak
+ * becomes something you can farm by toggling a checkbox.
+ */
+/** Returns the fields it saved, so the app can update without re-reading. */
+export async function setLessonComplete(lessonId, complete) {
   const userId = auth.currentUser.uid;
   const existing = await readProgress(userId);
 
-  const completedLessons = existing.completedLessons.includes(lessonId)
-    ? existing.completedLessons
-    : [...existing.completedLessons, lessonId];
+  if (existing.completedLessons.includes(lessonId) === complete) {
+    return { completedLessons: existing.completedLessons };
+  }
+
+  const changes = {
+    completedLessons: complete
+      ? [...existing.completedLessons, lessonId]
+      : existing.completedLessons.filter((id) => id !== lessonId),
+    ...(complete ? { streak: advanceStreak(existing.streak) } : {}),
+  };
+
+  // The server adds or removes the one id rather than taking this whole list,
+  // so a second save still in flight (another lesson, another phone) is not overwritten.
+  await setDoc(
+    doc(db, 'progress', userId),
+    {
+      ...changes,
+      completedLessons: complete ? arrayUnion(lessonId) : arrayRemove(lessonId),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
+  return changes;
+}
+
+export async function recordModuleQuizCompletion(moduleId, correct, total) {
+  const userId = auth.currentUser.uid;
+  const existing = await readProgress(userId);
 
   await setDoc(
     doc(db, 'progress', userId),
     {
-      completedLessons,
+      // merge keeps the other modules' scores, so two quizzes saved at once cannot erase each other.
+      moduleScores: { [moduleId]: { correct, total, lastAttemptAt: Date.now() } },
       streak: advanceStreak(existing.streak),
       updatedAt: serverTimestamp(),
     },
@@ -56,22 +92,39 @@ export async function recordLessonQuizCompletion(lessonId) {
   );
 }
 
-export async function recordModuleQuizCompletion(moduleId, correct, total) {
+/**
+ * Marks a Code Tracer program as done. Finishing one is real study, so it
+ * advances the streak every time, the same as finishing a quiz. arrayUnion
+ * adds the id on the server, so a repeat leaves the list as it is and two
+ * saves at once cannot overwrite each other.
+ */
+export async function recordTraceCompletion(traceId) {
   const userId = auth.currentUser.uid;
   const existing = await readProgress(userId);
-
-  const moduleScores = {
-    ...existing.moduleScores,
-    [moduleId]: { correct, total, lastAttemptAt: Date.now() },
-  };
 
   await setDoc(
     doc(db, 'progress', userId),
     {
-      moduleScores,
+      completedTraces: arrayUnion(traceId),
       streak: advanceStreak(existing.streak),
       updatedAt: serverTimestamp(),
     },
+    { merge: true }
+  );
+}
+
+/**
+ * Advances the streak after a challenge is solved. The runChallenge function
+ * has already added it to completedChallenges (the app cannot), but the
+ * streak follows the learner's local day, which only the phone knows.
+ */
+export async function recordChallengeStreak() {
+  const userId = auth.currentUser.uid;
+  const existing = await readProgress(userId);
+
+  await setDoc(
+    doc(db, 'progress', userId),
+    { streak: advanceStreak(existing.streak), updatedAt: serverTimestamp() },
     { merge: true }
   );
 }

@@ -1,0 +1,36 @@
+{
+  "id": "enums-nested-classes-common-mistakes",
+  "moduleId": "enums-nested-classes",
+  "title": "Common mistakes",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Qualifying a case label in a switch on an enum.** `case Size.LARGE:` is a compile error. Write `case LARGE:`."
+    },
+    {
+      "type": "text",
+      "value": "**Calling `valueOf()` on unvalidated input.** Throws `IllegalArgumentException`. Catch it, or check against `values()` first. Note it is also **case-sensitive**: `valueOf(\"large\")` fails."
+    },
+    {
+      "type": "text",
+      "value": "**Declaring an enum inside a method.** Not allowed. Put it in its own file or inside a class."
+    },
+    {
+      "type": "text",
+      "value": "**Using `<` or `>` on enum constants.** They are objects. Use `compareTo()`."
+    },
+    {
+      "type": "text",
+      "value": "**Relying on `ordinal()` as a stored value.** Reorder the constants and every stored number silently means something different. Store the constant's **name**, or give the enum an explicit field."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting that `==` is correct here.** Unlike Strings, enum comparison with `==` is right, and safer than `equals()` because it handles `null` without throwing."
+    },
+    {
+      "type": "text",
+      "value": "**Making an inner class when a separate class would do.** An inner class cannot be reused elsewhere. Nest only when the class is an implementation detail of its container."
+    }
+  ]
+}

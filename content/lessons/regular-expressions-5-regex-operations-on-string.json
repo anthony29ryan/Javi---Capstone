@@ -1,0 +1,81 @@
+{
+  "id": "regular-expressions-5-regex-operations-on-string",
+  "moduleId": "regular-expressions",
+  "title": "RegEx operations on String",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "heading",
+      "value": "split()"
+    },
+    {
+      "type": "text",
+      "value": "**The `split()` method splits the string around matches of the given regular expression.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String phone = \"991-978-6452\";\nString[] tokens = phone.split(\"-\");\n\nfor (String t : tokens) {\n    System.out.println(t);\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "991\n978\n6452"
+    },
+    {
+      "type": "text",
+      "value": "You used `split(\",\")` in Lesson 17 to break a record into fields. Now you know its argument is a **regex**, not a literal, which is why splitting on a dot needs `split(\"\\\\.\")`, since a bare `.` is the wildcard and would match everything."
+    },
+    {
+      "type": "heading",
+      "value": "replaceAll()"
+    },
+    {
+      "type": "text",
+      "value": "**`replaceAll()` replaces all occurrences of the defined regular expression found in the string with another string.** This removes runs of multiple spaces:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String str = \"  Help  me  I have   no idea what's  going on!\";\nstr = str.replaceAll(\" {2,}\", \" \");\nSystem.out.println(str);"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": " Help me I have no idea what's going on!"
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Correction",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "your handout shows the output as `Help me I have no idea what's going on!` with no leading space. But the input **begins** with two spaces, and ` {2,}` replaces them with **one** space , so a single leading space remains. The printed output in the handout is what you would get after also calling `trim()`:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "str = str.replaceAll(\" {2,}\", \" \").trim();   // now the handout's output is correct"
+        },
+        {
+          "type": "text",
+          "value": "Worth noticing: a regex does exactly what you asked, which is rarely quite what you meant."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Removing everything except digits"
+    },
+    {
+      "type": "text",
+      "value": "The regex `\\D`, written `\"\\\\D\"` in Java source, means \"any character that is not a digit\", so replacing it with an empty string strips a phone number down to its digits:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String phone = \"(991) 978-6452\";\nSystem.out.println(phone.replaceAll(\"\\\\D\", \"\"));   // 9919786452"
+    }
+  ]
+}

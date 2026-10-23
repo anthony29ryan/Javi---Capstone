@@ -1,0 +1,229 @@
+{
+  "id": "file-io-2-the-path-and-files-classes",
+  "moduleId": "file-io",
+  "title": "The Path and Files classes",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "The **`Path`** class creates objects containing information about files and directories, sizes, locations, creation dates, and is used to check whether a file or directory exists.",
+        "The **`Files`** class performs operations on files and directories: determining attributes, creating input and output streams, and deleting them."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Both require:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.nio.file.*;"
+    },
+    {
+      "type": "text",
+      "value": "To create a `Path`, use the **`Paths`** class and its `get()` method:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Path filePath = Paths.get(\"C:\\\\Java\\\\Chapter8\\\\sample.txt\");"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "An **absolute path** is complete; it requires no other information to locate a file. `C:\\Java\\Chapter8\\sample.txt`",
+        "A **relative path** depends on other path information. `sample.txt`, `Chapter8\\sample.txt`, `Java\\Chapter8`"
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Path methods"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Method",
+        "Description"
+      ],
+      "rows": [
+        [
+          "`String toString()`",
+          "Returns the String representation of the Path, eliminating double backslashes"
+        ],
+        [
+          "`Path getFileName()`",
+          "Returns the file or directory denoted by this Path, the last item in the sequence of name elements"
+        ],
+        [
+          "`int getNameCount()`",
+          "Returns the number of name elements in the Path"
+        ],
+        [
+          "`Path getName(int)`",
+          "Returns the name at the position specified by the integer parameter"
+        ]
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.nio.file.*;\n\npublic class PathDemo {\n    public static void main(String[] args) {\n        Path filePath = Paths.get(\"C:\\\\Java\\\\Chapter8\\\\sample.txt\");\n\n        System.out.println(\"Path:       \" + filePath.toString());\n        System.out.println(\"File name:  \" + filePath.getFileName());\n        System.out.println(\"Elements:   \" + filePath.getNameCount());\n\n        for (int i = 0; i < filePath.getNameCount(); i++) {\n            System.out.println(\"  Name \" + i + \": \" + filePath.getName(i));\n        }\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Path:       C:\\Java\\Chapter8\\sample.txt\nFile name:  sample.txt\nElements:   3\n  Name 0: Java\n  Name 1: Chapter8\n  Name 2: sample.txt"
+    },
+    {
+      "type": "text",
+      "value": "Note `getNameCount()` returns `3`, not `4`, the root `C:\\` is not a *name* element."
+    },
+    {
+      "type": "heading",
+      "value": "Relative to absolute"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Path relative = Paths.get(\"sample.txt\");\nSystem.out.println(relative.toAbsolutePath());\n// e.g. C:\\Users\\You\\Documents\\sample.txt, resolved against the current working directory"
+    },
+    {
+      "type": "heading",
+      "value": "Checking access"
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Correction: `checkAccess()` is not a method of `Files`",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Your handout presents it as though you could write `Files.checkAccess(path)`. That will not compile. The method lives on `FileSystemProvider`, reached like this:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "FileSystems.getDefault().provider().checkAccess(filePath, AccessMode.READ);"
+        },
+        {
+          "type": "text",
+          "value": "In practice nobody writes that. `Files` has direct methods that do the same job and return a `boolean` instead of throwing:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "Files.exists(filePath);        // does it exist?\nFiles.isReadable(filePath);    // exists and readable?\nFiles.isWritable(filePath);    // exists and writable?\nFiles.isExecutable(filePath);  // exists and executable?"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "value": "The arguments the handout lists still describe the underlying concept:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Argument",
+        "Description"
+      ],
+      "rows": [
+        [
+          "None",
+          "Checks whether the file exists"
+        ],
+        [
+          "`READ`",
+          "Checks existence and permission to read"
+        ],
+        [
+          "`WRITE`",
+          "Checks existence and permission to write"
+        ],
+        [
+          "`EXECUTE`",
+          "Checks existence and permission to execute"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Deleting"
+    },
+    {
+      "type": "text",
+      "value": "**The `delete()` method of `Files` accepts a `Path` parameter and removes the last element in a path**, or throws an exception if unsuccessful:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "Deleting a file that does not exist → **`NoSuchFileException`**",
+        "Deleting a directory that has files → **`DirectoryNotEmptyException`**",
+        "Deleting a file without permission → **`SecurityException`**",
+        "Other input/output errors → **`IOException`**"
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**`deleteIfExists()`** removes a file without throwing an exception if the file does not exist."
+    },
+    {
+      "type": "heading",
+      "value": "File attributes"
+    },
+    {
+      "type": "text",
+      "value": "**`readAttributes()`** retrieves information about a file. It takes two arguments: a `Path` object and `BasicFileAttributes.class`, and returns an instance of `BasicFileAttributes`."
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Method",
+        "Description"
+      ],
+      "rows": [
+        [
+          "`size()`",
+          "Returns the size of the file in bytes"
+        ],
+        [
+          "`creationTime()`",
+          "Returns the date and time the file was created, as `yyyy-mm-ddThh:mm:ss` (T stands for Time)"
+        ],
+        [
+          "`lastModifiedTime()`",
+          "Returns the date and time the file was last edited, same format"
+        ],
+        [
+          "`compareTo()`",
+          "Compares values retrieved from `creationTime()` or `lastModifiedTime()`"
+        ]
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.io.IOException;\nimport java.nio.file.*;\nimport java.nio.file.attribute.BasicFileAttributes;\n\npublic class AttributesDemo {\n    public static void main(String[] args) {\n        Path filePath = Paths.get(\"sample.txt\");\n\n        try {\n            BasicFileAttributes attr =\n                Files.readAttributes(filePath, BasicFileAttributes.class);\n\n            System.out.println(\"Size:     \" + attr.size() + \" bytes\");\n            System.out.println(\"Created:  \" + attr.creationTime());\n            System.out.println(\"Modified: \" + attr.lastModifiedTime());\n        } catch (IOException e) {\n            System.out.println(\"Could not read attributes: \" + e.getMessage());\n        }\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "The `try...catch` is not optional, `readAttributes` declares `IOException`, a **checked** exception, so the code will not compile without it."
+    },
+    {
+      "type": "heading",
+      "value": "Does it exist?"
+    },
+    {
+      "type": "text",
+      "value": "`Files.exists()` answers the question without throwing, and `Files.deleteIfExists()` returns `true` if it removed the file and `false` if there was nothing to remove. Plain `Files.delete()` throws `NoSuchFileException` for a missing file instead:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Path missing = Paths.get(\"nope.txt\");\nSystem.out.println(Files.exists(missing));            // false\nSystem.out.println(Files.deleteIfExists(missing));    // false, no exception"
+    }
+  ]
+}

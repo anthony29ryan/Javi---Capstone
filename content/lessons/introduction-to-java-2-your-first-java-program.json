@@ -1,0 +1,129 @@
+{
+  "id": "introduction-to-java-2-your-first-java-program",
+  "moduleId": "introduction-to-java",
+  "title": "Your first Java program",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class FirstJavaProgram {\n    public static void main(String[] args) {\n        System.out.println(\"First Java Application\");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Output:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "First Java Application"
+    },
+    {
+      "type": "text",
+      "value": "Small as it is, every line is doing something. Working outward:"
+    },
+    {
+      "type": "text",
+      "value": "**`FirstJavaProgram` is a class name.** A **class** is the basic unit of a Java program: all Java code is grouped into a class. The definition starts with an **access modifier** (here, `public`), which specifies the accessibility of the class, followed by the keyword `class`."
+    },
+    {
+      "type": "text",
+      "value": "**Braces mark boundaries.** Every class definition is enclosed in a pair of curly brackets, `{` and `}`. They mark where the class begins and ends."
+    },
+    {
+      "type": "text",
+      "value": "**`main` is where execution starts.** The main method is a special method and is the entry point of program execution. A Java class can have only one `main` method."
+    },
+    {
+      "type": "text",
+      "value": "**The line inside is a statement.** A **statement** is an action the program has to perform. Note the semicolon. Java requires one at the end of every statement."
+    },
+    {
+      "type": "text",
+      "value": "Breaking down `System.out.println(\"First Java Application\");`:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Part",
+        "What it is"
+      ],
+      "rows": [
+        [
+          "`System.out`",
+          "The standard output stream, your screen"
+        ],
+        [
+          "`println`",
+          "The method being called; prints its argument, then a newline"
+        ],
+        [
+          "`\"First Java Application\"`",
+          "A **literal string** passed as an **argument**"
+        ],
+        [
+          "`;`",
+          "Ends the statement"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "A **literal string** is a series of characters that appear exactly as entered, written between double quotation marks. **Arguments** are information passed to a method so it can perform its task."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "`println` prints and moves to the next line. `print` prints without the newline. You will use both."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Escape sequences"
+    },
+    {
+      "type": "text",
+      "value": "Some characters can't be typed directly inside a string. A backslash followed by a letter, called an **escape sequence**, stands for one of them:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Sequence",
+        "Meaning"
+      ],
+      "rows": [
+        [
+          "`\\n`",
+          "New line"
+        ],
+        [
+          "`\\t`",
+          "Tab"
+        ],
+        [
+          "`\\\"`",
+          "A double quotation mark"
+        ],
+        [
+          "`\\\\`",
+          "A backslash"
+        ]
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"Name:\\tAna\\nQuote: \\\"Hi\\\"\\nPath: C:\\\\temp\");"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Name:\tAna\nQuote: \"Hi\"\nPath: C:\\temp"
+    }
+  ]
+}

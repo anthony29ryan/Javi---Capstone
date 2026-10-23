@@ -5,171 +5,267 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import Ionicons from '@expo/vector-icons/Ionicons';
-
-import Button from '../components/Button';
-import TextField from '../components/TextField';
+import Text from '../components/AppText';
+import AuthAlert from '../components/auth/AuthAlert';
+import AuthAnimatedScreen from '../components/auth/AuthAnimatedScreen';
+import AuthBackButton from '../components/auth/AuthBackButton';
+import AuthButton from '../components/auth/AuthButton';
+import AuthTextField, { FieldError } from '../components/auth/AuthTextField';
+import GoogleButton, { useGoogleSignIn } from '../components/auth/GoogleButton';
+import PasswordRules, { passwordMeetsAllRules } from '../components/auth/PasswordRules';
+import TermsSheet from '../components/auth/TermsSheet';
+import { TERMS_VERSION } from '../constants/legal';
+import { EMAIL_PATTERN } from '../constants/validation';
 import { useAuth } from '../context/AuthContext';
-import { colors, radius, spacing, type } from '../theme/colors';
+import { googleAvailable } from '../services/googleSignIn';
+import { authColors, authRadius, authSpacing, authType, centeredColumn, contentWidth, authFonts } from '../theme/authTheme';
 
-const MIN_PASSWORD_LENGTH = 8;
-
-// Firebase's own list of characters that count as non-alphanumeric. Checking
-// against this exact set rather than "anything not a letter or digit" avoids
-// telling the user a character qualifies when the server would disagree.
-const SPECIAL_CHARACTERS = "^$*.[]{}()?\"!@#%&/\\,><':;|_~`";
-
-// These mirror the password policy configured in the Firebase console
-// (Authentication > Settings > Password policy). They exist here only to give
-// instant feedback; the server is what actually enforces them, so if the
-// console policy changes, update this list to match.
-const PASSWORD_RULES = [
-  {
-    label: `At least ${MIN_PASSWORD_LENGTH} characters`,
-    test: (value) => value.length >= MIN_PASSWORD_LENGTH,
+const BANNERS = {
+  taken: {
+    tone: 'danger',
+    title: 'This email already has an account',
+    // Never says which way this account signs in: that would reveal more about who has signed up.
+    body: googleAvailable
+      ? 'Log in with your password, or tap Continue with Google if you signed up with Google.'
+      : 'Log in with it instead. If you forgot the password, reset it from the log-in screen.',
+    action: 'Log in instead',
   },
-  {
-    label: 'One uppercase letter',
-    test: (value) => /[A-Z]/.test(value),
+  offline: {
+    tone: 'warn',
+    title: 'No internet connection',
+    body: 'Check Wi-Fi or mobile data, then try again. What you typed is kept.',
+    action: 'Try again',
   },
-  {
-    label: 'One special character',
-    test: (value) => [...value].some((character) => SPECIAL_CHARACTERS.includes(character)),
+  failed: {
+    tone: 'danger',
+    title: 'Could not create your account',
+    body: 'Something went wrong on our side. Try again in a moment.',
   },
-];
+};
 
-function PasswordRules({ password }) {
-  return (
-    <View style={styles.rules}>
-      {PASSWORD_RULES.map((rule) => {
-        const met = rule.test(password);
-
-        return (
-          <View key={rule.label} style={styles.rule}>
-            <Ionicons
-              name={met ? 'checkmark-circle' : 'ellipse-outline'}
-              size={15}
-              color={met ? colors.success : colors.borderStrong}
-            />
-            <Text style={[styles.ruleText, met && styles.ruleTextMet]}>{rule.label}</Text>
-          </View>
-        );
-      })}
-    </View>
-  );
+/**
+ * The first problem with the form, as { field, message }, or null when it is
+ * ready to send. One at a time, in the order the fields appear.
+ */
+function firstProblem({ displayName, lastName, email, password, confirmPassword, agreed }) {
+  if (!displayName.trim()) return { field: 'name', message: 'Enter your first name.' };
+  if (!lastName.trim()) return { field: 'lastName', message: 'Enter your last name.' };
+  if (!email.trim()) return { field: 'email', message: 'Enter your email address.' };
+  if (!EMAIL_PATTERN.test(email.trim())) {
+    return { field: 'email', message: 'That email looks incomplete. Use the full address, like name@email.com.' };
+  }
+  if (!password) return { field: 'password', message: 'Create a password.' };
+  if (!passwordMeetsAllRules(password)) {
+    return {
+      field: 'password',
+      message: 'Use at least 8 characters with an uppercase letter, a lowercase letter and a symbol.',
+    };
+  }
+  if (!confirmPassword) return { field: 'confirm', message: 'Repeat your password.' };
+  if (password !== confirmPassword) return { field: 'confirm', message: 'This does not match the password above.' };
+  if (!agreed) return { field: 'agree', message: 'Read and accept the terms to continue.' };
+  return null;
 }
 
 export default function SignupScreen({ navigation }) {
   const { signUp } = useAuth();
+  const insets = useSafeAreaInsets();
   const [displayName, setDisplayName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [agreed, setAgreed] = useState(false);
+  const [problem, setProblem] = useState(null); // { field, message }
+  const [banner, setBanner] = useState(null); // a key of BANNERS
+  const [termsTab, setTermsTab] = useState(null); // 'terms' | 'privacy' while the popup is open
   const [submitting, setSubmitting] = useState(false);
+  const google = useGoogleSignIn(navigation);
 
-  // Only flag a mismatch once the user has actually started the second field,
-  // so the error does not appear while they are still typing it.
-  const mismatch = confirmPassword.length > 0 && password !== confirmPassword;
+  // Editing a field clears its own error. The "already has an account" banner
+  // stays until the email itself changes; the others go on any edit.
+  function edited(field) {
+    if (problem?.field === field) setProblem(null);
+    if (banner && (banner !== 'taken' || field === 'email')) setBanner(null);
+  }
+
+  const errorFor = (field) => (problem?.field === field ? problem.message : undefined);
 
   async function handleSignUp() {
-    setError('');
-
-    if (PASSWORD_RULES.some((rule) => !rule.test(password))) {
-      setError('Your password does not meet all the requirements listed below.');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError('The two passwords do not match.');
-      return;
-    }
+    const found = firstProblem({ displayName, lastName, email, password, confirmPassword, agreed });
+    setProblem(found);
+    setBanner(null);
+    if (found) return;
 
     setSubmitting(true);
     try {
-      await signUp(email.trim(), password, displayName.trim());
+      await signUp(email.trim(), password, displayName.trim(), lastName.trim(), TERMS_VERSION);
     } catch (err) {
-      setError(err.message);
+      // Firebase's own messages are raw error codes, so map them to ones a
+      // learner can act on.
+      if (err.code === 'auth/email-already-in-use') {
+        setProblem({ field: 'email', message: 'An account already uses this email.' });
+        setBanner('taken');
+      } else if (err.code === 'auth/network-request-failed') {
+        setBanner('offline');
+      } else {
+        setBanner('failed');
+      }
     } finally {
       setSubmitting(false);
     }
   }
+
+  const bannerActions = {
+    taken: () => navigation.navigate('Login', { email: email.trim() }),
+    offline: handleSignUp,
+  };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView
-        contentContainerStyle={styles.content}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={styles.header}>
-          <Text style={styles.title}>Create account</Text>
-          <Text style={styles.subtitle}>Start working through the Java tiers.</Text>
-        </View>
+      <AuthAnimatedScreen>
+        <ScrollView
+          contentContainerStyle={[
+            styles.content,
+            { paddingTop: insets.top + authSpacing.screenTop, paddingBottom: insets.bottom + authSpacing.screenBottom },
+          ]}
+          keyboardShouldPersistTaps="handled"
+        >
+          <AuthBackButton onPress={() => navigation.goBack()} />
 
-        <View style={styles.form}>
-          <TextField
-            label="Display name"
-            placeholder="What should we call you?"
-            value={displayName}
-            onChangeText={setDisplayName}
-          />
-          <TextField
-            label="Email"
-            placeholder="javi@gmail.com"
-            autoCapitalize="none"
-            autoComplete="email"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
-          <TextField
-            label="Password"
-            placeholder="Choose a password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-            style={styles.passwordField}
-          />
-          <PasswordRules password={password} />
-          <TextField
-            label="Confirm password"
-            placeholder="Re-enter your password"
-            secureTextEntry
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            error={mismatch ? 'Passwords do not match.' : null}
-          />
+          <Text style={styles.title}>Create your account</Text>
 
-          {error ? (
-            <View style={styles.errorBox}>
-              <Text style={styles.errorText}>{error}</Text>
-            </View>
+          {banner ? (
+            <AuthAlert {...BANNERS[banner]} onAction={bannerActions[banner]} style={styles.banner} />
+          ) : google.alert ? (
+            <AuthAlert {...google.alert} style={styles.banner} />
           ) : null}
 
-          <Button
-            label="Sign Up"
+          <GoogleButton onPress={google.start} loading={google.busy} dividerLabel="OR SIGN UP WITH EMAIL" />
+
+          <View style={styles.form}>
+            <AuthTextField
+              placeholder="First name"
+              value={displayName}
+              error={errorFor('name')}
+              onChangeText={(value) => {
+                setDisplayName(value);
+                edited('name');
+              }}
+            />
+            <AuthTextField
+              placeholder="Last name"
+              value={lastName}
+              error={errorFor('lastName')}
+              onChangeText={(value) => {
+                setLastName(value);
+                edited('lastName');
+              }}
+            />
+            <AuthTextField
+              placeholder="Email address"
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              value={email}
+              error={errorFor('email')}
+              onChangeText={(value) => {
+                setEmail(value);
+                edited('email');
+              }}
+            />
+            <AuthTextField
+              placeholder="Password"
+              secureTextEntry
+              value={password}
+              error={errorFor('password')}
+              onChangeText={(value) => {
+                setPassword(value);
+                edited('password');
+              }}
+            />
+            <AuthTextField
+              placeholder="Confirm password"
+              secureTextEntry
+              value={confirmPassword}
+              error={errorFor('confirm')}
+              onChangeText={(value) => {
+                setConfirmPassword(value);
+                edited('confirm');
+              }}
+            />
+          </View>
+
+          <PasswordRules password={password} />
+
+          {/* Ticking goes through the Terms popup; unticking is direct. */}
+          <View style={styles.terms}>
+            <Pressable
+              onPress={() => (agreed ? setAgreed(false) : setTermsTab('terms'))}
+              hitSlop={8}
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: agreed }}
+              accessibilityLabel="I agree to the terms and privacy policy"
+              style={[
+                styles.checkbox,
+                agreed && styles.checkboxChecked,
+                problem?.field === 'agree' && styles.checkboxError,
+              ]}
+            >
+              {agreed ? <Text style={styles.checkboxMark}>✓</Text> : null}
+            </Pressable>
+            <Text style={styles.termsLabel}>
+              I agree to the{' '}
+              <Text style={styles.termsLink} onPress={() => setTermsTab('terms')}>
+                terms
+              </Text>{' '}
+              and{' '}
+              <Text style={styles.termsLink} onPress={() => setTermsTab('privacy')}>
+                privacy policy
+              </Text>
+            </Text>
+          </View>
+          {problem?.field === 'agree' ? (
+            <FieldError message={problem.message} style={styles.agreeError} />
+          ) : null}
+
+          <AuthButton
+            label="Get started"
+            loadingLabel="Creating account…"
             onPress={handleSignUp}
             loading={submitting}
             style={styles.submit}
           />
-        </View>
 
-        <Pressable
-          onPress={() => navigation.navigate('Login')}
-          style={({ pressed }) => [styles.footer, pressed && styles.footerPressed]}
-        >
-          <Text style={styles.footerText}>
-            Already have an account? <Text style={styles.footerLink}>Log in</Text>
-          </Text>
-        </Pressable>
-      </ScrollView>
+          <Pressable
+            onPress={() => navigation.navigate('Login')}
+            style={({ pressed }) => [styles.footer, pressed && styles.footerPressed]}
+          >
+            <Text style={styles.footerText}>
+              Already have an account? <Text style={styles.footerAccent}>Log in</Text>
+            </Text>
+          </Pressable>
+        </ScrollView>
+      </AuthAnimatedScreen>
+
+      <TermsSheet
+        visible={termsTab !== null}
+        initialTab={termsTab ?? 'terms'}
+        onClose={() => setTermsTab(null)}
+        onAccept={() => {
+          setAgreed(true);
+          edited('agree');
+          setTermsTab(null);
+        }}
+      />
+      <TermsSheet visible={google.termsOpen} onClose={google.decline} onAccept={google.accept} />
     </KeyboardAvoidingView>
   );
 }
@@ -177,77 +273,88 @@ export default function SignupScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: authColors.bg,
   },
   content: {
+    ...centeredColumn(contentWidth.form),
     flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.xl,
-    paddingVertical: spacing.xxl,
-  },
-  header: {
-    marginBottom: spacing.xxl,
+    paddingHorizontal: authSpacing.screenH,
   },
   title: {
-    ...type.screenTitle,
-    color: colors.text,
-  },
-  subtitle: {
-    ...type.body,
-    color: colors.textMuted,
-    marginTop: spacing.xs,
+    ...authType.screenTitle,
+    color: authColors.ink,
+    textAlign: 'center',
+    marginTop: 26,
+    marginBottom: 22,
   },
   form: {
-    gap: spacing.lg,
+    gap: authSpacing.fieldGap,
   },
-  // Pulls the rules checklist up against its own field rather than sitting a
-  // full form gap away from it.
-  passwordField: {
-    marginBottom: -spacing.sm,
+  banner: {
+    marginBottom: 16,
   },
-  rules: {
-    gap: spacing.xs,
-    marginLeft: 2,
-  },
-  rule: {
+  terms: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.sm,
+    gap: 12,
+    marginTop: 18,
+    marginHorizontal: 2,
   },
-  ruleText: {
-    ...type.small,
-    color: colors.textMuted,
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: authRadius.checkbox,
+    borderWidth: 1.5,
+    borderColor: authColors.line,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  ruleTextMet: {
-    color: colors.success,
+  checkboxChecked: {
+    backgroundColor: authColors.accent,
+    borderColor: authColors.accent,
   },
-  errorBox: {
-    backgroundColor: colors.errorBg,
-    borderRadius: radius.sm,
-    padding: spacing.md,
+  checkboxError: {
+    borderColor: authColors.error,
   },
-  errorText: {
-    ...type.small,
-    color: colors.error,
-    lineHeight: 19,
+  checkboxMark: {
+    color: authColors.white,
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  termsLabel: {
+    flex: 1,
+    fontFamily: authFonts.medium,
+    fontSize: 12.5,
+    lineHeight: 12.5 * 1.5,
+    color: authColors.ink2,
+  },
+  termsLink: {
+    fontFamily: authFonts.semiBold,
+    color: authColors.accentDeep,
+    textDecorationLine: 'underline',
+  },
+  agreeError: {
+    marginTop: 10,
   },
   submit: {
-    marginTop: spacing.xs,
+    marginTop: 22,
   },
   footer: {
-    marginTop: spacing.xl,
     alignItems: 'center',
-    paddingVertical: spacing.sm,
+    paddingVertical: 16,
+    paddingHorizontal: 8,
   },
   footerPressed: {
     opacity: 0.6,
   },
   footerText: {
-    ...type.small,
-    color: colors.textMuted,
+    fontFamily: authFonts.semiBold,
+    fontSize: 12,
+    letterSpacing: 12 * 0.08,
+    textTransform: 'uppercase',
+    color: authColors.muted,
   },
-  footerLink: {
-    color: colors.primary,
-    fontWeight: '600',
+  footerAccent: {
+    color: authColors.accentDeep,
   },
 });

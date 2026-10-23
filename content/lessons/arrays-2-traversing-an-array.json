@@ -1,0 +1,110 @@
+{
+  "id": "arrays-2-traversing-an-array",
+  "moduleId": "arrays",
+  "title": "Traversing an array",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **one-dimensional array** arranges all elements in a list. Common operations are initializing the array, reading data into it, and storing output data. Each of these requires stepping through the elements, which is what a loop is for."
+    },
+    {
+      "type": "text",
+      "value": "The `for` loop or enhanced `for` loop is used, because all elements are the same type and the size of the array is known."
+    },
+    {
+      "type": "heading",
+      "value": "With an index"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "double[] prices = {12.25, 32.50, 16.90, 1.25, 43};\n\nfor (int i = 0; i < prices.length; i++) {\n    System.out.println(prices[i]);\n}"
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "`length` is a field, not a method",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Your handout's comment calls it \"the length method.\" For an array it is written **`prices.length`** with no parentheses. Compare with Lesson 8, where a String uses **`str.length()`** *with* parentheses. Same word, different syntax, and the compiler will remind you often."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Always `i < prices.length`, never `<=`."
+    },
+    {
+      "type": "heading",
+      "value": "With the enhanced for loop"
+    },
+    {
+      "type": "text",
+      "value": "The enhanced `for` loop (also called the for-each loop) traverses the complete array sequentially **without an index variable**:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "for (double value : prices) {\n    System.out.println(value);\n}"
+    },
+    {
+      "type": "text",
+      "value": "Read the colon as \"in\": *for each `double value` in `prices`*."
+    },
+    {
+      "type": "text",
+      "value": "**Use the enhanced for when** you only need to read each element. **Use the indexed for when** you need the position, need to modify elements, or want to skip or step through in a different order, assigning to the loop variable of an enhanced for changes only the copy, not the array."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class ScoreStats {\n    public static void main(String[] args) {\n        int[] scores = {88, 92, 75, 96, 63, 81};\n\n        int sum = 0;\n        int highest = scores[0];\n        int lowest = scores[0];\n\n        for (int score : scores) {\n            sum += score;\n            if (score > highest) { highest = score; }\n            if (score < lowest)  { lowest = score; }\n        }\n\n        System.out.println(\"Count:   \" + scores.length);\n        System.out.println(\"Sum:     \" + sum);\n        System.out.printf(\"Average: %.2f%n\", (double) sum / scores.length);\n        System.out.println(\"Highest: \" + highest);\n        System.out.println(\"Lowest:  \" + lowest);\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Count:   6\nSum:     495\nAverage: 82.50\nHighest: 96\nLowest:  63"
+    },
+    {
+      "type": "heading",
+      "value": "Counting with an array"
+    },
+    {
+      "type": "text",
+      "value": "An array can hold a **tally**, using each value as an index. To count how often each face of a die appears, `counts[roll]++` adds one to the slot with that number:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[] rolls = {3, 5, 1, 3, 6, 3, 2, 5, 1, 6};\nint[] counts = new int[7];          // slots 0-6, slot 0 unused\n\nfor (int roll : rolls) {\n    counts[roll]++;\n}\nfor (int face = 1; face < counts.length; face++) {\n    System.out.println(face + \" appeared \" + counts[face] + \" time(s)\");\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "1 appeared 2 time(s)\n2 appeared 1 time(s)\n3 appeared 3 time(s)\n4 appeared 0 time(s)\n5 appeared 2 time(s)\n6 appeared 2 time(s)"
+    },
+    {
+      "type": "text",
+      "value": "The array has 7 slots so that a roll of `6` is a valid index. That is the same \"size is the highest value plus one\" rule as the index rule in Lesson 1."
+    },
+    {
+      "type": "heading",
+      "value": "Passing an array to a method"
+    },
+    {
+      "type": "text",
+      "value": "A method receives the **reference**, not a copy, so changes it makes to the elements are visible to the caller:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "static void doubleAll(int[] values) {\n    for (int i = 0; i < values.length; i++) {\n        values[i] = values[i] * 2;\n    }\n}\n\nint[] nums = {1, 2, 3};\ndoubleAll(nums);\nSystem.out.println(Arrays.toString(nums));   // [2, 4, 6]"
+    },
+    {
+      "type": "text",
+      "value": "Seed `highest` and `lowest` from `scores[0]`, not from `0`, starting `lowest` at `0` would report `0` for any array of positive numbers."
+    }
+  ]
+}

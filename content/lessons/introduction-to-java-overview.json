@@ -1,0 +1,35 @@
+{
+  "id": "introduction-to-java-overview",
+  "moduleId": "introduction-to-java",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Before you can write Java, it helps to know what actually happens when you press \"run.\" Java takes an unusual path from the code you type to the program that runs, and that path is the reason Java runs on almost anything: phones, servers, laptops, smart cards."
+    },
+    {
+      "type": "text",
+      "value": "This lesson is the map. Everything after it builds on these pieces."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Describe what Java is and how the JVM runs your code",
+        "Identify the parts of a minimal Java program",
+        "Apply Java's rules for naming identifiers",
+        "Write and compile a first Java program",
+        "Tell syntax errors apart from logical errors"
+      ]
+    }
+  ]
+}

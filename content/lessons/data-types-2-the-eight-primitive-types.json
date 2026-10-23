@@ -1,0 +1,147 @@
+{
+  "id": "data-types-2-the-eight-primitive-types",
+  "moduleId": "data-types",
+  "title": "The eight primitive types",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Java supports eight built-in primitive types. Within the integer family and the floating-point family, they run from lowest precision to highest."
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Keyword",
+        "Description",
+        "Range of values",
+        "Default"
+      ],
+      "rows": [
+        [
+          "`byte`",
+          "8-bit signed integer",
+          "−128 to 127",
+          "`0`"
+        ],
+        [
+          "`short`",
+          "16-bit signed integer",
+          "−32,768 to 32,767",
+          "`0`"
+        ],
+        [
+          "`int`",
+          "32-bit signed integer",
+          "−2³¹ to 2³¹−1",
+          "`0`"
+        ],
+        [
+          "`long`",
+          "64-bit signed integer",
+          "−2⁶³ to 2⁶³−1",
+          "`0L`"
+        ],
+        [
+          "`float`",
+          "Single-precision 32-bit IEEE 754",
+          "1.4 × 10⁻⁴⁵ to 3.4 × 10³⁸",
+          "`0.0f`"
+        ],
+        [
+          "`double`",
+          "Double-precision 64-bit IEEE 754",
+          "4.9 × 10⁻³²⁴ to 1.8 × 10³⁰⁸",
+          "`0.0d`"
+        ],
+        [
+          "`boolean`",
+          "One bit of information",
+          "`true` or `false`",
+          "`false`"
+        ],
+        [
+          "`char`",
+          "Single 16-bit Unicode character",
+          "`'\u0000'` (0) to `'￿'` (65,535)",
+          "`'\u0000'`"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Correction",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "your handout prints the upper bound of `double` as 1.79769313486231570 × 10⁻³⁰⁸. The exponent should be **positive**: 1.7976931348623157 × 10**³⁰⁸**. As printed it would make the largest `double` smaller than the smallest one."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "When to use each"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**`byte`**: useful for saving memory space in large arrays. `byte b = 100;`",
+        "**`short`**: also for saving memory space in large arrays. `short s = 1400;`",
+        "**`int`**: the default for whole numbers unless memory is a concern. `int a = 12400;`",
+        "**`long`**: when a wider range than `int` is needed. `long a = 124000L;`",
+        "**`float`**: saves memory in large arrays of floating-point numbers. `float f1 = 234.5f;`",
+        "**`double`**: the default for decimal values. `double d1 = 234.5;`",
+        "**`boolean`**: two possible values, for simple true/false flags. `boolean isCorrect = true;`",
+        "**`char`**: a single character, enclosed in **single** quotes. `char letter = 'A';`"
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**In practice, beginners need three:** `int` for whole numbers, `double` for decimals, `boolean` for yes/no. Reach for the others when you have a specific reason."
+    },
+    {
+      "type": "heading",
+      "value": "Two suffixes you must not forget"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "long population = 8000000000L;   // L required, without it, too big for int\nfloat price = 19.99f;            // f required, without it, it's a double"
+    },
+    {
+      "type": "text",
+      "value": "A decimal literal is a `double` by default, and a whole-number literal is an `int` by default. The suffix overrides that. Omit them and the compiler rejects the line."
+    },
+    {
+      "type": "heading",
+      "value": "Finding the limits in code"
+    },
+    {
+      "type": "text",
+      "value": "You do not need to memorize the ranges. Each numeric type has constants that hold its limits, so you can print them:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(Integer.MAX_VALUE);   // 2147483647\nSystem.out.println(Integer.MIN_VALUE);   // -2147483648\nSystem.out.println(Long.MAX_VALUE);      // 9223372036854775807"
+    },
+    {
+      "type": "heading",
+      "value": "A note on String"
+    },
+    {
+      "type": "text",
+      "value": "Java also provides special support for character strings through the `java.lang.String` class. **`String` is not technically a primitive data type**: it is a class, but you will use it constantly:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String name = \"Ana\";    // double quotes, note the capital S\nchar initial = 'A';     // single quotes"
+    },
+    {
+      "type": "text",
+      "value": "Lesson 8 covers `String` properly."
+    }
+  ]
+}

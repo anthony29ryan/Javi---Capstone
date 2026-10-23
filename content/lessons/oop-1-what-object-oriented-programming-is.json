@@ -1,0 +1,42 @@
+{
+  "id": "oop-1-what-object-oriented-programming-is",
+  "moduleId": "oop",
+  "title": "What object-oriented programming is",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Object-oriented programming is a programming methodology that defines objects whose behaviors and interactions accomplish a given task.**"
+    },
+    {
+      "type": "text",
+      "value": "Compare the two styles on the same problem, tracking a student."
+    },
+    {
+      "type": "text",
+      "value": "**Procedural**, the way you have been writing:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String studentName = \"Ana Reyes\";\nint studentAge = 19;\ndouble studentGrade = 92.5;\n\n// the data and the logic are separate, and nothing connects them\nSystem.out.println(formatStudent(studentName, studentAge, studentGrade));"
+    },
+    {
+      "type": "text",
+      "value": "Add a second student and you need a second set of variables, or parallel arrays you must keep in lockstep. Add an address and every method signature changes."
+    },
+    {
+      "type": "text",
+      "value": "**Object-oriented:**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Student ana = new Student(\"Ana Reyes\", 19, 92.5);\nStudent jess = new Student(\"Jess Diaz\", 20, 88.0);\n\nana.display();\njess.display();"
+    },
+    {
+      "type": "text",
+      "value": "Each `Student` carries its own data **and** knows how to display itself. Adding a hundred students adds no complexity at all."
+    }
+  ]
+}

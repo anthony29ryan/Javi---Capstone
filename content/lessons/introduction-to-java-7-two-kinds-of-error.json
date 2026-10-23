@@ -1,0 +1,84 @@
+{
+  "id": "introduction-to-java-7-two-kinds-of-error",
+  "moduleId": "introduction-to-java",
+  "title": "Kinds of error",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Telling these apart will save you more time than anything else in this lesson."
+    },
+    {
+      "type": "heading",
+      "value": "Syntax errors: the compiler catches them"
+    },
+    {
+      "type": "text",
+      "value": "**Syntax errors** are invalid statements that the compiler encounters. When it hits one, it produces one or more error messages, and **no program is produced at all**. To debug, locate and correct the grammatical mistake."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"Hello\")    // missing semicolon"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "FirstJavaProgram.java:3: error: ';' expected\n        System.out.println(\"Hello\")\n                                   ^\n1 error"
+    },
+    {
+      "type": "text",
+      "value": "The compiler tells you the file, the line, and often points at the exact column. Fix the grammar and recompile."
+    },
+    {
+      "type": "heading",
+      "value": "Logical errors: only you catch them"
+    },
+    {
+      "type": "text",
+      "value": "If the program compiles with no syntax errors, it is ready to execute. But if it produces **incorrect results**, that is a **logical error**."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Adder {\n    public static void main(String[] args) {\n        int a = 6;\n        int b = 7;\n        System.out.println(\"Sum: \" + (a * b));   // compiles fine, prints 42, not 13\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Nothing is grammatically wrong, so Java says nothing. These are harder to find and resolve because there is no error message, the programmer must locate and correct them."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Syntax error",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "the program will not build. **Logical error:** the program builds and lies to you."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "A third kind: runtime errors"
+    },
+    {
+      "type": "text",
+      "value": "A program can compile, start, and still crash. A **runtime error** happens while the program is running, when it is asked to do something impossible. Java stops and prints an **exception**:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int total = 10;\nint count = 0;\nSystem.out.println(total / count);"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Exception in thread \"main\" java.lang.ArithmeticException: / by zero\n\tat Divide.main(Divide.java:5)"
+    },
+    {
+      "type": "text",
+      "value": "The last line says which file and line to look at. You will learn to handle these errors in the Advanced tier."
+    }
+  ]
+}

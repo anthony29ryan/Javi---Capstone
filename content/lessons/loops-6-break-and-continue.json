@@ -1,0 +1,78 @@
+{
+  "id": "loops-6-break-and-continue",
+  "moduleId": "loops",
+  "title": "break and continue",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "heading",
+      "value": "break"
+    },
+    {
+      "type": "text",
+      "value": "The `break` statement terminates the loop or switch and transfers the flow of the program to the statements following it."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Scanner;\n\npublic class SumUntilZero {\n    public static void main(String[] args) {\n        Scanner console = new Scanner(System.in);\n        int sum = 0, num;\n\n        while (true) {\n            System.out.println(\"Type 0 to end program. A negative number is invalid.\");\n            System.out.print(\"Enter a number to add: \");\n            num = console.nextInt();\n\n            if (num == 0) {\n                System.out.println(\"You entered 0. End of program. Thank you!\");\n                break;\n            }\n\n            sum = sum + num;\n            System.out.println(\"The sum of entered numbers is: \" + sum);\n        }\n\n        console.close();\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "`while (true)` is an infinite loop by construction, `break` is what ends it. When the user enters `0`, the `if` evaluates to true, the message prints, and `break` terminates the loop."
+    },
+    {
+      "type": "text",
+      "value": "**`break` terminates only the innermost loop or switch containing it.** If a loop containing a `break` is inside another loop, `break` ends only the inner one. If a `break` is inside a `switch` that is inside a loop, it terminates the switch, **not** the loop."
+    },
+    {
+      "type": "heading",
+      "value": "continue"
+    },
+    {
+      "type": "text",
+      "value": "The `continue` statement causes the loop to skip the remainder of its body, immediately re-evaluate its condition, and proceed with the next iteration."
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "In a **`for`** loop, `continue` jumps immediately to the **update** statement, then the condition is evaluated.",
+        "In a **`while`** or **`do...while`** loop, `continue` jumps immediately to the **condition**."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Scanner;\n\npublic class SumSkippingNegatives {\n    public static void main(String[] args) {\n        Scanner console = new Scanner(System.in);\n        int sum = 0, num;\n\n        while (true) {\n            System.out.println(\"Type 0 to end program. A negative number is invalid.\");\n            System.out.print(\"Enter a number to add: \");\n            num = console.nextInt();\n\n            if (num == 0) {\n                System.out.println(\"You entered 0. End of program. Thank you!\");\n                break;\n            }\n            else if (num < 0) {\n                System.out.println(\"You entered a negative number.\");\n                continue;\n            }\n\n            sum = sum + num;\n            System.out.println(\"The sum of entered numbers is: \" + sum);\n        }\n\n        console.close();\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "When the user enters a negative number, `continue` executes and the flow skips the remaining statements, jumping back to the loop condition, so the negative value is never added."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "That difference in `continue` behaviour is a real trap",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "In a `while` loop, `continue` skips the update if the update is at the *bottom of the body*:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "int i = 0;\nwhile (i < 5) {\n    if (i == 2) { continue; }   // skips i++ → infinite loop\n    System.out.println(i);\n    i++;\n}"
+        },
+        {
+          "type": "text",
+          "value": "The same logic in a `for` loop is safe, because the update is part of the loop header."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "value": "`break` and `continue` avoid extra control variables and produce cleaner programs. `break` can only terminate an enclosing `switch` or repetition structure. `continue` can only appear inside a loop, or inside a `switch` that is itself inside a loop."
+    }
+  ]
+}

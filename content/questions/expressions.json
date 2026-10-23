@@ -1,0 +1,332 @@
+[
+  {
+    "id": "expressions-01",
+    "lessonId": "expressions-1-what-an-expression-is",
+    "type": "mcq",
+    "prompt": "What does an expression evaluate to?",
+    "choices": [
+      "A single value",
+      "Nothing",
+      "A whole class",
+      "Only a number"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "expressions-02",
+    "lessonId": "expressions-1-what-an-expression-is",
+    "type": "mcq",
+    "prompt": "Which of these is an expression that evaluates to a `boolean`?",
+    "choices": [
+      "11 + 13",
+      "score > 50",
+      "\"Hi \" + name",
+      "x = 12"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "expressions-03",
+    "lessonId": "expressions-1-what-an-expression-is",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int x;\nSystem.out.println(x = 12);",
+    "choices": [
+      "0",
+      "Compile error",
+      "12",
+      "x"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "expressions-04",
+    "lessonId": "expressions-1-what-an-expression-is",
+    "type": "truefalse",
+    "prompt": "The line `x + 1;` on its own is a valid Java statement.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "expressions-05",
+    "lessonId": "expressions-2-arithmetic-expressions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(5 / 4);",
+    "choices": [
+      "2",
+      "1.25",
+      "1",
+      "1.0"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "expressions-06",
+    "lessonId": "expressions-2-arithmetic-expressions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(11 + 3 * 24 - 5 / 4);",
+    "choices": [
+      "82",
+      "83",
+      "85",
+      "86"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "expressions-07",
+    "lessonId": "expressions-2-arithmetic-expressions",
+    "type": "mcq",
+    "prompt": "What kind of expression is `2.8 * 17.5 - 1.40`?",
+    "choices": [
+      "Integral",
+      "Logical",
+      "Mixed",
+      "Floating-point"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "expressions-08",
+    "lessonId": "expressions-2-arithmetic-expressions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int big = 1000000 * 1000000;\nSystem.out.println(big);",
+    "choices": [
+      "-727379968",
+      "0",
+      "1000000000000",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "expressions-09",
+    "lessonId": "expressions-2-arithmetic-expressions",
+    "type": "mcq",
+    "prompt": "Which line stores 1000000000000 correctly?",
+    "choices": [
+      "int big = 1000000 * 1000000;",
+      "long big = 1000000L * 1000000;",
+      "long big = 1000000 * 1000000;",
+      "int big = 1000000L * 1000000;"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "expressions-10",
+    "lessonId": "expressions-3-mixed-expressions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(25 / 2 * 2.0);",
+    "choices": [
+      "25.0",
+      "24.0",
+      "24",
+      "25"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "expressions-11",
+    "lessonId": "expressions-3-mixed-expressions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(25.0 / 2 * 2);",
+    "choices": [
+      "24.0",
+      "25",
+      "24",
+      "25.0"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "expressions-12",
+    "lessonId": "expressions-3-mixed-expressions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(6 / 4 + 3.9);",
+    "choices": [
+      "5.4",
+      "4.9",
+      "4",
+      "5.0"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "expressions-13",
+    "lessonId": "expressions-3-mixed-expressions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(11.5 + 3 * 2.25);",
+    "choices": [
+      "13.75",
+      "34.5",
+      "18.25",
+      "15.5"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "expressions-14",
+    "lessonId": "expressions-3-mixed-expressions",
+    "type": "mcq",
+    "prompt": "In `25 / 2 * 2.0`, why is the result `24.0` and not `25.0`?",
+    "choices": [
+      "The `2.0` is ignored",
+      "Multiplication happens before division",
+      "`25 / 2` is integer division and happens first",
+      "Java rounds down at the end"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "expressions-15",
+    "lessonId": "expressions-3-mixed-expressions",
+    "type": "truefalse",
+    "prompt": "In a mixed expression, Java applies the type rules to the whole expression at once rather than one operator at a time.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "expressions-16",
+    "lessonId": "expressions-3-mixed-expressions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println('a' + 1);",
+    "choices": [
+      "b",
+      "Compile error",
+      "a1",
+      "98"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "expressions-17",
+    "lessonId": "expressions-3-mixed-expressions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println((char) ('a' + 1));",
+    "choices": [
+      "b",
+      "98",
+      "a1",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "expressions-18",
+    "lessonId": "expressions-4-logical-expressions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(3 > 3 || 4 < 2 && 12 > 3 || 4 < 5);",
+    "choices": [
+      "false",
+      "true",
+      "Compile error",
+      "null"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "expressions-19",
+    "lessonId": "expressions-4-logical-expressions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println((3 > 3 || 4 < 2) && (12 > 3 || 4 < 5));",
+    "choices": [
+      "true",
+      "null",
+      "false",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "expressions-20",
+    "lessonId": "expressions-4-logical-expressions",
+    "type": "truefalse",
+    "prompt": "In `A || B && C`, the `||` is evaluated before the `&&`.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "expressions-21",
+    "lessonId": "expressions-4-logical-expressions",
+    "type": "mcq",
+    "prompt": "Which expression tests that `x` is between 1 and 10, inclusive?",
+    "choices": [
+      "1 <= x <= 10",
+      "x >= 1 || x <= 10",
+      "x > 1 && x < 10",
+      "x >= 1 && x <= 10"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "expressions-22",
+    "lessonId": "expressions-common-mistakes",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "double d = 5 / 2;\nSystem.out.println(d);",
+    "choices": [
+      "2.0",
+      "2.5",
+      "2",
+      "3.0"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "expressions-23",
+    "lessonId": "expressions-common-mistakes",
+    "type": "truefalse",
+    "prompt": "An assignment such as `x = 12` is itself an expression with a value.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "expressions-24",
+    "lessonId": "expressions-common-mistakes",
+    "type": "mcq",
+    "prompt": "Why does `a = b = 0;` work?",
+    "choices": [
+      "Assignment is an expression with a value",
+      "Java allows two equals signs in a row",
+      "`b` is declared automatically",
+      "It does not work"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "expressions-25",
+    "lessonId": "expressions-common-mistakes",
+    "type": "mcq",
+    "prompt": "Which statement about precedence and evaluation order is correct?",
+    "choices": [
+      "Everything is evaluated strictly left to right",
+      "Precedence applies first; left-to-right only breaks ties between equal-precedence operators",
+      "Parentheses are ignored",
+      "Logical operators have the highest precedence"
+    ],
+    "answer": 1
+  }
+]

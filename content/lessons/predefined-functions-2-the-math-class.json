@@ -1,0 +1,172 @@
+{
+  "id": "predefined-functions-2-the-math-class",
+  "moduleId": "predefined-functions",
+  "title": "The Math class",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "`Math` lives in `java.lang` and contains mathematical methods. Its methods are **static**, meaning they are used with the class name **without instantiating a `Math` object**: `Math.sqrt(16)`, never `new Math()`."
+    },
+    {
+      "type": "text",
+      "value": "All examples assume:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "double a = 3, b = 23, c = 34.45, d = 65.78;\nint e = -57;"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Method",
+        "Description",
+        "Example"
+      ],
+      "rows": [
+        [
+          "`abs(x)`",
+          "Returns the absolute value of `x`",
+          "`Math.abs(e)` → `57`"
+        ],
+        [
+          "`ceil(x)`",
+          "Returns a `double`, the smallest integer value **not less than** `x`",
+          "`Math.ceil(c)` → `35.0`<br>`Math.ceil(d)` → `66.0`"
+        ],
+        [
+          "`floor(x)`",
+          "Returns a `double`, the largest integer value **less than or equal to** `x`",
+          "`Math.floor(c)` → `34.0`<br>`Math.floor(d)` → `65.0`"
+        ],
+        [
+          "`exp(x)`",
+          "Returns *e* raised to the power `x`, where *e* ≈ 2.718281828459045",
+          "`Math.exp(3)` → `20.085536923187668`"
+        ],
+        [
+          "`log(x)`",
+          "Returns the natural logarithm (base *e*) of `x`",
+          "`Math.log(a)` → `1.0986122886681098`"
+        ],
+        [
+          "`log10(x)`",
+          "Returns the common logarithm (base 10) of `x`",
+          "`Math.log10(a)` → `0.47712125471966244`"
+        ],
+        [
+          "`max(x, y)`",
+          "Returns the larger of `x` and `y`. If either is a `double`, returns a `double`",
+          "`Math.max(a, b)` → `23.0`<br>`Math.max(12, a)` → `12.0`"
+        ],
+        [
+          "`min(x, y)`",
+          "Returns the smaller of `x` and `y`",
+          "`Math.min(a, b)` → `3.0`<br>`Math.min(23, 12)` → `12`"
+        ],
+        [
+          "`pow(x, y)`",
+          "Returns a `double`, `x` raised to the power `y`",
+          "`Math.pow(2, a)` → `8.0`"
+        ],
+        [
+          "`round(x)`",
+          "Returns the closest whole number to `x`, rounding halves up",
+          "`Math.round(c)` → `34`<br>`Math.round(d)` → `66`"
+        ],
+        [
+          "`sqrt(x)`",
+          "Returns a `double`, the square root of `x`",
+          "`Math.sqrt(4)` → `2.0`"
+        ],
+        [
+          "`cos(x)`",
+          "Returns the cosine of `x`, measured in **radians**",
+          "`Math.cos(34)` → `-0.8485702747846052`"
+        ],
+        [
+          "`sin(x)`",
+          "Returns the sine of `x`, measured in **radians**",
+          "`Math.sin(34)` → `0.5290826861200238`"
+        ],
+        [
+          "`tan(x)`",
+          "Returns the tangent of `x`, measured in **radians**",
+          "`Math.tan(34)` → `-0.1425465430742778`"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Three corrections to your handout's table",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "**1.** The `abs` row gives the example as `Math.abs(d)` and claims it returns `57`. But `d` is `65.78`, so `Math.abs(d)` is `65.78`. The variable meant was **`e`** (`-57`): `Math.abs(e)` → `57`."
+        },
+        {
+          "type": "text",
+          "value": "**2.** The `floor` description says \"the largest integer value **less than** x.\" It must be **less than or equal to**: `Math.floor(5.0)` is `5.0`, not `4.0`."
+        },
+        {
+          "type": "text",
+          "value": "**3.** The `round` description reads \"a value of long type that is the greater closest to x,\" which is garbled. `round` returns the **closest** whole number, rounding halves **up**. It returns an `int` for a `float` argument and a `long` for a `double` argument."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "value": "When a method returns a value, it can be used in an expression:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int x = Math.abs(-57);      // the return value is stored in x"
+    },
+    {
+      "type": "text",
+      "value": "When you use a method, you are said to **invoke** or **call** it."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class MathDemo {\n    public static void main(String[] args) {\n        System.out.println(Math.sqrt(144));          // 12.0\n        System.out.println(Math.pow(2, 10));         // 1024.0\n        System.out.println(Math.abs(-57));           // 57\n        System.out.println(Math.max(18, 24));        // 24\n        System.out.println(Math.round(4.5));         // 5\n        System.out.println(Math.round(4.4));         // 4\n        System.out.println(Math.ceil(4.1));          // 5.0\n        System.out.println(Math.floor(4.9));         // 4.0\n\n        // Trigonometry works in radians, convert from degrees first\n        System.out.println(Math.sin(Math.toRadians(30)));   // 0.49999999999999994\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "The last line deserves a second look. `Math.sin(30)` does **not** give the sine of 30 degrees: it treats 30 as radians. And the answer is `0.49999999999999994` rather than `0.5`, which is the floating-point imprecision from Lesson 2 showing up again."
+    },
+    {
+      "type": "heading",
+      "value": "Random numbers"
+    },
+    {
+      "type": "text",
+      "value": "`Math.random()` returns a `double` from `0.0` up to, but not including, `1.0`. Multiply to widen the range, cast to `int` to drop the decimal, then add to shift the start. This gives a whole number from 1 to 6, like a die:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int roll = (int) (Math.random() * 6) + 1;   // 1, 2, 3, 4, 5 or 6"
+    },
+    {
+      "type": "text",
+      "value": "`Math.random() * 6` is from `0.0` up to just under `6.0`. The cast turns it into `0` to `5`, and `+ 1` makes it `1` to `6`."
+    },
+    {
+      "type": "heading",
+      "value": "round returns a long"
+    },
+    {
+      "type": "text",
+      "value": "`Math.round` gives back a whole number but not an `int`, so cast it when you store the result in one:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int r = (int) Math.round(4.6);   // 5"
+    }
+  ]
+}

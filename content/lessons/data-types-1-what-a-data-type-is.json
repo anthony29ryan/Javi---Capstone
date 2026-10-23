@@ -1,0 +1,29 @@
+{
+  "id": "data-types-1-what-a-data-type-is",
+  "moduleId": "data-types",
+  "title": "What a data type is",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **data type** specifies a set of values and their operations. Values have particular data types because they are stored in memory in the same format and have the same operations defined for them."
+    },
+    {
+      "type": "text",
+      "value": "**Primitive data types** are the fundamental data types in Java: predefined by the language and named by a keyword."
+    },
+    {
+      "type": "heading",
+      "value": "Why the type matters"
+    },
+    {
+      "type": "text",
+      "value": "The same characters can mean different things depending on the type. The type decides what operations are allowed and what they do. With numbers, `+` adds. With text, `+` joins:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(5 + 5);        // 10, two int values\nSystem.out.println(\"5\" + \"5\");    // 55, two String values"
+    }
+  ]
+}

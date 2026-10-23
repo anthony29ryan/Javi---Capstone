@@ -1,0 +1,36 @@
+{
+  "id": "classes-and-methods-common-mistakes",
+  "moduleId": "classes-and-methods",
+  "title": "Common mistakes",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Writing `name = name;` in a setter.** Assigns the parameter to itself. Use `this.name = name;`"
+    },
+    {
+      "type": "text",
+      "value": "**Making instance variables public.** It works, and it removes every guarantee the class could offer. Default to `private`."
+    },
+    {
+      "type": "text",
+      "value": "**Writing getters and setters for every field reflexively.** A `setBalance` would undo everything `deposit` and `withdraw` protect. Expose only what callers legitimately need."
+    },
+    {
+      "type": "text",
+      "value": "**Declaring a variable inside a method and expecting it to persist.** Local variables die when the method returns. If the object should remember it, it is an instance variable."
+    },
+    {
+      "type": "text",
+      "value": "**Comparing objects with `==`.** Compares references. Use `equals()`, and override it for your own classes."
+    },
+    {
+      "type": "text",
+      "value": "**Trying to use an instance variable from a `static` method.** `main` is static and has no object, so it cannot see instance variables directly. Create an object first."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting that each object has its own copy.** Changing `ana.grade` does not touch `jess.grade`: unless both variables refer to the same object."
+    }
+  ]
+}

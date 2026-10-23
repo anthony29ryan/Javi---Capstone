@@ -1,0 +1,106 @@
+{
+  "id": "operators-5-assignment-operators",
+  "moduleId": "operators",
+  "title": "Assignment operators",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Assignment operators** assign values to a variable. The left operand receives the value of the expression on the right. In `int x = 20;`, `x` gets `20`."
+    },
+    {
+      "type": "text",
+      "value": "Assume `int score;`, each row below continues from the row above."
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Operator",
+        "Description",
+        "Example",
+        "Result",
+        "Equivalent to"
+      ],
+      "rows": [
+        [
+          "`=`",
+          "Assigns the right operand to the left",
+          "`score = 32`",
+          "`32`",
+          ""
+        ],
+        [
+          "`+=`",
+          "Adds and assigns",
+          "`score += 2`",
+          "`34`",
+          "`score = score + 2`"
+        ],
+        [
+          "`-=`",
+          "Subtracts and assigns",
+          "`score -= 3`",
+          "`31`",
+          "`score = score - 3`"
+        ],
+        [
+          "`*=`",
+          "Multiplies and assigns",
+          "`score *= 2`",
+          "`62`",
+          "`score = score * 2`"
+        ],
+        [
+          "`/=`",
+          "Divides and assigns",
+          "`score /= 2`",
+          "`31`",
+          "`score = score / 2`"
+        ],
+        [
+          "`%=`",
+          "Takes modulus and assigns",
+          "`score %= 2`",
+          "`1`",
+          "`score = score % 2`"
+        ],
+        [
+          "`++`",
+          "Adds 1",
+          "`score++`",
+          "`2`",
+          "`score = score + 1`"
+        ],
+        [
+          "`--`",
+          "Subtracts 1",
+          "`score--`",
+          "`1`",
+          "`score = score - 1`"
+        ]
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class ScoreTracker {\n    public static void main(String[] args) {\n        int score = 0;\n\n        score += 10;   System.out.println(score);   // 10\n        score += 25;   System.out.println(score);   // 35\n        score -= 5;    System.out.println(score);   // 30\n        score *= 2;    System.out.println(score);   // 60\n        score /= 4;    System.out.println(score);   // 15\n        score++;       System.out.println(score);   // 16\n        score--;       System.out.println(score);   // 15\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "`++` and `--` will become second nature in Lesson 7, where nearly every loop ends with one."
+    },
+    {
+      "type": "heading",
+      "value": "Increment before or after"
+    },
+    {
+      "type": "text",
+      "value": "`++` can go after the variable (`a++`) or before it (`++a`). On its own they are the same. Inside a larger statement, **postfix** `a++` uses the old value and then adds one, while **prefix** `++a` adds one first and then uses the new value:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int a = 5;\nint b = a++;                   // b gets 5, then a becomes 6\nSystem.out.println(a + \" \" + b);   // 6 5\n\nint c = ++a;                   // a becomes 7, then c gets 7\nSystem.out.println(a + \" \" + c);   // 7 7"
+    }
+  ]
+}

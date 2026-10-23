@@ -1,0 +1,331 @@
+[
+  {
+    "id": "regular-expressions-01",
+    "lessonId": "regular-expressions-1-fundamentals",
+    "type": "mcq",
+    "prompt": "Which package contains the regular expression classes?",
+    "choices": [
+      "java.util.regex",
+      "java.regex",
+      "java.lang.regex",
+      "java.text.pattern"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "regular-expressions-02",
+    "lessonId": "regular-expressions-1-fundamentals",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"my cat\".matches(\"cat\"));",
+    "choices": [
+      "true",
+      "false",
+      "cat",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "regular-expressions-03",
+    "lessonId": "regular-expressions-1-fundamentals",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"cat\".matches(\"cat|dog\"));",
+    "choices": [
+      "cat|dog",
+      "false",
+      "true",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "regular-expressions-04",
+    "lessonId": "regular-expressions-1-fundamentals",
+    "type": "mcq",
+    "prompt": "What does `String.matches(regex)` test?",
+    "choices": [
+      "Only the length",
+      "Whether any part of the string matches",
+      "Only the first character",
+      "Whether the entire string matches the regex"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "regular-expressions-05",
+    "lessonId": "regular-expressions-1-fundamentals",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"2024-001\".matches(\"\\\\d{4}-\\\\d{4}\"));",
+    "choices": [
+      "false",
+      "2024-001",
+      "true",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "regular-expressions-06",
+    "lessonId": "regular-expressions-2-character-classes",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"bat\".matches(\"[a-z]at\"));",
+    "choices": [
+      "Compile error",
+      "true",
+      "bat",
+      "false"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "regular-expressions-07",
+    "lessonId": "regular-expressions-2-character-classes",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"Bat\".matches(\"[a-z]at\"));",
+    "choices": [
+      "Bat",
+      "true",
+      "false",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "regular-expressions-08",
+    "lessonId": "regular-expressions-2-character-classes",
+    "type": "mcq",
+    "prompt": "What does the dot `.` represent in a regex?",
+    "choices": [
+      "A literal full stop",
+      "The end of the string",
+      "Zero or more characters",
+      "Any single character"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "regular-expressions-09",
+    "lessonId": "regular-expressions-2-character-classes",
+    "type": "mcq",
+    "prompt": "Which character range should be written for all letters of both cases?",
+    "choices": [
+      "[a-zA-Z]",
+      "[a-Z]",
+      "[A-z]",
+      "[a-z-A-Z]"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "regular-expressions-10",
+    "lessonId": "regular-expressions-2-character-classes",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"3x5\".matches(\"\\\\d\\\\.\\\\d\"));",
+    "choices": [
+      "true",
+      "false",
+      "3x5",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "regular-expressions-11",
+    "lessonId": "regular-expressions-2-character-classes",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"3x5\".matches(\"\\\\d.\\\\d\"));",
+    "choices": [
+      "Compile error",
+      "false",
+      "true",
+      "3x5"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "regular-expressions-12",
+    "lessonId": "regular-expressions-3-repetition-operators",
+    "type": "mcq",
+    "prompt": "What does the `+` operator mean?",
+    "choices": [
+      "Zero or more occurrences",
+      "Exactly one occurrence",
+      "Zero or one occurrence",
+      "One or more occurrences"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "regular-expressions-13",
+    "lessonId": "regular-expressions-3-repetition-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"AAAA\".matches(\"A{5,}\"));",
+    "choices": [
+      "false",
+      "Compile error",
+      "AAAA",
+      "true"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "regular-expressions-14",
+    "lessonId": "regular-expressions-3-repetition-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"\".matches(\".*\"));",
+    "choices": [
+      "false",
+      "true",
+      "Compile error",
+      "null"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "regular-expressions-15",
+    "lessonId": "regular-expressions-3-repetition-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"abab\".matches(\"(ab)+\"));",
+    "choices": [
+      "abab",
+      "false",
+      "true",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "regular-expressions-16",
+    "lessonId": "regular-expressions-3-repetition-operators",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"abab\".matches(\"ab*\"));",
+    "choices": [
+      "true",
+      "Compile error",
+      "abab",
+      "false"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "regular-expressions-17",
+    "lessonId": "regular-expressions-4-pattern-and-matcher",
+    "type": "mcq",
+    "prompt": "Why compile a `Pattern` once instead of calling `matches` repeatedly?",
+    "choices": [
+      "The parsing work is done once instead of on every call",
+      "It makes the pattern case-insensitive",
+      "It avoids exceptions",
+      "It makes the string shorter"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "regular-expressions-18",
+    "lessonId": "regular-expressions-4-pattern-and-matcher",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "Pattern p = Pattern.compile(\"[0-9]\");\nMatcher m = p.matcher(\"Passw0rd\");\nSystem.out.println(m.matches());",
+    "choices": [
+      "true",
+      "false",
+      "0",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "regular-expressions-19",
+    "lessonId": "regular-expressions-4-pattern-and-matcher",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "Pattern p = Pattern.compile(\"[0-9]\");\nMatcher m = p.matcher(\"Passw0rd\");\nSystem.out.println(m.find());",
+    "choices": [
+      "Compile error",
+      "false",
+      "true",
+      "0"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "regular-expressions-20",
+    "lessonId": "regular-expressions-4-pattern-and-matcher",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "Pattern p = Pattern.compile(\"(\\\\d{3})-(\\\\d{4})\");\nMatcher m = p.matcher(\"Call 555-1234 now\");\nm.find();\nSystem.out.println(m.group(2));",
+    "choices": [
+      "555",
+      "Call",
+      "555-1234",
+      "1234"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "regular-expressions-21",
+    "lessonId": "regular-expressions-4-pattern-and-matcher",
+    "type": "mcq",
+    "prompt": "Which method should you use to check whether a password CONTAINS a digit?",
+    "choices": [
+      "find()",
+      "matches()",
+      "compile()",
+      "split()"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "regular-expressions-22",
+    "lessonId": "regular-expressions-5-regex-operations-on-string",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"991-978-6452\".split(\"-\").length);",
+    "choices": [
+      "0",
+      "3",
+      "5",
+      "1"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "regular-expressions-23",
+    "lessonId": "regular-expressions-5-regex-operations-on-string",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"a.b.c\".split(\".\").length);",
+    "choices": [
+      "3",
+      "0",
+      "5",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "regular-expressions-24",
+    "lessonId": "regular-expressions-5-regex-operations-on-string",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"(991) 978-6452\".replaceAll(\"\\\\D\", \"\"));",
+    "choices": [
+      "(991) 978-6452",
+      "991 978 6452",
+      "9919786452",
+      "Compile error"
+    ],
+    "answer": 2
+  }
+]

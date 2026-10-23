@@ -1,0 +1,46 @@
+{
+  "id": "generics-overview",
+  "moduleId": "generics",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "You have already used generics without being told. Those angle brackets in `List<String>` are what this lesson is about."
+    },
+    {
+      "type": "text",
+      "value": "Generics let you write a class or method once and have it work safely with any type, catching mismatches at **compile time** rather than as a `ClassCastException` in production. It is the last topic in this course, and it is the one that makes Java's type system useful rather than merely strict."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "A note on what is missing",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Generics exist mainly to make **collections** type-safe, and the Collections Framework (`ArrayList`, `HashMap`, `List`, `Set`) is not covered anywhere in this course. The wildcard examples below therefore use `List`, which you have not formally met. Read `List<String>` as \"a resizable array of Strings\" and it will make sense. If you take one thing further after finishing this course, make it the Collections Framework. It is where everything here pays off."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Explain what generics are and the problem they solve",
+        "Write a generic class with one or more type parameters",
+        "Use the diamond operator correctly",
+        "Apply unbounded, upper bounded, and lower bounded wildcards",
+        "Recognise why generics require reference types"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "oop-4-inheritance",
+  "moduleId": "oop",
+  "title": "Inheritance",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "One way of organizing classes is through **inheritance**.",
+        "Inheritance allows objects of a class to take on the properties of objects from another class.",
+        "**Inheritance is used to avoid the repetition of programming instructions for each class.**",
+        "To apply inheritance between classes, the **`extends`** keyword is used."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Person {\n    String name;\n    int age;\n}\n\npublic class Student extends Person {\n    int studentNumber;      // Student has name and age too, without redeclaring them\n}"
+    },
+    {
+      "type": "text",
+      "value": "A `Student` **is a** `Person`. Everything a `Person` has, a `Student` has automatically, plus whatever it adds."
+    },
+    {
+      "type": "text",
+      "value": "Without inheritance, `Student`, `Teacher`, and `Staff` would each repeat `name` and `age` and every method that uses them. Inheritance writes it once."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Full treatment in Lesson 15."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Using what is inherited"
+    },
+    {
+      "type": "text",
+      "value": "A subclass object can use the fields it inherits as if it had declared them itself:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Student pupil = new Student();     // Student extends Person\npupil.name = \"Ana\";                 // inherited from Person\npupil.studentNumber = 7;            // declared in Student\nSystem.out.println(pupil.name + \" \" + pupil.studentNumber);   // Ana 7"
+    }
+  ]
+}

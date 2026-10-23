@@ -1,0 +1,36 @@
+{
+  "id": "inheritance-polymorphism-interfaces-overview",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "This is the longest lesson in the tier, and the one that makes object-oriented programming worth the trouble."
+    },
+    {
+      "type": "text",
+      "value": "Inheritance lets you write shared behavior once. Polymorphism lets you write code that works on a `Person` and automatically does the right thing for every kind of person that will ever exist, including kinds invented after your code was written. That is a different kind of leverage from anything in the beginner tier."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Define a derived class with `extends`",
+        "Override a base class method",
+        "Chain constructors with `super` and `this`",
+        "Explain polymorphism and dynamic binding",
+        "Write and implement an interface",
+        "Choose between an interface and an abstract class"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "id": "regular-expressions-2-character-classes",
+  "moduleId": "regular-expressions",
+  "title": "Character classes",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Square brackets allow for character variability.** To return `true` for `\"dog\"` or `\"Dog\"` but not `\"dOg\"`, `equalsIgnoreCase` would not work and `equals` would take multiple lines:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "return animal.matches(\"[Cc]at|[Dd]og\");"
+    },
+    {
+      "type": "text",
+      "value": "Brackets are not restricted to two-character options. **Combined with a hyphen, they include any range of characters.**"
+    },
+    {
+      "type": "text",
+      "value": "Consider a rhyming game that returns `true` if a word begins with any lowercase letter and ends in `\"at\"`. A first attempt might be:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (word.length() == 3)\n    if (word.substring(1, 3).equals(\"at\"))\n        return true;\nreturn false;"
+    },
+    {
+      "type": "text",
+      "value": "The regex is shorter and more general:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "return word.matches(\"[a-z]at\");"
+    },
+    {
+      "type": "text",
+      "value": "To include uppercase characters:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "return word.matches(\"[a-zA-Z](at|AT)\");"
+    },
+    {
+      "type": "text",
+      "value": "**Using the range `a-Z` or `A-z` will not work correctly**: those ranges span the punctuation characters that sit between the alphabets in Unicode."
+    },
+    {
+      "type": "text",
+      "value": "Everything inside the square brackets defines exactly how **one** character can be represented:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "return word.matches(\"[ 0-9a-zA-Z]bcde\");"
+    },
+    {
+      "type": "text",
+      "value": "This allows the first character to be a space, any digit, or any letter. The rest must be `\"bcde\"`, case-sensitively."
+    },
+    {
+      "type": "heading",
+      "value": "The wildcard"
+    },
+    {
+      "type": "text",
+      "value": "**The dot (`.`) is the wildcard operator representing any single character.** To check whether a String `element` is a number followed by any other single character:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "return element.matches(\"[0-9].\");"
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Added: predefined character classes",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Your handout writes every class out longhand. Java provides shorthands you will meet constantly:"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "Shorthand",
+            "Equivalent",
+            "Meaning"
+          ],
+          "rows": [
+            [
+              "`\\d`",
+              "`[0-9]`",
+              "any digit"
+            ],
+            [
+              "`\\D`",
+              "`[^0-9]`",
+              "any non-digit"
+            ],
+            [
+              "`\\w`",
+              "`[a-zA-Z0-9_]`",
+              "any word character"
+            ],
+            [
+              "`\\W`",
+              "`[^a-zA-Z0-9_]`",
+              "any non-word character"
+            ],
+            [
+              "`\\s`",
+              "`[ \\t\\n\\r\\f]`",
+              "any whitespace"
+            ],
+            [
+              "`\\S`",
+              "",
+              "any non-whitespace"
+            ]
+          ]
+        },
+        {
+          "type": "text",
+          "value": "`^` just inside the brackets **negates** the class: `[^0-9]` means \"any character that is not a digit.\""
+        },
+        {
+          "type": "text",
+          "value": "**In Java, you must write these with two backslashes.** `\\` starts an escape sequence in a string literal, so the regex `\\d` is written `\"\\\\d\"`:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "return str.matches(\"\\\\d{4}\");        // exactly four digits\nreturn str.matches(\"[0-9]{4}\");      // identical, written longhand"
+        },
+        {
+          "type": "text",
+          "value": "Forgetting the second backslash is the most common Java-specific regex error there is."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Matching a real dot"
+    },
+    {
+      "type": "text",
+      "value": "A bare `.` matches any character, so to match an actual full stop you must escape it with a backslash, written `\"\\\\.\"` in Java. The difference shows up as soon as the text contains something other than a dot:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"3.5\".matches(\"\\\\d\\\\.\\\\d\"));   // true\nSystem.out.println(\"3x5\".matches(\"\\\\d\\\\.\\\\d\"));   // false, x is not a dot\nSystem.out.println(\"3x5\".matches(\"\\\\d.\\\\d\"));     // true, the wildcard accepts x"
+    }
+  ]
+}

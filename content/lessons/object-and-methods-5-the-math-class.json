@@ -1,0 +1,147 @@
+{
+  "id": "object-and-methods-5-the-math-class",
+  "moduleId": "object-and-methods",
+  "title": "The Math class",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**The predefined `Math` class provides a number of standard mathematical methods. No import statement is required.**"
+    },
+    {
+      "type": "text",
+      "value": "Lesson 10 covered these in detail. One method not shown there:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Name",
+        "Description",
+        "Argument type",
+        "Return type",
+        "Example",
+        "Value returned"
+      ],
+      "rows": [
+        [
+          "`pow`",
+          "Power",
+          "`double`",
+          "`double`",
+          "`Math.pow(2.0, 3.0)`",
+          "`8.0`"
+        ],
+        [
+          "`abs`",
+          "Absolute value",
+          "`int`, `long`, `float`, `double`",
+          "same as argument",
+          "`Math.abs(-7)`<br>`Math.abs(-3.5)`",
+          "`7`<br>`3.5`"
+        ],
+        [
+          "`max`",
+          "Maximum",
+          "`int`, `long`, `float`, `double`",
+          "same as argument",
+          "`Math.max(5, 6)`<br>`Math.max(5.5, 5.3)`",
+          "`6`<br>`5.5`"
+        ],
+        [
+          "`min`",
+          "Minimum",
+          "`int`, `long`, `float`, `double`",
+          "same as argument",
+          "`Math.min(5, 6)`",
+          "`5`"
+        ],
+        [
+          "`random`",
+          "Random number",
+          "none",
+          "`double`",
+          "`Math.random()`",
+          "a number ≥ 0.0 and < 1.0"
+        ],
+        [
+          "`round`",
+          "Rounding",
+          "`float` or `double`",
+          "`int` or `long` respectively",
+          "`Math.round(6.2)`<br>`Math.round(6.8)`",
+          "`6`<br>`7`"
+        ],
+        [
+          "`ceil`",
+          "Ceiling",
+          "`double`",
+          "`double`",
+          "`Math.ceil(3.2)`",
+          "`4.0`"
+        ],
+        [
+          "`floor`",
+          "Floor",
+          "`double`",
+          "`double`",
+          "`Math.floor(3.9)`",
+          "`3.0`"
+        ],
+        [
+          "`sqrt`",
+          "Square root",
+          "`double`",
+          "`double`",
+          "`Math.sqrt(4.0)`",
+          "`2.0`"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Correction",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "your handout describes `Math.random()` as returning a number \"**>0** and <1.\" The lower bound is **inclusive**: it can return exactly `0.0`, though never `1.0`. The range is `[0.0, 1.0)`."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Using Math.random"
+    },
+    {
+      "type": "text",
+      "value": "The raw value is rarely what you want. The standard formula for a whole number in a range:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "(int) (Math.random() * (max - min + 1)) + min"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class DiceRoller {\n    public static void main(String[] args) {\n        for (int i = 1; i <= 5; i++) {\n            int roll = (int) (Math.random() * 6) + 1;   // 1 to 6\n            System.out.println(\"Roll \" + i + \": \" + roll);\n        }\n\n        int percent = (int) (Math.random() * 101);      // 0 to 100\n        System.out.println(\"Random percent: \" + percent);\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Trace the dice line: `Math.random()` gives `[0.0, 1.0)`, times 6 gives `[0.0, 6.0)`, cast to `int` truncates to `0` to `5`, plus 1 gives `1`–`6`. The `+ 1` is **outside** the cast: inside it, you would round the wrong thing."
+    },
+    {
+      "type": "heading",
+      "value": "The Random class"
+    },
+    {
+      "type": "text",
+      "value": "`java.util.Random` is an alternative to `Math.random()`. Its `nextInt(bound)` method returns a whole number from `0` up to, but not including, `bound`, with no scaling or casting. Creating it with a **seed**, as in `new Random(42)`, makes it produce the same sequence every run, which is useful when testing:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Random;\n\nRandom random = new Random();\nint roll = random.nextInt(6) + 1;   // 1 to 6\n\nRandom seeded = new Random(42);     // the same numbers on every run"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "oop-common-mistakes",
+  "moduleId": "oop",
+  "title": "Common mistakes",
+  "order": 9,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Confusing the class with the object.** `Student` is the blueprint; `ana` is a student. You can have one class and a thousand objects."
+    },
+    {
+      "type": "text",
+      "value": "**Thinking objects share data.** Each object has its own copy of the attributes. Changing one does not change another."
+    },
+    {
+      "type": "text",
+      "value": "**Expecting `extends` and `implements` to be interchangeable.** `extends` inherits real behavior from one class. `implements` promises to supply behavior listed by an interface, and a class may implement several."
+    },
+    {
+      "type": "text",
+      "value": "**Assuming OOP is always the right answer.** A twenty-line program that reads two numbers and adds them does not need a class. Objects earn their keep when a program has many parts that each own some state."
+    }
+  ]
+}

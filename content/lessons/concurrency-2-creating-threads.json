@@ -1,0 +1,83 @@
+{
+  "id": "concurrency-2-creating-threads",
+  "moduleId": "concurrency",
+  "title": "Creating threads",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "There are two ways."
+    },
+    {
+      "type": "heading",
+      "value": "Extending the Thread class"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class ThreadDemo extends Thread {\n    public static void main(String[] args) {\n        ThreadDemo thread = new ThreadDemo();\n        thread.start();\n        System.out.println(\"Outside of a thread\");\n    }\n\n    public void run() {\n        System.out.println(\"Running in a thread\");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Possible output:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Outside of a thread\nRunning in a thread"
+    },
+    {
+      "type": "text",
+      "value": "**To start a Java thread you call its `start()` method. The `run()` method is what is executed by the thread after you call `start()`. The `start()` call will not wait until `run()` is done**: `run()` executes as if by a different CPU."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": null,
+      "blocks": [
+        {
+          "type": "text",
+          "value": "**Important: that output is only *one* possible result.** Your handout presents it as *the* output. Once `start()` returns, two threads are running independently and the scheduler decides which proceeds. `Running in a thread` may appear **first**, **second**, or interleaved. Run it ten times and you may well see both orders."
+        },
+        {
+          "type": "text",
+          "value": "This matters more than it looks. A student who memorises the printed output will conclude that `start()` waits, the exact opposite of what the text says one paragraph later. **Never rely on the ordering of output from separate threads.**"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Implementing the Runnable interface"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class ThreadDemo implements Runnable {\n    public static void main(String[] args) {\n        ThreadDemo obj = new ThreadDemo();\n        Thread thread = new Thread(obj);\n        thread.start();\n        System.out.println(\"Outside of a thread\");\n    }\n\n    public void run() {\n        System.out.println(\"Running in a thread\");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "**You run the thread by passing an instance of the class to a `Thread` object's constructor and then calling the thread's `start()` method.**"
+    },
+    {
+      "type": "text",
+      "value": "**Prefer `Runnable`.** A class can extend only one class (Lesson 15), so `extends Thread` spends your single inheritance slot on plumbing. Implementing `Runnable` leaves the class free to extend something meaningful, and separates *what to do* from *how it is run*."
+    },
+    {
+      "type": "heading",
+      "value": "A shorter way: lambda"
+    },
+    {
+      "type": "text",
+      "value": "`Runnable` has a single method, so instead of writing a whole class you can pass the code for `run()` straight to the `Thread` constructor as a **lambda**, the arrow form `() -> { ... }`. A second argument names the thread. Calling `join()` waits for it, which makes the output reliable:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Thread worker = new Thread(\n    () -> System.out.println(\"Hello from \" + Thread.currentThread().getName()),\n    \"worker-1\");\n\nworker.start();\nworker.join();     // wait for it to finish\n// prints: Hello from worker-1"
+    },
+    {
+      "type": "text",
+      "value": "Threads that are not given a name are called `Thread-0`, `Thread-1` and so on, in the order they are created."
+    }
+  ]
+}

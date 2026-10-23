@@ -1,0 +1,326 @@
+[
+  {
+    "id": "arrays-01",
+    "lessonId": "arrays-1-one-dimensional-arrays",
+    "type": "mcq",
+    "prompt": "Which expression refers to the LAST element of `int[] num = new int[5];`?",
+    "choices": [
+      "num[4]",
+      "num[5]",
+      "num[6]",
+      "num[0]"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "arrays-02",
+    "lessonId": "arrays-1-one-dimensional-arrays",
+    "type": "truefalse",
+    "prompt": "Once an array has been created, its length can never change.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "arrays-03",
+    "lessonId": "arrays-1-one-dimensional-arrays",
+    "type": "mcq",
+    "prompt": "What value does each element of `new String[3]` start with?",
+    "choices": [
+      "\"\" (an empty string)",
+      "0",
+      "null",
+      "' '"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "arrays-04",
+    "lessonId": "arrays-1-one-dimensional-arrays",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "double[] prices = {12.25, 32.50, 16.90, 1.25, 43};\nint index = 3;\nSystem.out.println(prices[index + 1]);",
+    "choices": [
+      "1.25",
+      "43",
+      "16.9",
+      "43.0"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "arrays-05",
+    "lessonId": "arrays-1-one-dimensional-arrays",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int[] a = {1, 2, 3};\nint[] b = a;\nb[0] = 99;\nSystem.out.println(a[0]);",
+    "choices": [
+      "1",
+      "99",
+      "2",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "arrays-06",
+    "lessonId": "arrays-1-one-dimensional-arrays",
+    "type": "mcq",
+    "prompt": "What does the statement `int[] b = a;` do when `a` is an existing array?",
+    "choices": [
+      "Copies every element into a new array",
+      "Creates an empty array the same size as a",
+      "Makes b refer to the same array as a",
+      "Causes a compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "arrays-07",
+    "lessonId": "arrays-2-traversing-an-array",
+    "type": "mcq",
+    "prompt": "Which loop condition correctly visits every element of `prices`?",
+    "choices": [
+      "i <= prices.length",
+      "i < prices.length - 2",
+      "i != prices.length + 1",
+      "i < prices.length"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "arrays-08",
+    "lessonId": "arrays-2-traversing-an-array",
+    "type": "mcq",
+    "prompt": "When should you use the indexed `for` loop instead of the enhanced `for` loop?",
+    "choices": [
+      "You only need to read each value",
+      "You want the code to be shorter",
+      "You need to change the elements",
+      "The array holds doubles"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "arrays-09",
+    "lessonId": "arrays-2-traversing-an-array",
+    "type": "truefalse",
+    "prompt": "Assigning a new value to the loop variable of an enhanced `for` loop changes the element stored in the array.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "arrays-10",
+    "lessonId": "arrays-2-traversing-an-array",
+    "type": "mcq",
+    "prompt": "A program finds the lowest of the scores {88, 92, 75, 96, 63, 81}. Why should `lowest` start at `scores[0]` instead of `0`?",
+    "choices": [
+      "Zero is not a valid int",
+      "scores[0] is always the smallest value",
+      "The compiler requires it",
+      "Starting at 0 would report 0 for an array of positive numbers"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "arrays-11",
+    "lessonId": "arrays-2-traversing-an-array",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int[] counts = new int[4];\nint[] rolls = {1, 3, 1, 2, 1};\nfor (int roll : rolls) {\n    counts[roll]++;\n}\nSystem.out.println(counts[1] + \" \" + counts[0]);",
+    "choices": [
+      "1 3",
+      "3 0",
+      "3 1",
+      "0 3"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "arrays-12",
+    "lessonId": "arrays-2-traversing-an-array",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "static void doubleAll(int[] values) {\n    for (int i = 0; i < values.length; i++) {\n        values[i] = values[i] * 2;\n    }\n}\n\nint[] nums = {1, 2, 3};\ndoubleAll(nums);\nSystem.out.println(nums[2]);",
+    "choices": [
+      "3",
+      "2",
+      "6",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "arrays-13",
+    "lessonId": "arrays-3-two-dimensional-arrays",
+    "type": "mcq",
+    "prompt": "How many columns does `int[][] scores = new int[4][5];` have?",
+    "choices": [
+      "4",
+      "5",
+      "20",
+      "9"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "arrays-14",
+    "lessonId": "arrays-3-two-dimensional-arrays",
+    "type": "truefalse",
+    "prompt": "In Java, a two-dimensional array is really an array of arrays.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "arrays-15",
+    "lessonId": "arrays-3-two-dimensional-arrays",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int[][] triangle = new int[3][];\nfor (int row = 0; row < triangle.length; row++) {\n    triangle[row] = new int[row + 1];\n}\nSystem.out.println(triangle[2].length);",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "arrays-16",
+    "lessonId": "arrays-3-two-dimensional-arrays",
+    "type": "mcq",
+    "prompt": "To process every element of column 2 of a 2-D array, which part stays fixed?",
+    "choices": [
+      "The column index stays at 2 and the row index varies",
+      "The row index stays at 2",
+      "Both indexes vary",
+      "Both indexes stay fixed"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "arrays-17",
+    "lessonId": "arrays-4-multidimensional-arrays",
+    "type": "mcq",
+    "prompt": "How many elements does `int[][][] numbers = new int[2][3][5];` hold in total?",
+    "choices": [
+      "10",
+      "15",
+      "23",
+      "30"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "arrays-18",
+    "lessonId": "arrays-4-multidimensional-arrays",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int[][][] numbers = {\n    { {1, 3, 5, 7, 9}, {11, 13, 15, 17, 19}, {21, 23, 25, 27, 29} },\n    { {2, 4, 6, 8, 10}, {12, 14, 16, 18, 20}, {22, 24, 26, 28, 30} }\n};\nSystem.out.println(numbers[1][2][3]);",
+    "choices": [
+      "18",
+      "26",
+      "27",
+      "28"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "arrays-19",
+    "lessonId": "arrays-4-multidimensional-arrays",
+    "type": "mcq",
+    "prompt": "For `numbers` with 2 groups of 3 lists of 5 elements each, what is `numbers[0].length`?",
+    "choices": [
+      "2",
+      "3",
+      "5",
+      "30"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "arrays-20",
+    "lessonId": "arrays-5-the-arrays-class",
+    "type": "mcq",
+    "prompt": "Which statement prints the contents of the array `arr` rather than a memory reference?",
+    "choices": [
+      "System.out.println(arr);",
+      "System.out.println(arr[]);",
+      "System.out.println(arr.toString);",
+      "System.out.println(Arrays.toString(arr));"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "arrays-21",
+    "lessonId": "arrays-5-the-arrays-class",
+    "type": "mcq",
+    "prompt": "Which call puts the elements of `data` in ascending order?",
+    "choices": [
+      "Arrays.sort(data)",
+      "Arrays.fill(data)",
+      "Arrays.binarySearch(data)",
+      "Arrays.equals(data)"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "arrays-22",
+    "lessonId": "arrays-5-the-arrays-class",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int[] data = {10, 20, 30};\nSystem.out.println(Arrays.toString(Arrays.copyOfRange(data, 1, 3)));",
+    "choices": [
+      "[10, 20]",
+      "[20, 30, 0]",
+      "[20, 30]",
+      "[10, 20, 30]"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "arrays-23",
+    "lessonId": "arrays-5-the-arrays-class",
+    "type": "truefalse",
+    "prompt": "`Arrays.binarySearch` gives correct results even when the array is not sorted.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "arrays-24",
+    "lessonId": "arrays-common-mistakes",
+    "type": "mcq",
+    "prompt": "Which expression gives the number of elements in the array `arr`?",
+    "choices": [
+      "arr.length()",
+      "arr.size()",
+      "arr.count",
+      "arr.length"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "arrays-25",
+    "lessonId": "arrays-common-mistakes",
+    "type": "mcq",
+    "prompt": "What happens when this code runs?\n`String[] names = new String[3]; int n = names[0].length();`",
+    "choices": [
+      "n becomes 0",
+      "n becomes 3",
+      "It throws NullPointerException",
+      "It does not compile"
+    ],
+    "answer": 2
+  }
+]

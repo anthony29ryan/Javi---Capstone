@@ -1,0 +1,329 @@
+[
+  {
+    "id": "input-output-01",
+    "lessonId": "input-output-1-reading-input-with-scanner",
+    "type": "mcq",
+    "prompt": "Which import statement does `Scanner` need?",
+    "choices": [
+      "import java.util.Scanner;",
+      "import java.io.Scanner;",
+      "import java.lang.Scanner;",
+      "No import is needed"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "input-output-02",
+    "lessonId": "input-output-1-reading-input-with-scanner",
+    "type": "mcq",
+    "prompt": "What does `new Scanner(System.in)` connect the Scanner to?",
+    "choices": [
+      "A file",
+      "The keyboard",
+      "The screen",
+      "The network"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "input-output-03",
+    "lessonId": "input-output-1-reading-input-with-scanner",
+    "type": "mcq",
+    "prompt": "Which statement is best for a prompt, so the user types on the same line?",
+    "choices": [
+      "System.out.printf(\"Name: %n\");",
+      "System.out.println(\"Name: \");",
+      "System.out.print(\"Name: \");",
+      "System.out.println();"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "input-output-04",
+    "lessonId": "input-output-1-reading-input-with-scanner",
+    "type": "mcq",
+    "prompt": "What does `input.hasNextInt()` do?",
+    "choices": [
+      "Reads the next int",
+      "Closes the Scanner",
+      "Skips the next int",
+      "Returns true if the next token can be read as an int"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "input-output-05",
+    "lessonId": "input-output-2-scanner-methods",
+    "type": "mcq",
+    "prompt": "Which Scanner method reads an entire line, spaces included?",
+    "choices": [
+      "nextLine()",
+      "nextInt()",
+      "next()",
+      "nextChar()"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "input-output-06",
+    "lessonId": "input-output-2-scanner-methods",
+    "type": "mcq",
+    "prompt": "The user types `Ana Reyes`. What does `input.next()` return?",
+    "choices": [
+      "Ana Reyes",
+      "Ana",
+      "Reyes",
+      "It throws an exception"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "input-output-07",
+    "lessonId": "input-output-2-scanner-methods",
+    "type": "mcq",
+    "prompt": "How do you read a single character from a Scanner?",
+    "choices": [
+      "input.nextChar()",
+      "(char) input.nextInt()",
+      "input.next().charAt(0)",
+      "input.nextLine().char()"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "input-output-08",
+    "lessonId": "input-output-2-scanner-methods",
+    "type": "mcq",
+    "prompt": "The user types `10 20` on one line. After `int a = input.nextInt(); int b = input.nextInt();`, what is `b`?",
+    "choices": [
+      "10",
+      "An exception is thrown",
+      "0",
+      "20"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "input-output-09",
+    "lessonId": "input-output-2-scanner-methods",
+    "type": "truefalse",
+    "prompt": "`nextInt()` throws an exception if the next token is not an integer.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "input-output-10",
+    "lessonId": "input-output-3-displaying-output",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.print(\"A\");\nSystem.out.print(\"B\");\nSystem.out.println(\"C\");\nSystem.out.println(\"D\");",
+    "choices": [
+      "ABC\nD",
+      "AB\nCD",
+      "A\nB\nC\nD",
+      "ABCD"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "input-output-11",
+    "lessonId": "input-output-3-displaying-output",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"Total: \" + 2 + 3);",
+    "choices": [
+      "Total: 5",
+      "Total: 23",
+      "Total: 2 3",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "input-output-12",
+    "lessonId": "input-output-3-displaying-output",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"Total: \" + (2 + 3));",
+    "choices": [
+      "Compile error",
+      "Total: 23",
+      "Total: 5",
+      "Total: 2 3"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "input-output-13",
+    "lessonId": "input-output-3-displaying-output",
+    "type": "mcq",
+    "prompt": "What does `System.out.println();` with nothing in the parentheses do?",
+    "choices": [
+      "Prints nothing at all",
+      "Prints the word null",
+      "Causes a compile error",
+      "Prints a blank line"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "input-output-14",
+    "lessonId": "input-output-4-formatted-output-with-printf",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.printf(\"%.2f\", 19.5);",
+    "choices": [
+      "19.5",
+      "19.50",
+      "20",
+      "19.500"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "input-output-15",
+    "lessonId": "input-output-4-formatted-output-with-printf",
+    "type": "mcq",
+    "prompt": "Which format specifier displays a `String`?",
+    "choices": [
+      "%s",
+      "%d",
+      "%f",
+      "%c"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "input-output-16",
+    "lessonId": "input-output-4-formatted-output-with-printf",
+    "type": "mcq",
+    "prompt": "What does `%n` do in a `printf` format string?",
+    "choices": [
+      "Prints the letter n",
+      "Starts a new line",
+      "Prints a negative number",
+      "Rounds the number"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "input-output-17",
+    "lessonId": "input-output-4-formatted-output-with-printf",
+    "type": "mcq",
+    "prompt": "What does the `-` in `%-12s` do?",
+    "choices": [
+      "Cuts the text to 12 characters",
+      "Makes the text negative",
+      "Left-aligns the text in a 12-space field",
+      "Right-aligns the text"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "input-output-18",
+    "lessonId": "input-output-4-formatted-output-with-printf",
+    "type": "mcq",
+    "prompt": "What happens at run time with `System.out.printf(\"%d\", 3.5);`?",
+    "choices": [
+      "It prints 4",
+      "It prints 3.5",
+      "It prints 3",
+      "It throws IllegalFormatConversionException"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "input-output-19",
+    "lessonId": "input-output-4-formatted-output-with-printf",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "String text = String.format(\"%.2f\", 3.14159);\nSystem.out.println(text);",
+    "choices": [
+      "3.14",
+      "3.14159",
+      "3",
+      "3.1"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "input-output-20",
+    "lessonId": "input-output-5-a-complete-program",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.printf(\"%d%%%n\", 12);",
+    "choices": [
+      "12%",
+      "12",
+      "12%%",
+      "%12"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "input-output-21",
+    "lessonId": "input-output-5-a-complete-program",
+    "type": "mcq",
+    "prompt": "A payroll program computes `gross = hours * rate`. What is `gross` when `hours` is 160 and `rate` is 125.50?",
+    "choices": [
+      "1600.0",
+      "20080.0",
+      "20800.0",
+      "160125.5"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "input-output-22",
+    "lessonId": "input-output-5-a-complete-program",
+    "type": "mcq",
+    "prompt": "Why is `%%` written in a `printf` format string such as `\"Tax (12%%):\"`?",
+    "choices": [
+      "To format a decimal",
+      "To print a literal percent sign",
+      "To start a new line",
+      "To print two percent signs"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "input-output-23",
+    "lessonId": "input-output-common-mistakes",
+    "type": "mcq",
+    "prompt": "After `int age = input.nextInt();`, what does the next `input.nextLine()` return if the user pressed Enter after the number?",
+    "choices": [
+      "The next line the user types",
+      "null",
+      "An empty string left over from the Enter key",
+      "The number just read"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "input-output-24",
+    "lessonId": "input-output-common-mistakes",
+    "type": "mcq",
+    "prompt": "What does `nextInt()` throw when the user types letters?",
+    "choices": [
+      "Nothing, it returns 0",
+      "NumberFormatException",
+      "NullPointerException",
+      "InputMismatchException"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "input-output-25",
+    "lessonId": "input-output-common-mistakes",
+    "type": "truefalse",
+    "prompt": "Using the wrong format specifier in `printf` is caught by the compiler.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  }
+]

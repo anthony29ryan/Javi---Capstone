@@ -1,0 +1,127 @@
+{
+  "id": "exception-handling-2-checked-vs-unchecked-exceptions",
+  "moduleId": "exception-handling",
+  "title": "Checked vs. unchecked exceptions",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Java splits exceptions into two families, and the difference decides whether the compiler forces you to deal with them."
+    },
+    {
+      "type": "heading",
+      "value": "Checked exceptions: caught at compile time"
+    },
+    {
+      "type": "text",
+      "value": "The compiler *refuses to build* your program unless you handle these. They represent problems outside your code's control that a careful program should plan for."
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Exception",
+        "Description"
+      ],
+      "rows": [
+        [
+          "`ClassNotFoundException`",
+          "The class is not found"
+        ],
+        [
+          "`IllegalAccessException`",
+          "Access to a class is denied"
+        ],
+        [
+          "`InstantiationException`",
+          "Attempt to create an object of an abstract class or an interface"
+        ],
+        [
+          "`NoSuchMethodException`",
+          "A requested method does not exist"
+        ],
+        [
+          "`IOException`",
+          "A file or stream operation failed"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Unchecked exceptions: surface at run time"
+    },
+    {
+      "type": "text",
+      "value": "Also called **runtime exceptions**. The compiler does not force you to handle them, because they usually signal a *bug in your logic* that should be fixed rather than caught."
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Exception",
+        "Description"
+      ],
+      "rows": [
+        [
+          "`ArithmeticException`",
+          "Arithmetic error, such as an integer divided by 0"
+        ],
+        [
+          "`ArrayIndexOutOfBoundsException`",
+          "Accessing an invalid index of the array"
+        ],
+        [
+          "`ArrayStoreException`",
+          "Assigning a value to an array index that does not match the expected data type"
+        ],
+        [
+          "`InputMismatchException`",
+          "Entering a value that does not match the expected data type"
+        ],
+        [
+          "`NullPointerException`",
+          "Invalid use of a null reference"
+        ],
+        [
+          "`NumberFormatException`",
+          "Invalid conversion of a string to a numeric format"
+        ],
+        [
+          "`StringIndexOutOfBoundsException`",
+          "Accessing an invalid index (character) of a string"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Rule of thumb",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "if a *user* or the *environment* can cause it, it is probably checked, handle it. If *your own code* caused it, it is probably unchecked, fix the code."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "What the compiler says"
+    },
+    {
+      "type": "text",
+      "value": "Using a method that can throw a checked exception without handling it is a compile error, not a crash. For example, opening a file with `FileReader`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "FileReader reader = new FileReader(\"data.txt\");"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "error: unreported exception FileNotFoundException; must be caught or declared to be thrown"
+    },
+    {
+      "type": "text",
+      "value": "You have two choices: wrap the call in `try` and `catch`, or add `throws` to the heading of the method that contains it, passing the responsibility to the caller."
+    }
+  ]
+}

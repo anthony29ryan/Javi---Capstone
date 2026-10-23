@@ -1,0 +1,60 @@
+{
+  "id": "exception-handling-3-try-and-catch",
+  "moduleId": "exception-handling",
+  "title": "try and catch",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **try block** holds code that might throw an exception. A **catch block** follows it and handles the exception if one is thrown."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class SafeDivision {\n    public static void main(String[] args) {\n        int numerator = 10;\n        int denominator = 0;\n\n        try {\n            int result = numerator / denominator;\n            System.out.println(\"Result: \" + result);\n        } catch (ArithmeticException e) {\n            System.out.println(\"Cannot divide by zero.\");\n        }\n\n        System.out.println(\"Program continues normally.\");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Output:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Cannot divide by zero.\nProgram continues normally."
+    },
+    {
+      "type": "text",
+      "value": "The program survived instead of crashing."
+    },
+    {
+      "type": "text",
+      "value": "**Control flow:** when the exception is thrown, the rest of the `try` block is abandoned immediately, `System.out.println(\"Result: ...\")` never runs, and control jumps to the matching `catch`."
+    },
+    {
+      "type": "heading",
+      "value": "Getting the exception's own message"
+    },
+    {
+      "type": "text",
+      "value": "The `getMessage()` method returns Java's description of what went wrong:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "try {\n    int result = 10 / 0;\n} catch (ArithmeticException e) {\n    System.out.println(\"Error: \" + e.getMessage());   // Error: / by zero\n}"
+    },
+    {
+      "type": "heading",
+      "value": "Asking again after bad input"
+    },
+    {
+      "type": "text",
+      "value": "Combining `catch` with a loop lets a program recover instead of ending. `nextInt()` throws `InputMismatchException` when the user types something that is not a whole number, and it leaves the bad text waiting in the input. The `catch` block has to read and discard that text with `next()`, or the loop would fail on it forever:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Scanner input = new Scanner(System.in);\nint number = 0;\nboolean valid = false;\n\nwhile (!valid) {\n    System.out.print(\"Enter a whole number: \");\n    try {\n        number = input.nextInt();\n        valid = true;\n    } catch (InputMismatchException e) {\n        System.out.println(\"That is not a whole number.\");\n        input.next();   // discard the bad token\n    }\n}\nSystem.out.println(\"You entered \" + number);"
+    }
+  ]
+}

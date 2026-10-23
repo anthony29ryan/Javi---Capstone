@@ -1,0 +1,20 @@
+{
+  "id": "loops-key-takeaways",
+  "moduleId": "loops",
+  "title": "Key takeaways",
+  "order": 10,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**`for`** when you know the count, **`while`** when you do not, **`do...while`** when the body must run at least once.",
+        "Every loop needs three things: **initialise**, **test**, **update**. Missing the update is the classic infinite loop.",
+        "`do...while` requires a **semicolon** after the closing condition.",
+        "**`break`** exits the loop; **`continue`** skips to the next iteration. Both affect only the innermost loop.",
+        "In **nested loops**, the inner loop runs fully for every single outer iteration.",
+        "Watch `<` versus `<=`, one character, one whole iteration."
+      ]
+    }
+  ]
+}

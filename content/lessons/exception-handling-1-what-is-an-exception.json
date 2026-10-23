@@ -1,0 +1,38 @@
+{
+  "id": "exception-handling-1-what-is-an-exception",
+  "moduleId": "exception-handling",
+  "title": "What is an exception?",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "An **exception** is an event that occurs during program execution that disrupts the normal flow of instructions."
+    },
+    {
+      "type": "text",
+      "value": "**Exception handling** is the process of changing that normal flow when a specified exception occurs, instead of crashing, your code takes a recovery path."
+    },
+    {
+      "type": "text",
+      "value": "Here is the crash, before we handle anything:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Crash {\n    public static void main(String[] args) {\n        int[] scores = {90, 85, 78};\n        System.out.println(scores[5]);   // index 5 does not exist\n        System.out.println(\"This line never runs.\");\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Output:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Exception in thread \"main\" java.lang.ArrayIndexOutOfBoundsException:\n        Index 5 out of bounds for length 3\n        at Crash.main(Crash.java:4)"
+    },
+    {
+      "type": "text",
+      "value": "Read that from the top: the **exception type**, the **message**, then the **stack trace** telling you the exact file and line. Notice the last `println` never executed, an uncaught exception stops the program dead."
+    }
+  ]
+}

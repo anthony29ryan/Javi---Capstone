@@ -1,0 +1,133 @@
+{
+  "id": "arrays-1-one-dimensional-arrays",
+  "moduleId": "arrays",
+  "title": "One-dimensional arrays",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "An **array** is a collection or sequence of a fixed number of variables called **elements**, where all elements are of the same data type."
+    },
+    {
+      "type": "text",
+      "value": "**The length of an array is established when the array is created. After creation, its length is fixed.** Each element is accessed by its numerical **index**, and indices start at **0**."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "dataType[] arrayName = new dataType[arraySize];"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[] num = new int[5];"
+    },
+    {
+      "type": "text",
+      "value": "This declares and creates the array `num` with five elements, each of type `int`. The elements are accessed as `num[0]`, `num[1]`, `num[2]`, `num[3]`, and `num[4]`."
+    },
+    {
+      "type": "text",
+      "value": "**When an array is created, Java automatically initializes the elements of numeric arrays to 0.**"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Index",
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "rows": [
+        [
+          "`num`",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Defaults depend on the type: numeric arrays get `0`, `boolean` arrays get `false`, `char` arrays get `'\u0000'`, and arrays of objects (including `String`) get **`null`**."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Five elements, last index 4",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "`num[5]` does not exist and throws `ArrayIndexOutOfBoundsException` at run time, not a compile error. This is the single most common array bug."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Initializing with values"
+    },
+    {
+      "type": "text",
+      "value": "Like a primitive variable, an array can be initialized with specific values when declared:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "double prices[] = {12.25, 32.50, 16.90, 1.25, 43};"
+    },
+    {
+      "type": "text",
+      "value": "The values between braces, separated by commas, are the **initializer list**. The size is inferred from the number of values, five here. Note that `43` is stored as `43.0`, since the array is `double`."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "On placement of the brackets",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "`double prices[]` and `double[] prices` are both legal, but `double[] prices` is standard Java style, the brackets belong to the *type*, not the name. Your handout mixes both. Prefer `double[] prices`."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Putting it together"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class ArrayExample {\n    public static void main(String[] args) {\n        int[] ageList = new int[5];\n\n        ageList[0] = 23;        // initialize elements using the assignment operator\n        ageList[1] = 18;\n        ageList[2] = 22;\n        ageList[3] = 17;\n        ageList[4] = 34;\n\n        double[] prices = {12.25, 32.50, 16.90, 1.25, 43};   // initial values\n\n        int index = 3;\n        System.out.println(prices[index + 1]);               // 43.0\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "An index can be any expression that evaluates to an `int`, `index + 1` is `4`, so this prints the last element."
+    },
+    {
+      "type": "heading",
+      "value": "Arrays are references"
+    },
+    {
+      "type": "text",
+      "value": "An array variable doesn't hold the elements. It holds a **reference** to them. Assigning one array variable to another copies the reference, so both names point to the **same** array:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[] a = {1, 2, 3};\nint[] b = a;          // b is another name for the same array\nb[0] = 99;\nSystem.out.println(a[0]);   // 99"
+    },
+    {
+      "type": "text",
+      "value": "To get an independent copy, build a new array with `Arrays.copyOf` (see Lesson 5; it needs `import java.util.Arrays;`). Changing the copy then leaves the original alone, and `a == c` is `false` because they are different arrays:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[] c = Arrays.copyOf(a, a.length);\nc[1] = 50;\nSystem.out.println(Arrays.toString(a));   // [99, 2, 3]\nSystem.out.println(Arrays.toString(c));   // [99, 50, 3]"
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
 import { getReactNativePersistence, initializeAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getFunctions } from 'firebase/functions';
 
 // These are client identifiers, not secrets — safe to ship in the app bundle.
 // Real API keys (AI tutor, code execution) stay server-side in Cloud Functions.
@@ -22,3 +23,5 @@ export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 export const db = getFirestore(app);
+// Must match the region in functions/index.js, beside the Firestore database.
+export const functions = getFunctions(app, 'asia-southeast1');

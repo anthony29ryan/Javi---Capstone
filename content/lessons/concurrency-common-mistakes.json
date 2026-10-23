@@ -1,0 +1,40 @@
+{
+  "id": "concurrency-common-mistakes",
+  "moduleId": "concurrency",
+  "title": "Common mistakes",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Calling `run()` instead of `start()`.** `t.run()` compiles and executes the code **on the current thread**: no new thread is created at all, and the program is silently single-threaded. Only `start()` creates a thread."
+    },
+    {
+      "type": "text",
+      "value": "**Calling `start()` twice on the same Thread.** Throws `IllegalThreadStateException`. A thread cannot be restarted; create a new one."
+    },
+    {
+      "type": "text",
+      "value": "**Relying on output order.** Without `join()` or synchronization, order is whatever the scheduler chooses."
+    },
+    {
+      "type": "text",
+      "value": "**Assuming priority controls order.** It is a hint. Many platforms largely ignore it."
+    },
+    {
+      "type": "text",
+      "value": "**Sharing mutable data without synchronization.** The race condition above. It will pass your tests and fail in production."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting `InterruptedException`.** `sleep()` and `join()` both declare it."
+    },
+    {
+      "type": "text",
+      "value": "**Thinking `sleep()` releases a lock.** It does not. A sleeping thread inside a `synchronized` block still holds it, blocking everyone else."
+    },
+    {
+      "type": "text",
+      "value": "**Synchronizing everything.** Over-synchronizing serialises your program, removing the benefit of threads entirely, and can produce **deadlock**: two threads each waiting for a lock the other holds, so neither ever proceeds."
+    }
+  ]
+}

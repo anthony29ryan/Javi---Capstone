@@ -1,0 +1,32 @@
+{
+  "id": "introduction-to-java-common-mistakes",
+  "moduleId": "introduction-to-java",
+  "title": "Common mistakes",
+  "order": 11,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**File name does not match the class name.** `public class Hello` must live in `Hello.java`. The compiler rejects anything else."
+    },
+    {
+      "type": "text",
+      "value": "**Missing semicolon.** The single most common beginner syntax error. Every statement ends with one."
+    },
+    {
+      "type": "text",
+      "value": "**Case mismatch.** `system.out.println` and `String[] Args` will not compile. Java is case sensitive everywhere, always."
+    },
+    {
+      "type": "text",
+      "value": "**Running `java Hello.class`.** The `java` command takes the class name alone: `java Hello`."
+    },
+    {
+      "type": "text",
+      "value": "**Unbalanced braces.** Every `{` needs its `}`. Indent consistently and this mostly stops happening."
+    },
+    {
+      "type": "text",
+      "value": "**Assuming no error message means no bug.** Logical errors are silent. Always check that the output is actually correct."
+    }
+  ]
+}

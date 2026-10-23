@@ -1,0 +1,20 @@
+{
+  "id": "oop-key-takeaways",
+  "moduleId": "oop",
+  "title": "Key takeaways",
+  "order": 10,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "OOP bundles **data and the code that acts on it** into objects.",
+        "An object has **attributes**, whose current values are its **state**, and **behaviors** implemented as **methods**.",
+        "A **class is a blueprint**; objects are instances built from it, each with **its own state**.",
+        "**Inheritance** (`extends`) means *is a* and removes repetition. **Interfaces** (`implements`) mean *can do*.",
+        "**Packages** group related classes; `import` brings them in.",
+        "This lesson is the map. Lessons 13 to 15 are the territory."
+      ]
+    }
+  ]
+}

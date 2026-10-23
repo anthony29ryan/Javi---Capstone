@@ -1,0 +1,40 @@
+{
+  "id": "inheritance-polymorphism-interfaces-common-mistakes",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Common mistakes",
+  "order": 9,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Putting `super(...)` anywhere but first.** It must be the very first statement in the constructor."
+    },
+    {
+      "type": "text",
+      "value": "**Trying to use both `super(...)` and `this(...)` in one constructor.** Only one, and it must be first. Chain through `this(...)` to a constructor that calls `super(...)`."
+    },
+    {
+      "type": "text",
+      "value": "**Accessing a private field of the base class from a subclass.** Private means private, even to children. Use the accessor, or declare the field `protected`."
+    },
+    {
+      "type": "text",
+      "value": "**Overloading when you meant to override.** A different parameter list creates a *new* method that never runs polymorphically. `@Override` catches this instantly."
+    },
+    {
+      "type": "text",
+      "value": "**Expecting the variable's type to decide which method runs.** It does not: the **object's** class does. That is dynamic binding."
+    },
+    {
+      "type": "text",
+      "value": "**Trying to instantiate an abstract class or an interface.** Neither can be created with `new`."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting to implement every method of an interface.** The class will not compile unless it is itself declared abstract."
+    },
+    {
+      "type": "text",
+      "value": "**Reaching for inheritance when the relationship is not \"is a\".** A `Car` is not an `Engine`; it *has* one. Use a field, not `extends`."
+    }
+  ]
+}

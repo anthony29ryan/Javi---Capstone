@@ -1,0 +1,76 @@
+{
+  "id": "data-types-3-variables",
+  "moduleId": "data-types",
+  "title": "Variables",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **variable** is a name for a memory location that stores a specific value. A variable is an identifier. It can hold only one value at a time, but its value may change during execution, a variable named `score` might hold `0` when the program starts and `350` later on."
+    },
+    {
+      "type": "text",
+      "value": "To use a variable, it must be **declared** first:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "data_type variable_name [= value];"
+    },
+    {
+      "type": "text",
+      "value": "Valid declarations and initializations:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int a, b, c;                // three variables, comma-separated\nint a = 10, b = 5 + 3;      // declared and initialized\nint x = a + 5;              // initialized from another variable\nfloat f = 2.75f;\ndouble grade = 2.75;\nchar letter = 'A';\nbyte b;                     // declared, not yet given a value\nint size; size = 30;        // declared, then assigned"
+    },
+    {
+      "type": "text",
+      "value": "Each variable is assigned one memory location. When the variable is given a value, that value is encoded as a string of 0s and 1s and placed in the variable's memory location."
+    },
+    {
+      "type": "text",
+      "value": "Putting it together:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class StudentRecord {\n    public static void main(String[] args) {\n        String name = \"Ana Reyes\";\n        int age = 19;\n        double grade = 92.75;\n        char section = 'B';\n        boolean enrolled = true;\n\n        System.out.println(\"Name:     \" + name);\n        System.out.println(\"Age:      \" + age);\n        System.out.println(\"Grade:    \" + grade);\n        System.out.println(\"Section:  \" + section);\n        System.out.println(\"Enrolled: \" + enrolled);\n\n        grade = 94.50;   // a variable's value may change\n        System.out.println(\"Updated grade: \" + grade);\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Output:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Name:     Ana Reyes\nAge:      19\nGrade:    92.75\nSection:  B\nEnrolled: true\nUpdated grade: 94.5"
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Declaring vs. initializing",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "`int size;` *declares*. `size = 30;` *initializes*. Java will not let you read a local variable before it has been initialized. That is a compile error, not a crash."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "The = sign is assignment"
+    },
+    {
+      "type": "text",
+      "value": "In Java, `=` does not say \"is equal to.\" It means **evaluate the right side, then store the result in the variable on the left**. That is why this is valid, even though it would be nonsense as algebra:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int count = 5;\ncount = count + 1;       // read count (5), add 1, store 6 back in count\nSystem.out.println(count);   // 6"
+    }
+  ]
+}

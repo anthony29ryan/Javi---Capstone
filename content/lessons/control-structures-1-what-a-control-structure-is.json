@@ -1,0 +1,32 @@
+{
+  "id": "control-structures-1-what-a-control-structure-is",
+  "moduleId": "control-structures",
+  "title": "What a control structure is",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **sequential structure** executes a sequence of statements in order. **Control structures** provide alternatives to sequential programs and are used to alter the flow of execution."
+    },
+    {
+      "type": "text",
+      "value": "A **control structure** is a statement used to control the flow of a program. There are two kinds:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "In a **selection structure**, the program executes particular statements depending on a given condition. This alters the flow by making a choice, for example, determining whether a student passed or failed.",
+        "In a **repetition structure**, the program repeats particular statements a certain number of times, depending on a given condition, for example, printing a message ten times."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "This lesson covers selection. Lesson 7 covers repetition."
+    },
+    {
+      "type": "text",
+      "value": "Java provides three selection structures: the `if` statement, the `if...else` statement, and the `switch` statement. `if` and `if...else` create one-way, two-way, and multiple selections. `switch` tests a single variable against a series of values."
+    }
+  ]
+}

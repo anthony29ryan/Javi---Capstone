@@ -1,0 +1,335 @@
+[
+  {
+    "id": "predefined-functions-01",
+    "lessonId": "predefined-functions-1-methods-predefined-and-user-defined",
+    "type": "mcq",
+    "prompt": "Which package is imported automatically in every Java program?",
+    "choices": [
+      "java.lang",
+      "java.io",
+      "java.util",
+      "java.math"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "predefined-functions-02",
+    "lessonId": "predefined-functions-1-methods-predefined-and-user-defined",
+    "type": "truefalse",
+    "prompt": "`Scanner` can be used without an import statement.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "predefined-functions-03",
+    "lessonId": "predefined-functions-2-the-math-class",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(Math.sqrt(144));",
+    "choices": [
+      "12",
+      "72.0",
+      "144.0",
+      "12.0"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "predefined-functions-04",
+    "lessonId": "predefined-functions-2-the-math-class",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(Math.pow(2, 10));",
+    "choices": [
+      "1024.0",
+      "1024",
+      "20.0",
+      "100.0"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "predefined-functions-05",
+    "lessonId": "predefined-functions-2-the-math-class",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(Math.round(4.5));",
+    "choices": [
+      "4",
+      "5.0",
+      "4.5",
+      "5"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "predefined-functions-06",
+    "lessonId": "predefined-functions-2-the-math-class",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(Math.ceil(4.1));",
+    "choices": [
+      "4.0",
+      "4",
+      "5.0",
+      "5"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "predefined-functions-07",
+    "lessonId": "predefined-functions-2-the-math-class",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(Math.floor(4.9));",
+    "choices": [
+      "5.0",
+      "4.0",
+      "4",
+      "5"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "predefined-functions-08",
+    "lessonId": "predefined-functions-2-the-math-class",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(Math.abs(-57));",
+    "choices": [
+      "57",
+      "-57",
+      "0",
+      "18"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "predefined-functions-09",
+    "lessonId": "predefined-functions-2-the-math-class",
+    "type": "mcq",
+    "prompt": "What does `Math.random()` return?",
+    "choices": [
+      "A `long`",
+      "A `double` from 0.0 up to but not including 1.0",
+      "An `int` from 1 to 6",
+      "A `double` from 1.0 to 6.0"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "predefined-functions-10",
+    "lessonId": "predefined-functions-2-the-math-class",
+    "type": "mcq",
+    "prompt": "Which expression gives a whole number from 1 to 6?",
+    "choices": [
+      "Math.random() * 6",
+      "(int) (Math.random() * 6)",
+      "(int) (Math.random() * 6) + 1",
+      "(int) Math.random() + 6"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "predefined-functions-11",
+    "lessonId": "predefined-functions-2-the-math-class",
+    "type": "mcq",
+    "prompt": "In what unit do `Math.sin`, `Math.cos` and `Math.tan` expect their argument?",
+    "choices": [
+      "Percent",
+      "Degrees",
+      "Gradians",
+      "Radians"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "predefined-functions-12",
+    "lessonId": "predefined-functions-2-the-math-class",
+    "type": "mcq",
+    "prompt": "Why does `int n = Math.pow(2, 3);` not compile?",
+    "choices": [
+      "`Math.pow` returns a `double`",
+      "The arguments must be doubles",
+      "`pow` is not static",
+      "`n` must be a `long`"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "predefined-functions-13",
+    "lessonId": "predefined-functions-3-user-defined-methods",
+    "type": "mcq",
+    "prompt": "In `public static int sumOfTwoInt(int x, int y)`, what does the `int` before the method name mean?",
+    "choices": [
+      "The method is private",
+      "The method returns an `int`",
+      "The method has an int parameter",
+      "The method returns nothing"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "predefined-functions-14",
+    "lessonId": "predefined-functions-3-user-defined-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static int sumOfTwoInt(int x, int y) {\n    int sum = x + y;\n    return sum;\n}\n\nSystem.out.println(sumOfTwoInt(10, 5));",
+    "choices": [
+      "105",
+      "10",
+      "15",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "predefined-functions-15",
+    "lessonId": "predefined-functions-3-user-defined-methods",
+    "type": "mcq",
+    "prompt": "Which statement about a `void` method is true?",
+    "choices": [
+      "It cannot have parameters",
+      "It must return 0",
+      "It can only be static",
+      "It returns no value and cannot be used in an expression"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "predefined-functions-16",
+    "lessonId": "predefined-functions-3-user-defined-methods",
+    "type": "mcq",
+    "prompt": "What happens with the call `displayInfo(19, \"Jess\", \"Diaz\")` when the method expects `(String, String, int)`?",
+    "choices": [
+      "A compile error: the types do not match the parameters",
+      "It runs and swaps the values",
+      "A runtime exception",
+      "It prints null"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "predefined-functions-17",
+    "lessonId": "predefined-functions-3-user-defined-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static int add(int a, int b) { return a + b; }\npublic static double add(double a, double b) { return a + b; }\n\nSystem.out.println(add(2, 3) + \" \" + add(2.5, 3.5));",
+    "choices": [
+      "5.0 6.0",
+      "5 6.0",
+      "5 6",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "predefined-functions-18",
+    "lessonId": "predefined-functions-3-user-defined-methods",
+    "type": "mcq",
+    "prompt": "What is method overloading?",
+    "choices": [
+      "A method that calls itself",
+      "A method with too many statements",
+      "Several methods with the same name but different parameter lists",
+      "Two methods with the same name and the same parameters"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "predefined-functions-19",
+    "lessonId": "predefined-functions-3-user-defined-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static int square(int n) {\n    return n * n;\n}\n\nSystem.out.println(square(3) + square(4));",
+    "choices": [
+      "7",
+      "25",
+      "49",
+      "12"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "predefined-functions-20",
+    "lessonId": "predefined-functions-3-user-defined-methods",
+    "type": "mcq",
+    "prompt": "Which error appears when static `main` calls a non-static method with no object?",
+    "choices": [
+      "class not found",
+      "missing return statement",
+      "incompatible types",
+      "non-static method cannot be referenced from a static context"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "predefined-functions-21",
+    "lessonId": "predefined-functions-4-parameter-passing",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static void passMethod(int x) {\n    x = 10;\n}\n\nint x = 3;\npassMethod(x);\nSystem.out.println(x);",
+    "choices": [
+      "3",
+      "10",
+      "13",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "predefined-functions-22",
+    "lessonId": "predefined-functions-4-parameter-passing",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static void zeroFirst(int[] values) {\n    values[0] = 0;\n}\n\nint[] a = {5, 6};\nzeroFirst(a);\nSystem.out.println(a[0]);",
+    "choices": [
+      "9",
+      "5",
+      "6",
+      "0"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "predefined-functions-23",
+    "lessonId": "predefined-functions-4-parameter-passing",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static void reassign(int[] values) {\n    values = new int[] {9, 9};\n}\n\nint[] a = {5, 6};\nreassign(a);\nSystem.out.println(a[0]);",
+    "choices": [
+      "0",
+      "9",
+      "5",
+      "6"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "predefined-functions-24",
+    "lessonId": "predefined-functions-common-mistakes",
+    "type": "mcq",
+    "prompt": "What error appears when a value-returning method has a path with no `return`?",
+    "choices": [
+      "Cannot find symbol",
+      "Missing return statement",
+      "Division by zero",
+      "Nothing, it returns 0"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "predefined-functions-25",
+    "lessonId": "predefined-functions-common-mistakes",
+    "type": "truefalse",
+    "prompt": "`Math.pow` returns an `int` when both arguments are whole numbers.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  }
+]

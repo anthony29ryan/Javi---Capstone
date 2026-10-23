@@ -1,23 +1,25 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { colors, spacing, type } from '../theme/colors';
+import Text from './AppText';
+import Button from './Button';
 
 /**
- * The loading / error / empty states every data-backed screen needs.
- * Centralizing them keeps those three cases from being restyled per screen.
+ * The error / empty states every data-backed screen needs. Centralizing them
+ * keeps those cases from being restyled per screen. Loading is not here:
+ * each screen draws its own skeleton in its own shape.
  *
- * Usage: <ScreenState loading />, <ScreenState error={msg} />,
+ * Usage: <ScreenState error={msg} onRetry={fn} />,
  *        <ScreenState message="Nothing here yet." />
  */
-export default function ScreenState({ loading, error, message, hint }) {
+export default function ScreenState({ error, onRetry, message, hint }) {
   return (
     <View style={styles.container}>
-      {loading ? <ActivityIndicator color={colors.primary} size="large" /> : null}
-
       {error ? (
         <>
           <Text style={styles.errorTitle}>Something went wrong</Text>
           <Text style={styles.errorBody}>{error}</Text>
+          {onRetry ? <Button label="Try again" variant="secondary" onPress={onRetry} /> : null}
         </>
       ) : null}
 

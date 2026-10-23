@@ -1,13 +1,14 @@
 rules_version = '2';
 
+// Tested by tests/rules/storage.test.js — run `npm run test:rules` after any
+// change here, then `npm run rules:deploy`.
+
 service firebase.storage {
   match /b/{bucket}/o {
-    // TEMPORARY: any signed-in user can read/write lesson images while
-    // content is actively being authored. Once real content is in place,
-    // tighten write access since images should only be uploaded by the
-    // developer, not app users.
+    // Lesson images are uploaded through the Firebase console, which bypasses
+    // these rules, so the app only ever needs to read them.
     match /lessons/{allPaths=**} {
-      allow read, write: if request.auth != null;
+      allow read: if request.auth != null;
     }
   }
 }

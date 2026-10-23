@@ -1,0 +1,56 @@
+{
+  "id": "inheritance-polymorphism-interfaces-4-polymorphism",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Polymorphism",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Polymorphism is the ability of an object to take on many forms.**"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**The most common use of polymorphism occurs when a base class reference is used to refer to a derived class object.**",
+        "**When an overridden method is invoked, its action is the one defined in the class used to create the object with `new`. It is not determined by the type of the variable naming the object.**",
+        "**Dynamic binding** allows many meanings to be associated with one method name. In dynamic binding, the definition of a method is not bound to an invocation until **run time**, when the method is called. This is the mechanism used by polymorphism."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class PolymorphismSample {\n    public static void main(String[] args) {\n        Person[] people = new Person[4];\n\n        people[0] = new Undergraduate(\"Velasquez, Veronica\", 4910, 1);\n        people[1] = new Undergraduate(\"Santos, Stephanie\", 9931, 2);\n        people[2] = new Student(\"Mendoza, Marie\", 8812);\n        people[3] = new Undergraduate(\"Dela Cruz, Diane\", 9901, 4);\n\n        for (Person p : people) {\n            p.writeOutput();\n            System.out.println();\n        }\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Name: Velasquez, Veronica\nStudent Number: 4910\nStudent Level: 1\n\nName: Santos, Stephanie\nStudent Number: 9931\nStudent Level: 2\n\nName: Mendoza, Marie\nStudent Number: 8812\n\nName: Dela Cruz, Diane\nStudent Number: 9901\nStudent Level: 4"
+    },
+    {
+      "type": "text",
+      "value": "**Even though `p` is of type `Person`, the `writeOutput()` method associated with `Undergraduate` or `Student` is invoked, depending on which class was used to create the object.**"
+    },
+    {
+      "type": "text",
+      "value": "Look at what that buys you. The loop says `p.writeOutput()` **once**. It produces three different outputs, chosen per object at run time. Add a `GraduateStudent` class tomorrow, drop it into the array, and **this loop needs no changes at all**: it already handles a class that did not exist when it was written."
+    },
+    {
+      "type": "text",
+      "value": "Without polymorphism, the loop would need a chain of `if` tests naming every subclass, and every new subclass would mean editing every such chain in the program."
+    },
+    {
+      "type": "heading",
+      "value": "Reaching subclass-only methods"
+    },
+    {
+      "type": "text",
+      "value": "A `Person` variable can only call methods that `Person` declares, even when it refers to a `Student`. To call a subclass method, test the object with `instanceof` and then **cast** it. A cast to the wrong class throws `ClassCastException`, so always test first:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Person p = new Student(\"Ana\", 7);\n\nif (p instanceof Student) {\n    Student s = (Student) p;\n    System.out.println(s.getStudentNumber());   // 7\n}"
+    }
+  ]
+}

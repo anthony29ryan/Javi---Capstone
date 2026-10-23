@@ -1,0 +1,43 @@
+{
+  "id": "predefined-functions-4-parameter-passing",
+  "moduleId": "predefined-functions",
+  "title": "Parameter passing",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Java passes arguments into methods by value.** Any changes to the values of the parameters exist only within the scope of the method. When a method returns, the parameters are gone, and any changes to them are lost."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class PassByValue {\n    public static void main(String[] args) {\n        int x = 3;\n        passMethod(x);                  // invoke passMethod with x as argument\n        System.out.println(\"After invoking passMethod, x = \" + x);\n    }\n\n    // change the parameter inside passMethod()\n    public static void passMethod(int x) {\n        x = 10;\n        System.out.println(\"The value of x inside passMethod is \" + x);\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "The value of x inside passMethod is 10\nAfter invoking passMethod, x = 3"
+    },
+    {
+      "type": "text",
+      "value": "The method received a **copy** of the value `3`. Changing the copy to `10` had no effect on the original. The two `x` variables are entirely separate despite sharing a name."
+    },
+    {
+      "type": "text",
+      "value": "**This is why value-returning methods matter.** If a method must give something back, it has to `return` it, modifying a parameter accomplishes nothing."
+    },
+    {
+      "type": "heading",
+      "value": "What about arrays?"
+    },
+    {
+      "type": "text",
+      "value": "The rule is the same: a copy of the value is passed. For an array, the value is the **reference**, so the method and the caller both point at one array. The method can change the elements, but pointing its own parameter at a new array does not affect the caller:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static void zeroFirst(int[] values) {\n    values[0] = 0;               // changes the shared array\n}\n\npublic static void reassign(int[] values) {\n    values = new int[] {9, 9};   // changes only the local copy of the reference\n}\n\n// int[] a = {5, 6};\n// reassign(a);   a[0] is still 5\n// zeroFirst(a);  a[0] is now 0"
+    }
+  ]
+}

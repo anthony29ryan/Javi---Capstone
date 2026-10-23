@@ -1,0 +1,38 @@
+{
+  "id": "expressions-1-what-an-expression-is",
+  "moduleId": "expressions",
+  "title": "What an expression is",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "An **expression** is a construct made up of variables and operators that evaluates to a single value."
+    },
+    {
+      "type": "text",
+      "value": "`11 + 13` is an expression. So is `x = 12`. Expressions can also return other types of value, such as boolean or String."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "11 + 13              // evaluates to 24\nx = 12               // evaluates to 12 (and assigns it)\nscore > 50           // evaluates to true or false\n\"Hi \" + name         // evaluates to a String"
+    },
+    {
+      "type": "text",
+      "value": "The key idea: an expression **is** its value. Anywhere Java expects a value, you can write an expression that produces one."
+    },
+    {
+      "type": "heading",
+      "value": "Expressions and statements"
+    },
+    {
+      "type": "text",
+      "value": "A **statement** is a complete instruction ending in a semicolon. An expression can be part of a statement, such as the argument of `println`, or can become a statement by itself when it is an assignment or a method call. A bare calculation does nothing, so Java rejects it:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int x = 3;\nx = x + 1;                   // fine: an assignment is an expression statement\nSystem.out.println(x + 1);   // fine: x + 1 is an expression inside a statement\nx + 1;                       // error: not a statement"
+    }
+  ]
+}

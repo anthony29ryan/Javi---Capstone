@@ -1,0 +1,85 @@
+{
+  "id": "strings-1-what-a-string-is",
+  "moduleId": "strings",
+  "title": "What a string is",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Java provides the `String` class from the `java.lang` package to create and manipulate strings. It has its own methods for working with text. **The `String` class is not a primitive data type.**"
+    },
+    {
+      "type": "text",
+      "value": "A **string is a sequence of characters**. Every character has a specific position, and the position of the first character starts at **index 0**. The **length** of a string is the number of characters in it."
+    },
+    {
+      "type": "table",
+      "headers": [],
+      "rows": [
+        [
+          "**String**",
+          "`\"Hello World\"`",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "**Character**",
+          "`H`",
+          "`e`",
+          "`l`",
+          "`l`",
+          "`o`",
+          "` `",
+          "`W`",
+          "`o`",
+          "`r`",
+          "`l`",
+          "`d`"
+        ],
+        [
+          "**Index**",
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "The length of `\"Hello World\"` is **11**."
+    },
+    {
+      "type": "text",
+      "value": "Note what that means: the **last valid index is always `length() - 1`**, here `10`. Asking for index 11 throws `StringIndexOutOfBoundsException`. The space at index 5 is a character like any other."
+    },
+    {
+      "type": "heading",
+      "value": "Empty versus null"
+    },
+    {
+      "type": "text",
+      "value": "An **empty string** `\"\"` is a real string with no characters, so its length is `0` and you can call methods on it. A `null` string is no string at all: the variable points to nothing, and calling any method on it throws `NullPointerException`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String empty = \"\";\nSystem.out.println(empty.length());   // 0\nSystem.out.println(empty.isEmpty());   // true\n\nString none = null;\nnone.length();                         // NullPointerException"
+    }
+  ]
+}

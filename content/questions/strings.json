@@ -1,0 +1,334 @@
+[
+  {
+    "id": "strings-01",
+    "lessonId": "strings-1-what-a-string-is",
+    "type": "mcq",
+    "prompt": "What is the length of the string `\"Hello World\"`?",
+    "choices": [
+      "10",
+      "11",
+      "12",
+      "5"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "strings-02",
+    "lessonId": "strings-1-what-a-string-is",
+    "type": "mcq",
+    "prompt": "What is the last valid index of a string whose length is `n`?",
+    "choices": [
+      "n - 1",
+      "n + 1",
+      "n",
+      "1"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "strings-03",
+    "lessonId": "strings-1-what-a-string-is",
+    "type": "mcq",
+    "prompt": "What does `\"\".length()` return?",
+    "choices": [
+      "1",
+      "0",
+      "null",
+      "It throws an exception"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "strings-04",
+    "lessonId": "strings-1-what-a-string-is",
+    "type": "truefalse",
+    "prompt": "Calling a method such as `length()` on a `null` string throws `NullPointerException`.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "strings-05",
+    "lessonId": "strings-2-creating-strings",
+    "type": "truefalse",
+    "prompt": "String literals with the same contents share one object in memory.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "strings-06",
+    "lessonId": "strings-2-creating-strings",
+    "type": "mcq",
+    "prompt": "Which line is the usual way to create a string?",
+    "choices": [
+      "String s = Hi;",
+      "String s = new String(\"Hi\");",
+      "String s = \"Hi\";",
+      "string s = \"Hi\";"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "strings-07",
+    "lessonId": "strings-3-comparing-strings-vs-equals",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "String a = \"Computer\";\nString b = new String(\"Computer\");\nSystem.out.println(a == b);",
+    "choices": [
+      "Compile error",
+      "true",
+      "Computer",
+      "false"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "strings-08",
+    "lessonId": "strings-3-comparing-strings-vs-equals",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "String a = \"Computer\";\nString b = new String(\"Computer\");\nSystem.out.println(a.equals(b));",
+    "choices": [
+      "true",
+      "false",
+      "Computer",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "strings-09",
+    "lessonId": "strings-3-comparing-strings-vs-equals",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "String a = \"Computer\";\nString b = \"Computer\";\nSystem.out.println(a == b);",
+    "choices": [
+      "Compile error",
+      "true",
+      "Computer",
+      "false"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "strings-10",
+    "lessonId": "strings-3-comparing-strings-vs-equals",
+    "type": "mcq",
+    "prompt": "Which rule should you follow when comparing two `String` values?",
+    "choices": [
+      "Use `=` every time",
+      "Use `==` every time",
+      "Use `equals()` every time",
+      "Use `compareTo()` for equality only"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "strings-11",
+    "lessonId": "strings-3-comparing-strings-vs-equals",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "String entered = null;\nSystem.out.println(\"secret\".equals(entered));",
+    "choices": [
+      "true",
+      "secret",
+      "NullPointerException",
+      "false"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "strings-12",
+    "lessonId": "strings-3-comparing-strings-vs-equals",
+    "type": "mcq",
+    "prompt": "Why is `\"secret\".equals(entered)` safer than `entered.equals(\"secret\")`?",
+    "choices": [
+      "It cannot throw `NullPointerException` when `entered` is null",
+      "It is faster",
+      "It ignores upper and lower case",
+      "It compares references"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "strings-13",
+    "lessonId": "strings-4-immutability",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "String str = \"Java\";\nstr.toUpperCase();\nSystem.out.println(str);",
+    "choices": [
+      "JAVA",
+      "Java",
+      "java",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "strings-14",
+    "lessonId": "strings-4-immutability",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "String str = \"Java\";\nstr = str.toUpperCase();\nSystem.out.println(str);",
+    "choices": [
+      "Java",
+      "java",
+      "JAVA",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "strings-15",
+    "lessonId": "strings-4-immutability",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"  Java  \".trim().toUpperCase());",
+    "choices": [
+      "  JAVA  ",
+      "Java",
+      "java",
+      "JAVA"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "strings-16",
+    "lessonId": "strings-4-immutability",
+    "type": "truefalse",
+    "prompt": "String methods such as `toUpperCase()` change the original string.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "strings-17",
+    "lessonId": "strings-5-string-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"Java\".charAt(2));",
+    "choices": [
+      "v",
+      "a",
+      "J",
+      "Java"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "strings-18",
+    "lessonId": "strings-5-string-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "String text = \"Programming in Java\";\nSystem.out.println(text.substring(0, 3));",
+    "choices": [
+      "Prog",
+      "Pro",
+      "rog",
+      "Pr"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "strings-19",
+    "lessonId": "strings-5-string-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "String[] words = \"red,green,blue\".split(\",\");\nSystem.out.println(words[1]);",
+    "choices": [
+      "red",
+      "blue",
+      "green",
+      "red,green,blue"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "strings-20",
+    "lessonId": "strings-5-string-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "String text = \"Programming in Java\";\nSystem.out.println(text.contains(\"gram\"));",
+    "choices": [
+      "Compile error",
+      "false",
+      "gram",
+      "true"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "strings-21",
+    "lessonId": "strings-5-string-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int n = Integer.parseInt(\"42\");\nSystem.out.println(n + 1);",
+    "choices": [
+      "43",
+      "421",
+      "42",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "strings-22",
+    "lessonId": "strings-5-string-methods",
+    "type": "mcq",
+    "prompt": "What does `Integer.parseInt(\"abc\")` throw?",
+    "choices": [
+      "ArithmeticException",
+      "NumberFormatException",
+      "NullPointerException",
+      "Nothing, it returns 0"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "strings-23",
+    "lessonId": "strings-common-mistakes",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "System.out.println(\"Hello\".substring(1, 3));",
+    "choices": [
+      "ell",
+      "He",
+      "el",
+      "hel"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "strings-24",
+    "lessonId": "strings-common-mistakes",
+    "type": "mcq",
+    "prompt": "What does the statement `str.trim();` on its own do to `str`?",
+    "choices": [
+      "Sets `str` to null",
+      "Removes the extra spaces from `str`",
+      "Throws an exception",
+      "Nothing, the result is discarded"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "strings-25",
+    "lessonId": "strings-common-mistakes",
+    "type": "mcq",
+    "prompt": "Which class is better for assembling text inside a long loop?",
+    "choices": [
+      "StringBuilder",
+      "Scanner",
+      "char",
+      "Integer"
+    ],
+    "answer": 0
+  }
+]

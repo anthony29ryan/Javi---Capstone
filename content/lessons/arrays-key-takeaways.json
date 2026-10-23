@@ -1,0 +1,20 @@
+{
+  "id": "arrays-key-takeaways",
+  "moduleId": "arrays",
+  "title": "Key takeaways",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "An array holds a **fixed number** of elements of the **same type**, indexed from **0** to **`length - 1`**.",
+        "`length` on an array is a **field**; `length()` on a String is a **method**.",
+        "Elements default to `0`, `false`, `'\u0000'`, or `null`, never \"empty.\"",
+        "Use an **indexed for** when you need the position; an **enhanced for** when you just need the values.",
+        "A 2-D array is an **array of arrays**: `arr.length` is rows, `arr[row].length` is that row's columns. **Row first, column second.**",
+        "`Arrays.sort`, `Arrays.fill`, `Arrays.equals`, `Arrays.toString`, and `binarySearch` **only on sorted data**."
+      ]
+    }
+  ]
+}

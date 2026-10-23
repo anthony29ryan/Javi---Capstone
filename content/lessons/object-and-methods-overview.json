@@ -1,0 +1,35 @@
+{
+  "id": "object-and-methods-overview",
+  "moduleId": "object-and-methods",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "In Lesson 13 you built objects and then filled them in field by field, hoping you did not forget one. A half-initialized object is a bug waiting to happen."
+    },
+    {
+      "type": "text",
+      "value": "Constructors close that hole: they make it impossible to create an object without supplying what it needs. And **overloading** lets one class offer several ways to be created, so callers can give as much or as little as they have."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Write constructors to create and initialize objects",
+        "Overload constructors and methods",
+        "Explain what a method signature is",
+        "Distinguish static members from instance members",
+        "Use `Math.random` to generate random values"
+      ]
+    }
+  ]
+}

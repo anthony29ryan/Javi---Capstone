@@ -1,0 +1,63 @@
+{
+  "id": "input-output-common-mistakes",
+  "moduleId": "input-output",
+  "title": "Common mistakes",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**The `nextInt()` then `nextLine()` trap.** This is the most common Scanner bug there is:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.print(\"Age: \");\nint age = input.nextInt();        // reads 19, leaves the newline in the buffer\n\nSystem.out.print(\"Name: \");\nString name = input.nextLine();   // reads that leftover newline, returns \"\" immediately"
+    },
+    {
+      "type": "text",
+      "value": "The program never pauses for the name. `nextInt()` consumes the digits but **not** the Enter keypress, so the waiting `nextLine()` finds an empty rest-of-line and returns instantly."
+    },
+    {
+      "type": "text",
+      "value": "Two fixes:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int age = input.nextInt();\ninput.nextLine();                 // consume the leftover newline\nString name = input.nextLine();"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int age = Integer.parseInt(input.nextLine());   // read everything as lines\nString name = input.nextLine();"
+    },
+    {
+      "type": "text",
+      "value": "If your program ever \"skips\" an input, this is why."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting the import.** `Scanner` needs `import java.util.Scanner;` before the class declaration."
+    },
+    {
+      "type": "text",
+      "value": "**Concatenating instead of adding.** `\"Total: \" + 2 + 3` gives `Total: 23`. Parenthesize the arithmetic."
+    },
+    {
+      "type": "text",
+      "value": "**Expecting `printf` to wrap the line.** It does not. Add `%n`."
+    },
+    {
+      "type": "text",
+      "value": "**Wrong specifier for the type.** `%d` with a `double` throws an `IllegalFormatConversionException` at run time, not a compile error."
+    },
+    {
+      "type": "text",
+      "value": "**Typing letters when the program wants a number.** `nextInt()` throws `InputMismatchException` and the program crashes. Lesson 16 shows how to handle that properly."
+    },
+    {
+      "type": "text",
+      "value": "**Not closing the Scanner.** Call `input.close()` when you are finished. Close it only once, and only when you are truly done, a closed Scanner on `System.in` cannot be reopened."
+    }
+  ]
+}

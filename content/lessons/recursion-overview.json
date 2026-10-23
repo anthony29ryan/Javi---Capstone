@@ -1,0 +1,35 @@
+{
+  "id": "recursion-overview",
+  "moduleId": "recursion",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Recursion is the first idea in this course that feels like a trick. A method that calls itself sounds circular, like a definition that never resolves."
+    },
+    {
+      "type": "text",
+      "value": "It resolves because each call works on a **smaller** problem, and because there is always a case small enough to answer outright. Once that clicks, a class of problems, trees, nested structures, divide and conquer, becomes dramatically easier to write than with loops."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Define recursion and identify a recursive method",
+        "Distinguish the base case from the general case",
+        "Trace the execution of a recursive call",
+        "Design a recursive solution to a problem",
+        "Compare recursion with iteration and choose between them"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "id": "generics-1-fundamentals",
+  "moduleId": "generics",
+  "title": "Fundamentals",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "In programming, you may want to write code usable by **more than one type with the same underlying behavior**. You do not want to repeat your code line by line, changing only which data types it can access. For example, `setValue()` and `getValue()` should be able to set and retrieve types besides `String`."
+    },
+    {
+      "type": "text",
+      "value": "**Generic types (or generics) associate one or more non-specified Java types upon creation. They are declared within angle brackets `<>`.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Gen<T> {\n    private T data;\n\n    public void setValue(T dt) {\n        data = dt;\n    }\n\n    public T getValue() {\n        return data;\n    }\n\n    public void showType() {\n        System.out.println(\"Type of T is \" + data.getClass().getName());\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Taking it line by line:"
+    },
+    {
+      "type": "text",
+      "value": "**`public class Gen<T>`**: `T` is the name of a **type parameter**, a placeholder for the actual type passed to `Gen` when an object is created. Because `Gen` uses a type parameter, it is a **generic class**, also called a **parameterized type**."
+    },
+    {
+      "type": "text",
+      "value": "There is no special significance to the name `T`; any valid identifier would work, but `T` is traditional. **It is recommended that type parameter names be single-character capital letters.** The most commonly used are:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Name",
+        "Meaning"
+      ],
+      "rows": [
+        [
+          "`E`",
+          "Element"
+        ],
+        [
+          "`K`",
+          "Key"
+        ],
+        [
+          "`N`",
+          "Number"
+        ],
+        [
+          "`T`",
+          "Type"
+        ],
+        [
+          "`V`",
+          "Value"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**`private T data;`**: `T` declares an object called `data`, which will be of the type passed to `T`. If `String` is passed, `data` is a `String` in that instance."
+    },
+    {
+      "type": "text",
+      "value": "**`public void setValue(T dt)`**: the parameter's actual type is determined by the type passed to `T`. Because both `dt` and `data` are of type `T`, they are the same actual type for a given object."
+    },
+    {
+      "type": "text",
+      "value": "**`public T getValue()`**: a type parameter can also specify a method's return type."
+    },
+    {
+      "type": "text",
+      "value": "**`showType()`** displays the type of `T` by calling `getName()` on the `Class` object returned by `getClass()` on `data`. **`getClass()` is defined by `Object`**, so it is a member of all class types, and returns a `Class` object corresponding to the object's class. `Class` defines **`getName()`**, which returns a string representation of the class name."
+    },
+    {
+      "type": "heading",
+      "value": "Generic methods"
+    },
+    {
+      "type": "text",
+      "value": "A single method can also have its own type parameter, written in angle brackets **before** the return type. Java works out the type from the arguments, so the caller writes nothing extra:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static <T> T firstOf(T[] items) {\n    return items[0];\n}\n\nString[]  words   = {\"a\", \"b\"};\nInteger[] numbers = {7, 8};\nSystem.out.println(firstOf(words));     // a\nSystem.out.println(firstOf(numbers));   // 7"
+    }
+  ]
+}

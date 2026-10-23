@@ -1,0 +1,20 @@
+{
+  "id": "control-structures-key-takeaways",
+  "moduleId": "control-structures",
+  "title": "Key takeaways",
+  "order": 10,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Selection** structures choose a path; **repetition** structures repeat one.",
+        "`if` is one-way, `if...else` is two-way and always runs exactly one branch.",
+        "**Always use braces.** The most common selection bugs are braces and stray semicolons, not logic.",
+        "In an **else-if chain**, the first true condition wins, so order from most to least restrictive.",
+        "`&&` and `||` **short-circuit**, stopping as soon as the result is determined.",
+        "Use **`switch`** for one variable against fixed values; use **else-if** for ranges or multiple variables. Remember the `break`."
+      ]
+    }
+  ]
+}

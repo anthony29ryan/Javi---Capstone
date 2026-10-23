@@ -1,0 +1,35 @@
+{
+  "id": "enums-nested-classes-5-type-safety-and-enums-with-fields",
+  "moduleId": "enums-nested-classes",
+  "title": "Type safety, and enums with fields",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Using enums makes values type-safe.** *Type-safe* describes a data type that allows only appropriate behaviors."
+    },
+    {
+      "type": "text",
+      "value": "**As with other classes, you can also add methods and other fields to an enum type.** Your handout mentions this but does not show it, and it is where enums become powerful, the pizza example above keeps prices in a `switch`, far away from the sizes they belong to. Put them together:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public enum PizzaSize {\n    REGULAR(\"Regular\", 381.00),\n    LARGE(\"Large\", 602.00),\n    PARTY(\"Party\", 799.00);\n\n    private final String label;\n    private final double price;\n\n    PizzaSize(String label, double price) {   // enum constructors are always private\n        this.label = label;\n        this.price = price;\n    }\n\n    public String getLabel() { return label; }\n    public double getPrice() { return price; }\n\n    public double priceWithVat() { return price * 1.12; }\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Menu {\n    public static void main(String[] args) {\n        for (PizzaSize size : PizzaSize.values()) {\n            System.out.printf(\"%-8s %8.2f  (with VAT %8.2f)%n\",\n                              size.getLabel(), size.getPrice(), size.priceWithVat());\n        }\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Regular    381.00  (with VAT   426.72)\nLarge      602.00  (with VAT   674.24)\nParty      799.00  (with VAT   894.88)"
+    },
+    {
+      "type": "text",
+      "value": "No `switch` at all. Each constant carries its own data, the VAT rule is written once, and adding a new size means adding **one line**: with no chance of forgetting to update a switch somewhere else."
+    }
+  ]
+}

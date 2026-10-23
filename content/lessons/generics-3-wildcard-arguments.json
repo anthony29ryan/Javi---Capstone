@@ -1,0 +1,100 @@
+{
+  "id": "generics-3-wildcard-arguments",
+  "moduleId": "generics",
+  "title": "Wildcard arguments",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**The wildcard argument represents an unknown type and is specified by the question mark.** Wildcards allow greater control of the types you use, and fall into two categories: **unbounded** and **bounded**."
+    },
+    {
+      "type": "heading",
+      "value": "Unbounded"
+    },
+    {
+      "type": "text",
+      "value": "**`<?>` denotes an unbounded wildcard, used to represent any type.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.List;\nimport java.util.Arrays;\n\npublic void printList(List<?> list) {\n    for (Object elem : list) {\n        System.out.println(elem + \" \");\n    }\n    System.out.println();\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "List<Integer> li = Arrays.asList(1, 2, 3);\nList<String>  ls = Arrays.asList(\"one\", \"two\", \"three\");\nprintList(li);\nprintList(ls);"
+    },
+    {
+      "type": "text",
+      "value": "The method prints a list of any type. Note the loop variable is `Object`, with an unbounded wildcard, that is all the compiler knows the elements to be."
+    },
+    {
+      "type": "text",
+      "value": "`List<?>` is not the same as `List<Object>`. A `List<String>` **can** be passed to `List<?>`, but **cannot** be passed to `List<Object>`: one of the more surprising rules in Java, and the reason wildcards exist at all."
+    },
+    {
+      "type": "heading",
+      "value": "Upper bounded"
+    },
+    {
+      "type": "text",
+      "value": "To relax restrictions on a variable, use an **upper bounded wildcard**, which **restricts the unknown type to a specific type or a subtype of that type**. Declare it with `?` followed by **`extends`** and its upper bound:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public double sumOfList(List<? extends Number> list) {\n    double s = 0.0;\n    for (Number n : list) {\n        s += n.doubleValue();\n    }\n    return s;\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "List<Integer> li = Arrays.asList(1, 2, 3);\nSystem.out.println(\"sum = \" + sumOfList(li));      // sum = 6.0\n\nList<Double> ld = Arrays.asList(1.2, 2.3, 3.5);\nSystem.out.println(\"sum = \" + sumOfList(ld));      // sum = 7.0"
+    },
+    {
+      "type": "text",
+      "value": "Because every element is guaranteed to be a `Number` or a subtype, the loop variable can be `Number` and `doubleValue()` can be called, neither of which would work with `<?>`."
+    },
+    {
+      "type": "heading",
+      "value": "Lower bounded"
+    },
+    {
+      "type": "text",
+      "value": "A **lower bounded wildcard restricts the unknown type to a specific type or a super type of that type**, expressed with `?` followed by **`super`** and its lower bound."
+    },
+    {
+      "type": "text",
+      "value": "Suppose you want a method that puts `Integer` objects into a list. To maximise flexibility, it should work on anything that can hold `Integer` values, `Integer`, `Number`, or `Object`. Specify `List<? super Integer>`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public void addNumbers(List<? super Integer> list) {\n    for (int i = 1; i <= 10; i++) {\n        list.add(i);\n    }\n}"
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Added: how to choose: PECS",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "*Producer Extends, Consumer Super.*"
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            "If the parameter **produces** values you read out of it, use **`extends`**.",
+            "If the parameter **consumes** values you put into it, use **`super`**."
+          ]
+        },
+        {
+          "type": "text",
+          "value": "`sumOfList` reads numbers out, so it is a producer: `extends`. `addNumbers` writes integers in, so it is a consumer: `super`. That single mnemonic settles nearly every case."
+        }
+      ]
+    }
+  ]
+}

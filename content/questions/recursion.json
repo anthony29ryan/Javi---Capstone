@@ -1,0 +1,330 @@
+[
+  {
+    "id": "recursion-01",
+    "lessonId": "recursion-1-recursive-definitions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static int factorial(int num) {\n    if (num == 0) {\n        return 1;\n    } else {\n        return num * factorial(num - 1);\n    }\n}\n\nSystem.out.println(factorial(4));",
+    "choices": [
+      "4",
+      "10",
+      "24",
+      "120"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "recursion-02",
+    "lessonId": "recursion-1-recursive-definitions",
+    "type": "mcq",
+    "prompt": "What makes a method recursive?",
+    "choices": [
+      "It calls itself",
+      "It returns a value",
+      "It has no parameters",
+      "It is static"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "recursion-03",
+    "lessonId": "recursion-1-recursive-definitions",
+    "type": "mcq",
+    "prompt": "How many calls to `factorial` are made by `factorial(4)`, counting the call with argument 0?",
+    "choices": [
+      "4",
+      "5",
+      "6",
+      "24"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "recursion-04",
+    "lessonId": "recursion-1-recursive-definitions",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static int power(int base, int exp) {\n    if (exp == 0) {\n        return 1;\n    }\n    return base * power(base, exp - 1);\n}\n\nSystem.out.println(power(2, 5));",
+    "choices": [
+      "10",
+      "25",
+      "32",
+      "64"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "recursion-05",
+    "lessonId": "recursion-2-base-case-and-general-case",
+    "type": "mcq",
+    "prompt": "What is the job of the base case?",
+    "choices": [
+      "To print the result",
+      "To stop the recursion",
+      "To make the recursive call",
+      "To declare the parameters"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "recursion-06",
+    "lessonId": "recursion-2-base-case-and-general-case",
+    "type": "mcq",
+    "prompt": "What does the general case do?",
+    "choices": [
+      "Ends the recursion",
+      "Declares the return type",
+      "Reduces the problem to a smaller version of itself",
+      "Reads input"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "recursion-07",
+    "lessonId": "recursion-2-base-case-and-general-case",
+    "type": "mcq",
+    "prompt": "What error does a recursive method with no base case eventually cause?",
+    "choices": [
+      "NumberFormatException",
+      "NullPointerException",
+      "Missing return statement",
+      "StackOverflowError"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "recursion-08",
+    "lessonId": "recursion-2-base-case-and-general-case",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static int fib(int n) {\n    if (n == 0) { return 0; }\n    if (n == 1) { return 1; }\n    return fib(n - 1) + fib(n - 2);\n}\n\nSystem.out.println(fib(6));",
+    "choices": [
+      "5",
+      "6",
+      "8",
+      "13"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "recursion-09",
+    "lessonId": "recursion-2-base-case-and-general-case",
+    "type": "mcq",
+    "prompt": "A recursive Fibonacci method returns 0 when `n` is 0, returns 1 when `n` is 1, and otherwise returns `fib(n - 1) + fib(n - 2)`. How many base cases does it have?",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "0"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "recursion-10",
+    "lessonId": "recursion-3-recursion-in-void-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static void countDown(int num) {\n    if (num <= 0) {\n        System.out.println(\"End\");\n    } else {\n        System.out.print(num + \" \");\n        countDown(num - 1);\n    }\n}\n\ncountDown(3);",
+    "choices": [
+      "3 2 1 End",
+      "End 1 2 3",
+      "1 2 3 End",
+      "3 2 1"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "recursion-11",
+    "lessonId": "recursion-3-recursion-in-void-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static void counting(int num) {\n    if (num <= 0) {\n        System.out.println(\"Start\");\n    } else {\n        counting(num - 1);\n        System.out.print(num + \" \");\n    }\n}\n\ncounting(3);",
+    "choices": [
+      "3 2 1\nStart",
+      "Start\n1 2 3",
+      "1 2 3\nStart",
+      "Start\n3 2 1"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "recursion-12",
+    "lessonId": "recursion-3-recursion-in-void-methods",
+    "type": "mcq",
+    "prompt": "Work placed BEFORE the recursive call happens:",
+    "choices": [
+      "Never",
+      "On the way back up",
+      "On the way down, with the first call first",
+      "Only at the base case"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "recursion-13",
+    "lessonId": "recursion-4-designing-a-recursive-method",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static String reverse(String s) {\n    if (s.isEmpty()) {\n        return \"\";\n    }\n    return reverse(s.substring(1)) + s.charAt(0);\n}\n\nSystem.out.println(reverse(\"abc\"));",
+    "choices": [
+      "c",
+      "abc",
+      "bca",
+      "cba"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "recursion-14",
+    "lessonId": "recursion-4-designing-a-recursive-method",
+    "type": "mcq",
+    "prompt": "What is the base case when reversing a string recursively?",
+    "choices": [
+      "The empty string",
+      "A string of length 10",
+      "A null reference",
+      "The first character"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "recursion-15",
+    "lessonId": "recursion-4-designing-a-recursive-method",
+    "type": "mcq",
+    "prompt": "What is the first step in designing a recursive method?",
+    "choices": [
+      "Run the program",
+      "Understand the problem requirements",
+      "Write the general case",
+      "Remove the base case"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "recursion-16",
+    "lessonId": "recursion-4-designing-a-recursive-method",
+    "type": "mcq",
+    "prompt": "A recursive method `largest(list, startIndex, lastIndex)` finds the largest element of part of an array. What should its base case be?",
+    "choices": [
+      "max == 0",
+      "startIndex == 0",
+      "startIndex == lastIndex, so only one element is left",
+      "list.length == 0"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "recursion-17",
+    "lessonId": "recursion-4-designing-a-recursive-method",
+    "type": "mcq",
+    "prompt": "When writing the general case, the \"leap of faith\" means you should assume:",
+    "choices": [
+      "The recursive call will fail",
+      "A loop will handle it",
+      "The base case is not needed",
+      "The recursive call already returns the correct answer for the smaller problem"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "recursion-18",
+    "lessonId": "recursion-4-designing-a-recursive-method",
+    "type": "mcq",
+    "prompt": "In `decToBin`, why does the print come AFTER the recursive call?",
+    "choices": [
+      "So the digits come out in the correct order",
+      "To run faster",
+      "To avoid StackOverflowError",
+      "To use less memory"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "recursion-19",
+    "lessonId": "recursion-5-recursion-versus-iteration",
+    "type": "mcq",
+    "prompt": "Compared with a loop, a recursive solution usually uses:",
+    "choices": [
+      "The same memory",
+      "More memory, because every call has its own parameters and locals",
+      "No memory",
+      "Less memory"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "recursion-20",
+    "lessonId": "recursion-5-recursion-versus-iteration",
+    "type": "mcq",
+    "prompt": "Which task is best done with iteration instead of recursion?",
+    "choices": [
+      "Walking a nested folder tree",
+      "A divide and conquer search",
+      "Counting from 1 to 100",
+      "Parsing nested brackets"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "recursion-21",
+    "lessonId": "recursion-5-recursion-versus-iteration",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static int fibIter(int n) {\n    int a = 0, b = 1;\n    for (int i = 0; i < n; i++) {\n        int next = a + b;\n        a = b;\n        b = next;\n    }\n    return a;\n}\n\nSystem.out.println(fibIter(10));",
+    "choices": [
+      "34",
+      "55",
+      "89",
+      "10"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "recursion-22",
+    "lessonId": "recursion-5-recursion-versus-iteration",
+    "type": "truefalse",
+    "prompt": "An iterative solution is generally cheaper in memory than a recursive one.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "recursion-23",
+    "lessonId": "recursion-common-mistakes",
+    "type": "mcq",
+    "prompt": "What is wrong with calling `factorial(num)` instead of `factorial(num - 1)` inside `factorial`?",
+    "choices": [
+      "It will not compile",
+      "It returns 0",
+      "Nothing is wrong",
+      "It calls itself with the same argument forever"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "recursion-24",
+    "lessonId": "recursion-common-mistakes",
+    "type": "mcq",
+    "prompt": "What mistake does the line `factorial(num - 1);` make in the general case?",
+    "choices": [
+      "The result of the recursive call is thrown away",
+      "The base case is missing",
+      "It has no parameters",
+      "It should be void"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "recursion-25",
+    "lessonId": "recursion-common-mistakes",
+    "type": "truefalse",
+    "prompt": "The naive recursive Fibonacci method finishes quickly for `fib(50)`.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  }
+]

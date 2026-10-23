@@ -1,0 +1,21 @@
+{
+  "id": "generics-key-takeaways",
+  "moduleId": "generics",
+  "title": "Key takeaways",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Generics** let one class or method serve many types while keeping full compile-time type safety.",
+        "A **type parameter** (`T`, `E`, `K`, `V`, `N`) is a placeholder filled in when an object is created.",
+        "The **diamond** `<>` goes on the **right**; the declared type on the left is required.",
+        "Type arguments must be **reference types**: `Integer`, not `int`; autoboxing hides the conversion.",
+        "**`<?>`** is unbounded, **`<? extends T>`** upper bounded, **`<? super T>`** lower bounded.",
+        "**PECS**: Producer `extends`, Consumer `super`.",
+        "Generic types are **invariant**: `List<String>` is not a `List<Object>`."
+      ]
+    }
+  ]
+}

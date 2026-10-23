@@ -1,0 +1,313 @@
+[
+  {
+    "id": "concurrency-01",
+    "lessonId": "concurrency-1-fundamentals",
+    "type": "mcq",
+    "prompt": "What is a thread?",
+    "choices": [
+      "The smallest unit of execution the operating system can schedule",
+      "A group of processes",
+      "A type of file",
+      "A kind of loop"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "concurrency-02",
+    "lessonId": "concurrency-1-fundamentals",
+    "type": "mcq",
+    "prompt": "What do threads in the same process share?",
+    "choices": [
+      "Nothing at all",
+      "The same memory space",
+      "Their own private memory",
+      "Only the screen"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "concurrency-03",
+    "lessonId": "concurrency-1-fundamentals",
+    "type": "mcq",
+    "prompt": "Which thread executes the `main()` method?",
+    "choices": [
+      "The last thread started",
+      "A thread created by the user",
+      "The main thread, created by the JVM",
+      "The garbage collector"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "concurrency-04",
+    "lessonId": "concurrency-1-fundamentals",
+    "type": "output",
+    "prompt": "What does this print in a plain program?",
+    "code": "System.out.println(Thread.currentThread().getName());",
+    "choices": [
+      "Thread-0",
+      "null",
+      "Thread-1",
+      "main"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "concurrency-05",
+    "lessonId": "concurrency-1-fundamentals",
+    "type": "mcq",
+    "prompt": "What is a context switch?",
+    "choices": [
+      "Storing a thread's state and later restoring it to continue",
+      "Changing the program's language",
+      "Switching between two files",
+      "Closing a thread"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "concurrency-06",
+    "lessonId": "concurrency-2-creating-threads",
+    "type": "mcq",
+    "prompt": "Which method starts a new thread running its `run()` code?",
+    "choices": [
+      "run()",
+      "start()",
+      "begin()",
+      "execute()"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "concurrency-07",
+    "lessonId": "concurrency-2-creating-threads",
+    "type": "mcq",
+    "prompt": "What happens if you call `t.run()` directly instead of `t.start()`?",
+    "choices": [
+      "An exception is thrown",
+      "A new thread is created",
+      "The code runs on the current thread, with no new thread",
+      "A compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "concurrency-08",
+    "lessonId": "concurrency-2-creating-threads",
+    "type": "mcq",
+    "prompt": "Why is implementing `Runnable` usually preferred over extending `Thread`?",
+    "choices": [
+      "It runs faster",
+      "It avoids exceptions",
+      "It needs no `run()` method",
+      "It leaves the class free to extend another class"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "concurrency-09",
+    "lessonId": "concurrency-2-creating-threads",
+    "type": "truefalse",
+    "prompt": "When two threads are started, the order of their output is guaranteed.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "concurrency-10",
+    "lessonId": "concurrency-2-creating-threads",
+    "type": "mcq",
+    "prompt": "How do you run a `Runnable` object named `obj` in a thread?",
+    "choices": [
+      "new Thread(obj).start();",
+      "obj.start();",
+      "Thread.run(obj);",
+      "new Runnable(obj).start();"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "concurrency-11",
+    "lessonId": "concurrency-2-creating-threads",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "Thread t = new Thread(\n    () -> System.out.println(\"Hello from \" + Thread.currentThread().getName()),\n    \"worker-1\");\nt.start();\nt.join();",
+    "choices": [
+      "Hello from main",
+      "Hello from worker-1",
+      "Hello from Thread-0",
+      "Nothing"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "concurrency-12",
+    "lessonId": "concurrency-3-thread-methods",
+    "type": "mcq",
+    "prompt": "What is the range of thread priorities, and the default?",
+    "choices": [
+      "0 to 9, with a default of 0",
+      "1 to 5, with a default of 3",
+      "1 to 10, with a default of 5",
+      "1 to 100, with a default of 50"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "concurrency-13",
+    "lessonId": "concurrency-3-thread-methods",
+    "type": "mcq",
+    "prompt": "What does a higher thread priority guarantee?",
+    "choices": [
+      "The thread cannot be interrupted",
+      "The thread always finishes first",
+      "The thread runs twice as fast",
+      "Nothing; it is only a hint to the scheduler"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "concurrency-14",
+    "lessonId": "concurrency-3-thread-methods",
+    "type": "mcq",
+    "prompt": "What does `t.join()` do?",
+    "choices": [
+      "Waits until thread `t` has finished",
+      "Starts thread `t`",
+      "Stops thread `t` immediately",
+      "Renames thread `t`"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "concurrency-15",
+    "lessonId": "concurrency-3-thread-methods",
+    "type": "mcq",
+    "prompt": "Which checked exception do `sleep()` and `join()` declare?",
+    "choices": [
+      "ThreadDeath",
+      "InterruptedException",
+      "IOException",
+      "ArithmeticException"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "concurrency-16",
+    "lessonId": "concurrency-3-thread-methods",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "Thread t = new Thread(() -> { });\nt.start();\nt.join();\nSystem.out.println(t.isAlive());",
+    "choices": [
+      "true",
+      "null",
+      "false",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "concurrency-17",
+    "lessonId": "concurrency-3-thread-methods",
+    "type": "mcq",
+    "prompt": "What does `Thread.currentThread()` return?",
+    "choices": [
+      "The number of threads",
+      "A new thread",
+      "The main class",
+      "The Thread object running the current code"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "concurrency-18",
+    "lessonId": "concurrency-4-race-conditions",
+    "type": "mcq",
+    "prompt": "What is a race condition?",
+    "choices": [
+      "A result that depends on the unpredictable order in which threads reach shared data",
+      "A thread that runs very fast",
+      "A syntax error in a loop",
+      "A thread that never starts"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "concurrency-19",
+    "lessonId": "concurrency-4-race-conditions",
+    "type": "mcq",
+    "prompt": "`count++` is really three steps. What are they?",
+    "choices": [
+      "Compile, link, run",
+      "Read, add one, write back",
+      "Open, close, save",
+      "Lock, wait, unlock"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "concurrency-20",
+    "lessonId": "concurrency-4-race-conditions",
+    "type": "mcq",
+    "prompt": "What does the `synchronized` keyword ensure?",
+    "choices": [
+      "The code runs on a new thread",
+      "The code runs faster",
+      "Only one thread at a time executes the protected code",
+      "The code is never interrupted by exceptions"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "concurrency-21",
+    "lessonId": "concurrency-4-race-conditions",
+    "type": "mcq",
+    "prompt": "Two threads each call `count.incrementAndGet()` 100000 times on a shared `AtomicInteger`. After joining both, what does `count.get()` print?",
+    "choices": [
+      "0",
+      "A number below 200000 that varies",
+      "100000",
+      "200000"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "concurrency-22",
+    "lessonId": "concurrency-common-mistakes",
+    "type": "mcq",
+    "prompt": "What happens if you call `start()` twice on the same `Thread` object?",
+    "choices": [
+      "IllegalThreadStateException",
+      "It runs twice",
+      "It restarts the thread",
+      "Nothing"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "concurrency-23",
+    "lessonId": "concurrency-common-mistakes",
+    "type": "truefalse",
+    "prompt": "A thread that is sleeping inside a `synchronized` block releases the lock.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "concurrency-24",
+    "lessonId": "concurrency-common-mistakes",
+    "type": "mcq",
+    "prompt": "What is deadlock?",
+    "choices": [
+      "A thread that finishes too early",
+      "Two threads each waiting for a lock the other holds, so neither proceeds",
+      "A thread with the lowest priority",
+      "A program that uses no threads"
+    ],
+    "answer": 1
+  }
+]

@@ -1,0 +1,61 @@
+{
+  "id": "introduction-to-java-9-packages-and-the-import-statement",
+  "moduleId": "introduction-to-java",
+  "title": "Packages and the import statement",
+  "order": 10,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Packages** are collections of related classes grouped together into a folder. The name of the folder is the name of the package and begins with lowercase letters. Each class in the package is placed in a separate file, and the file name begins with the name of the class."
+    },
+    {
+      "type": "text",
+      "value": "**`import`** is a reserved keyword used to access the classes in a package. There are two common ways to use it:"
+    },
+    {
+      "type": "text",
+      "value": "**Importing a single package member**: to import one specific class:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import package_name.Class_name;"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Date;"
+    },
+    {
+      "type": "text",
+      "value": "**Importing an entire package**. Use the asterisk (`*`) wildcard to import all classes in a package:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import package_name.*;"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.*;"
+    },
+    {
+      "type": "text",
+      "value": "**All import statements must appear before the class declaration.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Scanner;        // imports come first\n\npublic class Greeter {           // then the class\n    public static void main(String[] args) {\n        Scanner input = new Scanner(System.in);\n        System.out.print(\"What is your name? \");\n        String name = input.nextLine();\n        System.out.println(\"Hello, \" + name + \"!\");\n        input.close();\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "You will use `import java.util.Scanner;` constantly starting in Lesson 5."
+    },
+    {
+      "type": "text",
+      "value": "The package `java.lang` is imported automatically in every program. That is why you can use `System`, `String` and `Math` with no `import`, but need `import java.util.Scanner;` for `Scanner`."
+    }
+  ]
+}

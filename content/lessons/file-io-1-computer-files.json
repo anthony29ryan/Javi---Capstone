@@ -1,0 +1,72 @@
+{
+  "id": "file-io-1-computer-files",
+  "moduleId": "file-io",
+  "title": "Computer files",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "heading",
+      "value": "Types of storage"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Volatile storage** is temporary. Values stored in variables are lost when the computer loses power. **RAM** is used when a Java program stores a value in a variable.",
+        "**Non-volatile storage** is permanent. A Java program saved on a disk uses non-volatile storage."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**A computer file is a collection of data stored on a non-volatile device.**"
+    },
+    {
+      "type": "heading",
+      "value": "Categories of file"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "A **text file** consists of data that can be read in a text editor. Data is encoded using a scheme, most commonly **ASCII** or **Unicode**. Examples: program files, application files.",
+        "A **binary file** contains data not encoded as text. Its contents cannot be understood by viewing them in a text editor. Examples: images, music, and the `.class` files created when Java programs are compiled."
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Both share the characteristics of **size**, **name**, and **date and time of creation**."
+    },
+    {
+      "type": "heading",
+      "value": "Paths"
+    },
+    {
+      "type": "text",
+      "value": "Permanent files are commonly stored in the main or **root** directory. **Folders** or **directories** organize them, and folders may contain folders."
+    },
+    {
+      "type": "text",
+      "value": "**The complete list of the disk drive plus the hierarchy of directories in which a file is located is called a path.**"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "C:\\Java\\Chapter8\\example.txt"
+    },
+    {
+      "type": "text",
+      "value": "In Windows, the **backslash (`\\`)** is the **path delimiter**: the special character separating path components."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "In Java source, a backslash must be doubled",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "`\\` begins an escape sequence, so a Windows path is written `\"C:\\\\Java\\\\Chapter8\\\\example.txt\"`. Forward slashes also work on Windows and are more portable: `\"C:/Java/Chapter8/example.txt\"`."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,329 @@
+[
+  {
+    "id": "generics-01",
+    "lessonId": "generics-1-fundamentals",
+    "type": "mcq",
+    "prompt": "What problem do generics solve?",
+    "choices": [
+      "Writing code once that works safely for many types",
+      "Making programs run faster",
+      "Reading input from the keyboard",
+      "Connecting to files"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "generics-02",
+    "lessonId": "generics-1-fundamentals",
+    "type": "mcq",
+    "prompt": "Where are type parameters written in a generic class declaration?",
+    "choices": [
+      "Within parentheses",
+      "Within angle brackets",
+      "Within square brackets",
+      "Within braces"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "generics-03",
+    "lessonId": "generics-1-fundamentals",
+    "type": "mcq",
+    "prompt": "By convention, what does the type parameter name `T` stand for?",
+    "choices": [
+      "Text",
+      "Table",
+      "Type",
+      "Thread"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "generics-04",
+    "lessonId": "generics-1-fundamentals",
+    "type": "mcq",
+    "prompt": "In `public class Gen<T>`, what is `T` called?",
+    "choices": [
+      "A variable",
+      "A package",
+      "A method",
+      "A type parameter"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "generics-05",
+    "lessonId": "generics-1-fundamentals",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "class Gen<T> {\n    private T data;\n\n    public void setValue(T dt) { data = dt; }\n    public T getValue() { return data; }\n}\n\nGen<String> g = new Gen<>();\ng.setValue(\"One\");\nSystem.out.println(g.getValue());",
+    "choices": [
+      "One",
+      "T",
+      "null",
+      "Compile error"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "generics-06",
+    "lessonId": "generics-1-fundamentals",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static <T> T firstOf(T[] items) {\n    return items[0];\n}\n\nString[] words = {\"a\", \"b\"};\nSystem.out.println(firstOf(words));",
+    "choices": [
+      "b",
+      "a",
+      "String",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "generics-07",
+    "lessonId": "generics-2-using-a-generic-class",
+    "type": "mcq",
+    "prompt": "Why does `Gen<int>` not compile?",
+    "choices": [
+      "Generics need two parameters",
+      "int is too small",
+      "Type arguments must be reference types",
+      "The name `Gen` is reserved"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "generics-08",
+    "lessonId": "generics-2-using-a-generic-class",
+    "type": "mcq",
+    "prompt": "Which line correctly uses the diamond operator?",
+    "choices": [
+      "Gen<> g = new Gen<Integer>();",
+      "Gen<Integer> g = new <>Gen();",
+      "Gen g = new Gen<>();",
+      "Gen<Integer> g = new Gen<>();"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "generics-09",
+    "lessonId": "generics-2-using-a-generic-class",
+    "type": "mcq",
+    "prompt": "What happens in `iData.setValue(1)` when `iData` is a `Gen<Integer>`?",
+    "choices": [
+      "Autoboxing converts the int 1 to an Integer",
+      "A compile error",
+      "The value is stored as a String",
+      "The value is ignored"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "generics-10",
+    "lessonId": "generics-2-using-a-generic-class",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "class Pair<T, V> {\n    private T data1;\n    private V data2;\n\n    public void setValue(T dt1, V dt2) {\n        data1 = dt1;\n        data2 = dt2;\n    }\n\n    public T getT1Value() { return data1; }\n    public V getT2Value() { return data2; }\n}\n\nPair<Integer, String> p = new Pair<>();\np.setValue(1, \"One\");\nSystem.out.println(p.getT2Value());",
+    "choices": [
+      "1",
+      "One",
+      "Integer",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "generics-11",
+    "lessonId": "generics-2-using-a-generic-class",
+    "type": "truefalse",
+    "prompt": "A type argument such as `Gen<double>` may be a primitive type.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "generics-12",
+    "lessonId": "generics-3-wildcard-arguments",
+    "type": "mcq",
+    "prompt": "What does `List<?>` mean?",
+    "choices": [
+      "A list of Strings",
+      "A list of Objects only",
+      "A list of any type",
+      "An empty list"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "generics-13",
+    "lessonId": "generics-3-wildcard-arguments",
+    "type": "mcq",
+    "prompt": "Can a `List<String>` be passed to a parameter of type `List<Object>`?",
+    "choices": [
+      "Yes",
+      "Only inside `main`",
+      "Only if it is empty",
+      "No"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "generics-14",
+    "lessonId": "generics-3-wildcard-arguments",
+    "type": "mcq",
+    "prompt": "Which lists can be passed to a parameter of type `List<? extends Number>`?",
+    "choices": [
+      "A `List<Integer>` and a `List<Double>`",
+      "Only a `List<Number>`",
+      "Only a `List<Object>`",
+      "A `List<String>`"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "generics-15",
+    "lessonId": "generics-3-wildcard-arguments",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static double sumOfList(List<? extends Number> list) {\n    double s = 0.0;\n    for (Number n : list) {\n        s += n.doubleValue();\n    }\n    return s;\n}\n\nList<Integer> li = Arrays.asList(1, 2, 3);\nSystem.out.println(sumOfList(li));",
+    "choices": [
+      "6",
+      "6.0",
+      "3",
+      "Compile error"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "generics-16",
+    "lessonId": "generics-3-wildcard-arguments",
+    "type": "mcq",
+    "prompt": "What does PECS stand for?",
+    "choices": [
+      "Pair extends, comparable super",
+      "Primitive extends, class super",
+      "Producer extends, consumer super",
+      "Private extends, constant super"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "generics-17",
+    "lessonId": "generics-3-wildcard-arguments",
+    "type": "mcq",
+    "prompt": "Which lists can be passed to a parameter of type `List<? super Integer>`?",
+    "choices": [
+      "Only a `List<Integer>`",
+      "Only a `List<Double>`",
+      "A `List<String>`",
+      "A `List<Integer>`, `List<Number>` or `List<Object>`"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "generics-18",
+    "lessonId": "generics-4-what-generics-buy-you",
+    "type": "mcq",
+    "prompt": "Generics move a category of error from:",
+    "choices": [
+      "Run time to compile time",
+      "Compile time to run time",
+      "The user to the compiler only",
+      "Nowhere"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "generics-19",
+    "lessonId": "generics-4-what-generics-buy-you",
+    "type": "mcq",
+    "prompt": "With a raw `List`, what can happen at `String s = (String) rawList.get(1);` if the element is an Integer?",
+    "choices": [
+      "A compile error",
+      "A ClassCastException at run time",
+      "Nothing",
+      "The Integer is converted automatically"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "generics-20",
+    "lessonId": "generics-4-what-generics-buy-you",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "ArrayList<String> names = new ArrayList<>();\nnames.add(\"Ana\");\nnames.add(\"Jess\");\nSystem.out.println(names.size());",
+    "choices": [
+      "1",
+      "0",
+      "2",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "generics-21",
+    "lessonId": "generics-4-what-generics-buy-you",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "public static <T extends Comparable<T>> T larger(T a, T b) {\n    return a.compareTo(b) >= 0 ? a : b;\n}\n\nSystem.out.println(larger(3, 9));",
+    "choices": [
+      "3",
+      "Compile error",
+      "39",
+      "9"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "generics-22",
+    "lessonId": "generics-4-what-generics-buy-you",
+    "type": "mcq",
+    "prompt": "What does `<T extends Comparable<T>>` allow inside a method?",
+    "choices": [
+      "Calling compareTo on values of type T",
+      "Using T as an int",
+      "Creating a new T",
+      "Skipping the return statement"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "generics-23",
+    "lessonId": "generics-common-mistakes",
+    "type": "mcq",
+    "prompt": "What does type erasure mean?",
+    "choices": [
+      "Types are deleted from the source file",
+      "Generic type information is removed during compilation",
+      "Generic classes cannot be compiled",
+      "Only primitives are erased"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "generics-24",
+    "lessonId": "generics-common-mistakes",
+    "type": "truefalse",
+    "prompt": "You can add an `Integer` to a `List<? extends Number>`.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "generics-25",
+    "lessonId": "generics-common-mistakes",
+    "type": "mcq",
+    "prompt": "What does using a raw type such as `Gen g = new Gen();` do?",
+    "choices": [
+      "Causes a runtime exception immediately",
+      "Makes the program faster",
+      "Gives up the compile-time guarantees of generics",
+      "Is the recommended style"
+    ],
+    "answer": 2
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "id": "strings-3-comparing-strings-vs-equals",
+  "moduleId": "strings",
+  "title": "Comparing strings: == vs equals()",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**`equals()`** compares the **contents** of two strings.",
+        "**`==`** compares the **references**: whether two variables point to the same object in memory."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String str1 = \"Computer\";\nString str2 = \"Computer\";\nString str3 = new String(\"Computer\");\nString str4 = new String(\"Computer\");"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "str1 == str2          // true, same memory location, same content\nstr1 == str3          // false, different memory locations\nstr1.equals(str3)     // true, same contents\nstr3 == str4          // false, different memory locations\nstr3.equals(str4)     // true, same contents"
+    },
+    {
+      "type": "text",
+      "value": "`str1`, `str3`, and `str4` all contain the word `Computer`, yet `==` says two of them are different. Because both literals produce the same shared object, `str1 == str2` is `true`, which is exactly what makes this bug so dangerous. **Your test with literals passes, and the program fails the moment the string comes from user input or a file.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "import java.util.Scanner;\n\npublic class PasswordCheck {\n    public static void main(String[] args) {\n        Scanner input = new Scanner(System.in);\n        System.out.print(\"Enter the password: \");\n        String entered = input.nextLine();\n\n        if (entered == \"secret\") {                 // always false\n            System.out.println(\"Wrong, never matches.\");\n        }\n\n        if (entered.equals(\"secret\")) {            // correct\n            System.out.println(\"Access granted.\");\n        }\n\n        input.close();\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "**Rule: use `equals()` for strings, every time.** Reserve `==` for primitives."
+    },
+    {
+      "type": "heading",
+      "value": "Put the literal first"
+    },
+    {
+      "type": "text",
+      "value": "If a string variable might be `null`, calling `equals` on it crashes. Calling `equals` on the literal instead is safe, because the literal is never `null`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String entered = null;\nSystem.out.println(\"secret\".equals(entered));   // false, no exception\n// entered.equals(\"secret\") would throw NullPointerException"
+    }
+  ]
+}

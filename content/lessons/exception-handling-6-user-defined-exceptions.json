@@ -1,0 +1,68 @@
+{
+  "id": "exception-handling-6-user-defined-exceptions",
+  "moduleId": "exception-handling",
+  "title": "User-defined exceptions",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "When no built-in exception describes your problem, create one by **extending the `Exception` class**."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class InsufficientFundsException extends Exception {\n    public InsufficientFundsException(String message) {\n        super(message);\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "The class is complete as written. It inherits `getMessage()` and everything else from `Exception`."
+    },
+    {
+      "type": "heading",
+      "value": "Throwing it"
+    },
+    {
+      "type": "text",
+      "value": "A **`throw` statement** sends an exception out of a block or method so it can be handled elsewhere. A method that throws a checked exception must declare it with **`throws`** in its heading."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class BankAccount {\n    private double balance;\n\n    public BankAccount(double balance) {\n        this.balance = balance;\n    }\n\n    public void withdraw(double amount) throws InsufficientFundsException {\n        if (amount > balance) {\n            throw new InsufficientFundsException(\n                \"Withdrawal of \" + amount + \" exceeds balance of \" + balance);\n        }\n        balance = balance - amount;\n        System.out.println(\"Withdrew \" + amount + \". New balance: \" + balance);\n    }\n\n    public static void main(String[] args) {\n        BankAccount account = new BankAccount(500.00);\n\n        try {\n            account.withdraw(200.00);\n            account.withdraw(1000.00);\n        } catch (InsufficientFundsException e) {\n            System.out.println(\"Transaction failed: \" + e.getMessage());\n        }\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Output:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Withdrew 200.0. New balance: 300.0\nTransaction failed: Withdrawal of 1000.0 exceeds balance of 300.0"
+    },
+    {
+      "type": "text",
+      "value": "**`throw` vs. `throws`**: the two words are easy to confuse:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "`throw` is a *statement*. It actually raises the exception, right now.",
+        "`throws` is a *declaration* in the method heading. It warns callers this method might raise one."
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Unchecked custom exceptions"
+    },
+    {
+      "type": "text",
+      "value": "Extending `RuntimeException` instead of `Exception` makes your exception unchecked, so callers are not forced to catch it and methods do not need `throws`. Use that for programming errors such as a bad argument, and a checked exception for problems callers can reasonably recover from:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class InvalidAgeException extends RuntimeException {\n    public InvalidAgeException(String message) {\n        super(message);\n    }\n}\n\nstatic void checkAge(int age) {          // no throws clause needed\n    if (age < 0) {\n        throw new InvalidAgeException(\"Age cannot be negative: \" + age);\n    }\n}"
+    }
+  ]
+}

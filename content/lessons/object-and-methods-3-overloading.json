@@ -1,0 +1,56 @@
+{
+  "id": "object-and-methods-3-overloading",
+  "moduleId": "object-and-methods",
+  "title": "Overloading",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Overloading occurs when multiple methods have the same name within the same class**, distinguished by different parameter lists:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public static double getAverage(double n1, double n2) { }\npublic static double getAverage(double n1, double n2, double n3) { }\npublic static int    getAverage(int n1, int n2, int n3) { }"
+    },
+    {
+      "type": "text",
+      "value": "**Java distinguishes methods according to the number of parameters and the types of the parameters.**"
+    },
+    {
+      "type": "text",
+      "value": "**A method's name and the number and types of its parameters are called the method's signature.** **A class cannot define multiple methods with the same signature.** Constructors can be overloaded too."
+    },
+    {
+      "type": "text",
+      "value": "Note what is **not** part of the signature: the **return type**, and the parameter **names**. These two cannot coexist:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public int    calculate(int a, int b) { return a + b; }\npublic double calculate(int a, int b) { return a * b; }   // error: same signature"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Calculator {\n    public static int add(int a, int b)             { return a + b; }\n    public static int add(int a, int b, int c)      { return a + b + c; }\n    public static double add(double a, double b)    { return a + b; }\n    public static String add(String a, String b)    { return a + b; }\n\n    public static void main(String[] args) {\n        System.out.println(add(3, 7));               // 10\n        System.out.println(add(3, 7, 11));           // 21\n        System.out.println(add(3.5, 7.5));           // 11.0\n        System.out.println(add(\"Ja\", \"va\"));         // Java\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "You have been relying on overloading since Lesson 1. `System.out.println` is overloaded for `int`, `double`, `char`, `String`, `boolean`, and more, which is why it prints anything you hand it."
+    },
+    {
+      "type": "heading",
+      "value": "Which version is called?"
+    },
+    {
+      "type": "text",
+      "value": "Java picks the overload whose parameters match the arguments best. If there is no exact match, it widens the arguments (for example `int` to `double`) and uses the version that then fits. With the `add` methods above, `add(3, 7.5)` has no `(int, double)` version, so the `int` is widened and `add(double, double)` runs:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(add(3, 7.5));   // 10.5, the double version"
+    }
+  ]
+}

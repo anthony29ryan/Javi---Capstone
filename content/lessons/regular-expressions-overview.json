@@ -1,0 +1,35 @@
+{
+  "id": "regular-expressions-overview",
+  "moduleId": "regular-expressions",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Validating an email address with `String` methods takes a page of code, handles half the cases, and breaks the moment the rules change. A regular expression does it in one line."
+    },
+    {
+      "type": "text",
+      "value": "The trade-off is real: regexes are dense, and a wrong one fails quietly. Treat this lesson as learning to read them first and write them second."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Explain what a regular expression is and when to use one",
+        "Match characters with brackets, ranges, and the wildcard",
+        "Control repetition with the repetition operators",
+        "Use `Pattern` and `Matcher` to compile and apply a regex",
+        "Distinguish `matches` from `find`, and use `split` and `replaceAll`"
+      ]
+    }
+  ]
+}

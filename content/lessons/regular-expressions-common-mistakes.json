@@ -1,0 +1,40 @@
+{
+  "id": "regular-expressions-common-mistakes",
+  "moduleId": "regular-expressions",
+  "title": "Common mistakes",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Expecting `matches()` to search.** It tests the **entire** string. Use `find()` to search within, or wrap the pattern in `.*` on both sides."
+    },
+    {
+      "type": "text",
+      "value": "**Single backslashes.** In Java, `\\d` must be written `\"\\\\d\"`. `\"\\d\"` will not even compile."
+    },
+    {
+      "type": "text",
+      "value": "**Using `a-Z` or `A-z` as a range.** Neither does what it looks like. Write `[a-zA-Z]`."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting that `split()` takes a regex.** `split(\".\")` returns an empty array; you need `split(\"\\\\.\")`. The same applies to `|`, `*`, `+`, `(`, `)`, `[`, `]`, `$`, `^`."
+    },
+    {
+      "type": "text",
+      "value": "**Applying a repetition operator to the wrong thing.** `\"ab*\"` is *a* followed by zero or more *b*; `\"(ab)*\"` is zero or more repetitions of *ab*."
+    },
+    {
+      "type": "text",
+      "value": "**Assuming `.*` excludes the empty string.** `*` means zero or more, so `\"\".matches(\".*\")` is `true`. Use `+` when at least one is required."
+    },
+    {
+      "type": "text",
+      "value": "**Recompiling a pattern in a loop.** `Pattern.compile` once outside the loop; that is the reason `Pattern` exists as a separate class."
+    },
+    {
+      "type": "text",
+      "value": "**Reusing a `Matcher` after `matches()`.** It holds position state. Create a fresh one, or call `reset()`."
+    }
+  ]
+}

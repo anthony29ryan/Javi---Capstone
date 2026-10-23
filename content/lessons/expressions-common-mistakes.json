@@ -1,0 +1,24 @@
+{
+  "id": "expressions-common-mistakes",
+  "moduleId": "expressions",
+  "title": "Common mistakes",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Believing a `double` on the left rescues the expression.** `double d = 5 / 2;` is `2.0`. The division finished before the assignment began."
+    },
+    {
+      "type": "text",
+      "value": "**Reading an expression strictly left to right.** Precedence applies first; left-to-right only breaks ties between equal-precedence operators."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting that an assignment is an expression.** `x = 12` has the value `12`, which is why `a = b = 0;` works and why `if (found = true)` compiles."
+    },
+    {
+      "type": "text",
+      "value": "**Trusting a mixed expression to be \"mostly decimal.\"** Java applies the rules one operator at a time. `6 / 4 + 3.9` is `4.9`."
+    }
+  ]
+}

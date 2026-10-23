@@ -1,0 +1,35 @@
+{
+  "id": "arrays-overview",
+  "moduleId": "arrays",
+  "title": "Why This Matters",
+  "order": 1,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "Storing five test scores means five variables. Fifty means fifty, and you cannot write a loop over variables named `score1` through `score50`."
+    },
+    {
+      "type": "text",
+      "value": "An array gives many values **one name and a number**, which is what makes loops and data meet. This is the lesson where Lesson 7 pays off."
+    },
+    {
+      "type": "heading",
+      "value": "What you will be able to do"
+    },
+    {
+      "type": "text",
+      "value": "By the end of this lesson you will be able to:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "Declare, create, and initialize one-dimensional arrays",
+        "Traverse an array with a `for` loop and an enhanced `for` loop",
+        "Work with two-dimensional arrays in rows and columns",
+        "Understand multidimensional arrays as arrays of arrays",
+        "Use the `Arrays` class for sorting, searching, filling, and comparing"
+      ]
+    }
+  ]
+}

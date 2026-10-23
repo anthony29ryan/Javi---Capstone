@@ -1,0 +1,61 @@
+{
+  "id": "inheritance-polymorphism-interfaces-1-inheritance",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Inheritance",
+  "order": 2,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Inheritance enables the use of an existing class to define a new class.**"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "A **derived class** is defined by adding instance variables and methods to an existing class. Also known as **subclass**, **child class**, or **descendant class**.",
+        "The existing class the derived class is built upon is the **base class**. Also called **superclass**, **parent class**, or **ancestor class**."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class DerivedClass extends BaseClass { }"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Student extends Person { }"
+    },
+    {
+      "type": "text",
+      "value": "The derived class is `Student`; the base class is `Person`. **`Student` inherits the declared instance variables and public methods of `Person`, except its constructors.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Person {\n    private String name;\n\n    public Person() {\n        this(\"No name yet\");\n    }\n\n    public Person(String initialName) {\n        name = initialName;\n    }\n\n    public String getName()          { return name; }\n    public void setName(String n)    { name = n; }\n\n    public void writeOutput() {\n        System.out.println(\"Name: \" + name);\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Student extends Person {\n    private int studentNumber;\n\n    public Student(String name, int studentNumber) {\n        super(name);                       // call the base class constructor first\n        this.studentNumber = studentNumber;\n    }\n\n    public int getStudentNumber() { return studentNumber; }\n\n    @Override\n    public void writeOutput() {\n        System.out.println(\"Name: \" + getName());\n        System.out.println(\"Student Number: \" + studentNumber);\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "`Student` never declares `name`, yet every `Student` has one. Note also that `Student` must call `getName()` rather than using `name` directly, `name` is `private` in `Person`, and **private members are not accessible even to subclasses**. (`protected` would allow it, at the cost of some encapsulation.)"
+    },
+    {
+      "type": "heading",
+      "value": "Every class extends Object"
+    },
+    {
+      "type": "text",
+      "value": "A class that does not say `extends` still has a parent: Java makes it extend the built-in class `Object`. That is the top of every inheritance chain, which is why every object already has methods such as `toString()` and `equals()`, even in a class that never wrote them:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Student s = new Student(\"Ana\", 7);\nSystem.out.println(s instanceof Object);              // true\nSystem.out.println(s.getClass().getSimpleName());     // Student"
+    }
+  ]
+}

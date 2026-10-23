@@ -1,0 +1,20 @@
+{
+  "id": "input-output-key-takeaways",
+  "moduleId": "input-output",
+  "title": "Key takeaways",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "`Scanner` needs an **import** and an **object** tied to `System.in`.",
+        "Match the method to the type: `nextInt()`, `nextDouble()`, `nextLine()`, `next()`.",
+        "**`next()` stops at whitespace; `nextLine()` takes the whole line.** There is no `nextChar()`: use `next().charAt(0)`.",
+        "`print()` stays on the line, `println()` moves to the next.",
+        "**`printf()`** formats: `%d` integers, `%f` decimals, `%s` strings, `%.2f` two decimals, `%-12s` left-aligned in a field, `%n` newline, `%%` a literal percent.",
+        "After `nextInt()`, a waiting `nextLine()` will read the leftover newline. Consume it."
+      ]
+    }
+  ]
+}

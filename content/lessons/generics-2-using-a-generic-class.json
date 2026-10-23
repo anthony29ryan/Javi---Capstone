@@ -1,0 +1,107 @@
+{
+  "id": "generics-2-using-a-generic-class",
+  "moduleId": "generics",
+  "title": "Using a generic class",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class GenDemo {\n    public static void main(String[] args) {\n        Gen<Integer> iData = new Gen<Integer>();\n        Gen<String>  sData = new Gen<String>();\n\n        iData.setValue(1);\n        iData.showType();\n\n        sData.setValue(\"One\");\n        sData.showType();\n\n        int num = iData.getValue();\n        String str = sData.getValue();\n\n        System.out.println(\"Integer value: \" + num);\n        System.out.println(\"String value: \" + str);\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Type of T is java.lang.Integer\nType of T is java.lang.String\nInteger value: 1\nString value: One"
+    },
+    {
+      "type": "text",
+      "value": "To initialize a generic object, give the generic class name followed by the type in angle brackets:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Gen<Integer> iData = new Gen<Integer>();"
+    },
+    {
+      "type": "text",
+      "value": "The type argument on the **right** may be omitted, leaving the empty **diamond operator**:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Gen<Integer> iData = new Gen<>();"
+    },
+    {
+      "type": "note",
+      "variant": "correction",
+      "title": "Correction",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "your handout says \"The data type on the left of the `new` operator is optional.\" It is the other way round. The **left** side declares the variable and its type: it is **required**, and it is what tells the compiler what `T` is. The **right** side may be shortened to `<>`, because the compiler infers the type from the left."
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "Gen<Integer> iData = new Gen<>();     // correct, diamond on the right\nGen iData = new Gen<Integer>();       // compiles, but Gen is now a \"raw type\", unchecked warnings"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Why the value is `Integer`, not `int`"
+    },
+    {
+      "type": "text",
+      "value": "Notice `Gen<Integer>` rather than `Gen<int>`. **Type parameters must be reference types**: generics do not work with primitives. `Gen<int>` will not compile."
+    },
+    {
+      "type": "text",
+      "value": "Two features hide this:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "iData.setValue(1);              // autoboxing:   int 1  →  Integer.valueOf(1)\nint num = iData.getValue();     // unboxing:     Integer →  int"
+    },
+    {
+      "type": "text",
+      "value": "Java converts automatically between primitives and their **wrapper classes**: `int`/`Integer`, `double`/`Double`, `char`/`Character`, `boolean`/`Boolean`. Your handout's example relies on this without naming it."
+    },
+    {
+      "type": "heading",
+      "value": "Multiple type parameters"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Pair<T, V> {\n    private T data1;\n    private V data2;\n\n    public void setValue(T dt1, V dt2) {\n        data1 = dt1;\n        data2 = dt2;\n    }\n\n    public T getT1Value() { return data1; }\n    public V getT2Value() { return data2; }\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class PairDemo {\n    public static void main(String[] args) {\n        Pair<Integer, String>  mixData = new Pair<>();\n        Pair<Integer, Integer> iData   = new Pair<>();\n\n        mixData.setValue(1, \"One\");\n        iData.setValue(7, 25);\n\n        int    mdType1 = mixData.getT1Value();\n        String mdType2 = mixData.getT2Value();\n        int    idType1 = iData.getT1Value();\n        int    idType2 = iData.getT2Value();\n\n        System.out.println(\"First pair: \"  + mdType1 + \" and \" + mdType2);\n        System.out.println(\"Second pair: \" + idType1 + \" and \" + idType2);\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "First pair: 1 and One\nSecond pair: 7 and 25"
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "A naming note",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Your handout writes this class as `Gen<T, T2>`, immediately after stating that type parameter names should be single capital letters. `T2` breaks its own rule. The conventional second parameter is **`V`** (Value) or `U`. Renamed above."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "value": "Type safety at work: `mixData.getT2Value()` returns a `String` because the second parameter was declared `String`. Assign it to an `int` and the compiler stops you, no cast, no run-time surprise."
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "id": "input-output-4-formatted-output-with-printf",
+  "moduleId": "input-output",
+  "title": "Formatted output with printf",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "`printf()` creates output in a specific format. It adds formatting instructions that specify how output appears, such as the number of digits after a decimal point:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "double price = 19.5;\nSystem.out.println(\"Price using println: \" + price);\nSystem.out.printf(\"Price using printf: %.2f\", price);"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Price using println: 19.5\nPrice using printf: 19.50"
+    },
+    {
+      "type": "text",
+      "value": "The `double` is formatted to two decimal places. The first argument, `%.2f`, is a **format specifier**: a placeholder for a value. The second argument is the value to be output in that format."
+    },
+    {
+      "type": "text",
+      "value": "`%.2f` tells the JVM to return the variable with two digits after the decimal point. The `f` means the output is a floating-point number."
+    },
+    {
+      "type": "heading",
+      "value": "Common format specifiers"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Specifier",
+        "Type of output",
+        "Examples"
+      ],
+      "rows": [
+        [
+          "`%c`",
+          "Character",
+          "A single character: `%c` · in a field of two spaces: `%2c`"
+        ],
+        [
+          "`%d`",
+          "Decimal integer",
+          "An integer: `%d`"
+        ],
+        [
+          "`%f`",
+          "Floating-point",
+          "`%f` · two decimals: `%.2f` · two decimals in a field of six: `%6.2f`"
+        ],
+        [
+          "`%e`",
+          "Exponential floating-point",
+          "`%e`"
+        ],
+        [
+          "`%s`",
+          "String",
+          "In a field of ten spaces: `%10s` · first two characters: `%.2s`"
+        ],
+        [
+          "`%b`",
+          "Boolean",
+          "`true` or `false`"
+        ],
+        [
+          "`%n`",
+          "Newline",
+          "Platform-independent line break"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Note",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "your handout titles this table \"Format Specifiers for the `print()` method.\" These specifiers belong to **`printf()`**: `print()` does no formatting at all."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "printf does not add a newline"
+    },
+    {
+      "type": "text",
+      "value": "This catches everyone once:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.printf(\"First%n\");     // %n adds the line break\nSystem.out.printf(\"Second\\n\");    // \\n also works\nSystem.out.printf(\"Third\");       // no break, the next output continues on this line"
+    },
+    {
+      "type": "text",
+      "value": "Prefer `%n` over `\\n`; it produces the correct line ending on every platform."
+    },
+    {
+      "type": "heading",
+      "value": "Numbers in columns"
+    },
+    {
+      "type": "text",
+      "value": "Field widths are what make `printf` worth learning. They let you line output up:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Receipt {\n    public static void main(String[] args) {\n        System.out.printf(\"%-12s %8s %8s%n\", \"ITEM\", \"PRICE\", \"QTY\");\n        System.out.printf(\"%-12s %8.2f %8d%n\", \"Notebook\", 45.5, 3);\n        System.out.printf(\"%-12s %8.2f %8d%n\", \"Pen\", 12.0, 10);\n        System.out.printf(\"%-12s %8.2f %8d%n\", \"Calculator\", 899.75, 1);\n    }\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "ITEM            PRICE      QTY\nNotebook        45.50        3\nPen             12.00       10\nCalculator     899.75        1"
+    },
+    {
+      "type": "text",
+      "value": "The `-` in `%-12s` left-aligns within a 12-space field; without it, text is right-aligned. Try producing that table with `println` and concatenation to see why `printf` exists."
+    },
+    {
+      "type": "heading",
+      "value": "Formatting without printing"
+    },
+    {
+      "type": "text",
+      "value": "`String.format()` takes the same format string as `printf()` but returns the result as a `String` instead of displaying it, so you can store it or use it later. The `,` flag adds thousands separators; it follows your computer's regional settings, and English-language settings give commas:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String text = String.format(\"%.2f\", 3.14159);\nSystem.out.println(text);                 // 3.14\nSystem.out.printf(\"%,d%n\", 1234567);      // 1,234,567"
+    }
+  ]
+}

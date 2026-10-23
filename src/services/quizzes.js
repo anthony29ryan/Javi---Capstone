@@ -1,49 +1,42 @@
-import { addDoc, collection, getDocs, query, serverTimestamp, where } from 'firebase/firestore';
+import { collection, getDocsFromServer, query, where } from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
 
-import { auth, db } from './firebase';
+import { db, functions } from './firebase';
+import { forgetWeakTopics } from './weakTopics';
 
-function byOrder(a, b) {
-  return a.order - b.order;
-}
-
-export async function getLessonQuestions(lessonId) {
-  const snapshot = await getDocs(
-    query(collection(db, 'questions'), where('lessonId', '==', lessonId))
-  );
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byOrder);
-}
-
+/**
+ * Every question belonging to a module, including the ones attached to its
+ * individual lessons.
+ *
+ * The module quiz is the only quiz in the app: a lesson is finished by reading
+ * it, and the module quiz then tests the whole module at once. So this
+ * deliberately does not filter on `lessonId` — an earlier version required it
+ * to be null, which limited the quiz to questions written at module level and
+ * left every lesson's questions unused.
+ *
+ * Ordering is left to the caller, which knows what order the lessons run in;
+ * a question's own `order` is only meaningful within its lesson.
+ */
 export async function getModuleQuestions(moduleId) {
-  const snapshot = await getDocs(
-    query(
-      collection(db, 'questions'),
-      where('moduleId', '==', moduleId),
-      where('lessonId', '==', null)
-    )
+  // From the server: offline, the cache answers with no questions, which
+  // looked like a module with no quiz rather than a missing connection.
+  const snapshot = await getDocsFromServer(
+    query(collection(db, 'questions'), where('moduleId', '==', moduleId))
   );
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).sort(byOrder);
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-async function getAttemptNumber(questionId) {
-  const snapshot = await getDocs(
-    query(
-      collection(db, 'attempts'),
-      where('userId', '==', auth.currentUser.uid),
-      where('questionId', '==', questionId)
-    )
-  );
-  return snapshot.size + 1;
-}
+const gradeAnswerFunction = httpsCallable(functions, 'gradeAnswer');
 
-export async function recordAttempt({ questionId, topic, correct, timeTakenMs }) {
-  const attemptNumber = await getAttemptNumber(questionId);
-  await addDoc(collection(db, 'attempts'), {
-    userId: auth.currentUser.uid,
-    questionId,
-    topic,
-    correct,
-    timeTakenMs,
-    attemptNumber,
-    createdAt: serverTimestamp(),
-  });
+/**
+ * Grades one answer on the server, which also records the attempt.
+ *
+ * The app cannot grade by itself: the correct answers live in `answerKeys`,
+ * which it is not allowed to read. Resolves to { correct, answer }, where
+ * `answer` is the index of the correct choice.
+ */
+export async function gradeAnswer({ questionId, choice, timeTakenMs, attemptId }) {
+  const { data } = await gradeAnswerFunction({ questionId, choice, timeTakenMs, attemptId });
+  forgetWeakTopics(); // a new attempt can change the model's verdict
+  return data;
 }

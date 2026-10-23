@@ -1,0 +1,107 @@
+{
+  "id": "regular-expressions-3-repetition-operators",
+  "moduleId": "regular-expressions",
+  "title": "Repetition operators",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**A repetition operator is any symbol indicating the number of times a specified character appears in a matching string.**"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Operator",
+        "Definition",
+        "Sample",
+        "Meaning"
+      ],
+      "rows": [
+        [
+          "`*`",
+          "0 or more occurrences",
+          "`str.matches(\"A*\")`",
+          "`true` if `str` consists of zero or more A's and no other letter"
+        ],
+        [
+          "`?`",
+          "0 or 1 occurrence",
+          "`str.matches(\"A?\")`",
+          "`true` if `str` is `\"\"` or `\"A\"`"
+        ],
+        [
+          "`+`",
+          "1 or more occurrences",
+          "`str.matches(\"A+\")`",
+          "`true` if `str` is one or more A's in a sequence"
+        ],
+        [
+          "`{x}`",
+          "exactly x occurrences",
+          "`str.matches(\"A{7}\")`",
+          "`true` if `str` is a sequence of 7 A's"
+        ],
+        [
+          "`{x,y}`",
+          "between x and y occurrences",
+          "`str.matches(\"A{7,9}\")`",
+          "`true` if `str` is 7, 8, or 9 A's"
+        ],
+        [
+          "`{x,}`",
+          "x or more occurrences",
+          "`str.matches(\"A{5,}\")`",
+          "`true` if `str` is 5 or more A's"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "A repetition operator applies to **the item immediately before it**: one character, one bracket group, or one parenthesised group."
+    },
+    {
+      "type": "text",
+      "value": "Regular expressions allow powerful validation without much code:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "return str.matches(\".*\");"
+    },
+    {
+      "type": "text",
+      "value": "The dot represents any character and the asterisk any number of occurrences of the item preceding it, so `\".*\"` means **any number of any characters**: it matches everything, including the empty string."
+    },
+    {
+      "type": "text",
+      "value": "**All regex symbols may be combined:**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "return str.matches(\".?[0-5]{10}\");"
+    },
+    {
+      "type": "text",
+      "value": "That is: an optional single character of any kind, followed by exactly ten digits in the range 0 to 5."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class RegexBasics {\n    public static void main(String[] args) {\n        System.out.println(\"cat\".matches(\"cat|dog\"));        // true\n        System.out.println(\"Dog\".matches(\"[Cc]at|[Dd]og\"));  // true\n        System.out.println(\"dOg\".matches(\"[Cc]at|[Dd]og\"));  // false\n        System.out.println(\"bat\".matches(\"[a-z]at\"));        // true\n        System.out.println(\"Bat\".matches(\"[a-z]at\"));        // false\n        System.out.println(\"7x\".matches(\"[0-9].\"));          // true\n        System.out.println(\"AAAAAAA\".matches(\"A{7}\"));       // true\n        System.out.println(\"AAAA\".matches(\"A{5,}\"));         // false\n        System.out.println(\"0912345678\".matches(\"\\\\d{10}\")); // true\n        System.out.println(\"my cat\".matches(\"cat\"));         // false, whole string only\n    }\n}"
+    },
+    {
+      "type": "heading",
+      "value": "Grouping and optional parts"
+    },
+    {
+      "type": "text",
+      "value": "Parentheses group several characters so that an operator applies to all of them, and `?` makes the item before it optional. This matches a seven-digit phone number with or without the hyphen, and a group repeated with `+`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"5551234\".matches(\"\\\\d{3}-?\\\\d{4}\"));    // true\nSystem.out.println(\"555-1234\".matches(\"\\\\d{3}-?\\\\d{4}\"));   // true\nSystem.out.println(\"abab\".matches(\"(ab)+\"));              // true, \"ab\" repeated\nSystem.out.println(\"abab\".matches(\"ab*\"));                // false, only a, then b's"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "strings-2-creating-strings",
+  "moduleId": "strings",
+  "title": "Creating strings",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A String can be constructed in two ways: by directly assigning a string literal, or by using the `new` keyword with a String constructor."
+    },
+    {
+      "type": "text",
+      "value": "**Directly, with a literal**: the usual way:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String strGreeting = \"Hello World!\";\nString strName;\nstrName = \"Jess Diaz\";"
+    },
+    {
+      "type": "text",
+      "value": "`\"Hello World!\"` and `\"Jess Diaz\"` are **string literals**: series of characters that appear in output exactly as entered. String literals are constants. Whenever the JVM encounters one, it creates a String object with that value."
+    },
+    {
+      "type": "text",
+      "value": "**With `new`**: rarely what you want:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "String strGreeting = new String(\"Hello World!\");"
+    },
+    {
+      "type": "text",
+      "value": "The difference matters: **string literals with the same contents share the same memory location**, while strings constructed with `new` are stored in **different memory locations**."
+    }
+  ]
+}

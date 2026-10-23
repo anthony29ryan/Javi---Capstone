@@ -1,0 +1,63 @@
+{
+  "id": "exception-handling-5-finally",
+  "moduleId": "exception-handling",
+  "title": "finally",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "A **finally block** runs whether or not an exception was thrown, and even if the `try` or `catch` block executes a `return`. It is where cleanup goes."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class FinallyDemo {\n    public static void main(String[] args) {\n        try {\n            int[] numbers = {1, 2, 3};\n            System.out.println(numbers[10]);\n        } catch (ArrayIndexOutOfBoundsException e) {\n            System.out.println(\"Caught: invalid index.\");\n        } finally {\n            System.out.println(\"This always runs.\");\n        }\n    }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Output:"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Caught: invalid index.\nThis always runs."
+    },
+    {
+      "type": "text",
+      "value": "A `try` structure may have at most one `finally` block, and it is optional."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Added (Java 7+, not in the source handout)",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "for anything that must be closed: files, streams, connections, prefer **try-with-resources** over a `finally` block. Java closes the resource automatically, even if an exception is thrown:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "try (Scanner file = new Scanner(new File(\"data.txt\"))) {\n    while (file.hasNextLine()) {\n        System.out.println(file.nextLine());\n    }\n} catch (FileNotFoundException e) {\n    System.out.println(\"File not found.\");\n}\n// file is closed automatically, no finally needed"
+        },
+        {
+          "type": "text",
+          "value": "You will use this constantly in the next lesson, File Input & Output."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "finally runs even after return"
+    },
+    {
+      "type": "text",
+      "value": "A `return` inside `try` does not skip the `finally` block. The method's return value is worked out first, then `finally` runs, and only then does control go back to the caller:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "static int withFinally() {\n    try {\n        return 1;\n    } finally {\n        System.out.println(\"cleanup\");\n    }\n}\n\n// System.out.println(withFinally());   prints cleanup, then 1"
+    }
+  ]
+}

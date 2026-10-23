@@ -1,0 +1,334 @@
+[
+  {
+    "id": "control-structures-01",
+    "lessonId": "control-structures-1-what-a-control-structure-is",
+    "type": "mcq",
+    "prompt": "Which kind of control structure runs statements repeatedly?",
+    "choices": [
+      "Repetition",
+      "Selection",
+      "Sequential",
+      "Declaration"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "control-structures-02",
+    "lessonId": "control-structures-1-what-a-control-structure-is",
+    "type": "mcq",
+    "prompt": "Which of these is NOT one of Java's selection structures?",
+    "choices": [
+      "if",
+      "for",
+      "switch",
+      "if...else"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "control-structures-03",
+    "lessonId": "control-structures-2-one-way-selection-if",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int score = 50;\nif (score >= 60) {\n    System.out.println(\"Passed\");\n}\nSystem.out.println(\"Done\");",
+    "choices": [
+      "Passed\nDone",
+      "Nothing is printed",
+      "Done",
+      "Passed"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "control-structures-04",
+    "lessonId": "control-structures-2-one-way-selection-if",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int score = 70;\nboolean passed = score >= 60;\nif (passed) {\n    System.out.println(\"Passed\");\n}",
+    "choices": [
+      "true",
+      "passed",
+      "Nothing is printed",
+      "Passed"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "control-structures-05",
+    "lessonId": "control-structures-2-one-way-selection-if",
+    "type": "mcq",
+    "prompt": "Which is the cleaner way to write `if (passed == true)` when `passed` is a `boolean`?",
+    "choices": [
+      "if (passed)",
+      "if (passed = true)",
+      "if (true)",
+      "if passed"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "control-structures-06",
+    "lessonId": "control-structures-3-two-way-selection-if-else",
+    "type": "truefalse",
+    "prompt": "In an `if...else` statement, exactly one of the two blocks always runs.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "control-structures-07",
+    "lessonId": "control-structures-3-two-way-selection-if-else",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int score = 55;\nif (score >= 60) {\n    System.out.println(\"passed\");\n}\nelse {\n    System.out.println(\"failed\");\n}",
+    "choices": [
+      "passed",
+      "failed",
+      "passed\nfailed",
+      "Nothing is printed"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "control-structures-08",
+    "lessonId": "control-structures-3-two-way-selection-if-else",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int n = 7;\nif (n % 2 == 0) {\n    System.out.println(n + \" is even\");\n}\nelse {\n    System.out.println(n + \" is odd\");\n}",
+    "choices": [
+      "7 is even",
+      "7",
+      "7 is odd",
+      "Nothing is printed"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "control-structures-09",
+    "lessonId": "control-structures-4-compound-statements",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int score = 40;\nif (score >= 60)\n    System.out.println(\"Passed.\");\n    System.out.println(\"Congratulations!\");",
+    "choices": [
+      "Passed.\nCongratulations!",
+      "Nothing is printed",
+      "Passed.",
+      "Congratulations!"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "control-structures-10",
+    "lessonId": "control-structures-4-compound-statements",
+    "type": "mcq",
+    "prompt": "A variable is declared inside a pair of braces `{ }`. Where can it be used?",
+    "choices": [
+      "Only inside those braces",
+      "Anywhere in the method",
+      "Anywhere in the class",
+      "Only before the braces"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "control-structures-11",
+    "lessonId": "control-structures-5-multiple-selections-nested-if",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int score = 85;\nif (score >= 90) { System.out.println(\"A\"); }\nelse if (score >= 80) { System.out.println(\"B\"); }\nelse if (score >= 70) { System.out.println(\"C\"); }\nelse { System.out.println(\"F\"); }",
+    "choices": [
+      "A",
+      "B",
+      "C",
+      "F"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "control-structures-12",
+    "lessonId": "control-structures-5-multiple-selections-nested-if",
+    "type": "mcq",
+    "prompt": "In an else-if chain, why does each condition only need a lower bound such as `score >= 80`?",
+    "choices": [
+      "Because `score` is an int",
+      "Java ignores upper bounds",
+      "Earlier conditions have already ruled out the higher scores",
+      "It is a mistake in the lesson"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "control-structures-13",
+    "lessonId": "control-structures-5-multiple-selections-nested-if",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int score = 95;\nif (score >= 60) { System.out.println(\"D\"); }\nelse if (score >= 70) { System.out.println(\"C\"); }",
+    "choices": [
+      "C",
+      "Nothing is printed",
+      "D\nC",
+      "D"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "control-structures-14",
+    "lessonId": "control-structures-5-multiple-selections-nested-if",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int a = 5, b = 1;\nif (a > 3)\n    if (b > 3)\n        System.out.println(\"both\");\nelse\n    System.out.println(\"belongs to inner if\");",
+    "choices": [
+      "belongs to inner if",
+      "Compile error",
+      "Nothing is printed",
+      "both"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "control-structures-15",
+    "lessonId": "control-structures-5-multiple-selections-nested-if",
+    "type": "mcq",
+    "prompt": "An `else` is paired with which `if`?",
+    "choices": [
+      "The outermost `if`",
+      "The nearest preceding `if` that has no `else` yet",
+      "The first `if` in the method",
+      "The one it is indented under"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "control-structures-16",
+    "lessonId": "control-structures-6-short-circuit-evaluation",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int a = 0, b = 1, c = 4, d = 4;\nif (a == b && c == d) {\n    System.out.println(\"Example\");\n}\nelse {\n    System.out.println(\"No\");\n}",
+    "choices": [
+      "Example\nNo",
+      "Example",
+      "No",
+      "Compile error"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "control-structures-17",
+    "lessonId": "control-structures-6-short-circuit-evaluation",
+    "type": "mcq",
+    "prompt": "In `if (c == d || a == b)`, where `c == d` is true, is `a == b` evaluated?",
+    "choices": [
+      "It causes a compile error",
+      "Yes, both sides are always evaluated",
+      "Only if `a` is 0",
+      "No, evaluation stops once the result is known"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "control-structures-18",
+    "lessonId": "control-structures-7-the-switch-statement",
+    "type": "mcq",
+    "prompt": "Which type can be used as the variable of a `switch`?",
+    "choices": [
+      "String",
+      "double",
+      "boolean",
+      "long"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "control-structures-19",
+    "lessonId": "control-structures-7-the-switch-statement",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int k = 1;\nswitch (k) {\n    case 1:\n        System.out.println(\"one\");\n    case 2:\n        System.out.println(\"two\");\n        break;\n    default:\n        System.out.println(\"other\");\n}",
+    "choices": [
+      "one",
+      "one\ntwo",
+      "two",
+      "one\ntwo\nother"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "control-structures-20",
+    "lessonId": "control-structures-7-the-switch-statement",
+    "type": "output",
+    "prompt": "What does this print?",
+    "code": "int month = 4;\nint days = switch (month) {\n    case 1, 3, 5, 7, 8, 10, 12 -> 31;\n    case 4, 6, 9, 11 -> 30;\n    default -> 28;\n};\nSystem.out.println(\"Days: \" + days);",
+    "choices": [
+      "Days: 28",
+      "Days: 31",
+      "Days: 30",
+      "Days: 0"
+    ],
+    "answer": 2
+  },
+  {
+    "id": "control-structures-21",
+    "lessonId": "control-structures-7-the-switch-statement",
+    "type": "mcq",
+    "prompt": "Which situation needs an else-if chain instead of a `switch`?",
+    "choices": [
+      "Testing a month number against 1 to 12",
+      "Testing a `char` against 'A', 'B' and 'C'",
+      "Testing a `String` against fixed words",
+      "Testing a score against ranges such as `>= 90`"
+    ],
+    "answer": 3
+  },
+  {
+    "id": "control-structures-22",
+    "lessonId": "control-structures-7-the-switch-statement",
+    "type": "truefalse",
+    "prompt": "In the arrow form of `switch` (`case ... ->`), control falls through to the next case unless there is a `break`.",
+    "choices": [
+      "True",
+      "False"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "control-structures-23",
+    "lessonId": "control-structures-common-mistakes",
+    "type": "mcq",
+    "prompt": "What does a semicolon right after `if (score >= 60)` cause?",
+    "choices": [
+      "The block that follows always runs",
+      "A compile error",
+      "The block never runs",
+      "The `if` runs twice"
+    ],
+    "answer": 0
+  },
+  {
+    "id": "control-structures-24",
+    "lessonId": "control-structures-common-mistakes",
+    "type": "mcq",
+    "prompt": "Why is `if (found = true)` a bug when `found` is a `boolean`?",
+    "choices": [
+      "It only works with ints",
+      "It assigns true instead of comparing",
+      "It always compares with false",
+      "It does not compile"
+    ],
+    "answer": 1
+  },
+  {
+    "id": "control-structures-25",
+    "lessonId": "control-structures-common-mistakes",
+    "type": "mcq",
+    "prompt": "How should two `String` values be compared in an `if`?",
+    "choices": [
+      "a = b",
+      "a == b",
+      "a.equals(b)",
+      "a.compare(b)"
+    ],
+    "answer": 2
+  }
+]

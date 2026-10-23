@@ -1,0 +1,55 @@
+{
+  "id": "control-structures-4-compound-statements",
+  "moduleId": "control-structures",
+  "title": "Compound statements",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Compound statements**, or blocks of statements, are any statements grouped together within curly braces:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "{\n    // statement 1\n    // statement 2\n    //   .\n    // statement n\n}"
+    },
+    {
+      "type": "text",
+      "value": "A compound statement consists of a sequence of statements enclosed in braces. This is what lets a branch do more than one thing:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (price >= 500.00) {\n    discount = price * 0.10;\n    salePrice = price - discount;\n    System.out.println(\"The discounted price is \" + salePrice);\n}\nelse {\n    System.out.println(\"No discount.\");\n    System.out.println(\"The price is \" + price);\n}"
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Java allows you to omit the braces when a branch holds exactly one statement. Do not",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "java",
+          "value": "if (score >= 60)\n    System.out.println(\"Passed.\");\n    System.out.println(\"Congratulations!\");   // NOT part of the if, always runs"
+        },
+        {
+          "type": "text",
+          "value": "The indentation says both lines are conditional. Only the first one is. Always use braces, even for a single statement, this bug is invisible during review and has caused real security incidents."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Variables belong to their braces"
+    },
+    {
+      "type": "text",
+      "value": "A variable declared inside a block exists only inside that block. This is its **scope**. Using it after the closing brace is a compile error, so declare a variable *before* the block if you need it afterwards:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (true) {\n    int inside = 5;\n}\nSystem.out.println(inside);   // error: cannot find symbol"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "id": "arrays-4-multidimensional-arrays",
+  "moduleId": "arrays",
+  "title": "Multidimensional arrays",
+  "order": 5,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Multidimensional arrays** are arrays whose elements are arrays themselves."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "dataType[][]...[] arrayName = new dataType[exp1][exp2]...[n];"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[][][] numbers = new int[2][3][5];"
+    },
+    {
+      "type": "text",
+      "value": "This declares `numbers` with 2 groups, each group holding 3 lists, each list containing 5 elements, 30 elements in total."
+    },
+    {
+      "type": "text",
+      "value": "Initialized at declaration:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[][][] numbers = {\n    {\n        {1,  3,  5,  7,  9},\n        {11, 13, 15, 17, 19},\n        {21, 23, 25, 27, 29}\n    },\n    {\n        {2,  4,  6,  8,  10},\n        {12, 14, 16, 18, 20},\n        {22, 24, 26, 28, 30}\n    }\n};\n\nSystem.out.println(numbers[1][2][3]);   // 28"
+    },
+    {
+      "type": "text",
+      "value": "Trace `numbers[1][2][3]`: group `1` is the second group, list `2` is `{22, 24, 26, 28, 30}`, element `3` is **28**."
+    },
+    {
+      "type": "text",
+      "value": "A multidimensional array can also be built from already-declared arrays:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[][] odd = {\n    {1,  3,  5,  7,  9},\n    {11, 13, 15, 17, 19},\n    {21, 23, 25, 27, 29}\n};\n\nint[][] even = {\n    {2,  4,  6,  8,  10},\n    {12, 14, 16, 18, 20},\n    {22, 24, 26, 28, 30}\n};\n\nint[][][] numbers = {odd, even};\n\nSystem.out.println(numbers.length);         // 2, number of groups\nSystem.out.println(numbers[0].length);      // 3, number of lists in a group\nSystem.out.println(numbers[0][2].length);   // 5, number of elements in a list"
+    },
+    {
+      "type": "text",
+      "value": "Each `.length` peels off one dimension. In practice, three dimensions are rare, reach for objects (Lesson 12 onward) once data gets this shaped."
+    }
+  ]
+}

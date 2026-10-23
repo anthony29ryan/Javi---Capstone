@@ -1,0 +1,76 @@
+{
+  "id": "loops-3-the-for-loop",
+  "moduleId": "loops",
+  "title": "The for loop",
+  "order": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "The `for` loop executes a sequence of statements multiple times and abbreviates the code that manages the loop variable. Use it when a **definite number of iterations** is required."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "for (initialization; condition; update) {\n    // statements\n}"
+    },
+    {
+      "type": "text",
+      "value": "The **initialization** indicates the starting value for the loop control variable, the **condition** controls loop entry, and the **update** alters the control variable. The three parameters are enclosed in parentheses and separated by two semicolons."
+    },
+    {
+      "type": "text",
+      "value": "The flow of control:"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "The initialization executes first, and **only once**.",
+        "The condition is evaluated. If false, the loop terminates. If true: a. Execute the loop body. b. Update the loop control variable.",
+        "Repeat step 2 until the condition evaluates to false."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int num;\nfor (num = 0; num <= 10; num++) {\n    System.out.println(num);\n}"
+    },
+    {
+      "type": "text",
+      "value": "Compare that with the `while` version. Identical behaviour, but the `for` loop puts initialisation, test, and update on **one line**, where you can see all three at once. That is why forgetting the update is rare in a `for` loop and common in a `while` loop."
+    },
+    {
+      "type": "text",
+      "value": "Usually the control variable is declared inside the loop, which limits it to the loop:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "for (int i = 1; i <= 5; i++) {\n    System.out.println(\"Line \" + i);\n}\n// i does not exist here"
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Why `i`?",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Convention, inherited from mathematics: `i` for index. Nested loops use `i`, `j`, `k`. For anything non-obvious, name it properly: `for (int studentNumber = 1; ...)`."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "Counting down and in steps"
+    },
+    {
+      "type": "text",
+      "value": "The update does not have to be `i++`. Start high and subtract to count down, or add or subtract a larger step to skip values:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "for (int d = 10; d >= 0; d -= 2) {\n    System.out.print(d + \" \");\n}\n// prints: 10 8 6 4 2 0"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "object-and-methods-key-takeaways",
+  "moduleId": "object-and-methods",
+  "title": "Key takeaways",
+  "order": 8,
+  "blocks": [
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "A **constructor** has no return type and shares the class's name; `new` invokes it.",
+        "**Overloading** gives one name several parameter lists; the **signature** is name + parameter types, and return type is excluded.",
+        "Writing any constructor **removes** the free default one.",
+        "**`this(...)`** chains to another constructor in the same class and must come first.",
+        "**Static** members belong to the class and are shared; **instance** members belong to each object.",
+        "A static method cannot touch instance variables, which is why `main` needs an object.",
+        "`Math.random()` returns `[0.0, 1.0)`; scale with `(int)(Math.random() * range) + min`."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "recursion-common-mistakes",
+  "moduleId": "recursion",
+  "title": "Common mistakes",
+  "order": 7,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**No base case.** `StackOverflowError`. Every recursive method needs at least one."
+    },
+    {
+      "type": "text",
+      "value": "**A base case that is never reached.** Having one is not enough: each call must move toward it. `factorial(n - 1)` with a negative argument recurses forever past `num == 0`; guarding with `num <= 0` is safer."
+    },
+    {
+      "type": "text",
+      "value": "**Forgetting to return the recursive call's result.**"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "if (num == 0) { return 1; }\nfactorial(num - 1);           // result computed, then thrown away"
+    },
+    {
+      "type": "text",
+      "value": "**Not reducing the problem.** `factorial(num)` instead of `factorial(num - 1)` calls itself with identical arguments forever."
+    },
+    {
+      "type": "text",
+      "value": "**Recursing too deep.** Java's default stack handles only a few thousand frames. A recursion 100,000 levels deep overflows regardless of correctness, use iteration there."
+    },
+    {
+      "type": "text",
+      "value": "**Recomputing the same values.** Naive recursive Fibonacci recalculates the same subproblems exponentially many times; `fib(50)` effectively never finishes."
+    },
+    {
+      "type": "text",
+      "value": "**Putting work on the wrong side of the recursive call.** Before it, work happens on the way down; after it, on the way back up. Getting this backwards reverses your output."
+    }
+  ]
+}

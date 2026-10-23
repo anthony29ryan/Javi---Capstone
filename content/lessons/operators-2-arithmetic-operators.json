@@ -1,0 +1,130 @@
+{
+  "id": "operators-2-arithmetic-operators",
+  "moduleId": "operators",
+  "title": "Arithmetic operators",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**Arithmetic operators** perform basic mathematical operations on numerical values."
+    },
+    {
+      "type": "text",
+      "value": "Assume `int x = 11, y = 3;`"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Operator",
+        "Description",
+        "Example",
+        "Result"
+      ],
+      "rows": [
+        [
+          "`+`",
+          "Addition",
+          "`x + y`",
+          "`14`"
+        ],
+        [
+          "`-`",
+          "Subtraction",
+          "`x - y`",
+          "`8`"
+        ],
+        [
+          "`*`",
+          "Multiplication",
+          "`x * y`",
+          "`33`"
+        ],
+        [
+          "`/`",
+          "Division",
+          "`x / y`",
+          "`3` (not 3.66)"
+        ],
+        [
+          "`%`",
+          "Modulus",
+          "`x % y`",
+          "`2`"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "`/` and `%` need special attention."
+    },
+    {
+      "type": "heading",
+      "value": "The two kinds of division"
+    },
+    {
+      "type": "text",
+      "value": "**Integer division** occurs when **both** operands are integers. The result is an integer, and any fractional part is lost:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int x = 11;\nint y = 3;\nSystem.out.println(x / y);   // 3"
+    },
+    {
+      "type": "text",
+      "value": "**Floating-point division** occurs when **either or both** operands are floating-point values. The result is a floating-point value:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int x = 11;\ndouble y = 3;\nSystem.out.println(x / y);   // 3.6666666666666665"
+    },
+    {
+      "type": "text",
+      "value": "Nothing warns you about this. `11 / 3` giving `3` is not an error in Java. It is the defined behaviour, so a wrong average or a wrong percentage just quietly appears in your output."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int correct = 7;\nint total = 10;\n\nSystem.out.println(correct / total * 100);              // 0    ← wrong\nSystem.out.println((double) correct / total * 100);     // 70.0 ← right"
+    },
+    {
+      "type": "text",
+      "value": "The first line computes `7 / 10` as integer division, gets `0`, then multiplies by 100. **If you want a decimal result, at least one operand must be a decimal type.**"
+    },
+    {
+      "type": "heading",
+      "value": "Modulus"
+    },
+    {
+      "type": "text",
+      "value": "`%` gives the **remainder** after division. It looks like a curiosity and turns out to be everywhere:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(11 % 3);        // 2, 3 goes into 11 three times, remainder 2\nSystem.out.println(10 % 2);        // 0, evenly divisible\nSystem.out.println(7 % 2);         // 1\n\nint seconds = 3725;\nSystem.out.println(seconds / 60);  // 62 minutes total\nSystem.out.println(seconds % 60);  // 5 seconds left over"
+    },
+    {
+      "type": "text",
+      "value": "`n % 2 == 0` is the standard test for \"is this even.\" You will use it constantly once you reach loops."
+    },
+    {
+      "type": "heading",
+      "value": "The + operator with text"
+    },
+    {
+      "type": "text",
+      "value": "When either side of `+` is a `String`, it joins instead of adding. Java works left to right, so the order decides which `+` adds and which joins:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "System.out.println(\"Total: \" + 1 + 2);       // Total: 12\nSystem.out.println(1 + 2 + \" total\");       // 3 total\nSystem.out.println(\"Total: \" + (1 + 2));     // Total: 3"
+    },
+    {
+      "type": "text",
+      "value": "In the first line, `\"Total: \" + 1` is already a `String` by the time `+ 2` runs, so the `2` is joined, not added. Use parentheses to add first."
+    }
+  ]
+}

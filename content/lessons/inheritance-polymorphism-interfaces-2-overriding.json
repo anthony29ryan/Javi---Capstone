@@ -1,0 +1,60 @@
+{
+  "id": "inheritance-polymorphism-interfaces-2-overriding",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Overriding",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**If a derived class defines a method with the same name, the same number and types of parameters, and the same return type as a method in the base class, the definition in the derived class is said to override the definition in the base class.**"
+    },
+    {
+      "type": "text",
+      "value": "`Student.writeOutput()` above overrides `Person.writeOutput()`."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Added: the `@Override` annotation",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "Writing `@Override` above a method asks the compiler to verify that it really does override something. If you misspell the name or get a parameter type wrong, you get an error instead of a method that silently never runs. It is optional, and worth using every time."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "value": "**Overriding is not overloading.** They sound alike and are unrelated:"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "",
+        "Overriding",
+        "Overloading"
+      ],
+      "rows": [
+        [
+          "Where",
+          "In a **subclass**",
+          "In the **same class**"
+        ],
+        [
+          "Signature",
+          "**Identical**",
+          "**Different**"
+        ],
+        [
+          "Chosen",
+          "At **run time**, by the object's actual class",
+          "At **compile time**, by the arguments"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "value": "To forbid overriding, mark a method `final`. A subclass that tries to override a `final` method fails to compile. A whole class can be `final` as well, in which case it cannot be extended at all. `String` is a `final` class."
+    }
+  ]
+}

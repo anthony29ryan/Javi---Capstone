@@ -1,0 +1,87 @@
+{
+  "id": "inheritance-polymorphism-interfaces-5-interfaces",
+  "moduleId": "inheritance-polymorphism-interfaces",
+  "title": "Interfaces",
+  "order": 6,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "**An interface is used to specify methods that a class must implement.** It contains headings for a number of public methods, and should include comments describing them."
+    },
+    {
+      "type": "text",
+      "value": "Different classes can implement the same interface:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class ClassName implements InterfaceName1, InterfaceName2 { }"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Rectangle implements Countable, Measurable { }"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public interface Measurable {\n    /** Returns the area of this shape in square units. */\n    double getArea();\n\n    /** Returns the perimeter of this shape in linear units. */\n    double getPerimeter();\n}"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Rectangle implements Measurable {\n    private double length, width;\n\n    public Rectangle(double length, double width) {\n        this.length = length;\n        this.width = width;\n    }\n\n    @Override\n    public double getArea() { return length * width; }\n\n    @Override\n    public double getPerimeter() { return 2 * (length + width); }\n}\n\npublic class Circle implements Measurable {\n    private double radius;\n\n    public Circle(double radius) { this.radius = radius; }\n\n    @Override\n    public double getArea() { return Math.PI * radius * radius; }\n\n    @Override\n    public double getPerimeter() { return 2 * Math.PI * radius; }\n}"
+    },
+    {
+      "type": "text",
+      "value": "Now polymorphism works across **completely unrelated** classes:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Measurable[] shapes = { new Rectangle(4, 6), new Circle(3) };\n\nfor (Measurable s : shapes) {\n    System.out.printf(\"Area %.2f, perimeter %.2f%n\", s.getArea(), s.getPerimeter());\n}"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "value": "Area 24.00, perimeter 20.00\nArea 28.27, perimeter 18.85"
+    },
+    {
+      "type": "text",
+      "value": "`Rectangle` and `Circle` share no base class. The interface is the only thing they have in common, and it is enough."
+    },
+    {
+      "type": "note",
+      "variant": "note",
+      "title": "Added: interfaces since Java 8",
+      "blocks": [
+        {
+          "type": "text",
+          "value": "The description above (headings only) matches Java 7 and your handout's era. Modern interfaces may also contain **`default`** methods with a body and **`static`** methods:"
+        },
+        {
+          "type": "code",
+          "language": "java",
+          "value": "public interface Measurable {\n    double getArea();\n\n    default String describe() {           // has a body; implementers may override it\n        return \"Area: \" + getArea();\n    }\n}"
+        },
+        {
+          "type": "text",
+          "value": "This was added so interfaces could gain new methods without breaking every existing implementer. Exam questions will likely follow the older definition; real code you meet will use both."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "A built-in interface: Comparable"
+    },
+    {
+      "type": "text",
+      "value": "Java's library uses interfaces for contracts like ordering. A class that implements `Comparable` supplies a `compareTo` method that returns a negative number if this object comes first, zero if they are equal, and a positive number if it comes later. Methods such as `Arrays.sort` then work on your class without knowing anything else about it:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Student extends Person implements Comparable<Student> {\n    // ...\n    public int compareTo(Student other) {\n        return Integer.compare(studentNumber, other.studentNumber);\n    }\n}\n\n// Arrays.sort(roster) now orders students by studentNumber"
+    }
+  ]
+}

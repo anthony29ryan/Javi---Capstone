@@ -1,0 +1,121 @@
+{
+  "id": "input-output-2-scanner-methods",
+  "moduleId": "input-output",
+  "title": "Scanner methods",
+  "order": 3,
+  "blocks": [
+    {
+      "type": "text",
+      "value": "The Scanner class retrieves values from the input device. Each retrieved value is a **token**: a set of characters separated from the next set by whitespace."
+    },
+    {
+      "type": "text",
+      "value": "Each method retrieves a value and returns it **if the next token is of the correct data type**; otherwise it throws an exception."
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Method",
+        "Description",
+        "Example"
+      ],
+      "rows": [
+        [
+          "`nextInt()`",
+          "Retrieves input as an `int`",
+          "`int x = input.nextInt();`"
+        ],
+        [
+          "`nextDouble()`",
+          "Retrieves input as a `double`",
+          "`double x = input.nextDouble();`"
+        ],
+        [
+          "`nextLine()`",
+          "Retrieves the next line of data and returns it as a `String`",
+          "`String x = input.nextLine();`"
+        ],
+        [
+          "`next()`",
+          "Retrieves the next complete token as a `String`",
+          "`String x = input.next();`"
+        ],
+        [
+          "`nextShort()`",
+          "Retrieves input as a `short`",
+          "`short x = input.nextShort();`"
+        ],
+        [
+          "`nextByte()`",
+          "Retrieves input as a `byte`",
+          "`byte x = input.nextByte();`"
+        ],
+        [
+          "`nextFloat()`",
+          "Retrieves input as a `float`",
+          "`float x = input.nextFloat();`"
+        ],
+        [
+          "`nextLong()`",
+          "Retrieves input as a `long`",
+          "`long x = input.nextLong();`"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "value": "`next()` vs `nextLine()`"
+    },
+    {
+      "type": "text",
+      "value": "This distinction matters more than the table suggests:"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**`next()`** reads one **token**: it stops at the first space.",
+        "**`nextLine()`** reads the **entire line**, spaces included."
+      ]
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "// user types: Ana Reyes\nString a = input.next();       // \"Ana\", stops at the space\nString b = input.nextLine();   // \"Ana Reyes\", takes the whole line"
+    },
+    {
+      "type": "text",
+      "value": "For a full name, `nextLine()`. For a single word, `next()`."
+    },
+    {
+      "type": "heading",
+      "value": "Reading a single character"
+    },
+    {
+      "type": "text",
+      "value": "**The Scanner class has no `nextChar()` method.** To retrieve a single character, use `next()` and then `charAt(0)`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "char grade = input.next().charAt(0);"
+    },
+    {
+      "type": "text",
+      "value": "`next()` returns the token as a String, and `charAt(0)` returns the first character of that String, at index `0`."
+    },
+    {
+      "type": "heading",
+      "value": "Several values on one line"
+    },
+    {
+      "type": "text",
+      "value": "Because `nextInt()` and `nextDouble()` work token by token, the user can type several values on one line separated by spaces. Each call takes the next token:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "// user types: 10 20\nint a = input.nextInt();    // 10\nint b = input.nextInt();    // 20\nSystem.out.println(a + b);  // 30"
+    }
+  ]
+}

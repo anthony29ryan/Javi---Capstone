@@ -1,38 +1,69 @@
-// Coffee/Java-inspired palette. Everything screen-level styling reads from
-// here, so swapping the whole app's look later is a one-file edit instead of
-// hunting through every screen.
+// App-wide styling tokens for every screen past sign-in.
+//
+// The values come from `authTheme.js`, which holds the palette from the Javi
+// design handoff. That file used to be a separate island covering only the
+// pre-auth screens, with this file carrying an unrelated coffee palette for
+// everything else; the two are now one palette, imported here rather than
+// copied, so they cannot drift apart.
+//
+// The token *names* here are deliberately unchanged from the coffee theme.
+// Every screen already reads `colors.background`, `colors.primary` and so on,
+// so remapping the values re-skins the whole app without touching a single
+// screen — which is also what makes this easy to revert if the look is wrong.
+//
+// Only the light theme exists so far. The handoff also defines a dark "Night
+// study mode", but an app-wide theme toggle (Settings screen, persisted
+// preference, every screen re-checked) is its own feature.
+
+import { authColors } from './authTheme';
+
+// Shared with the auth screens so every screen caps its width the same way.
+export { centeredColumn, contentWidth } from './authTheme';
 
 export const colors = {
-  background: '#F7F0E6', // warm cream page background
-  surface: '#FFFFFF', // cards, inputs, sheets sitting on the background
-  surfaceSunken: '#F0E6D8', // subtly recessed areas, progress track
+  background: authColors.bg, // warm off-white page background
+  surface: authColors.surface, // cards, inputs, sheets sitting on the background
+  surfaceSunken: authColors.surface2, // recessed areas, progress tracks
 
-  primary: '#8C4A2F', // roasted coffee - main buttons, active elements
-  primaryDark: '#6B3620', // espresso - pressed states, headers
-  primaryLight: '#D9A066', // caramel - softer accents, secondary highlights
-  primarySoft: '#F0E2D2', // tinted fill for selected/secondary surfaces
+  primary: authColors.accent, // terracotta - active elements, links, progress
+  primaryDark: authColors.accentDeep, // pressed states, accent text on light ground
+  // The handoff has no token for this: progress-bar fills that need to sit
+  // between the track and the full accent. A lightened accent keeps that
+  // hierarchy without inventing a second hue.
+  primaryLight: '#DCA08E',
+  primarySoft: authColors.accentSoft, // tinted panel behind selected/secondary surfaces
 
-  text: '#3B2A20', // dark coffee brown, replaces pure black
-  textMuted: '#8A7568', // warm taupe, secondary/help text
+  button: authColors.button, // filled buttons only
+  buttonPressed: authColors.buttonPressed,
 
-  border: '#E5D6C3', // light tan borders and dividers
-  borderStrong: '#D6C1A8', // emphasized borders, input focus
+  text: authColors.ink, // primary text
+  textMuted: authColors.ink2, // secondary/help text
 
-  success: '#6B8E5A', // muted sage, correct answers
-  successBg: '#E4EEDF',
-  error: '#B5533C', // muted rust, errors and wrong answers
-  errorBg: '#F5E1DA',
+  border: authColors.line, // hairline borders and dividers
+  borderStrong: authColors.muted, // chevrons, emphasized borders
 
-  codeBg: '#2B211B', // warm near-black for code blocks
-  codeText: '#EDE3D9',
+  success: authColors.success,
+  successBg: '#E6F4EC',
+  error: authColors.error,
+  errorBg: authColors.errorSoft,
 
-  white: '#FFFFFF',
+  // The design gives code its own ground, slightly bluer and deeper than the
+  // near-black used for the tutor card and toast.
+  codeBg: '#262B45',
+  codeText: '#E7E9F5',
+  codeLine: 'rgba(231,233,245,.14)',
+  codeLabel: 'rgba(231,233,245,.5)',
+
+  white: authColors.white,
 };
 
+// The design rounds much harder than the coffee theme did: list rows sit at
+// 18, tiles at 20, and hero cards at 24.
 export const radius = {
-  sm: 8,
-  md: 10,
-  lg: 12,
+  sm: 12,
+  md: 14,
+  lg: 18,
+  xl: 24,
   pill: 999,
 };
 
@@ -47,10 +78,43 @@ export const spacing = {
   xxl: 32,
 };
 
+// The design is set in Outfit throughout. Code, scores and other numeric marks
+// stay in JetBrains Mono (the design uses Outfit there too, but the Code
+// Tracer needs fixed-width characters for its caret to line up). React Native picks a font file by
+// family name rather than by weight, so weights are chosen by naming the
+// right family here — a `fontWeight` alongside one of these is ignored.
+export const fonts = {
+  regular: 'Outfit_400Regular',
+  medium: 'Outfit_500Medium',
+  semiBold: 'Outfit_600SemiBold',
+  bold: 'Outfit_700Bold',
+  mono: 'JetBrainsMono_500Medium',
+  monoRegular: 'JetBrainsMono_400Regular',
+  wordmark: 'Baloo2_800ExtraBold', // the "Javi" wordmark only
+};
+
 export const type = {
-  screenTitle: { fontSize: 28, fontWeight: '700', letterSpacing: -0.5 },
-  sectionLabel: { fontSize: 12, fontWeight: '700', letterSpacing: 1, textTransform: 'uppercase' },
-  cardTitle: { fontSize: 17, fontWeight: '600' },
-  body: { fontSize: 15, lineHeight: 23 },
-  small: { fontSize: 13 },
+  // Courses and Practice only — the handoff enlarged those two titles and
+  // dropped their subheadings, leaving every other screen on screenTitle.
+  pageTitle: { fontFamily: fonts.bold, fontSize: 34, lineHeight: 34 * 1.15, letterSpacing: -34 * 0.025 },
+  screenTitle: { fontFamily: fonts.bold, fontSize: 25, lineHeight: 25 * 1.25, letterSpacing: -25 * 0.02 },
+  sectionHeading: { fontFamily: fonts.bold, fontSize: 18, lineHeight: 18 * 1.2, letterSpacing: -18 * 0.01 },
+  cardTitle: { fontFamily: fonts.bold, fontSize: 16, lineHeight: 16 * 1.25 },
+  rowTitle: { fontFamily: fonts.bold, fontSize: 14.5, lineHeight: 14.5 * 1.3 },
+  sectionLabel: {
+    fontFamily: fonts.semiBold,
+    fontSize: 10,
+    letterSpacing: 10 * 0.12,
+    textTransform: 'uppercase',
+  },
+  body: { fontFamily: fonts.regular, fontSize: 14, lineHeight: 14 * 1.5 },
+  small: { fontFamily: fonts.medium, fontSize: 12.5, lineHeight: 12.5 * 1.4 },
+  meta: {
+    fontFamily: fonts.medium,
+    fontSize: 11.5,
+    lineHeight: 11.5 * 1.3,
+    letterSpacing: 11.5 * 0.06,
+    textTransform: 'uppercase',
+  },
+  mono: { fontFamily: fonts.mono, fontSize: 13 },
 };
