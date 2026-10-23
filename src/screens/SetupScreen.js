@@ -61,7 +61,14 @@ export default function SetupScreen({ navigation }) {
     setSaving(true);
     try {
       if (trimmed !== nickname) await updateNickname(trimmed);
-      await savePreferences({ reminderTime: time, reminderEnabled: true, setupComplete: true });
+      // tourSeen: false queues the first-time tour (MainTabs). Accounts set up
+      // before the tour existed have no field, so they never see it.
+      await savePreferences({
+        reminderTime: time,
+        reminderEnabled: true,
+        setupComplete: true,
+        tourSeen: false,
+      });
       // A refused permission prompt turns the reminder off rather than
       // blocking setup, so this never stops someone reaching the app.
       const scheduled = await syncDailyReminder({ reminderEnabled: true, reminderTime: time });

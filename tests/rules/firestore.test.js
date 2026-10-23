@@ -166,9 +166,15 @@ describe('users', () => {
 
     // SetupScreen, SettingsScreen, ProfileDetailsScreen, AuthContext.updateDisplayName
     await assertSucceeds(
-      setDoc(ref, { reminderTime: '20:00', reminderEnabled: true, setupComplete: true }, { merge: true })
+      setDoc(
+        ref,
+        { reminderTime: '20:00', reminderEnabled: true, setupComplete: true, tourSeen: false },
+        { merge: true }
+      )
     );
     await assertSucceeds(setDoc(ref, { reminderEnabled: false }, { merge: true }));
+    // TourOverlay, on finishing or skipping the first-time tour
+    await assertSucceeds(setDoc(ref, { tourSeen: true }, { merge: true }));
     await assertSucceeds(setDoc(ref, { goals: ['Exam prep', 'Curiosity'] }, { merge: true }));
     await assertSucceeds(setDoc(ref, { goals: [] }, { merge: true }));
     await assertSucceeds(updateDoc(ref, { displayName: 'Alice B' }));
@@ -198,6 +204,7 @@ describe('users', () => {
     await assertFails(setDoc(ref, { reminderTime: 'eight pm' }, { merge: true }));
     await assertFails(setDoc(ref, { goals: 'Exam prep' }, { merge: true }));
     await assertFails(setDoc(ref, { setupComplete: 1 }, { merge: true }));
+    await assertFails(setDoc(ref, { tourSeen: 'yes' }, { merge: true }));
     await assertFails(setDoc(ref, { displayName: '' }, { merge: true }));
   });
 

@@ -12,11 +12,16 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Text from '../components/AppText';
+import AuthToast from '../components/auth/AuthToast';
+import TourOverlay from '../components/TourOverlay';
+import { useAuth } from '../context/AuthContext';
+import { useProgress } from '../context/ProgressContext';
 import CoursesScreen from '../screens/CoursesScreen';
 import HomeScreen from '../screens/HomeScreen';
 import PracticeScreen from '../screens/PracticeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import TutorScreen from '../screens/TutorScreen';
+import { getPreferences, savePreferences } from '../services/preferences';
 import { authColors } from '../theme/authTheme';
 import { colors, fonts } from '../theme/colors';
 import { createSlideTabNavigator } from './SlideTabs';
@@ -177,19 +182,63 @@ function StickerBar({ state, navigation }) {
   );
 }
 
-export default function MainTabs() {
+export default function MainTabs({ route, navigation }) {
+  const { callName } = useAuth();
+  const { loading } = useProgress();
+  const [tourQueued, setTourQueued] = useState(false);
+  const [toast, setToast] = useState('');
+
+  // SetupScreen queues the first-time tour by writing tourSeen: false.
+  useEffect(() => {
+    getPreferences()
+      .then((preferences) => {
+        if (preferences.tourSeen === false) setTourQueued(true);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Help & feedback replays it by navigating here with { tour: true }.
+  useEffect(() => {
+    if (!route.params?.tour) return;
+    setTourQueued(true);
+    navigation.setParams({ tour: undefined });
+  }, [route.params?.tour]);
+
+  function closeTour(sawAStop) {
+    setTourQueued(false);
+    if (sawAStop) setToast('You are all set');
+    // If this fails the tour shows again next launch, which is harmless.
+    savePreferences({ tourSeen: true }).catch(() => {});
+  }
+
+  // Waits for Home to finish loading, as in the design, so the dim falls on
+  // the real screen rather than its skeleton.
+  const touring = tourQueued && !loading;
+
   return (
-    <Tab.Navigator tabBar={(props) => <StickerBar {...props} />}>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Courses" component={CoursesScreen} />
-      <Tab.Screen name="Tutor" component={TutorScreen} />
-      <Tab.Screen name="Practice" component={PracticeScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-    </Tab.Navigator>
+    <View style={styles.root}>
+      <View
+        style={styles.root}
+        importantForAccessibility={touring ? 'no-hide-descendants' : 'auto'}
+      >
+        <Tab.Navigator tabBar={(props) => <StickerBar {...props} />}>
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="Courses" component={CoursesScreen} />
+          <Tab.Screen name="Tutor" component={TutorScreen} />
+          <Tab.Screen name="Practice" component={PracticeScreen} />
+          <Tab.Screen name="Settings" component={SettingsScreen} />
+        </Tab.Navigator>
+      </View>
+      {touring ? <TourOverlay name={callName} onClose={closeTour} /> : null}
+      <AuthToast message={toast} onHide={() => setToast('')} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   bar: {
     flexDirection: 'row',
     paddingTop: 8,

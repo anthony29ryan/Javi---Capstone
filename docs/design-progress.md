@@ -23,7 +23,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 71 done · 0 to do · 43 not built · 1 partly · 9 last
+Totals: 77 done · 0 to do · 37 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -46,12 +46,12 @@ Totals: 71 done · 0 to do · 43 not built · 1 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 13 | Tour · Welcome | — | not built |  |
-| 14 | Tour · Home | — | not built |  |
-| 15 | Tour · Courses | — | not built |  |
-| 16 | Tour · Javi | — | not built |  |
-| 17 | Tour · Practice | — | not built |  |
-| 18 | Tour · Settings | — | not built |  |
+| 13 | Tour · Welcome | TourOverlay (over Home) | done | (new accounts only: Setup writes tourSeen false; Back skips) |
+| 14 | Tour · Home | TourOverlay | done |  |
+| 15 | Tour · Courses | TourOverlay | done |  |
+| 16 | Tour · Javi | TourOverlay | done | (rings the raised face; >_ chip) |
+| 17 | Tour · Practice | TourOverlay | done |  |
+| 18 | Tour · Settings | TourOverlay | done | (points to Help & feedback for replay) |
 
 ## B · Main tabs
 
