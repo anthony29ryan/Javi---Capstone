@@ -42,6 +42,10 @@ export default function Button({
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
       disabled={isDisabled}
+      // The label stays the spoken name while the spinner replaces it on screen.
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ busy: loading }}
       pressRetentionOffset={16}
       style={style}
     >

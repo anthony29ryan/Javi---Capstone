@@ -332,6 +332,7 @@ function ProfileBody({ navigation }) {
           onPress={() => navigation.navigate('MainTabs', { screen: 'Settings' })}
           accessibilityRole="button"
           accessibilityLabel="Settings"
+          hitSlop={8}
           style={({ pressed }) => [styles.gear, pressed && styles.gearPressed]}
         >
           <Text style={styles.gearGlyph}>⚙</Text>

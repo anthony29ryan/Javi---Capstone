@@ -24,6 +24,7 @@ function BackButton({ top, onPress }) {
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel="Go back"
+      hitSlop={8}
       style={({ pressed }) => [styles.back, { top }, pressed && styles.backPressed]}
     >
       <Text style={styles.backGlyph}>←</Text>

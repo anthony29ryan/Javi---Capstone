@@ -26,6 +26,10 @@ export default function AuthButton({
     <Pressable
       onPress={onPress}
       disabled={isDisabled}
+      // The label stays the spoken name while the spinner replaces it on screen.
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ busy: loading }}
       style={({ pressed }) => [
         isPrimary ? styles.primary : styles.secondary,
         pressed && !isDisabled && (isPrimary ? styles.primaryPressed : styles.secondaryPressed),

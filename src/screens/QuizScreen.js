@@ -90,6 +90,7 @@ function CloseButton({ onPress }) {
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel="Quit quiz"
+      hitSlop={8}
       style={({ pressed }) => [styles.close, pressed && styles.closePressed]}
     >
       <Text style={styles.closeGlyph}>✕</Text>
