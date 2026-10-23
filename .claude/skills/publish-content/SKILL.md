@@ -15,12 +15,18 @@ content/lessons/*.json   one file per lesson, each with a moduleId and blocks[]
         |
         |  node scripts/publishContent.js
         v
-Firestore collections: courses, modules, lessons
+Firestore collections: courses, modules, lessons, questions, answerKeys, traces,
+challenges, challengeTests (hidden tests, function-only; `solution` is never published),
+plus meta/lessonIndex (every lesson's id, module, title, order, minutes, publishedAt)
 ```
 
-**`publishContent.js` upserts every local file and deletes any Firestore lesson
-that no longer exists locally.** That prune is what keeps the two in step, and it
-is also what makes a rollback work.
+**`publishContent.js` upserts every local file and deletes any Firestore course,
+module, lesson, question or trace that no longer exists locally.** That prune is what
+keeps the two in step, and it is also what makes a rollback work.
+
+The app reads `meta/lessonIndex` on launch instead of every lesson, so the lesson
+lists only change after a publish rewrites it. A new `publishedAt` is also what makes
+phones re-fetch the modules they downloaded for offline use.
 
 ## Before doing anything
 
@@ -66,9 +72,10 @@ app user. A normal account, even the developer's, can no longer publish. Do not
 loosen the rules to get around a missing key.
 
 Expected output ends with a line like
-`Done. Published 3 courses, 21 modules, 180 lessons, removed 77 stale.`
+`Done. Published 3 courses, 21 modules, 180 lessons, 527 questions, 21 traces, 15 challenges. Removed stale: none.`
 
-If `removed` is unexpectedly large, stop and check with the user before going further.
+If anything is removed that you did not expect (above all, any courses or modules),
+stop and check with the user before going further.
 
 ## Test in the app
 
@@ -133,11 +140,5 @@ Then verify and publish as above.
   stores lesson ids; renamed or re-split lessons no longer match. Mention it to the
   user rather than trying to repair it silently — the right fix depends on whether
   real users exist.
-
-## Known rough edge
-
-`src/services/content.js` `getAllLessonProgressRefs()` fetches the **entire** `lessons`
-collection, bodies included, once per app session (in `ProgressContext`) and again on
-each `refresh()`. Screens reuse that list rather than fetching their own, so the cost
-is one read per lesson per session. It grows with content — raise it if the user is
-looking at Firestore costs or load times.
+- **"The lesson list has not been published yet."** on launch, against a fresh or
+  emulator project: `meta/lessonIndex` does not exist until the first publish.
