@@ -2,6 +2,7 @@ import { collection, getDocsFromServer, query, where } from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions';
 
 import { db, functions } from './firebase';
+import { forgetWeakTopics } from './weakTopics';
 
 /**
  * Every question belonging to a module, including the ones attached to its
@@ -34,7 +35,8 @@ const gradeAnswerFunction = httpsCallable(functions, 'gradeAnswer');
  * which it is not allowed to read. Resolves to { correct, answer }, where
  * `answer` is the index of the correct choice.
  */
-export async function gradeAnswer({ questionId, choice, timeTakenMs }) {
-  const { data } = await gradeAnswerFunction({ questionId, choice, timeTakenMs });
+export async function gradeAnswer({ questionId, choice, timeTakenMs, attemptId }) {
+  const { data } = await gradeAnswerFunction({ questionId, choice, timeTakenMs, attemptId });
+  forgetWeakTopics(); // a new attempt can change the model's verdict
   return data;
 }

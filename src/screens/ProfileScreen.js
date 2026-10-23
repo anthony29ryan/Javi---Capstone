@@ -13,7 +13,8 @@ import { BADGE_ART } from '../constants/art';
 import { levelTheme } from '../constants/levels';
 import { useAuth } from '../context/AuthContext';
 import { scorePercent, useProgress } from '../context/ProgressContext';
-import { getWeakTopics } from '../services/weakTopics';
+import { getChallenges, getDraftIds } from '../services/challenges';
+import { useWeakTopics } from '../services/weakTopics';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 const WEAK_SHOWN = 3;
@@ -31,9 +32,9 @@ function masteryLabel(percent) {
  * awarded. The project deliberately has no achievement engine, and it does not
  * need one: each of these is a plain question about data already loaded, so
  * there is nothing to keep in sync and nothing to backfill for existing users.
- * The first two need the cloud Java runner, which does not exist yet.
+ * First Compile reads progress.ranFirstProgram, which only the runCode function sets.
  */
-function badgeList({ moduleScores, tracedCount, streak, courses, courseProgress }) {
+function badgeList({ moduleScores, tracedCount, solvedChallengeCount, ranFirstProgram, streak, courses, courseProgress }) {
   const scores = Object.values(moduleScores);
   const best = scores.length > 0 ? Math.max(...scores.map(scorePercent)) : 0;
   const longest = streak.longest ?? 0;
@@ -49,8 +50,8 @@ function badgeList({ moduleScores, tracedCount, streak, courses, courseProgress 
   });
 
   return [
-    { key: 'compile', title: 'First Compile', sub: 'Coming later', earned: false },
-    { key: 'bug', title: 'Bug Squasher', sub: 'Coming later', earned: false },
+    { key: 'compile', title: 'First Compile', sub: 'Run your first program', earned: ranFirstProgram || solvedChallengeCount > 0 },
+    { key: 'bug', title: 'Bug Squasher', sub: 'Solve a Code Challenge', earned: solvedChallengeCount > 0 },
     { key: 'pass', title: 'Pass Mark', sub: '75% or more on a quiz', earned: best >= 75 },
     { key: 'perfect', title: 'Perfect Score', sub: '100% on any quiz', earned: best >= 100 },
     {
@@ -118,9 +119,23 @@ function SkeletonRow() {
   );
 }
 
-/** The design's Practice panel, with Quizzes in place of the unbuilt Challenges. */
-function PracticePanel({ courses, modules, moduleScores, tracedIds, navigation }) {
-  const [tab, setTab] = useState('quizzes');
+/**
+ * The design's Practice panel. The design has Challenges and Tracer tabs;
+ * Quizzes stays as a third so its summary is not lost.
+ */
+function PracticePanel({ courses, modules, moduleScores, tracedIds, isChallengeSolved, navigation }) {
+  const [tab, setTab] = useState('challenges');
+  const [challenges, setChallenges] = useState([]);
+  const [draftIds, setDraftIds] = useState(new Set());
+
+  // The list is cached for the session; drafts are re-read so a challenge
+  // left half-done shows as in progress when the learner comes back.
+  useFocusEffect(
+    useCallback(() => {
+      getChallenges(courses).then(setChallenges).catch(() => {});
+      getDraftIds().then(setDraftIds).catch(() => {});
+    }, [courses])
+  );
 
   const taken = modules.filter((module) => moduleScores[module.id]);
   const traced = modules.filter((module) => tracedIds.has(`${module.id}-trace`));
@@ -129,10 +144,16 @@ function PracticePanel({ courses, modules, moduleScores, tracedIds, navigation }
       ? Math.round(taken.reduce((sum, module) => sum + scorePercent(moduleScores[module.id]), 0) / taken.length)
       : null;
 
-  const done = tab === 'quizzes' ? taken : traced;
+  const solved = challenges.filter((challenge) => isChallengeSolved(challenge.id));
+  const started = challenges.filter((challenge) => !isChallengeSolved(challenge.id) && draftIds.has(challenge.id));
+  // Challenges group by their level; quizzes and drills by their module's course.
+  const [items, done, levelOf] =
+    tab === 'challenges'
+      ? [challenges, solved, (challenge) => challenge.level]
+      : [modules, tab === 'quizzes' ? taken : traced, (module) => module.courseId];
   const tiers = courses.map((course, index) => {
-    const inTier = modules.filter((module) => module.courseId === course.id);
-    const doneInTier = done.filter((module) => module.courseId === course.id).length;
+    const inTier = items.filter((item) => levelOf(item) === course.id);
+    const doneInTier = done.filter((item) => levelOf(item) === course.id).length;
     return {
       id: course.id,
       label: course.title,
@@ -144,7 +165,15 @@ function PracticePanel({ courses, modules, moduleScores, tracedIds, navigation }
   });
 
   const panel =
-    tab === 'quizzes'
+    tab === 'challenges'
+      ? {
+          kicker: 'Code Challenges',
+          ofText: `of ${challenges.length} solved`,
+          note: `${started.length} in progress · ${challenges.length - solved.length - started.length} not started`,
+          cta: 'Continue',
+          open: () => navigation.navigate('Challenges'),
+        }
+      : tab === 'quizzes'
       ? {
           kicker: 'Module quizzes',
           ofText: `of ${modules.length} taken`,
@@ -159,7 +188,7 @@ function PracticePanel({ courses, modules, moduleScores, tracedIds, navigation }
           cta: 'Trace next',
           open: () => navigation.navigate('TracerList'),
         };
-  const percent = modules.length ? Math.round((done.length / modules.length) * 100) : 0;
+  const percent = items.length ? Math.round((done.length / items.length) * 100) : 0;
 
   return (
     <>
@@ -167,6 +196,7 @@ function PracticePanel({ courses, modules, moduleScores, tracedIds, navigation }
         <Text style={styles.headingInline}>Practice</Text>
         <View style={styles.segments}>
           {[
+            ['challenges', 'Challenges'],
             ['quizzes', 'Quizzes'],
             ['tracer', 'Tracer'],
           ].map(([id, label]) => (
@@ -260,26 +290,11 @@ function ProfileBody({ navigation }) {
     loading,
     error,
     refresh,
+    isChallengeSolved,
   } = useProgress();
 
-  // The model's weak topics, as on Home; null while the first answer is on
-  // its way. Re-asked on each visit so a finished quiz shows up.
-  const [weakTopics, setWeakTopics] = useState(null);
-  useFocusEffect(
-    useCallback(() => {
-      if (offline) {
-        setWeakTopics([]);
-        return undefined;
-      }
-      let cancelled = false;
-      getWeakTopics()
-        .then((topics) => !cancelled && setWeakTopics(topics))
-        .catch(() => !cancelled && setWeakTopics([]));
-      return () => {
-        cancelled = true;
-      };
-    }, [offline])
-  );
+  // The model's weak topics, as on Home; null while the first answer is on its way.
+  const weakTopics = useWeakTopics(offline);
 
   // Below the floating back button: 40px plus a 12px gap.
   const top = insets.top + spacing.lg + 52;
@@ -298,6 +313,8 @@ function ProfileBody({ navigation }) {
   const badges = badgeList({
     moduleScores,
     tracedCount: tracedIds.size,
+    solvedChallengeCount: progress?.completedChallenges?.length ?? 0,
+    ranFirstProgram: progress?.ranFirstProgram === true,
     streak,
     courses,
     courseProgress,
@@ -383,6 +400,7 @@ function ProfileBody({ navigation }) {
         modules={modules}
         moduleScores={moduleScores}
         tracedIds={tracedIds}
+        isChallengeSolved={isChallengeSolved}
         navigation={navigation}
       />
 

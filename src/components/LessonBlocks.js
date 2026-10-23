@@ -44,7 +44,7 @@ export function InlineText({ value, style }) {
   );
 }
 
-function CodeBlock({ value, language, label }) {
+export function CodeBlock({ value, language, label }) {
   const styles = useScaledStyles(baseStyles);
   return (
     <View style={styles.codeBlock}>

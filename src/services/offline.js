@@ -17,6 +17,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SNAPSHOT_KEY = 'offline:snapshot';
 const MODULE_PREFIX = 'offline:module:';
+// The content publish the downloads were last refreshed against.
+const PUBLISHED_AT_KEY = 'offline:publishedAt';
 
 export async function saveSnapshot(data) {
   await AsyncStorage.setItem(SNAPSHOT_KEY, JSON.stringify(data));
@@ -59,23 +61,32 @@ export async function downloadsSize() {
 }
 
 /**
- * Rewrites every downloaded module from a fresh full lesson list, so a
- * content publish reaches downloads the next time the app loads online —
- * including lessons the publish removed, which simply drop out.
+ * Re-fetches every downloaded module when content has been published since
+ * the last refresh, so a publish reaches downloads the next time the app
+ * loads online, including lessons it removed, which simply drop out.
+ * `publishedAt` comes from the lesson index; `fetchModuleLessons(moduleId)`
+ * is content.js's getModuleLessons, passed in to keep this file Firebase-free.
+ * If a fetch fails, the time is not stored, so the next launch tries again.
  */
-export async function refreshDownloads(allLessons) {
+export async function refreshDownloads(publishedAt, fetchModuleLessons) {
+  if ((await AsyncStorage.getItem(PUBLISHED_AT_KEY)) === String(publishedAt)) return;
   for (const moduleId of await getDownloadedModuleIds()) {
-    // Checked per module so one removed while this runs is not written back.
+    const lessons = await fetchModuleLessons(moduleId);
+    // Checked after the fetch so a module removed meanwhile is not written back.
     if ((await AsyncStorage.getItem(MODULE_PREFIX + moduleId)) === null) continue;
-    await saveModule(
-      moduleId,
-      allLessons.filter((lesson) => lesson.moduleId === moduleId)
-    );
+    await saveModule(moduleId, lessons);
   }
+  await AsyncStorage.setItem(PUBLISHED_AT_KEY, String(publishedAt));
 }
 
-/** Everything offline, for sign-out: the snapshot holds this user's progress. */
+/**
+ * Everything offline, for sign-out: the snapshot holds this user's progress.
+ * Code drafts go too, or the next person on this phone would see this user's
+ * code (keys from services/challenges.js, not imported to keep this file Firebase-free).
+ */
 export async function clearOfflineData() {
-  const keys = (await AsyncStorage.getAllKeys()).filter((key) => key.startsWith('offline:'));
+  const keys = (await AsyncStorage.getAllKeys()).filter(
+    (key) => key.startsWith('offline:') || key.startsWith('challengeDraft:') || key === 'playgroundDraft'
+  );
   await AsyncStorage.multiRemove(keys);
 }

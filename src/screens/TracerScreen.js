@@ -16,7 +16,7 @@ import { recordTraceCompletion } from '../services/progress';
 import { countsAsSlip, lineMatches, mismatchIndex, straightenQuotes } from '../services/tracer';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
-function formatDuration(ms) {
+export function formatDuration(ms) {
   const seconds = Math.round(ms / 1000);
   return seconds < 60 ? `${seconds}s` : `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
 }

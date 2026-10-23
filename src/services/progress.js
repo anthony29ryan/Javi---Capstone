@@ -1,4 +1,4 @@
-import { arrayUnion, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 import { auth, db } from './firebase';
 import { advanceStreak } from './streak';
@@ -6,6 +6,7 @@ import { advanceStreak } from './streak';
 const EMPTY_PROGRESS = {
   completedLessons: [],
   completedTraces: [],
+  completedChallenges: [],
   moduleScores: {},
   streak: { current: 0, longest: 0, lastActiveDate: null },
   lastLessonId: null,
@@ -61,9 +62,15 @@ export async function setLessonComplete(lessonId, complete) {
     ...(complete ? { streak: advanceStreak(existing.streak) } : {}),
   };
 
+  // The server adds or removes the one id rather than taking this whole list,
+  // so a second save still in flight (another lesson, another phone) is not overwritten.
   await setDoc(
     doc(db, 'progress', userId),
-    { ...changes, updatedAt: serverTimestamp() },
+    {
+      ...changes,
+      completedLessons: complete ? arrayUnion(lessonId) : arrayRemove(lessonId),
+      updatedAt: serverTimestamp(),
+    },
     { merge: true }
   );
   return changes;
@@ -73,15 +80,11 @@ export async function recordModuleQuizCompletion(moduleId, correct, total) {
   const userId = auth.currentUser.uid;
   const existing = await readProgress(userId);
 
-  const moduleScores = {
-    ...existing.moduleScores,
-    [moduleId]: { correct, total, lastAttemptAt: Date.now() },
-  };
-
   await setDoc(
     doc(db, 'progress', userId),
     {
-      moduleScores,
+      // merge keeps the other modules' scores, so two quizzes saved at once cannot erase each other.
+      moduleScores: { [moduleId]: { correct, total, lastAttemptAt: Date.now() } },
       streak: advanceStreak(existing.streak),
       updatedAt: serverTimestamp(),
     },
@@ -106,6 +109,22 @@ export async function recordTraceCompletion(traceId) {
       streak: advanceStreak(existing.streak),
       updatedAt: serverTimestamp(),
     },
+    { merge: true }
+  );
+}
+
+/**
+ * Advances the streak after a challenge is solved. The runChallenge function
+ * has already added it to completedChallenges (the app cannot), but the
+ * streak follows the learner's local day, which only the phone knows.
+ */
+export async function recordChallengeStreak() {
+  const userId = auth.currentUser.uid;
+  const existing = await readProgress(userId);
+
+  await setDoc(
+    doc(db, 'progress', userId),
+    { streak: advanceStreak(existing.streak), updatedAt: serverTimestamp() },
     { merge: true }
   );
 }

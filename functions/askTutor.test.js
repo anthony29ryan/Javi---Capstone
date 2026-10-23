@@ -11,9 +11,10 @@ const { before, beforeEach, test } = require('node:test');
 
 const { getFirestore } = require('firebase-admin/firestore');
 const { askTutor } = require('./index');
+const { manilaDayStart } = require('./dayStart');
 
 const db = getFirestore();
-const ask = (uid, data) => askTutor.run({ auth: { uid }, data });
+const ask = (uid, data) => askTutor.run({ auth: { uid, token: { email_verified: true } }, data });
 const refused = (code) => (err) => err.code === code;
 
 let geminiCalls;
@@ -58,6 +59,11 @@ beforeEach(() => stubGemini());
 
 test('signed-out callers, bad input and unknown modules are refused', async () => {
   await assert.rejects(askTutor.run({ data: { moduleId: 'arrays', question: 'hi' } }), refused('unauthenticated'));
+  // An account made straight from Firebase's sign-up endpoint, email never verified.
+  await assert.rejects(
+    askTutor.run({ auth: { uid: 't0', token: { email_verified: false } }, data: { moduleId: 'arrays', question: 'hi' } }),
+    refused('permission-denied')
+  );
   await assert.rejects(ask('t1', { moduleId: '', question: 'hi' }), refused('invalid-argument'));
   await assert.rejects(ask('t1', { moduleId: 'arrays', question: '   ' }), refused('invalid-argument'));
   await assert.rejects(ask('t1', { moduleId: 'arrays', question: 'x'.repeat(501) }), refused('invalid-argument'));
@@ -74,6 +80,7 @@ test('the model gets this module only, in order, and the question stays out of t
   assert.match(url, /gemini-3\.5-flash-lite:generateContent$/);
   assert.strictEqual(options.headers['x-goog-api-key'], 'test-key');
   assert.ok(options.signal instanceof AbortSignal, 'the call has a timeout');
+  assert.match(instruction, /You are Javi/);
   assert.match(instruction, /"Arrays"/);
   assert.ok(instruction.indexOf('One-dimensional arrays') < instruction.indexOf('Traversing'), 'lessons in order');
   assert.match(instruction, /int\[\] a = new int\[3\];/);
@@ -82,6 +89,13 @@ test('the model gets this module only, in order, and the question stays out of t
   assert.doesNotMatch(instruction, /While loops/, 'other modules stay out');
   assert.doesNotMatch(instruction, /write a poem/, 'learner text never enters the instruction');
   assert.deepStrictEqual(body.contents, [{ role: 'user', parts: [{ text: question }] }]);
+});
+
+test('stray Markdown is stripped from the reply, but code blocks are left alone', async () => {
+  stubGemini('## Arrays\n* An **array** holds `int` values.\n```java\nint x = a * b;\n```\nWant to try one?');
+  assert.deepStrictEqual(await ask('t10', { moduleId: 'arrays', question: 'hi' }), {
+    reply: 'Arrays\nAn array holds `int` values.\n```java\nint x = a * b;\n```\nWant to try one?',
+  });
 });
 
 test('both sides are saved, and earlier messages come back as context', async () => {
@@ -112,13 +126,17 @@ test('both sides are saved, and earlier messages come back as context', async ()
   );
 });
 
-test('the 31st question within 24 hours is refused, and an old one stops counting', async () => {
+test('the 31st question of the day is refused, and one from before midnight stops counting', async () => {
   await db.doc('tutorUsage/t4').set({ askedAt: Array.from({ length: 29 }, (_, i) => Date.now() - i) });
   await ask('t4', { moduleId: 'arrays', question: 'number 30' });
-  await assert.rejects(ask('t4', { moduleId: 'arrays', question: 'number 31' }), refused('resource-exhausted'));
+  await assert.rejects(
+    ask('t4', { moduleId: 'arrays', question: 'number 31' }),
+    (err) => err.code === 'resource-exhausted' && /reset at midnight/.test(err.message)
+  );
 
-  const day = 24 * 60 * 60 * 1000;
-  await db.doc('tutorUsage/t5').set({ askedAt: [Date.now() - day - 1000, ...Array(29).fill(Date.now())] });
+  // One second before today's Manila midnight belongs to yesterday.
+  const beforeMidnight = manilaDayStart(Date.now()) - 1000;
+  await db.doc('tutorUsage/t5').set({ askedAt: [beforeMidnight, ...Array(29).fill(Date.now())] });
   await ask('t5', { moduleId: 'arrays', question: 'still allowed' });
 });
 
@@ -162,4 +180,13 @@ test('lesson text is reused from the cache instead of re-read on every question'
   stubGemini();
   await ask('t8', { moduleId: 'cached', question: 'q2' });
   assert.match(geminiCalls[0].body.systemInstruction.parts[0].text, /old text/);
+});
+
+test('a sixth question within a minute is refused, without using a daily question', async () => {
+  for (let i = 0; i < 5; i++) await ask('burst1', { moduleId: 'arrays', question: `quick ${i}` });
+  await assert.rejects(
+    ask('burst1', { moduleId: 'arrays', question: 'one too many' }),
+    (err) => err.code === 'resource-exhausted' && /Slow down/.test(err.message)
+  );
+  assert.strictEqual((await db.doc('tutorUsage/burst1').get()).data().askedAt.length, 5);
 });

@@ -36,7 +36,7 @@ before(async () => {
 });
 
 test("returns the learner's own judged topics, most likely weak first", async () => {
-  const { topics } = await getWeakTopics.run({ auth: { uid: 'wendy' }, data: {} });
+  const { topics } = await getWeakTopics.run({ auth: { uid: 'wendy', token: { email_verified: true } }, data: {} });
   assert.deepStrictEqual(
     topics.map(({ topic, weak, attempts }) => ({ topic, weak, attempts })),
     [
@@ -47,6 +47,6 @@ test("returns the learner's own judged topics, most likely weak first", async ()
 });
 
 test('a learner with no attempts gets an empty list, and signed-out callers are refused', async () => {
-  assert.deepStrictEqual(await getWeakTopics.run({ auth: { uid: 'newcomer' }, data: {} }), { topics: [] });
+  assert.deepStrictEqual(await getWeakTopics.run({ auth: { uid: 'newcomer', token: { email_verified: true } }, data: {} }), { topics: [] });
   await assert.rejects(getWeakTopics.run({ data: {} }), (err) => err.code === 'unauthenticated');
 });

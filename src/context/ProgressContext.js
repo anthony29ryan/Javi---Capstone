@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import { getAllLessons, getAllModules, getCourses, getModuleLessons } from '../services/content';
+import { getAllModules, getCourses, getLessonIndex, getModuleLessons } from '../services/content';
 import {
   getDownloadedModuleIds,
   loadSnapshot,
@@ -62,16 +62,16 @@ export function ProgressProvider({ children }) {
     // Screens show the spinner, not the old error, while a retry is in flight.
     setLoading(true);
     try {
-      const [progressData, courseData, moduleData, lessonData] = await Promise.all([
+      const [progressData, courseData, moduleData, lessonIndex] = await Promise.all([
         getProgress(),
         getCourses(),
         getAllModules(),
-        getAllLessons(),
+        getLessonIndex(),
       ]);
       setProgress(progressData);
       setCourses(courseData);
       setModules(moduleData);
-      setLessonRefs(lessonData.refs);
+      setLessonRefs(lessonIndex.lessons);
       setError('');
       setOffline(false);
       // Keep the offline copies current from the read just made. Failing to
@@ -80,9 +80,9 @@ export function ProgressProvider({ children }) {
         progress: progressData,
         courses: courseData,
         modules: moduleData,
-        lessonRefs: lessonData.refs,
+        lessonRefs: lessonIndex.lessons,
       }).catch(() => {});
-      refreshDownloads(lessonData.full).catch(() => {});
+      refreshDownloads(lessonIndex.publishedAt, getModuleLessons).catch(() => {});
     } catch (err) {
       const snapshot = await loadSnapshot().catch(() => null);
       if (snapshot) {
@@ -190,6 +190,7 @@ export function ProgressProvider({ children }) {
   const value = useMemo(() => {
     const completedSet = new Set(progress?.completedLessons ?? []);
     const completedTraces = new Set(progress?.completedTraces ?? []);
+    const completedChallenges = new Set(progress?.completedChallenges ?? []);
 
     const lessonsByModule = {};
     for (const lesson of lessonRefs) {
@@ -254,6 +255,7 @@ export function ProgressProvider({ children }) {
       courseProgress,
       isLessonComplete: (lessonId) => completedSet.has(lessonId),
       isTraceComplete: (traceId) => completedTraces.has(traceId),
+      isChallengeSolved: (challengeId) => completedChallenges.has(challengeId),
     };
   }, [
     progress,

@@ -65,7 +65,15 @@ after(async () => {
 });
 
 describe('course content', () => {
-  const contentPaths = ['courses/beginner', 'modules/oop', 'lessons/oop-1', 'questions/q1', 'traces/t1'];
+  const contentPaths = [
+    'courses/beginner',
+    'modules/oop',
+    'lessons/oop-1',
+    'questions/q1',
+    'traces/t1',
+    'challenges/hello-world',
+    'meta/lessonIndex',
+  ];
 
   beforeEach(async () => {
     await seed(async (db) => {
@@ -309,6 +317,23 @@ describe('progress', () => {
     await assertFails(setDoc(ref, { updatedAt: Timestamp.fromDate(new Date('2020-01-01')) }, { merge: true }));
   });
 
+  test('only the runChallenge function can mark a challenge solved', async () => {
+    const ref = doc(dbAs('alice'), 'progress/alice');
+    // Same for the First Compile flag, which only runCode sets.
+    await assertFails(setDoc(ref, { ranFirstProgram: true }, { merge: true }));
+    await assertFails(setDoc(ref, { completedChallenges: arrayUnion('fizzbuzz') }, { merge: true }));
+    await assertFails(setDoc(ref, { completedChallenges: ['fizzbuzz'] }, { merge: true }));
+    // Once the function has written it, the app's later streak saves still work.
+    await seed((admin) => setDoc(doc(admin, 'progress/alice'), { completedChallenges: ['fizzbuzz'] }));
+    await assertSucceeds(
+      setDoc(
+        ref,
+        { streak: { current: 1, longest: 1, lastActiveDate: '2026-10-23' }, updatedAt: serverTimestamp() },
+        { merge: true }
+      )
+    );
+  });
+
   test('the app cannot delete a progress document', async () => {
     await seed((admin) => setDoc(doc(admin, 'progress/alice'), { completedLessons: [] }));
     await assertFails(deleteDoc(doc(dbAs('alice'), 'progress/alice')));
@@ -382,6 +407,8 @@ describe('chats', () => {
     await seed((admin) => setDoc(doc(admin, 'tutorUsage/alice'), { askedAt: [1] }));
     await assertFails(getDoc(doc(dbAs('alice'), 'tutorUsage/alice')));
     await assertFails(setDoc(doc(dbAs('alice'), 'tutorUsage/alice'), { askedAt: [] }));
+    // gradeAnswer's per-minute counter, closed the same way.
+    await assertFails(setDoc(doc(dbAs('alice'), 'quizUsage/alice'), { lastMinute: [] }));
   });
 });
 
@@ -389,11 +416,25 @@ describe('everything else', () => {
   test('collections without rules are closed', async () => {
     await assertFails(setDoc(doc(dbAs('alice'), 'admins/alice'), { role: 'admin' }));
     await assertFails(getDoc(doc(dbAs('alice'), 'secrets/anything')));
+    // Only meta/lessonIndex is open, not the rest of meta.
+    await assertFails(getDoc(doc(dbAs('alice'), 'meta/anything')));
   });
 
   test('quiz answer keys cannot be read, so answers never reach the app', async () => {
     await seed((db) => setDoc(doc(db, 'answerKeys/q1'), { moduleId: 'm1', answer: 2 }));
     await assertFails(getDoc(doc(dbAs('alice'), 'answerKeys/q1')));
     await assertFails(getDocs(collection(dbAs('alice'), 'answerKeys')));
+  });
+
+  test('hidden challenge tests and the run counter cannot be read or written', async () => {
+    await seed(async (db) => {
+      await setDoc(doc(db, 'challengeTests/fizzbuzz'), { hidden: [{ input: '3', output: '1\n2\nFizz' }] });
+      await setDoc(doc(db, 'runUsage/alice'), { challenge: [1] });
+    });
+    const db = dbAs('alice');
+    await assertFails(getDoc(doc(db, 'challengeTests/fizzbuzz')));
+    await assertFails(getDocs(collection(db, 'challengeTests')));
+    await assertFails(getDoc(doc(db, 'runUsage/alice')));
+    await assertFails(setDoc(doc(db, 'runUsage/alice'), { challenge: [] }));
   });
 });

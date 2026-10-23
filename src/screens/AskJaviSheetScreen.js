@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Keyboard, KeyboardAvoidingView, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Text from '../components/AppText';
@@ -16,60 +17,81 @@ export default function AskJaviSheetScreen({ navigation, route }) {
   const { moduleId, moduleTitle, topic } = route.params;
   const insets = useSafeAreaInsets();
 
+  // On Android the keyboard's hide event reports a spot above the navigation
+  // bar, so the avoiding view would keep that much padding once it closes.
+  // Switching it off while the keyboard is down puts the sheet back at the bottom.
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+  useEffect(() => {
+    const shown = Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
+    const hidden = Keyboard.addListener('keyboardDidHide', () => setKeyboardOpen(false));
+    return () => {
+      shown.remove();
+      hidden.remove();
+    };
+  }, []);
+
   return (
-    <BottomSheet
-      onClosed={navigation.goBack}
-      handleOnly
-      // A share of the screen, so it shrinks when the keyboard resizes the window.
-      style={[styles.sheet, { paddingBottom: insets.bottom + 16 }]}
-    >
-      {(close) => (
-        <TutorChat
-          moduleId={moduleId}
-          topic={topic}
-          header={
-            <View style={styles.head}>
-              <View style={styles.headRow}>
-                <View style={styles.avatar}>
-                  <Mascot variant="thinking" px={34} decorative animate={false} />
+    // SDK 54 is edge-to-edge, so the window no longer resizes for the keyboard;
+    // this makes room instead. It wraps the whole screen so its frame starts at
+    // the window top, which the built-in overlap maths assumes.
+    <KeyboardAvoidingView behavior="padding" enabled={keyboardOpen} style={styles.keyboard}>
+      <BottomSheet
+        onClosed={navigation.goBack}
+        handleOnly
+        // A share of the space above the keyboard, so it shrinks while typing.
+        style={[styles.sheet, { paddingBottom: insets.bottom + 16 }]}
+      >
+        {(close) => (
+          <TutorChat
+            moduleId={moduleId}
+            topic={topic}
+            header={
+              <View style={styles.head}>
+                <View style={styles.headRow}>
+                  <View style={styles.avatar}>
+                    <Mascot variant="thinking" px={34} decorative animate={false} />
+                  </View>
+                  <View style={styles.headText}>
+                    <Text style={styles.title}>Ask Javi</Text>
+                    <Text style={styles.subtitle} numberOfLines={1}>
+                      Answers on {moduleTitle}
+                    </Text>
+                  </View>
+                  <Pressable
+                    onPress={close}
+                    accessibilityRole="button"
+                    accessibilityLabel="Close"
+                    style={({ pressed }) => [styles.close, pressed && styles.closePressed]}
+                  >
+                    <Text style={styles.closeGlyph}>×</Text>
+                  </Pressable>
                 </View>
-                <View style={styles.headText}>
-                  <Text style={styles.title}>Ask Javi</Text>
-                  <Text style={styles.subtitle} numberOfLines={1}>
-                    Answers on {moduleTitle}
-                  </Text>
-                </View>
-                <Pressable
-                  onPress={close}
-                  accessibilityRole="button"
-                  accessibilityLabel="Close"
-                  style={({ pressed }) => [styles.close, pressed && styles.closePressed]}
+                <Text
+                  style={styles.link}
+                  suppressHighlighting
+                  accessibilityRole="link"
+                  onPress={() =>
+                    navigation.navigate('MainTabs', {
+                      screen: 'Tutor',
+                      params: { moduleId, openedAt: Date.now() },
+                    })
+                  }
                 >
-                  <Text style={styles.closeGlyph}>×</Text>
-                </Pressable>
+                  See the whole chat in Javi ›
+                </Text>
               </View>
-              <Text
-                style={styles.link}
-                suppressHighlighting
-                accessibilityRole="link"
-                onPress={() =>
-                  navigation.navigate('MainTabs', {
-                    screen: 'Tutor',
-                    params: { moduleId, openedAt: Date.now() },
-                  })
-                }
-              >
-                See the whole chat in Javi ›
-              </Text>
-            </View>
-          }
-        />
-      )}
-    </BottomSheet>
+            }
+          />
+        )}
+      </BottomSheet>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  keyboard: {
+    flex: 1,
+  },
   sheet: {
     height: '80%',
   },

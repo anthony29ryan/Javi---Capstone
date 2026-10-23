@@ -55,6 +55,8 @@ async function purgeAccount({ db, auth }, userId) {
   const chats = await db.collection('chats').where('userId', '==', userId).get();
   await deleteInBatches(db, chats.docs.map((chat) => chat.ref));
   await db.collection('tutorUsage').doc(userId).delete();
+  await db.collection('runUsage').doc(userId).delete();
+  await db.collection('quizUsage').doc(userId).delete();
 
   await db.collection('progress').doc(userId).delete();
   await db.collection('users').doc(userId).delete();

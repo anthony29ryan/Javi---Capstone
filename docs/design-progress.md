@@ -38,7 +38,7 @@ Totals: 78 done · 0 to do · 35 not built · 1 partly · 9 last
 | 07 | Before you start | SetupScreen | done | 289e43f |
 | 08 | Notification permission | Android's own dialog | done | 289e43f |
 | 09 | Log in | LoginScreen | done | 00c4d64 |
-| 10 | Continue with Google | — | not built |  |
+| 10 | Continue with Google | GoogleButton (Login, Signup); Android's own account picker replaces the drawn frame | done |  |
 | 11 | Forgot password | ForgotPasswordScreen | done | 388a1d4 |
 | 12 | Set a new password | — | not built |  |
 
@@ -74,10 +74,10 @@ Totals: 78 done · 0 to do · 35 not built · 1 partly · 9 last
 | 28 | Lesson complete | — | not built |  |
 | 29 | Module complete | — | not built |  |
 | 30 | Quizzes | QuizzesScreen | done | 5c6116d (last score, not best) |
-| 31 | Code Challenges | — | not built |  |
-| 32 | Challenge | — | not built |  |
-| 33 | Full editor · Output open | — | not built |  |
-| 34 | Challenge solved | — | not built |  |
+| 31 | Code Challenges | ChallengesScreen | done | (15 challenges, level tabs from the courses; In progress = a draft saved on the phone) |
+| 32 | Challenge | ChallengeScreen | done | (Judge0 via runChallenge; plain editor with a line gutter, no Expand; Run checks the example (1 credit), Submit only the 2 hidden tests and stops at the first failure; Reset asks first; no rule line under the description; a Practices card linking the lessons it practices, and a tap-to-show hint) |
+| 33 | Full editor · Output open | — | skipped | (decided against: the inline editor and output cover it) |
+| 34 | Challenge solved | ChallengeSolvedScreen | done | (submits and time spent kept in memory only; Open in editor reopens the challenge) |
 | 35 | Code Tracer | TracerListScreen | done | 1083617 |
 | 36 | Trace | TracerScreen | done | 1083617, d62ff49 |
 | 37 | Trace result | TracerScreen | done | 0a61859 |
@@ -90,7 +90,7 @@ Totals: 78 done · 0 to do · 35 not built · 1 partly · 9 last
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
 | 41 | Streak | — | not built |  |
-| 42 | Playground | — | not built |  |
+| 42 | Playground | PlaygroundScreen | done | (starts empty; the 4 samples load on tap and ask before replacing edited code; Clear asks first; an optional Input box for Scanner programs; code kept on the phone; floating back button; runs do not count toward the streak; the first run unlocks First Compile) |
 | 43 | Mini-projects | — | not built |  |
 
 ## E · Settings
@@ -174,13 +174,13 @@ Totals: 78 done · 0 to do · 35 not built · 1 partly · 9 last
 | 98 | Session expired | — | not built |  |
 | 99 | Lesson · Server error | with Lesson | done | 3c5b564 (real Firebase error code, not a made-up ref; Back to module instead of Report) |
 | 100 | Quiz result · Not synced | with Quiz result | done | 3f4c279 (banner with Try saving again) |
-| 101 | Challenge · Compile error | — | not built |  |
-| 102 | Challenge · Test failing | — | not built |  |
-| 103 | Challenge · Time limit | — | not built |  |
-| 104 | Challenge · Runner offline | — | not built |  |
-| 105 | Playground · Compile error | — | not built |  |
+| 101 | Challenge · Compile error | with Challenge | done | (real compiler message; one fixed What to fix line per error kind, not per challenge) |
+| 102 | Challenge · Test failing | with Challenge | done | (separate line for passing the example but failing a hidden test) |
+| 103 | Challenge · Time limit | with Challenge | done |  |
+| 104 | Challenge · Runner offline | with Challenge | done | (also shown for the runner being down; its daily limit gets its own message) |
+| 105 | Playground · Compile error | with Playground | done | (real compiler message, no What to fix box, as drawn) |
 | 106 | Tutor · Writing a reply | with Tutor | done | a01ce13 |
-| 107 | Tutor · Daily limit | with Tutor | done | a01ce13 (rolling 24 h, shown after a refusal) |
+| 107 | Tutor · Daily limit | with Tutor | done | a01ce13 (resets at midnight Philippine time, shown after a refusal) |
 | 108 | Notifications · Blocked by Android | — | not built |  |
 
 ## J · Mascot moments

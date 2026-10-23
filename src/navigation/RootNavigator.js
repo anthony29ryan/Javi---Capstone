@@ -48,6 +48,10 @@ import ModulesScreen from '../screens/ModulesScreen';
 import ProgressScreen from '../screens/ProgressScreen';
 import QuizScreen from '../screens/QuizScreen';
 import SignupScreen from '../screens/SignupScreen';
+import ChallengeScreen from '../screens/ChallengeScreen';
+import ChallengeSolvedScreen from '../screens/ChallengeSolvedScreen';
+import ChallengesScreen from '../screens/ChallengesScreen';
+import PlaygroundScreen from '../screens/PlaygroundScreen';
 import TracerListScreen from '../screens/TracerListScreen';
 import TracerScreen from '../screens/TracerScreen';
 import VerifyEmailScreen from '../screens/VerifyEmailScreen';
@@ -209,6 +213,14 @@ function AppStack({ needsSetup }) {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Tracer" component={TracerScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Challenges" component={ChallengesScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Challenge" component={ChallengeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Playground" component={PlaygroundScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="ChallengeSolved"
+        component={ChallengeSolvedScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }

@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Text from '../components/AppText';
 import AuthButton from '../components/auth/AuthButton';
-import AuthToast from '../components/auth/AuthToast';
 import Mascot from '../components/Mascot';
 import ScreenState from '../components/ScreenState';
 import Skeleton, { SkeletonSticker } from '../components/Skeleton';
 import Sticker from '../components/Sticker';
 import { scorePercent, useProgress } from '../context/ProgressContext';
+import { getChallenges } from '../services/challenges';
 import { authColors, authFonts } from '../theme/authTheme';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 import { quizCount } from './QuizzesScreen';
@@ -77,11 +77,19 @@ function PracticeSkeleton({ top }) {
 }
 
 export default function PracticeScreen({ navigation }) {
-  const { modules, courses, moduleScores, progress, loading, error, refresh } = useProgress();
+  const { modules, courses, moduleScores, progress, loading, error, refresh, isChallengeSolved } = useProgress();
   // Tab screen with no nav header, so it owns its top inset.
   const insets = useSafeAreaInsets();
   const top = insets.top + spacing.lg;
-  const [toast, setToast] = useState('');
+  const [challengeIds, setChallengeIds] = useState([]);
+
+  // Cached for the session, so this is one read however often Practice opens.
+  useEffect(() => {
+    if (!courses.length) return;
+    getChallenges(courses)
+      .then((list) => setChallengeIds(list.map((challenge) => challenge.id)))
+      .catch(() => {}); // offline: the tile just doesn't show a count
+  }, [courses]);
 
   if (loading) return <PracticeSkeleton top={top} />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
@@ -104,6 +112,9 @@ export default function PracticeScreen({ navigation }) {
     null
   );
   const lowestTitle = lowest ? modulesById[lowest[0]]?.title : null;
+
+  const challengeTotal = challengeIds.length;
+  const solvedChallenges = challengeIds.filter(isChallengeSolved).length;
 
   // Courses are sorted by order, so this is the first Beginner module.
   const firstModule = modules.find((module) => module.courseId === courses[0]?.id) ?? modules[0];
@@ -170,28 +181,25 @@ export default function PracticeScreen({ navigation }) {
             onPress={() => navigation.navigate('TracerList')}
           />
         </View>
-        {/* Drawn ahead of time: both need a cloud Java runner that does not
-            exist yet, so a tap says so instead of opening anything. */}
         <View style={styles.modeRow}>
           <ModeSticker
             glyph="{ }"
             name="Code Challenges"
-            line="Coming later"
+            line={challengeTotal ? `${solvedChallenges} of ${challengeTotal} solved` : 'Write and run Java'}
             background={CHALLENGE_STICKER}
             tilt={-1.5}
-            onPress={() => setToast('Coding challenges are coming later')}
+            onPress={() => navigation.navigate('Challenges')}
           />
           <ModeSticker
             glyph="main"
             name="Playground"
-            line="Coming later"
+            line="Write any Java"
             background={PLAYGROUND_STICKER}
             tilt={1.5}
-            onPress={() => setToast('The playground is coming later')}
+            onPress={() => navigation.navigate('Playground')}
           />
         </View>
       </ScrollView>
-      <AuthToast message={toast} onHide={() => setToast('')} />
     </View>
   );
 }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import Text, { AppTextInput as TextInput } from './AppText';
+import { CodeBlock, InlineText } from './LessonBlocks';
 import Mascot from './Mascot';
 import Skeleton from './Skeleton';
 import { useProgress } from '../context/ProgressContext';
@@ -22,6 +23,23 @@ function suggestions(topic) {
     { label: 'Quiz me', question: `Ask me one short practice question about "${topic}", then check my answer.` },
     { label: 'When do I use it?', question: `When and why would I use "${topic}" in a real Java program?` },
   ];
+}
+
+/**
+ * Javi's reply: plain text with `inline code`, and ```java blocks shown in the
+ * lesson code box. The split puts text, fence language and code in turn.
+ */
+function TutorReply({ text }) {
+  const parts = text.split(/```(\w*)\n?([\s\S]*?)\n?```/);
+  return (
+    <View style={styles.reply}>
+      {parts.map((part, index) => {
+        if (index % 3 === 1) return null; // the fence language, used by the code after it
+        if (index % 3 === 2) return <CodeBlock key={index} value={part} language={parts[index - 1] || 'java'} />;
+        return part.trim() ? <InlineText key={index} value={part.trim()} style={styles.bubbleText} /> : null;
+      })}
+    </View>
+  );
 }
 
 /**
@@ -86,7 +104,11 @@ export default function TutorChat({
       const reply = await askTutor(moduleId, trimmed);
       setMessages((current) => [...current, { role: 'tutor', text: reply }]);
     } catch (err) {
-      if (err.code === 'functions/resource-exhausted') {
+      if (err.code === 'functions/resource-exhausted' && /Slow down/.test(err.message)) {
+        // The 5-a-minute limit: kept, dimmed, to send again in a moment.
+        setMessages((current) => [...current.slice(0, -1), { role: 'learner', text: trimmed, failed: true }]);
+        setFailure({ tooFast: true });
+      } else if (err.code === 'functions/resource-exhausted') {
         // Nothing to retry until a question frees up, so it is taken back out.
         setMessages((current) => current.slice(0, -1));
         setLimitReached(true);
@@ -141,9 +163,11 @@ export default function TutorChat({
             message.failed && styles.bubbleFailed,
           ]}
         >
-          <Text style={[styles.bubbleText, message.role === 'learner' && styles.bubbleTextLearner]}>
-            {message.text}
-          </Text>
+          {message.role === 'learner' ? (
+            <Text style={[styles.bubbleText, styles.bubbleTextLearner]}>{message.text}</Text>
+          ) : (
+            <TutorReply text={message.text} />
+          )}
         </View>
       ))}
 
@@ -165,12 +189,14 @@ export default function TutorChat({
       {failure && failedText ? (
         <View style={styles.errorCard}>
           <Text style={styles.errorTitle}>
-            {failure.connection ? 'Not sent · no connection' : 'Not sent'}
+            {failure.connection ? 'Not sent · no connection' : failure.tooFast ? 'Not sent · too fast' : 'Not sent'}
           </Text>
           <Text style={styles.errorBody}>
             {failure.connection
               ? 'Your question stays here. Send it again when you are back online.'
-              : 'Javi could not answer right now. Try again in a moment.'}
+              : failure.tooFast
+                ? 'You can ask 5 questions a minute. Wait a moment, then try again.'
+                : 'Javi could not answer right now. Try again in a moment.'}
           </Text>
           <Pressable
             onPress={() => send(failedText)}
@@ -194,7 +220,7 @@ export default function TutorChat({
       </Text>
       <Text style={styles.limitTitle}>Daily question limit reached</Text>
       <Text style={styles.limitBody}>
-        Each question frees up 24 hours after you asked it. Lessons and quizzes still work.
+        Your questions reset at midnight. Lessons and quizzes still work.
       </Text>
       <View style={styles.limitBar} />
     </View>
@@ -335,6 +361,9 @@ const styles = StyleSheet.create({
   },
   bubbleTextLearner: {
     color: colors.white,
+  },
+  reply: {
+    gap: spacing.sm,
   },
   thinkingRow: {
     flexDirection: 'row',

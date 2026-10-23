@@ -55,6 +55,17 @@ service cloud.firestore {
     match /traces/{traceId} {
       allow read: if signedIn();
     }
+    // challengeTests (the hidden tests) has no rule, so only the runChallenge
+    // function reads it, the same as answerKeys. runUsage, the daily run
+    // counter, is closed the same way.
+    match /challenges/{challengeId} {
+      allow read: if signedIn();
+    }
+    // Every lesson's summary in one document, written by publishContent.js.
+    // Only this one document: the rest of `meta` stays closed.
+    match /meta/lessonIndex {
+      allow read: if signedIn();
+    }
 
     // ------------------------------------------------------------------ users
     // Profile and preferences. Written by AuthContext and services/preferences.
@@ -106,7 +117,9 @@ service cloud.firestore {
 
     // --------------------------------------------------------------- progress
     // Written by services/progress.js with merge, so each write carries only
-    // some of these fields.
+    // some of these fields. completedChallenges is deliberately missing from
+    // the list: only the runChallenge function writes it, after the hidden
+    // tests pass, so the app cannot mark a challenge solved on its own.
 
     function validProgressWrite() {
       let data = request.resource.data;
@@ -147,7 +160,7 @@ service cloud.firestore {
     // One tutor thread per user per module, written only by the askTutor Cloud
     // Function (admin access). The app can read its own and nothing else.
     // tutorUsage, which counts each user's daily questions, has no rule at all
-    // and so stays closed to the app.
+    // and so stays closed to the app. So does quizUsage, gradeAnswer's counter.
 
     // `resource == null` lets the app read its own thread before the first
     // question creates it; otherwise that read would be refused. It only

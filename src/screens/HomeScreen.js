@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Text from '../components/AppText';
@@ -14,7 +13,7 @@ import Sticker from '../components/Sticker';
 import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
 import { pickWeakLessons } from '../services/recommendations';
-import { getWeakTopics } from '../services/weakTopics';
+import { useWeakTopics } from '../services/weakTopics';
 import { authColors, authFonts } from '../theme/authTheme';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
@@ -154,26 +153,9 @@ export default function HomeScreen({ navigation }) {
   } = useProgress();
 
   // The model's weak topics; null while the first answer is on its way.
-  // Re-asked on every visit so a finished quiz shows up. Any failure just
-  // means course-order picks, so it is never reported.
-  const [weakTopics, setWeakTopics] = useState(null);
+  const weakTopics = useWeakTopics(offline);
   // Lessons kept out of Recommended until something real changes; see below.
   const recHidden = useRef({ key: null, hidden: new Set() });
-  useFocusEffect(
-    useCallback(() => {
-      if (offline) {
-        setWeakTopics([]);
-        return undefined;
-      }
-      let cancelled = false;
-      getWeakTopics()
-        .then((topics) => !cancelled && setWeakTopics(topics))
-        .catch(() => !cancelled && setWeakTopics([]));
-      return () => {
-        cancelled = true;
-      };
-    }, [offline])
-  );
 
   if (loading) return <HomeSkeleton top={insets.top + spacing.lg} />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;

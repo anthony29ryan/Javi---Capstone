@@ -17,7 +17,11 @@ development. Prefer explanations alongside code, and favor clarity over cleverne
 - **Client:** Expo (React Native), JavaScript
 - **Backend:** Firebase — Auth, Firestore, Cloud Functions, notifications
 - **AI tutor:** Gemini 3.5 Flash Lite (Google AI Studio free-tier key), called from a Cloud Function (never from the client)
-- **Code execution:** Piston or Judge0 API, called from a Cloud Function
+- **Code execution:** Judge0 CE on RapidAPI, pay as you go, called from a Cloud Function. Only
+  `functions/codeRunner.js` knows the provider. JDoodle's free 20 runs a day proved too few, and
+  the public Piston API went whitelist-only in Feb 2026. Spend is capped in `functions/index.js`:
+  20 challenge checks + 10 playground runs per user a day, 5 runs a minute per user, and 300 Judge0
+  calls a day / 1,350 a month (~$9.45) for the whole app. Change those numbers, not the logic.
 - **Trained model:** TensorFlow.js (`@tensorflow/tfjs`, pure JS — no native build), loaded and run inside a Cloud Function
 - **Video demos:** embedded YouTube
 
@@ -53,9 +57,13 @@ content/courses.json · modules.json · lessons/*.json  ->  scripts/publishConte
 ```
 
 - `npm run content:verify` checks the files and exits non-zero if anything is wrong.
-- `npm run content:publish` verifies, then publishes. It upserts every local lesson and
-  **deletes any Firestore lesson that no longer exists locally**, which is what keeps the
-  two in step and what makes a rollback work.
+- `npm run content:publish` verifies, then publishes. It upserts every local course, module,
+  lesson, question and trace and **deletes any Firestore one that no longer exists locally**,
+  which is what keeps the two in step and what makes a rollback work.
+- Publishing also writes `meta/lessonIndex`: every lesson's id, module, title, order and
+  reading minutes, plus a `publishedAt` time. The app reads this one document on launch
+  instead of every lesson, and re-fetches offline downloads only when `publishedAt` changes.
+  The app shows a load error until this document exists, so publish after a fresh setup.
 - Lesson bodies are an array of blocks (`text`, `code`, `heading`, `list`, `note`, `table`,
   `image`, `video`) rendered by `src/components/LessonBlocks.js`. A block type with no case
   there renders as blank space, so add both together.
@@ -116,6 +124,6 @@ toward these unless asked — they were cut to protect the core deliverables.
 
 ## Note on Expo version
 
-This project was scaffolded with a newer Expo SDK than older training data may reflect. Consult
-the versioned docs at https://docs.expo.dev/versions/v57.0.0/ before relying on remembered API
-shapes for Expo-specific code.
+This project is on Expo SDK 54 (see `expo` in package.json). Consult the versioned docs at
+https://docs.expo.dev/versions/v54.0.0/ before relying on remembered API shapes for
+Expo-specific code, and update this link whenever the SDK is upgraded.

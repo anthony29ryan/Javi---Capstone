@@ -1,0 +1,462 @@
+[
+  {
+    "id": "hello-world",
+    "level": "beginner",
+    "order": 1,
+    "moduleId": "introduction-to-java",
+    "title": "Hello, World",
+    "description": "Print the classic greeting to the console: Hello, World!",
+    "kind": "output",
+    "minutes": 2,
+    "practices": [
+      "introduction-to-java-2-your-first-java-program"
+    ],
+    "hint": "Put the exact text inside System.out.println(\"…\"); and end the line with a semicolon.",
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // your code here\n    }\n}",
+    "solution": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}",
+    "example": {
+      "input": "",
+      "output": "Hello, World!"
+    },
+    "hidden": []
+  },
+  {
+    "id": "is-it-even",
+    "level": "beginner",
+    "order": 2,
+    "moduleId": "operators",
+    "title": "Is it even?",
+    "description": "Print true if the number n is even, or false if it is odd.",
+    "kind": "given",
+    "minutes": 3,
+    "practices": [
+      "operators-2-arithmetic-operators",
+      "operators-3-relational-operators"
+    ],
+    "hint": "n % 2 is the remainder after dividing by 2. Store n % 2 == 0 in a boolean and print it.",
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        int n = 9;\n\n        // your code here: print true if n is even, false if it is odd\n    }\n}",
+    "solution": "public class Main {\n    public static void main(String[] args) {\n        int n = 9;\n\n        boolean even = n % 2 == 0;\n        System.out.println(even);\n    }\n}",
+    "example": {
+      "input": "int n = 9;",
+      "output": "false"
+    },
+    "hidden": [
+      {
+        "input": "int n = -7;",
+        "output": "false"
+      },
+      {
+        "input": "int n = 0;",
+        "output": "true"
+      }
+    ]
+  },
+  {
+    "id": "sum-of-two-numbers",
+    "level": "beginner",
+    "order": 3,
+    "moduleId": "input-output",
+    "title": "Sum of two numbers",
+    "description": "Read two whole numbers with the Scanner and print their sum.",
+    "kind": "io",
+    "minutes": 3,
+    "practices": [
+      "input-output-1-reading-input-with-scanner",
+      "input-output-2-scanner-methods"
+    ],
+    "hint": "Call in.nextInt() twice, store each number in an int variable, then print the two added together.",
+    "starterCode": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        // your code here\n    }\n}",
+    "solution": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        int a = in.nextInt();\n        int b = in.nextInt();\n        System.out.println(a + b);\n    }\n}",
+    "example": {
+      "input": "4 7",
+      "output": "11"
+    },
+    "hidden": [
+      {
+        "input": "-3 10",
+        "output": "7"
+      },
+      {
+        "input": "1000000 2345",
+        "output": "1002345"
+      }
+    ]
+  },
+  {
+    "id": "largest-of-three",
+    "level": "beginner",
+    "order": 4,
+    "moduleId": "control-structures",
+    "title": "Largest of three",
+    "description": "Print the biggest of the three numbers a, b and c.",
+    "kind": "given",
+    "minutes": 5,
+    "practices": [
+      "control-structures-2-one-way-selection-if",
+      "control-structures-5-multiple-selections-nested-if"
+    ],
+    "hint": "Start with int largest = a; then use one if to check b and another to check c.",
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        int a = 3;\n        int b = 12;\n        int c = 8;\n\n        // your code here: print the biggest of a, b and c\n    }\n}",
+    "solution": "public class Main {\n    public static void main(String[] args) {\n        int a = 3;\n        int b = 12;\n        int c = 8;\n\n        int largest = a;\n        if (b > largest) largest = b;\n        if (c > largest) largest = c;\n        System.out.println(largest);\n    }\n}",
+    "example": {
+      "input": "int a = 3;\nint b = 12;\nint c = 8;",
+      "output": "12"
+    },
+    "hidden": [
+      {
+        "input": "int a = -5;\nint b = -2;\nint c = -9;",
+        "output": "-2"
+      },
+      {
+        "input": "int a = 1;\nint b = 2;\nint c = 30;",
+        "output": "30"
+      }
+    ]
+  },
+  {
+    "id": "sum-from-1-to-n",
+    "level": "beginner",
+    "order": 5,
+    "moduleId": "loops",
+    "title": "Sum from 1 to n",
+    "description": "Print the total of 1 + 2 + 3 + … + n.",
+    "kind": "given",
+    "minutes": 4,
+    "practices": [
+      "loops-3-the-for-loop"
+    ],
+    "hint": "Keep a total that starts at 0, and add i to it on each pass of a for loop that counts from 1 to n.",
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        int n = 5;\n\n        // your code here: print 1 + 2 + … + n\n    }\n}",
+    "solution": "public class Main {\n    public static void main(String[] args) {\n        int n = 5;\n\n        int total = 0;\n        for (int i = 1; i <= n; i++) {\n            total += i;\n        }\n        System.out.println(total);\n    }\n}",
+    "example": {
+      "input": "int n = 5;",
+      "output": "15"
+    },
+    "hidden": [
+      {
+        "input": "int n = 1;",
+        "output": "1"
+      },
+      {
+        "input": "int n = 100;",
+        "output": "5050"
+      }
+    ]
+  },
+  {
+    "id": "reverse-a-string",
+    "level": "intermediate",
+    "order": 1,
+    "moduleId": "strings",
+    "title": "Reverse a string",
+    "description": "Print the characters of text in reverse order.",
+    "kind": "given",
+    "minutes": 6,
+    "practices": [
+      "strings-5-string-methods",
+      "strings-1-what-a-string-is"
+    ],
+    "hint": "Loop i from text.length() - 1 down to 0, and add text.charAt(i) to a new String each time.",
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        String text = \"java\";\n\n        // your code here: print text backwards\n    }\n}",
+    "solution": "public class Main {\n    public static void main(String[] args) {\n        String text = \"java\";\n\n        String reversed = \"\";\n        for (int i = text.length() - 1; i >= 0; i--) {\n            reversed += text.charAt(i);\n        }\n        System.out.println(reversed);\n    }\n}",
+    "example": {
+      "input": "String text = \"java\";",
+      "output": "avaj"
+    },
+    "hidden": [
+      {
+        "input": "String text = \"Hello World\";",
+        "output": "dlroW olleH"
+      },
+      {
+        "input": "String text = \"a\";",
+        "output": "a"
+      }
+    ]
+  },
+  {
+    "id": "count-above-target",
+    "level": "intermediate",
+    "order": 2,
+    "moduleId": "arrays",
+    "title": "Count above the target",
+    "description": "Print how many numbers in the array nums are greater than target.",
+    "kind": "given",
+    "minutes": 6,
+    "practices": [
+      "arrays-2-traversing-an-array",
+      "arrays-1-one-dimensional-arrays"
+    ],
+    "hint": "Keep a count that starts at 0. Go through the array with a for loop and add 1 whenever a value is bigger than target.",
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        int[] nums = {3, 8, 1, 9, 4};\n        int target = 4;\n\n        // your code here: print how many values in nums are bigger than target\n    }\n}",
+    "solution": "public class Main {\n    public static void main(String[] args) {\n        int[] nums = {3, 8, 1, 9, 4};\n        int target = 4;\n\n        int count = 0;\n        for (int value : nums) {\n            if (value > target) count++;\n        }\n        System.out.println(count);\n    }\n}",
+    "example": {
+      "input": "int[] nums = {3, 8, 1, 9, 4};\nint target = 4;",
+      "output": "2"
+    },
+    "hidden": [
+      {
+        "input": "int[] nums = {-1, -5, 0, 2};\nint target = -2;",
+        "output": "3"
+      },
+      {
+        "input": "int[] nums = {7};\nint target = 7;",
+        "output": "0"
+      }
+    ]
+  },
+  {
+    "id": "hypotenuse",
+    "level": "intermediate",
+    "order": 3,
+    "moduleId": "predefined-functions",
+    "title": "Hypotenuse",
+    "description": "a and b are the two short sides of a right triangle. Print the long side: the square root of a × a + b × b.",
+    "kind": "given",
+    "minutes": 4,
+    "practices": [
+      "predefined-functions-2-the-math-class"
+    ],
+    "hint": "Math.sqrt(x) returns the square root of x. Work out a * a + b * b first, then pass it to Math.sqrt and print the result.",
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        double a = 3;\n        double b = 4;\n\n        // your code here: print the long side\n    }\n}",
+    "solution": "public class Main {\n    public static void main(String[] args) {\n        double a = 3;\n        double b = 4;\n\n        System.out.println(Math.sqrt(a * a + b * b));\n    }\n}",
+    "example": {
+      "input": "double a = 3;\ndouble b = 4;",
+      "output": "5.0"
+    },
+    "hidden": [
+      {
+        "input": "double a = 1;\ndouble b = 1;",
+        "output": "1.4142135623730951"
+      },
+      {
+        "input": "double a = 0;\ndouble b = 7;",
+        "output": "7.0"
+      }
+    ]
+  },
+  {
+    "id": "power-recursively",
+    "level": "intermediate",
+    "order": 4,
+    "moduleId": "recursion",
+    "title": "Power, recursively",
+    "description": "Fill in power so it returns base raised to exp (exp is 0 or more) by calling itself, without a loop.",
+    "kind": "given",
+    "minutes": 8,
+    "stub": true,
+    "practices": [
+      "recursion-2-base-case-and-general-case",
+      "recursion-1-recursive-definitions"
+    ],
+    "hint": "Base case: any number to the power 0 is 1. General case: base to the exp is base * power(base, exp - 1).",
+    "starterCode": "public class Main {\n    public static int power(int base, int exp) {\n        // your code here\n        return 0;\n    }\n\n    // Prints power(base, exp) for the given values. You don't need to change it.\n    public static void main(String[] args) {\n        int base = 2;\n        int exp = 5;\n        System.out.println(power(base, exp));\n    }\n}",
+    "solution": "public class Main {\n    public static int power(int base, int exp) {\n        if (exp == 0) {\n            return 1;\n        }\n        return base * power(base, exp - 1);\n    }\n\n    // Prints power(base, exp) for the given values. You don't need to change it.\n    public static void main(String[] args) {\n        int base = 2;\n        int exp = 5;\n        System.out.println(power(base, exp));\n    }\n}",
+    "example": {
+      "input": "int base = 2;\nint exp = 5;",
+      "output": "32"
+    },
+    "hidden": [
+      {
+        "input": "int base = 3;\nint exp = 0;",
+        "output": "1"
+      },
+      {
+        "input": "int base = -2;\nint exp = 3;",
+        "output": "-8"
+      }
+    ]
+  },
+  {
+    "id": "box-volume",
+    "level": "intermediate",
+    "order": 5,
+    "moduleId": "classes-and-methods",
+    "title": "Box volume",
+    "description": "Fill in the Box class: keep the length, width and height in private fields, set them in the constructor, and return length × width × height from volume().",
+    "kind": "given",
+    "minutes": 8,
+    "stub": true,
+    "practices": [
+      "classes-and-methods-1-methods-and-variables-in-a-class",
+      "classes-and-methods-3-encapsulation"
+    ],
+    "hint": "Declare three private int fields, copy each constructor parameter into its field with this.length = length; and so on, then multiply them in volume().",
+    "starterCode": "public class Main {\n    // Prints the volume of the given box. You don't need to change it.\n    public static void main(String[] args) {\n        Box box = new Box(2, 3, 4);\n        System.out.println(box.volume());\n    }\n}\n\n// Fill in this class.\nclass Box {\n    // your code here: the fields\n\n    public Box(int length, int width, int height) {\n        // your code here\n    }\n\n    public int volume() {\n        // your code here\n        return 0;\n    }\n}",
+    "solution": "public class Main {\n    // Prints the volume of the given box. You don't need to change it.\n    public static void main(String[] args) {\n        Box box = new Box(2, 3, 4);\n        System.out.println(box.volume());\n    }\n}\n\n// Fill in this class.\nclass Box {\n    private int length;\n    private int width;\n    private int height;\n\n    public Box(int length, int width, int height) {\n        this.length = length;\n        this.width = width;\n        this.height = height;\n    }\n\n    public int volume() {\n        return length * width * height;\n    }\n}",
+    "example": {
+      "input": "Box box = new Box(2, 3, 4);",
+      "output": "24"
+    },
+    "hidden": [
+      {
+        "input": "Box box = new Box(10, 5, 2);",
+        "output": "100"
+      },
+      {
+        "input": "Box box = new Box(7, 0, 3);",
+        "output": "0"
+      }
+    ]
+  },
+  {
+    "id": "shape-areas",
+    "level": "advanced",
+    "order": 1,
+    "moduleId": "inheritance-polymorphism-interfaces",
+    "title": "Shape areas",
+    "description": "Square and Rect both extend the abstract class Shape. Fill in their area() methods so each shape returns its own area.",
+    "kind": "given",
+    "minutes": 8,
+    "stub": true,
+    "practices": [
+      "inheritance-polymorphism-interfaces-6-abstract-classes",
+      "inheritance-polymorphism-interfaces-2-overriding"
+    ],
+    "hint": "A square's area is side * side, and a rectangle's is width * height. main stores each one as a Shape and calls area(), and Java picks the right version for you.",
+    "starterCode": "public class Main {\n    // Prints the area of each given shape. You don't need to change it.\n    public static void main(String[] args) {\n        Shape[] shapes = { new Square(3), new Rect(2, 5) };\n        for (Shape shape : shapes) {\n            System.out.println(shape.area());\n        }\n    }\n}\n\nabstract class Shape {\n    public abstract int area();\n}\n\nclass Square extends Shape {\n    private int side;\n\n    public Square(int side) {\n        this.side = side;\n    }\n\n    @Override\n    public int area() {\n        // your code here\n        return 0;\n    }\n}\n\nclass Rect extends Shape {\n    private int width;\n    private int height;\n\n    public Rect(int width, int height) {\n        this.width = width;\n        this.height = height;\n    }\n\n    @Override\n    public int area() {\n        // your code here\n        return 0;\n    }\n}",
+    "solution": "public class Main {\n    // Prints the area of each given shape. You don't need to change it.\n    public static void main(String[] args) {\n        Shape[] shapes = { new Square(3), new Rect(2, 5) };\n        for (Shape shape : shapes) {\n            System.out.println(shape.area());\n        }\n    }\n}\n\nabstract class Shape {\n    public abstract int area();\n}\n\nclass Square extends Shape {\n    private int side;\n\n    public Square(int side) {\n        this.side = side;\n    }\n\n    @Override\n    public int area() {\n        return side * side;\n    }\n}\n\nclass Rect extends Shape {\n    private int width;\n    private int height;\n\n    public Rect(int width, int height) {\n        this.width = width;\n        this.height = height;\n    }\n\n    @Override\n    public int area() {\n        return width * height;\n    }\n}",
+    "example": {
+      "input": "Shape[] shapes = { new Square(3), new Rect(2, 5) };",
+      "output": "9\n10"
+    },
+    "hidden": [
+      {
+        "input": "Shape[] shapes = { new Rect(4, 4), new Square(10), new Rect(1, 7) };",
+        "output": "16\n100\n7"
+      },
+      {
+        "input": "Shape[] shapes = { new Rect(0, 9), new Square(6) };",
+        "output": "0\n36"
+      }
+    ]
+  },
+  {
+    "id": "score-check",
+    "level": "advanced",
+    "order": 2,
+    "moduleId": "exception-handling",
+    "title": "Score check",
+    "description": "Fill in checkScore so it throws an InvalidScoreException when the score is below 0 or above 100, and does nothing for a valid score.",
+    "kind": "given",
+    "minutes": 8,
+    "stub": true,
+    "practices": [
+      "exception-handling-6-user-defined-exceptions",
+      "exception-handling-3-try-and-catch"
+    ],
+    "hint": "Use an if with || to spot a bad score, then throw new InvalidScoreException(\"…\"); main catches it and prints Invalid score.",
+    "starterCode": "public class Main {\n    public static void checkScore(int score) throws InvalidScoreException {\n        // your code here\n    }\n\n    // Checks each given score and prints the result. You don't need to change it.\n    public static void main(String[] args) {\n        int[] scores = {85, -4, 100};\n        for (int score : scores) {\n            try {\n                checkScore(score);\n                System.out.println(\"Score: \" + score);\n            } catch (InvalidScoreException e) {\n                System.out.println(\"Invalid score\");\n            }\n        }\n    }\n}\n\nclass InvalidScoreException extends Exception {\n    public InvalidScoreException(String message) {\n        super(message);\n    }\n}",
+    "solution": "public class Main {\n    public static void checkScore(int score) throws InvalidScoreException {\n        if (score < 0 || score > 100) {\n            throw new InvalidScoreException(\"Score must be 0 to 100: \" + score);\n        }\n    }\n\n    // Checks each given score and prints the result. You don't need to change it.\n    public static void main(String[] args) {\n        int[] scores = {85, -4, 100};\n        for (int score : scores) {\n            try {\n                checkScore(score);\n                System.out.println(\"Score: \" + score);\n            } catch (InvalidScoreException e) {\n                System.out.println(\"Invalid score\");\n            }\n        }\n    }\n}\n\nclass InvalidScoreException extends Exception {\n    public InvalidScoreException(String message) {\n        super(message);\n    }\n}",
+    "example": {
+      "input": "int[] scores = {85, -4, 100};",
+      "output": "Score: 85\nInvalid score\nScore: 100"
+    },
+    "hidden": [
+      {
+        "input": "int[] scores = {0, 50, 100, 200};",
+        "output": "Score: 0\nScore: 50\nScore: 100\nInvalid score"
+      },
+      {
+        "input": "int[] scores = {-1, -100};",
+        "output": "Invalid score\nInvalid score"
+      }
+    ]
+  },
+  {
+    "id": "weekend-or-weekday",
+    "level": "advanced",
+    "order": 3,
+    "moduleId": "enums-nested-classes",
+    "title": "Weekend or weekday",
+    "description": "Fill in isWeekend so it returns true for SATURDAY and SUNDAY, and false for every other Day.",
+    "kind": "given",
+    "minutes": 6,
+    "stub": true,
+    "practices": [
+      "enums-nested-classes-1-enumerations",
+      "enums-nested-classes-4-enums-in-a-switch"
+    ],
+    "hint": "Use a switch on day with a case for SATURDAY and SUNDAY that returns true, and return false otherwise. Comparing with == works too.",
+    "starterCode": "public class Main {\n    public static boolean isWeekend(Day day) {\n        // your code here\n        return false;\n    }\n\n    // Prints Weekend or Weekday for each given day. You don't need to change it.\n    public static void main(String[] args) {\n        Day[] days = { Day.SATURDAY, Day.MONDAY };\n        for (Day day : days) {\n            System.out.println(isWeekend(day) ? \"Weekend\" : \"Weekday\");\n        }\n    }\n}\n\nenum Day { MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY }",
+    "solution": "public class Main {\n    public static boolean isWeekend(Day day) {\n        switch (day) {\n            case SATURDAY:\n            case SUNDAY:\n                return true;\n            default:\n                return false;\n        }\n    }\n\n    // Prints Weekend or Weekday for each given day. You don't need to change it.\n    public static void main(String[] args) {\n        Day[] days = { Day.SATURDAY, Day.MONDAY };\n        for (Day day : days) {\n            System.out.println(isWeekend(day) ? \"Weekend\" : \"Weekday\");\n        }\n    }\n}\n\nenum Day { MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY }",
+    "example": {
+      "input": "Day[] days = { Day.SATURDAY, Day.MONDAY };",
+      "output": "Weekend\nWeekday"
+    },
+    "hidden": [
+      {
+        "input": "Day[] days = { Day.SUNDAY };",
+        "output": "Weekend"
+      },
+      {
+        "input": "Day[] days = { Day.FRIDAY, Day.TUESDAY, Day.WEDNESDAY };",
+        "output": "Weekday\nWeekday\nWeekday"
+      }
+    ]
+  },
+  {
+    "id": "student-id-check",
+    "level": "advanced",
+    "order": 4,
+    "moduleId": "regular-expressions",
+    "title": "Student ID check",
+    "description": "A student ID is two capital letters, a dash, then four digits, like AB-1234. Fill in isStudentId so it returns true only for IDs in that form.",
+    "kind": "given",
+    "minutes": 8,
+    "stub": true,
+    "practices": [
+      "regular-expressions-2-character-classes",
+      "regular-expressions-3-repetition-operators"
+    ],
+    "hint": "[A-Z] matches one capital letter and \\d one digit, and {2} or {4} repeats the thing before it. Pass the pattern to id.matches(…).",
+    "starterCode": "public class Main {\n    public static boolean isStudentId(String id) {\n        // your code here\n        return false;\n    }\n\n    // Prints true or false for each given ID. You don't need to change it.\n    public static void main(String[] args) {\n        String[] ids = {\"AB-1234\", \"ab-1234\", \"AB1234\"};\n        for (String id : ids) {\n            System.out.println(isStudentId(id));\n        }\n    }\n}",
+    "solution": "public class Main {\n    public static boolean isStudentId(String id) {\n        return id.matches(\"[A-Z]{2}-\\\\d{4}\");\n    }\n\n    // Prints true or false for each given ID. You don't need to change it.\n    public static void main(String[] args) {\n        String[] ids = {\"AB-1234\", \"ab-1234\", \"AB1234\"};\n        for (String id : ids) {\n            System.out.println(isStudentId(id));\n        }\n    }\n}",
+    "example": {
+      "input": "String[] ids = {\"AB-1234\", \"ab-1234\", \"AB1234\"};",
+      "output": "true\nfalse\nfalse"
+    },
+    "hidden": [
+      {
+        "input": "String[] ids = {\"A-1234\", \"AB-12345\", \"CD-9876\"};",
+        "output": "false\nfalse\ntrue"
+      },
+      {
+        "input": "String[] ids = {\"AB-12C4\", \"XY-4321\"};",
+        "output": "false\ntrue"
+      }
+    ]
+  },
+  {
+    "id": "last-of-anything",
+    "level": "advanced",
+    "order": 5,
+    "moduleId": "generics",
+    "title": "Last of anything",
+    "description": "Fill in the generic method lastOf so it returns the last item of any array, whether it holds words or numbers.",
+    "kind": "given",
+    "minutes": 6,
+    "stub": true,
+    "practices": [
+      "generics-1-fundamentals",
+      "generics-2-using-a-generic-class"
+    ],
+    "hint": "The <T> before the return type lets the method work with any type. The last item sits at index items.length - 1.",
+    "starterCode": "public class Main {\n    public static <T> T lastOf(T[] items) {\n        // your code here\n        return null;\n    }\n\n    // Prints the last word and the last number. You don't need to change it.\n    public static void main(String[] args) {\n        String[] words = {\"pear\", \"apple\", \"fig\"};\n        Integer[] numbers = {7, 42};\n        System.out.println(lastOf(words));\n        System.out.println(lastOf(numbers));\n    }\n}",
+    "solution": "public class Main {\n    public static <T> T lastOf(T[] items) {\n        return items[items.length - 1];\n    }\n\n    // Prints the last word and the last number. You don't need to change it.\n    public static void main(String[] args) {\n        String[] words = {\"pear\", \"apple\", \"fig\"};\n        Integer[] numbers = {7, 42};\n        System.out.println(lastOf(words));\n        System.out.println(lastOf(numbers));\n    }\n}",
+    "example": {
+      "input": "String[] words = {\"pear\", \"apple\", \"fig\"};\nInteger[] numbers = {7, 42};",
+      "output": "fig\n42"
+    },
+    "hidden": [
+      {
+        "input": "String[] words = {\"solo\"};\nInteger[] numbers = {-5};",
+        "output": "solo\n-5"
+      },
+      {
+        "input": "String[] words = {\"x\", \"y\"};\nInteger[] numbers = {1, 2, 3, 4};",
+        "output": "y\n4"
+      }
+    ]
+  }
+]

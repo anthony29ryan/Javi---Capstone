@@ -364,6 +364,9 @@ export default function QuizScreen({ route, navigation }) {
         questionId: question.id,
         choice: selected,
         timeTakenMs: Date.now() - questionStart,
+        // Same for a retry of this question, new for the next, so a retry
+        // after a lost reply replaces its attempt rather than adding one.
+        attemptId: String(questionStart),
       });
       setMarks((current) => [...current, { ...verdict, picked: selected }]);
     } catch {

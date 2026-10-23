@@ -12,7 +12,7 @@ Solo capstone project, built incrementally over one semester.
 - **Backend:** Firebase (Auth, Firestore, Cloud Functions)
 - **Navigation:** React Navigation
 - **AI tutor:** Gemini 3.5 Flash Lite (Google AI Studio free-tier key), called from a Cloud Function (never from the client)
-- **Code execution:** Piston or Judge0 API, called from a Cloud Function
+- **Code execution:** Judge0 CE on RapidAPI (pay as you go), called from a Cloud Function
 - **Trained model:** TensorFlow.js (`@tensorflow/tfjs`, pure JS), run inside a Cloud Function — see `docs/model.md`
 
 There is no custom Node/Express server. Firebase Cloud Functions are the only backend layer.
@@ -89,9 +89,8 @@ computer are on the same network but auto-discovery doesn't find it.
 
 ```
 src/
-  components/  # shared UI: Button, TextField, ListCard, ScreenState, Avatar, JaviCard
+  components/  # shared UI: Button, TextField, ScreenState, Avatar
   context/     # AuthContext: auth state, sign up / log in / log out
-  hooks/       # useProgressSummary: streak and completion figures, reloaded on focus
   navigation/  # RootNavigator (auth vs. app stack), MainTabs (Home / Learn / Progress)
   screens/     # one file per screen, including HomeScreen (the dashboard)
   services/    # firebase.js (init), content.js, quizzes.js, progress.js
@@ -112,9 +111,6 @@ Every screen reads its colors, spacing, and font sizes from `src/theme/colors.js
 restyle is a one-file edit rather than a pass over each screen. Change the values freely;
 avoid removing keys, since the screens import `colors`, `radius`, `spacing`, and `type` by
 name.
-
-Javi is the in-app learning companion. His wording lives in `messageFor()` inside
-`src/components/JaviCard.js`, and the message shown depends on the learner's progress.
 
 ### Adding/editing lesson content
 
@@ -145,7 +141,7 @@ Core collections: `users`, `courses`, `modules`, `lessons`, `questions`, `attemp
 - [x] Sign up / log in flow
 - [x] Lesson tier structure (3 tiers, 21 real modules from course PDFs, all 77 lessons authored)
 - [x] Multiple-choice quizzes (per lesson and per module) with attempt tracking
-- [ ] Runnable coding problems (Piston/Judge0 via Cloud Function)
+- [x] Runnable coding problems (Judge0 via the runChallenge Cloud Function)
 - [ ] AI tutor (Cloud Function)
 - [x] Progress tracking (streaks, lessons completed, module quiz scores)
 - [ ] Trained personalization model

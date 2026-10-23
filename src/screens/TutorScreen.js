@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,
-  Platform,
   Pressable,
   StyleSheet,
   View,
@@ -94,7 +93,8 @@ export default function TutorScreen({ route }) {
     return (
       <KeyboardAvoidingView
         style={[styles.container, styles.chat, { paddingTop: insets.top + spacing.lg }]}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        // Android too: SDK 54 is edge-to-edge, so the window no longer resizes for the keyboard.
+        behavior="padding"
       >
         <TutorChat
           moduleId={module.id}

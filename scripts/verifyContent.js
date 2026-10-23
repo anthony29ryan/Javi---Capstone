@@ -8,6 +8,9 @@
 const fs = require('fs');
 const path = require('path');
 
+// The same marker swap the runChallenge function grades with.
+const { givenKey, withGiven } = require('../functions/codeRunner');
+
 const CONTENT_DIR = path.join(__dirname, '..', 'content');
 const LESSONS_DIR = path.join(CONTENT_DIR, 'lessons');
 
@@ -238,6 +241,94 @@ if (!Array.isArray(traces)) {
 const modulesWithoutTrace = modules.filter((m) => !modulesWithTrace.has(m.id)).length;
 if (modulesWithoutTrace) warnings.push(`${modulesWithoutTrace} modules have no Code Tracer drill`);
 
+/* ---------------------------------------------------------------- challenges */
+
+// content/challenges.json: the Code Challenges, one array of
+// { id, level, order, moduleId, title, description, kind, minutes,
+//   starterCode, example: { input, output }, hidden: [{ input, output }], solution, stub?,
+//   practices: [lessonId], hint }.
+// Every output is recorded by running `solution` on JDK 17, not typed by hand.
+// publishContent.js moves `hidden` and `solution` into challengeTests, which the app cannot read.
+
+const CHALLENGES_FILE = path.join(CONTENT_DIR, 'challenges.json');
+const CHALLENGES_PER_LEVEL = 5;
+const HIDDEN_TESTS = 2; // every run costs a runner credit, so Submit uses at most 2
+
+const challenges = fs.existsSync(CHALLENGES_FILE) ? readJson(CHALLENGES_FILE) : [];
+const challengeIds = new Set();
+const challengesPerLevel = {};
+const isTest = (t) => t && typeof t.input === 'string' && typeof t.output === 'string';
+
+if (!Array.isArray(challenges)) {
+  problems.push('challenges.json: must be an array of challenges');
+} else {
+  for (const c of challenges) {
+    const at = `challenges.json ${c.id || '(no id)'}`;
+
+    if (!c.id?.trim()) problems.push(`${at}: missing id`);
+    else if (challengeIds.has(c.id)) problems.push(`${at}: duplicate id`);
+    challengeIds.add(c.id);
+
+    if (!courseIds.has(c.level)) problems.push(`${at}: unknown level "${c.level}"`);
+    challengesPerLevel[c.level] = (challengesPerLevel[c.level] || 0) + 1;
+    if (!moduleIds.has(c.moduleId)) problems.push(`${at}: unknown moduleId "${c.moduleId}"`);
+    // A challenge practices its own module, so every lesson it points to must be in that module.
+    const practices = Array.isArray(c.practices) ? c.practices : [];
+    if (practices.length < 1 || practices.length > 3) problems.push(`${at}: practices needs 1-3 lesson ids`);
+    for (const lessonId of practices) {
+      if (!lessonModule.has(lessonId)) problems.push(`${at}: practices unknown lesson "${lessonId}"`);
+      else if (lessonModule.get(lessonId) !== c.moduleId) {
+        problems.push(`${at}: practices "${lessonId}", which is not in its module ${c.moduleId}`);
+      }
+    }
+    for (const field of ['title', 'description', 'starterCode', 'solution', 'hint']) {
+      if (typeof c[field] !== 'string' || !c[field].trim()) problems.push(`${at}: missing ${field}`);
+    }
+    if (!Number.isInteger(c.order)) problems.push(`${at}: order must be an integer`);
+    if (!Number.isInteger(c.minutes) || c.minutes < 1) problems.push(`${at}: minutes must be a positive integer`);
+    if (!isTest(c.example) || !c.example.output.trim()) problems.push(`${at}: example needs an input and an output`);
+
+    const hidden = Array.isArray(c.hidden) ? c.hidden : [];
+    if (!hidden.every(isTest)) problems.push(`${at}: every hidden test needs an input and an output`);
+    if (c.kind === 'output') {
+      // Printing the text is the whole task, so there is nothing more to test.
+      if (hidden.length) problems.push(`${at}: an output challenge has no hidden tests`);
+      if (c.example?.input) problems.push(`${at}: an output challenge takes no input`);
+    } else if (c.kind === 'io' || c.kind === 'given') {
+      if (hidden.length !== HIDDEN_TESTS) problems.push(`${at}: needs ${HIDDEN_TESTS} hidden tests, has ${hidden.length}`);
+      // A program that prints the example's answer without reading the input must fail.
+      if (hidden.length && hidden.every((t) => t.output === c.example?.output)) {
+        problems.push(`${at}: every hidden test expects the example's output, so hard-coding it would pass`);
+      }
+      // 'given' tests are declarations (int n = 9;) the grader swaps in by variable name,
+      // so each test must declare the same variables as the example, in the same order.
+      if (c.kind === 'given' && typeof c.example?.input === 'string') {
+        const keys = (given) => given.split('\n').map(givenKey).join('\n');
+        if (!c.example.input.trim()) problems.push(`${at}: a given challenge needs example values`);
+        if (typeof c.starterCode === 'string' && withGiven(c.starterCode, c.example.input, c.example.input) === null) {
+          problems.push(`${at}: starterCode must declare each given line exactly once`);
+        }
+        hidden.forEach((t, i) => {
+          if (isTest(t) && keys(t.input) !== keys(c.example.input)) {
+            problems.push(`${at}: hidden test ${i + 1} declares different variables from the example`);
+          }
+        });
+      }
+    } else {
+      problems.push(`${at}: kind must be "output", "io" or "given"`);
+    }
+    // A stub starter has main written already and the student fills in a method.
+    if (c.stub !== undefined && typeof c.stub !== 'boolean') problems.push(`${at}: stub must be true or false`);
+    if (c.stub && c.kind === 'output') problems.push(`${at}: an output challenge cannot have a stub starter`);
+  }
+}
+
+for (const course of courses) {
+  if ((challengesPerLevel[course.id] || 0) !== CHALLENGES_PER_LEVEL) {
+    problems.push(`challenges.json: ${course.id} needs ${CHALLENGES_PER_LEVEL} challenges, has ${challengesPerLevel[course.id] || 0}`);
+  }
+}
+
 /* -------------------------------------------------------------------- report */
 
 console.log(`courses  ${courses.length}`);
@@ -249,6 +340,7 @@ console.log(`lessons per module: min ${Math.min(...Object.values(perModule).map(
 console.log(`questions ${questionIds.size} across ${Object.keys(questionCounts).length} modules` +
             (modulesWithoutQuestions ? ` (${modulesWithoutQuestions} modules have none yet)` : ''));
 console.log(`traces   ${traceIds.size}`);
+console.log(`challenges ${challengeIds.size}`);
 
 if (warnings.length) {
   console.log(`\n${warnings.length} warning(s):`);
