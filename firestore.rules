@@ -133,10 +133,13 @@ service cloud.firestore {
         && (!changed('moduleScores') || data.moduleScores is map)
         && (!changed('streak')
             || (data.streak is map
-                && data.streak.keys().hasOnly(['current', 'longest', 'lastActiveDate'])
+                && data.streak.keys().hasOnly(['current', 'longest', 'lastActiveDate', 'days'])
                 && data.streak.current is int
                 && data.streak.longest is int
-                && (data.streak.lastActiveDate == null || data.streak.lastActiveDate is string)))
+                && (data.streak.lastActiveDate == null || data.streak.lastActiveDate is string)
+                // The days studied, for the Streak calendar; capped like MAX_STUDIED_DAYS in streak.js.
+                && (!('days' in data.streak)
+                    || (data.streak.days is list && data.streak.days.size() <= 42))))
         && (!changed('lastLessonId') || data.lastLessonId is string)
         && (!changed('updatedAt') || data.updatedAt == request.time);
     }

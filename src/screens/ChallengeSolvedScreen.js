@@ -12,13 +12,23 @@ import { getChallenges } from '../services/challenges';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 import { formatDuration } from './TracerScreen';
 
-// Also used by the lesson and module complete screens.
-export function Stat({ label, value, color = colors.text }) {
-  return (
-    <View style={styles.stat}>
+// Also used by Lesson complete, whose streak tile passes onPress to open the Streak screen.
+export function Stat({ label, value, color = colors.text, onPress }) {
+  const content = (
+    <>
       <Text style={[styles.statValue, { color }]}>{value}</Text>
       <Text style={styles.statLabel}>{label}</Text>
-    </View>
+    </>
+  );
+  if (!onPress) return <View style={styles.stat}>{content}</View>;
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      style={({ pressed }) => [styles.stat, pressed && styles.statPressed]}
+    >
+      {content}
+    </Pressable>
   );
 }
 
@@ -187,6 +197,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
+  },
+  statPressed: {
+    backgroundColor: colors.primarySoft,
   },
   statValue: {
     fontFamily: fonts.mono,

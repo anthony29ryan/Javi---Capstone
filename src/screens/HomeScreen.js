@@ -246,10 +246,17 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.greeting} numberOfLines={2}>
               {greeting()}, {name}
             </Text>
-            <Text style={styles.streakLine}>
-              {completedCount} lesson{completedCount === 1 ? '' : 's'} done · {streak.current} day
-              streak
-            </Text>
+            <Pressable
+              onPress={() => navigation.navigate('Streak')}
+              accessibilityRole="button"
+              accessibilityHint="Opens your streak"
+              hitSlop={8}
+            >
+              <Text style={styles.streakLine}>
+                {completedCount} lesson{completedCount === 1 ? '' : 's'} done · {streak.current} day
+                streak ›
+              </Text>
+            </Pressable>
           </View>
           <View style={styles.avatarRing}>
             <Avatar user={user} name={callName} size={40} onPress={() => navigation.navigate('Profile')} />

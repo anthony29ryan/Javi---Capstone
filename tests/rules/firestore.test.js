@@ -317,6 +317,19 @@ describe('progress', () => {
     await assertFails(setDoc(ref, { updatedAt: Timestamp.fromDate(new Date('2020-01-01')) }, { merge: true }));
   });
 
+  test('the streak may carry up to 42 studied days, and no more', async () => {
+    const ref = doc(dbAs('alice'), 'progress/alice');
+    const streak = (count) => ({
+      current: 1,
+      longest: 1,
+      lastActiveDate: '2026-10-24',
+      days: Array.from({ length: count }, () => '2026-10-24'),
+    });
+    await assertSucceeds(setDoc(ref, { streak: streak(42) }, { merge: true }));
+    await assertFails(setDoc(ref, { streak: streak(43) }, { merge: true }));
+    await assertFails(setDoc(ref, { streak: { ...streak(1), days: '2026-10-24' } }, { merge: true }));
+  });
+
   test('only the runChallenge function can mark a challenge solved', async () => {
     const ref = doc(dbAs('alice'), 'progress/alice');
     // Same for the First Compile flag, which only runCode sets.
