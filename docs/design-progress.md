@@ -23,7 +23,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 80 done · 0 to do · 33 not built · 1 partly · 9 last
+Totals: 82 done · 0 to do · 31 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -72,7 +72,7 @@ Totals: 80 done · 0 to do · 33 not built · 1 partly · 9 last
 | 26 | Module | ModulesScreen | done | 0a1bd8d |
 | 27 | Lesson | LessonDetailScreen | done | 3c5b564 (pinned Javi + complete bar, read-to-the-end gate, Ask Javi sheet links to the Javi tab; slide card and step-through demo skipped, no such data) |
 | 28 | Lesson complete | LessonCompleteScreen | done | (opens in place of the lesson after a confirmed "Mark lesson complete", not on undo; hero in the deeper terracotta for contrast; real streak, not a link until the Streak screen exists; Up next reuses LessonRow, hidden after the last lesson; no haptics) |
-| 29 | Module complete | — | not built |  |
+| 29 | Module complete | ModuleCompleteScreen | done | (opens instead of Lesson complete when that lesson finishes the module, i.e. every lesson in it is done; the finished list reuses LessonRow, terracotta ticks rather than green, and each row opens its lesson; "Your best score counts" left out, only the latest quiz attempt is saved; the Lock it in label is ink, not accent, for contrast) |
 | 30 | Quizzes | QuizzesScreen | done | 5c6116d (last score, not best) |
 | 31 | Code Challenges | ChallengesScreen | done | (15 challenges, level tabs from the courses; In progress = a draft saved on the phone) |
 | 32 | Challenge | ChallengeScreen | done | (Judge0 via runChallenge; plain editor with a line gutter, no Expand; Run checks the example (1 credit), Submit only the 2 hidden tests and stops at the first failure; Reset asks first; no rule line under the description; a Practices card linking the lessons it practices, and a tap-to-show hint) |
@@ -192,7 +192,7 @@ Totals: 80 done · 0 to do · 33 not built · 1 partly · 9 last
 | 111 | Quiz · Correct answer | with Quiz | done | 3f4c279 |
 | 112 | Quiz · Not quite | with Quiz | done | 3f4c279 |
 | 113 | Lesson complete | with 28 | done |  |
-| 114 | Module complete | — | not built |  |
+| 114 | Module complete | with 29 | done |  |
 | 115 | Tutor · Empty | with Tutor | done | a01ce13 |
 
 ## I · Night study mode

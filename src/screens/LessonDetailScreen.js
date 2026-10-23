@@ -219,7 +219,11 @@ export default function LessonDetailScreen({ route, navigation }) {
       setSaving(false);
     }
     // Celebrate only a confirmed finish; an undo stays on the lesson.
-    if (saved && completing) navigation.replace('LessonComplete', { lessonId: lesson.id });
+    if (!saved || !completing) return;
+    // isLessonComplete still holds the pre-save state here, so this lesson is counted by id.
+    const moduleDone = siblings.every((item) => item.id === lesson.id || isLessonComplete(item.id));
+    if (moduleDone) navigation.replace('ModuleComplete', { moduleId });
+    else navigation.replace('LessonComplete', { lessonId: lesson.id });
   }
 
   function goToLesson(target) {

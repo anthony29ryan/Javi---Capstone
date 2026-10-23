@@ -35,6 +35,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import SetupScreen from '../screens/SetupScreen';
 import LessonDetailScreen from '../screens/LessonDetailScreen';
 import LessonCompleteScreen from '../screens/LessonCompleteScreen';
+import ModuleCompleteScreen from '../screens/ModuleCompleteScreen';
 import WeakLessonsScreen from '../screens/WeakLessonsScreen';
 import QuizzesScreen from '../screens/QuizzesScreen';
 import AvatarSheetScreen from '../screens/AvatarSheetScreen';
@@ -171,6 +172,11 @@ function AppStack({ needsSetup }) {
       <Stack.Screen
         name="LessonComplete"
         component={LessonCompleteScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ModuleComplete"
+        component={ModuleCompleteScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen name="WeakLessons" component={WeakLessonsScreen} options={{ headerShown: false }} />
