@@ -12,7 +12,8 @@ import { getChallenges } from '../services/challenges';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 import { formatDuration } from './TracerScreen';
 
-function Stat({ label, value, color = colors.text }) {
+// Also used by the lesson and module complete screens.
+export function Stat({ label, value, color = colors.text }) {
   return (
     <View style={styles.stat}>
       <Text style={[styles.statValue, { color }]}>{value}</Text>

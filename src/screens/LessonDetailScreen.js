@@ -207,14 +207,19 @@ export default function LessonDetailScreen({ route, navigation }) {
   }
 
   async function toggleComplete() {
+    const completing = !done;
+    let saved = false;
     setSaving(true);
     try {
-      await markLessonComplete(lesson.id, !done);
+      await markLessonComplete(lesson.id, completing);
+      saved = true;
     } catch {
       setToast('Could not save. Try again.');
     } finally {
       setSaving(false);
     }
+    // Celebrate only a confirmed finish; an undo stays on the lesson.
+    if (saved && completing) navigation.replace('LessonComplete', { lessonId: lesson.id });
   }
 
   function goToLesson(target) {

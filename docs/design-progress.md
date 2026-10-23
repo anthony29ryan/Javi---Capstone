@@ -23,7 +23,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 78 done · 0 to do · 35 not built · 1 partly · 9 last
+Totals: 80 done · 0 to do · 33 not built · 1 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -70,8 +70,8 @@ Totals: 78 done · 0 to do · 35 not built · 1 partly · 9 last
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
 | 26 | Module | ModulesScreen | done | 0a1bd8d |
-| 27 | Lesson | LessonDetailScreen | done | 3c5b564 (pinned Javi + complete bar, read-to-the-end gate, Ask Javi sheet links to the Javi tab; slide card and step-through demo skipped, no such data; 28 still not built) |
-| 28 | Lesson complete | — | not built |  |
+| 27 | Lesson | LessonDetailScreen | done | 3c5b564 (pinned Javi + complete bar, read-to-the-end gate, Ask Javi sheet links to the Javi tab; slide card and step-through demo skipped, no such data) |
+| 28 | Lesson complete | LessonCompleteScreen | done | (opens in place of the lesson after a confirmed "Mark lesson complete", not on undo; hero in the deeper terracotta for contrast; real streak, not a link until the Streak screen exists; Up next reuses LessonRow, hidden after the last lesson; no haptics) |
 | 29 | Module complete | — | not built |  |
 | 30 | Quizzes | QuizzesScreen | done | 5c6116d (last score, not best) |
 | 31 | Code Challenges | ChallengesScreen | done | (15 challenges, level tabs from the courses; In progress = a draft saved on the phone) |
@@ -191,7 +191,7 @@ Totals: 78 done · 0 to do · 35 not built · 1 partly · 9 last
 | 110 | Quiz result · Below 75% | with Quiz result | done | 3f4c279 |
 | 111 | Quiz · Correct answer | with Quiz | done | 3f4c279 |
 | 112 | Quiz · Not quite | with Quiz | done | 3f4c279 |
-| 113 | Lesson complete | — | not built |  |
+| 113 | Lesson complete | with 28 | done |  |
 | 114 | Module complete | — | not built |  |
 | 115 | Tutor · Empty | with Tutor | done | a01ce13 |
 
