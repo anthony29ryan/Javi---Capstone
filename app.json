@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Capstone",
+    "name": "Javi",
     "slug": "Capstone",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,6 +11,11 @@
     },
     "android": {
       "package": "com.anthony29ryan.capstone",
+      "blockedPermissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
