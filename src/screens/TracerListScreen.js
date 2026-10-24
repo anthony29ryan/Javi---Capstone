@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     ...type.sectionLabel,
     fontSize: 11,
     letterSpacing: 11 * 0.12,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   title: {
     ...type.screenTitle,
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
   },
   cardEyebrow: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   cardTitleRow: {
     flexDirection: 'row',

@@ -21,6 +21,7 @@ import {
   Baloo2_800ExtraBold,
 } from '../theme/authTheme';
 import SplashView from '../components/SplashView';
+import TermsSheet from '../components/auth/TermsSheet';
 import { MASCOT_IMAGES } from '../components/Mascot';
 import MainTabs from './MainTabs';
 import { syncDailyReminder } from '../services/notifications';
@@ -247,7 +248,7 @@ function AppStack({ needsSetup }) {
 }
 
 export default function RootNavigator() {
-  const { user, initializing } = useAuth();
+  const { user, initializing, termsOutdated, acceptUpdatedTerms, logOut } = useAuth();
 
   // Whether this account has been through the setup screen. Held as
   // undefined until known so the app stays on the loader rather than
@@ -327,6 +328,14 @@ export default function RootNavigator() {
         <ProgressProvider>
           <TextSizeProvider>
             <AppStack needsSetup={needsSetup} />
+            {/* Accepted an older version of the Terms: show the current text
+                once. Closing without agreeing logs out, like the sign-up popup.
+                A failed save leaves the sheet up to try again. */}
+            <TermsSheet
+              visible={termsOutdated}
+              onAccept={() => acceptUpdatedTerms().catch(() => {})}
+              onClose={() => logOut().catch(() => {})}
+            />
           </TextSizeProvider>
         </ProgressProvider>
       )}

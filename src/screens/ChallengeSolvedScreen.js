@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     ...type.sectionLabel,
     fontSize: 11,
     letterSpacing: 11 * 0.12,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     flex: 1,
   },
   kicker: {
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: 7,
   },
   levelCard: {
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   },
   label: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   track: {
     height: 6,
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     ...type.sectionLabel,
     fontSize: 10.5,
     letterSpacing: 10.5 * 0.08,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: spacing.sm,
   },
   chevron: {

@@ -11,7 +11,7 @@ const { defineSecret } = require('firebase-functions/params');
 
 const { RunnerUnavailable, outputMatches, runJava, withGiven } = require('./codeRunner');
 const { manilaDate, manilaDayStart, manilaMonth } = require('./dayStart');
-const { MAX_PER_RUN, dueAccounts, purgeAccount } = require('./purgeAccounts');
+const { MAX_PER_RUN, abandonedGoogleAccounts, dueAccounts, purgeAccount } = require('./purgeAccounts');
 
 // Spend cap: a traffic spike or loop can't scale past 5 instances per function.
 setGlobalOptions({ maxInstances: 5 });
@@ -33,9 +33,17 @@ function verifiedUserId(request, signedOutMessage) {
   return request.auth.uid;
 }
 
+// Every module and question id (checked by scripts/verifyContent.js). Anything
+// else is refused up front: a / or a reserved id like __x__ would otherwise
+// crash the Firestore lookup and reach the caller as INTERNAL.
+const CONTENT_ID = /^[a-z0-9-]{1,100}$/;
+
 // Per user, in quizUsage/{uid}. A quiz question takes a person at least a few
 // seconds, so this only ever stops a script.
 const ANSWERS_PER_MINUTE = 30;
+// Per user per day (20 full quizzes), resetting at midnight Manila time: every
+// attempt is stored, and getWeakTopics' reads grow with them.
+const ANSWERS_PER_DAY = 400;
 
 /**
  * Grades one quiz answer and records it in `attempts`.
@@ -46,18 +54,18 @@ const ANSWERS_PER_MINUTE = 30;
  * claim, which matters because `attempts` is the trained model's feature
  * source — so the rules no longer let the app create attempts at all.
  *
- * Takes { questionId, choice, timeTakenMs, attemptId? } and returns { correct, answer },
- * where `answer` is the correct choice's index, for the screen to highlight.
- * attemptId names one viewing of a question: a retry after a lost reply sends
- * the same one, so it replaces that attempt instead of adding a second.
+ * Takes { questionId, choice, timeTakenMs, attemptId? } and returns { correct, answer, choice },
+ * where `answer` is the correct choice's index, for the screen to highlight,
+ * and `choice` the one graded. attemptId names one viewing of a question: a
+ * retry after a lost reply sends the same one and gets the first verdict back.
  */
 exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
   const userId = verifiedUserId(request, 'Sign in to take a quiz.');
 
   // Everything below comes from the client, so none of it is trusted.
   const { questionId, choice, timeTakenMs, attemptId } = request.data ?? {};
-  if (typeof questionId !== 'string' || !questionId) {
-    throw new HttpsError('invalid-argument', 'questionId must be a non-empty string.');
+  if (typeof questionId !== 'string' || !CONTENT_ID.test(questionId)) {
+    throw new HttpsError('invalid-argument', 'questionId must be a question id.');
   }
   if (!Number.isInteger(choice) || choice < 0) {
     throw new HttpsError('invalid-argument', 'choice must be a choice index.');
@@ -72,13 +80,20 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
 
   // Each answer is a paid write, and attempts feed getWeakTopics, which reads
   // them all, so a script must not be able to add thousands a minute.
-  await takeAllowance(
-    `quizUsage/${userId}`,
+  const usagePath = `quizUsage/${userId}`;
+  const burst = await takeAllowance(
+    usagePath,
     'lastMinute',
     ANSWERS_PER_MINUTE,
     `Slow down: you can answer ${ANSWERS_PER_MINUTE} questions a minute. Try again shortly.`,
     Date.now() - 60 * 1000
   );
+  try {
+    await takeAllowance(usagePath, 'today', ANSWERS_PER_DAY, `You can answer ${ANSWERS_PER_DAY} questions a day. They reset at midnight.`);
+  } catch (err) {
+    await giveBackAllowance(usagePath, 'lastMinute', burst.at); // refused before grading
+    throw err;
+  }
 
   const key = await db.collection('answerKeys').doc(questionId).get();
   if (!key.exists) throw new HttpsError('not-found', 'No such question.');
@@ -89,16 +104,21 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
     ? db.collection('attempts').doc(`${userId}_${questionId}_${attemptId}`)
     : db.collection('attempts').doc();
   const retried = await attemptRef.get();
-  const attemptNumber = retried.exists
-    ? retried.data().attemptNumber
-    : (
-        await db
-          .collection('attempts')
-          .where('userId', '==', userId)
-          .where('questionId', '==', questionId)
-          .count()
-          .get()
-      ).data().count + 1;
+  // A retry after a lost reply gets the verdict already recorded, so answering
+  // again cannot turn a wrong answer right; finishQuiz counts these.
+  if (retried.exists) {
+    const recorded = retried.data();
+    return { correct: recorded.correct, answer, choice: recorded.choice ?? choice };
+  }
+  const attemptNumber =
+    (
+      await db
+        .collection('attempts')
+        .where('userId', '==', userId)
+        .where('questionId', '==', questionId)
+        .count()
+        .get()
+    ).data().count + 1;
 
   const correct = choice === answer;
   await attemptRef.set({
@@ -108,15 +128,92 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
     // "X Quiz") and can be renamed, and the model groups features by topic.
     topic: moduleId,
     correct,
+    choice, // for a retry's reply; not a model feature
     timeTakenMs: Math.round(timeTakenMs),
     attemptNumber,
     createdAt: FieldValue.serverTimestamp(),
   });
 
-  return { correct, answer };
+  return { correct, answer, choice };
+});
+
+// Keep in step with QUIZ_LENGTH in src/screens/QuizScreen.js.
+const QUIZ_LENGTH = 20;
+const FINISHES_PER_MINUTE = 6;
+
+/**
+ * Saves a finished quiz's score to progress/{uid}.moduleScores, counted here
+ * from the attempts gradeAnswer recorded, so the app cannot write a score of
+ * its own (firestore.rules no longer lets it touch moduleScores).
+ *
+ * Left open on purpose: a script can grade a question twice under two
+ * attemptIds, learn the answer from the first reply and send the second. That
+ * is only a faster retake: the app shows each answer after it is graded and
+ * allows retakes, and a score unlocks nothing (badges and the score display).
+ * A server-issued quiz id would not change this, since a script can start two.
+ *
+ * Takes { moduleId, answers: [{ questionId, attemptId }] }, one per question of
+ * the quiz, and returns { correct, total }.
+ */
+exports.finishQuiz = onCall({ region: 'asia-southeast1' }, async (request) => {
+  const userId = verifiedUserId(request, 'Sign in to save a quiz score.');
+
+  const { moduleId, answers } = request.data ?? {};
+  if (typeof moduleId !== 'string' || !CONTENT_ID.test(moduleId)) {
+    throw new HttpsError('invalid-argument', 'moduleId must be a module id.');
+  }
+  const validAnswer = (a) =>
+    typeof a?.questionId === 'string' &&
+    CONTENT_ID.test(a.questionId) &&
+    typeof a.attemptId === 'string' &&
+    /^[A-Za-z0-9-]{1,40}$/.test(a.attemptId);
+  if (!Array.isArray(answers) || answers.length > QUIZ_LENGTH || !answers.every(validAnswer)) {
+    throw new HttpsError('invalid-argument', `answers must be up to ${QUIZ_LENGTH} { questionId, attemptId }.`);
+  }
+  if (new Set(answers.map((a) => a.questionId)).size !== answers.length) {
+    throw new HttpsError('invalid-argument', 'Each question can be counted once.');
+  }
+
+  await takeAllowance(
+    `quizUsage/${userId}`,
+    'finishLastMinute',
+    FINISHES_PER_MINUTE,
+    'Slow down: try again in a minute.',
+    Date.now() - 60 * 1000
+  );
+
+  // A whole quiz, not a hand-picked few: otherwise sending only the right answers scores 100%.
+  const bank = (await db.collection('answerKeys').where('moduleId', '==', moduleId).count().get()).data().count;
+  if (bank === 0 || answers.length !== Math.min(QUIZ_LENGTH, bank)) {
+    throw new HttpsError('invalid-argument', 'Send every question of the quiz.');
+  }
+
+  // The uid in each id means only this user's attempts can be counted.
+  const attempts = await db.getAll(
+    ...answers.map((a) => db.doc(`attempts/${userId}_${a.questionId}_${a.attemptId}`))
+  );
+  if (attempts.some((attempt) => !attempt.exists || attempt.data().topic !== moduleId)) {
+    throw new HttpsError('failed-precondition', 'Some answers of this quiz were not recorded.');
+  }
+
+  const correct = attempts.filter((attempt) => attempt.data().correct).length;
+  const total = answers.length;
+  // merge keeps the other modules' scores.
+  await db.doc(`progress/${userId}`).set(
+    {
+      moduleScores: { [moduleId]: { correct, total, lastAttemptAt: Date.now() } },
+      updatedAt: FieldValue.serverTimestamp(),
+    },
+    { merge: true }
+  );
+  return { correct, total };
 });
 
 // ------------------------------------------------------------ weak topics
+
+// Per user, in quizUsage/{uid}. The app asks once per session and again only after a new answer.
+const WEAK_TOPICS_PER_MINUTE = 6;
+const MAX_ATTEMPTS_READ = 500;
 
 /**
  * Predicts which topics the signed-in learner is weak in, using the trained
@@ -127,12 +224,21 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
  */
 exports.getWeakTopics = onCall({ region: 'asia-southeast1' }, async (request) => {
   const userId = verifiedUserId(request, 'Sign in to see weak topics.');
+  // Each call reads up to MAX_ATTEMPTS_READ documents, so a script must not call it in a loop.
+  await takeAllowance(
+    `quizUsage/${userId}`,
+    'weakTopicsLastMinute',
+    WEAK_TOPICS_PER_MINUTE,
+    'Slow down: try again in a minute.',
+    Date.now() - 60 * 1000
+  );
 
   // Required here, not at the top: TensorFlow.js would slow every other function's cold start.
   const { loadModel, predictWeakTopics } = require('./weakTopics');
-  // shortcut: reads all of a user's attempts, add orderBy+index or a cap if users reach thousands.
   const [attempts, modules, model] = await Promise.all([
-    db.collection('attempts').where('userId', '==', userId).get(),
+    // Newest first (index in firestore.indexes.json). The model uses only the last
+    // 20 answers per topic, and 21 topics × 20 fits well inside the cap.
+    db.collection('attempts').where('userId', '==', userId).orderBy('createdAt', 'desc').limit(MAX_ATTEMPTS_READ).get(),
     db.collection('modules').select().get(),
     loadModel(),
   ]);
@@ -353,8 +459,8 @@ exports.askTutor = onCall({ region: 'asia-southeast1', secrets: [geminiKey] }, a
   const userId = verifiedUserId(request, 'Sign in to use the tutor.');
 
   const { moduleId, question } = request.data ?? {};
-  if (typeof moduleId !== 'string' || !moduleId) {
-    throw new HttpsError('invalid-argument', 'moduleId must be a non-empty string.');
+  if (typeof moduleId !== 'string' || !CONTENT_ID.test(moduleId)) {
+    throw new HttpsError('invalid-argument', 'moduleId must be a module id.');
   }
   if (typeof question !== 'string' || !question.trim() || question.length > MAX_QUESTION_CHARS) {
     throw new HttpsError('invalid-argument', `Ask a question of 1 to ${MAX_QUESTION_CHARS} characters.`);
@@ -605,7 +711,9 @@ exports.runChallenge = onCall(RUNNER_OPTIONS, async (request) => {
         }
         tests.push({ label, hidden: true, passed: run.kind === 'ok' && outputMatches(run.stdout, test.output) });
       }
-      return { status: tests.every((t) => t.passed) ? 'passed' : 'failed', stdout: '', error: '', timeSeconds, tests };
+      const allPassed = tests.every((t) => t.passed);
+      // Only on a pass: a program could burn CPU in proportion to a hidden input, then fail on purpose to read it here.
+      return { status: allPassed ? 'passed' : 'failed', stdout: '', error: '', timeSeconds: allPassed ? timeSeconds : 0, tests };
     }
   );
 
@@ -673,24 +781,24 @@ exports.runCode = onCall(RUNNER_OPTIONS, async (request) => {
 exports.purgeDeletedAccounts = onSchedule(
   { schedule: 'every day 03:00', timeZone: 'Asia/Manila', region: 'asia-southeast1' },
   async () => {
-    const due = await dueAccounts(db);
-    if (!due.length) {
-      console.log('purgeDeletedAccounts: no accounts past their deletion window');
-      return;
-    }
-
     const admin = { db, auth: getAuth() };
-    let failed = 0;
-    for (const profile of due) {
-      try {
-        const counts = await purgeAccount(admin, profile.id);
-        console.log(`purgeDeletedAccounts: deleted ${profile.id}`, counts);
-      } catch (err) {
-        failed++;
-        console.error(`purgeDeletedAccounts: could not delete ${profile.id}`, err.message);
+    // Deleted accounts past their window, then Google sign-ups abandoned on the Terms popup.
+    for (const [kind, ids] of [
+      ['past their deletion window', (await dueAccounts(db)).map((profile) => profile.id)],
+      ['abandoned at the Terms popup', await abandonedGoogleAccounts(admin)],
+    ]) {
+      let failed = 0;
+      for (const userId of ids) {
+        try {
+          const counts = await purgeAccount(admin, userId);
+          console.log(`purgeDeletedAccounts: deleted ${userId}`, counts);
+        } catch (err) {
+          failed++;
+          console.error(`purgeDeletedAccounts: could not delete ${userId}`, err.message);
+        }
       }
+      const capped = ids.length === MAX_PER_RUN ? `; hit the cap of ${MAX_PER_RUN}, the rest go tomorrow` : '';
+      console.log(`purgeDeletedAccounts: ${kind}: deleted ${ids.length - failed} of ${ids.length}${capped}`);
     }
-    const capped = due.length === MAX_PER_RUN ? `; hit the cap of ${MAX_PER_RUN}, the rest go tomorrow` : '';
-    console.log(`purgeDeletedAccounts: deleted ${due.length - failed} of ${due.length}${capped}`);
   }
 );

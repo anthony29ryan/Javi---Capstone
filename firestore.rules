@@ -117,25 +117,29 @@ service cloud.firestore {
 
     // --------------------------------------------------------------- progress
     // Written by services/progress.js with merge, so each write carries only
-    // some of these fields. completedChallenges is deliberately missing from
-    // the list: only the runChallenge function writes it, after the hidden
-    // tests pass, so the app cannot mark a challenge solved on its own.
+    // some of these fields. completedChallenges and moduleScores are
+    // deliberately missing from the list: only the runChallenge function
+    // writes the first, after the hidden tests pass, and only finishQuiz the
+    // second, counting the graded attempts. So the app cannot mark a challenge
+    // solved or set a quiz score on its own.
 
     function validProgressWrite() {
       let data = request.resource.data;
       return changedFields().hasOnly([
-          'completedLessons', 'completedTraces', 'moduleScores', 'streak', 'lastLessonId', 'updatedAt'
+          'completedLessons', 'completedTraces', 'streak', 'lastLessonId', 'updatedAt'
         ])
         && (!changed('completedLessons')
             || (data.completedLessons is list && data.completedLessons.size() <= 1000))
         && (!changed('completedTraces')
             || (data.completedTraces is list && data.completedTraces.size() <= 1000))
-        && (!changed('moduleScores') || data.moduleScores is map)
         && (!changed('streak')
             || (data.streak is map
                 && data.streak.keys().hasOnly(['current', 'longest', 'lastActiveDate', 'days'])
                 && data.streak.current is int
                 && data.streak.longest is int
+                // What advanceStreak in streak.js always keeps true.
+                && data.streak.current >= 0
+                && data.streak.current <= data.streak.longest
                 && (data.streak.lastActiveDate == null || data.streak.lastActiveDate is string)
                 // The days studied, for the Streak calendar; capped like MAX_STUDIED_DAYS in streak.js.
                 && (!('days' in data.streak)

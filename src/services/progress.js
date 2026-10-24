@@ -1,6 +1,7 @@
 import { arrayRemove, arrayUnion, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
 
-import { auth, db } from './firebase';
+import { auth, db, functions } from './firebase';
 import { advanceStreak } from './streak';
 
 const EMPTY_PROGRESS = {
@@ -17,6 +18,24 @@ async function readProgress(userId) {
   return snapshot.exists() ? { ...EMPTY_PROGRESS, ...snapshot.data() } : EMPTY_PROGRESS;
 }
 
+// Firestore resolves a write only once the server has it, which never happens
+// offline, so screens would spin until reconnect. Give up after this long so
+// they can say "not saved"; the write stays queued and lands on reconnect.
+const SAVE_TIMEOUT_MS = 10000;
+
+const finishQuizFunction = httpsCallable(functions, 'finishQuiz', { timeout: SAVE_TIMEOUT_MS });
+
+/** Merges `fields` into progress/{userId}, rejecting if the server has not confirmed it in time. */
+function saveProgress(userId, fields) {
+  let timer;
+  const timedOut = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error('Saving timed out. Check your connection.')), SAVE_TIMEOUT_MS);
+  });
+  return Promise.race([setDoc(doc(db, 'progress', userId), fields, { merge: true }), timedOut]).finally(() =>
+    clearTimeout(timer)
+  );
+}
+
 export async function getProgress() {
   return readProgress(auth.currentUser.uid);
 }
@@ -31,11 +50,7 @@ export async function getProgress() {
  * again is not measuring anything.
  */
 export async function recordLessonOpened(lessonId) {
-  await setDoc(
-    doc(db, 'progress', auth.currentUser.uid),
-    { lastLessonId: lessonId, updatedAt: serverTimestamp() },
-    { merge: true }
-  );
+  await saveProgress(auth.currentUser.uid, { lastLessonId: lessonId, updatedAt: serverTimestamp() });
 }
 
 /**
@@ -64,32 +79,25 @@ export async function setLessonComplete(lessonId, complete) {
 
   // The server adds or removes the one id rather than taking this whole list,
   // so a second save still in flight (another lesson, another phone) is not overwritten.
-  await setDoc(
-    doc(db, 'progress', userId),
-    {
-      ...changes,
-      completedLessons: complete ? arrayUnion(lessonId) : arrayRemove(lessonId),
-      updatedAt: serverTimestamp(),
-    },
-    { merge: true }
-  );
+  await saveProgress(userId, {
+    ...changes,
+    completedLessons: complete ? arrayUnion(lessonId) : arrayRemove(lessonId),
+    updatedAt: serverTimestamp(),
+  });
   return changes;
 }
 
-export async function recordModuleQuizCompletion(moduleId, correct, total) {
+/**
+ * Saves a finished quiz. The score is counted and saved by the finishQuiz
+ * function from the graded attempts, since the rules do not let the app write
+ * moduleScores; the streak follows the phone's own day, so it is saved here.
+ * `answers` is one { questionId, attemptId } per question of the quiz.
+ */
+export async function recordModuleQuizCompletion(moduleId, answers) {
+  await finishQuizFunction({ moduleId, answers });
   const userId = auth.currentUser.uid;
   const existing = await readProgress(userId);
-
-  await setDoc(
-    doc(db, 'progress', userId),
-    {
-      // merge keeps the other modules' scores, so two quizzes saved at once cannot erase each other.
-      moduleScores: { [moduleId]: { correct, total, lastAttemptAt: Date.now() } },
-      streak: advanceStreak(existing.streak),
-      updatedAt: serverTimestamp(),
-    },
-    { merge: true }
-  );
+  await saveProgress(userId, { streak: advanceStreak(existing.streak), updatedAt: serverTimestamp() });
 }
 
 /**
@@ -102,15 +110,11 @@ export async function recordTraceCompletion(traceId) {
   const userId = auth.currentUser.uid;
   const existing = await readProgress(userId);
 
-  await setDoc(
-    doc(db, 'progress', userId),
-    {
-      completedTraces: arrayUnion(traceId),
-      streak: advanceStreak(existing.streak),
-      updatedAt: serverTimestamp(),
-    },
-    { merge: true }
-  );
+  await saveProgress(userId, {
+    completedTraces: arrayUnion(traceId),
+    streak: advanceStreak(existing.streak),
+    updatedAt: serverTimestamp(),
+  });
 }
 
 /**
@@ -122,9 +126,5 @@ export async function recordChallengeStreak() {
   const userId = auth.currentUser.uid;
   const existing = await readProgress(userId);
 
-  await setDoc(
-    doc(db, 'progress', userId),
-    { streak: advanceStreak(existing.streak), updatedAt: serverTimestamp() },
-    { merge: true }
-  );
+  await saveProgress(userId, { streak: advanceStreak(existing.streak), updatedAt: serverTimestamp() });
 }

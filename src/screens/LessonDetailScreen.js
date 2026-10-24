@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
   },
   crumb: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   position: {
     fontFamily: fonts.semiBold,
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
     fontSize: 10.5,
     letterSpacing: 10.5 * 0.08,
     textTransform: 'uppercase',
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   body: {
     marginTop: 18,

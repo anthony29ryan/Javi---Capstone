@@ -1,6 +1,6 @@
-// The email-link page's logic. Firebase adds mode, oobCode and apiKey to every
-// action link, so the page needs no project config of its own. The SDK is
-// Firebase's own build from gstatic, pinned to the app's version (package.json).
+// The email-link page's logic. Firebase adds mode and oobCode to every action
+// link; the project config comes from Firebase Hosting itself (start()). The
+// SDK is Firebase's own build from gstatic, pinned to the app's version (package.json).
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js';
 import {
   applyActionCode,
@@ -13,7 +13,6 @@ import { PASSWORD_RULES, passwordProblems } from './passwordRules.js';
 const params = new URLSearchParams(window.location.search);
 const mode = params.get('mode');
 const oobCode = params.get('oobCode');
-const apiKey = params.get('apiKey');
 
 const byId = (id) => document.getElementById(id);
 
@@ -119,9 +118,12 @@ function setUpResetForm(auth) {
 }
 
 async function start() {
-  if (!oobCode || !apiKey) return show('expired');
-  const auth = getAuth(initializeApp({ apiKey }));
+  if (!oobCode) return show('expired');
   try {
+    // Hosting's reserved URL for this project's config. The link's own apiKey
+    // is ignored: a link carrying another project's key would send the new
+    // password to that project.
+    const auth = getAuth(initializeApp(await (await fetch('/__/firebase/init.json')).json()));
     if (mode === 'resetPassword') {
       byId('reset-email').textContent = await verifyPasswordResetCode(auth, oobCode);
       setUpResetForm(auth);

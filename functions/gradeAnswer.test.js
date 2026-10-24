@@ -24,10 +24,12 @@ test('answers are graded from the hidden key and every one is recorded', async (
   assert.deepStrictEqual(await asAlice({ questionId: 'q1', choice: 2, timeTakenMs: 4200.6 }), {
     correct: true,
     answer: 2,
+    choice: 2,
   });
   assert.deepStrictEqual(await asAlice({ questionId: 'q1', choice: 0, timeTakenMs: 900 }), {
     correct: false,
     answer: 2,
+    choice: 0,
   });
 
   const attempts = await db.collection('attempts').where('userId', '==', 'alice').get();
@@ -36,22 +38,27 @@ test('answers are graded from the hidden key and every one is recorded', async (
     .sort((a, b) => a.attemptNumber - b.attemptNumber)
     .map(({ createdAt, ...rest }) => rest);
   assert.deepStrictEqual(recorded, [
-    { userId: 'alice', questionId: 'q1', topic: 'm1', correct: true, timeTakenMs: 4201, attemptNumber: 1 },
-    { userId: 'alice', questionId: 'q1', topic: 'm1', correct: false, timeTakenMs: 900, attemptNumber: 2 },
+    { userId: 'alice', questionId: 'q1', topic: 'm1', correct: true, choice: 2, timeTakenMs: 4201, attemptNumber: 1 },
+    { userId: 'alice', questionId: 'q1', topic: 'm1', correct: false, choice: 0, timeTakenMs: 900, attemptNumber: 2 },
   ]);
 });
 
-test('a retry with the same attemptId replaces that attempt instead of adding one', async () => {
+test('a retry with the same attemptId gets the first verdict back and adds no attempt', async () => {
   const asBob = (data) => gradeAnswer.run({ auth: { uid: 'bob', token: { email_verified: true } }, data });
   await asBob({ questionId: 'q1', choice: 0, timeTakenMs: 500, attemptId: '111' });
-  await asBob({ questionId: 'q1', choice: 2, timeTakenMs: 700, attemptId: '111' }); // reply was lost, answered again
+  // The reply was lost and a different choice is sent: the wrong answer stands.
+  assert.deepStrictEqual(await asBob({ questionId: 'q1', choice: 2, timeTakenMs: 700, attemptId: '111' }), {
+    correct: false,
+    answer: 2,
+    choice: 0,
+  });
   await asBob({ questionId: 'q1', choice: 2, timeTakenMs: 300, attemptId: '222' }); // the next viewing
 
   const attempts = (await db.collection('attempts').where('userId', '==', 'bob').get()).docs.map((d) => d.data());
   assert.deepStrictEqual(
     attempts.map(({ correct, attemptNumber }) => ({ correct, attemptNumber })).sort((a, b) => a.attemptNumber - b.attemptNumber),
     [
-      { correct: true, attemptNumber: 1 },
+      { correct: false, attemptNumber: 1 },
       { correct: true, attemptNumber: 2 },
     ]
   );
@@ -67,6 +74,16 @@ test('a 31st answer within a minute is refused', async () => {
   );
 });
 
+test("the 401st answer of the day is refused, and it does not use up the minute's allowance", async () => {
+  await db.doc('quizUsage/dave').set({ today: Array(400).fill(Date.now()) });
+  const asDave = (data) => gradeAnswer.run({ auth: { uid: 'dave', token: { email_verified: true } }, data });
+  await assert.rejects(
+    asDave({ questionId: 'q1', choice: 2, timeTakenMs: 1 }),
+    (err) => err.code === 'resource-exhausted' && /a day/.test(err.message)
+  );
+  assert.deepStrictEqual((await db.doc('quizUsage/dave').get()).data().lastMinute, []);
+});
+
 test('signed-out callers, bad input and unknown questions are refused', async () => {
   const refused = (code) => (err) => err.code === code;
   await assert.rejects(
@@ -75,6 +92,9 @@ test('signed-out callers, bad input and unknown questions are refused', async ()
   );
   await assert.rejects(asAlice({ questionId: 'q1', choice: '2', timeTakenMs: 1 }), refused('invalid-argument'));
   await assert.rejects(asAlice({ questionId: 'q1', choice: 2, timeTakenMs: -5 }), refused('invalid-argument'));
-  await assert.rejects(asAlice({ questionId: '', choice: 2, timeTakenMs: 1 }), refused('invalid-argument'));
+  // Ids Firestore would reject as paths come back as invalid-argument, not INTERNAL.
+  for (const questionId of ['', 'a/b', '..', '__x__']) {
+    await assert.rejects(asAlice({ questionId, choice: 2, timeTakenMs: 1 }), refused('invalid-argument'));
+  }
   await assert.rejects(asAlice({ questionId: 'nope', choice: 2, timeTakenMs: 1 }), refused('not-found'));
 });

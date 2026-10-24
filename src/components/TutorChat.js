@@ -160,6 +160,8 @@ export default function TutorChat({
           style={[
             styles.bubble,
             message.role === 'learner' ? styles.bubbleLearner : styles.bubbleTutor,
+            // A definite width: sized to fit, the sideways code box throws off the text's height on Android.
+            message.role === 'tutor' && message.text.includes('```') && styles.bubbleWide,
             message.failed && styles.bubbleFailed,
           ]}
         >
@@ -279,6 +281,9 @@ export default function TutorChat({
         contentContainerStyle={styles.fullThreadContent}
         keyboardShouldPersistTaps="handled"
         onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
+        // The view itself shrinks too (the sheet settling, the keyboard opening), and that changes the end.
+        // A frame later, once the native view has its new height, or the scroll lands on the old end.
+        onLayout={() => requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: false }))}
       >
         {thread}
       </ScrollView>
@@ -346,6 +351,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  bubbleWide: {
+    width: '84%',
+  },
   bubbleLearner: {
     alignSelf: 'flex-end',
     backgroundColor: colors.button,
@@ -386,7 +394,7 @@ const styles = StyleSheet.create({
   thinkingText: {
     fontFamily: fonts.medium,
     fontSize: 11.5,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: 12,
   },
   errorCard: {
@@ -447,7 +455,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 10 * 0.12,
     textTransform: 'uppercase',
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   limitTitle: {
     fontFamily: fonts.bold,

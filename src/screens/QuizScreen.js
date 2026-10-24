@@ -155,8 +155,9 @@ export default function QuizScreen({ route, navigation }) {
 
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState(null);
-  // One per answered question: { correct, answer, picked }, answer being the
-  // index of the right choice as the server reports it.
+  // One per answered question: { correct, answer, picked, questionId, attemptId },
+  // answer being the index of the right choice as the server reports it, and
+  // questionId + attemptId naming the graded attempt that finishQuiz counts.
   const [marks, setMarks] = useState([]);
   const [grading, setGrading] = useState(false);
   const [gradeError, setGradeError] = useState('');
@@ -255,7 +256,10 @@ export default function QuizScreen({ route, navigation }) {
   async function saveScore() {
     setSavingScore(true);
     try {
-      await recordModuleQuizCompletion(moduleId, correctCount, questions.length);
+      await recordModuleQuizCompletion(
+        moduleId,
+        marks.map(({ questionId, attemptId }) => ({ questionId, attemptId }))
+      );
       // Completion just changed the numbers behind every progress ring, so
       // reload them before the user navigates back to a screen showing one.
       await reloadProgress();
@@ -359,23 +363,31 @@ export default function QuizScreen({ route, navigation }) {
     if (selected === null || grading) return;
     setGrading(true);
     setGradeError('');
+    // Same for a retry of this question, new for the next, so a retry after a
+    // lost reply gets that attempt's verdict back rather than adding one.
+    const attemptId = String(questionStart);
     try {
       const verdict = await gradeAnswer({
         questionId: question.id,
         choice: selected,
         timeTakenMs: Date.now() - questionStart,
-        // Same for a retry of this question, new for the next, so a retry
-        // after a lost reply replaces its attempt rather than adding one.
-        attemptId: String(questionStart),
+        attemptId,
       });
-      setMarks((current) => [...current, { ...verdict, picked: selected }]);
-    } catch {
+      // `choice` is the one the server graded, which on a retry may be the first pick.
+      setMarks((current) => [
+        ...current,
+        { correct: verdict.correct, answer: verdict.answer, picked: verdict.choice ?? selected, questionId: question.id, attemptId },
+      ]);
+    } catch (err) {
       // No verdict came back, so keep the choice and let them submit again
       // rather than ending the whole quiz over one dropped request.
       setGradeError(
-        offline
-          ? "Your answer wasn't checked. Reconnect and submit it again."
-          : 'Could not check that answer. Try submitting again.'
+        // A limit (per minute or per day): the server's message says how long to wait.
+        err.code === 'functions/resource-exhausted'
+          ? err.message
+          : offline
+            ? "Your answer wasn't checked. Reconnect and submit it again."
+            : 'Could not check that answer. Try submitting again.'
       );
     } finally {
       setGrading(false);
@@ -526,7 +538,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     letterSpacing: 11 * 0.1,
     textTransform: 'uppercase',
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   track: {
     height: 5,
@@ -751,7 +763,7 @@ const styles = StyleSheet.create({
   },
   nextLabel: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   nextBody: {
     fontFamily: fonts.medium,
@@ -787,7 +799,7 @@ const styles = StyleSheet.create({
   },
   reviewNumber: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   reviewVerdict: {
     fontFamily: fonts.bold,

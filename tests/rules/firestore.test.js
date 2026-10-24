@@ -271,12 +271,11 @@ describe('progress', () => {
     await assertSucceeds(
       setDoc(ref, { completedLessons: [], updatedAt: serverTimestamp() }, { merge: true })
     );
-    // recordModuleQuizCompletion
+    // recordModuleQuizCompletion (the score itself is saved by finishQuiz)
     await assertSucceeds(
       setDoc(
         ref,
         {
-          moduleScores: { oop: { correct: 4, total: 5, lastAttemptAt: Date.now() } },
           streak: { current: 2, longest: 2, lastActiveDate: '2026-10-01' },
           updatedAt: serverTimestamp(),
         },
@@ -310,7 +309,13 @@ describe('progress', () => {
     await assertFails(setDoc(ref, { badges: ['all'] }, { merge: true }));
     await assertFails(setDoc(ref, { completedLessons: 'oop-1' }, { merge: true }));
     await assertFails(setDoc(ref, { moduleScores: 100 }, { merge: true }));
+    // Only finishQuiz sets scores, so even a well-formed one is refused.
+    await assertFails(
+      setDoc(ref, { moduleScores: { oop: { correct: 20, total: 20, lastAttemptAt: Date.now() } } }, { merge: true })
+    );
     await assertFails(setDoc(ref, { streak: { current: 'lots' } }, { merge: true }));
+    await assertFails(setDoc(ref, { streak: { current: -5, longest: -5, lastActiveDate: null } }, { merge: true }));
+    await assertFails(setDoc(ref, { streak: { current: 9, longest: 3, lastActiveDate: null } }, { merge: true }));
     await assertFails(
       setDoc(ref, { streak: { current: 1, longest: 1, lastActiveDate: null, bonus: 9 } }, { merge: true })
     );

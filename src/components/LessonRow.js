@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.mono,
     fontSize: 10.5,
     letterSpacing: 0.42,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
 });

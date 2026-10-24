@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   eyebrow: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   title: {
     ...type.screenTitle,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   groupCount: {
     fontFamily: fonts.semiBold,
     fontSize: 10.5,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   quizCard: {
     flexDirection: 'row',
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   quizEyebrow: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   quizName: {
     ...type.cardTitle,

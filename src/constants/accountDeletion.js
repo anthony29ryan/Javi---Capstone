@@ -15,6 +15,11 @@ export function permanentDeletionDate(requestedAt) {
   return new Date(requestedAt.getTime() + DELETION_WINDOW_DAYS * DAY_MS);
 }
 
+/** True once the window has ended: the account counts as gone even if the purge has not run yet. */
+export function isPastDeletionWindow(requestedAt, now = new Date()) {
+  return permanentDeletionDate(requestedAt) <= now;
+}
+
 /** Formats a purge date for the screens that tell the user about it. */
 export function formatDeletionDate(date) {
   return date.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });

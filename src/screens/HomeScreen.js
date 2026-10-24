@@ -592,7 +592,7 @@ const styles = StyleSheet.create({
     ...type.meta,
     letterSpacing: 11.5 * 0.06,
     textTransform: 'uppercase',
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: spacing.xs,
   },
   recChevron: {
@@ -603,7 +603,7 @@ const styles = StyleSheet.create({
   recWhy: {
     ...type.small,
     fontSize: 12,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: 14,
     marginHorizontal: spacing.xs,
   },

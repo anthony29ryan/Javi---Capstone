@@ -433,7 +433,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     letterSpacing: 11 * 0.12,
     textTransform: 'uppercase',
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   courseTitle: {
     ...type.screenTitle,
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
   },
   moduleLabel: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   moduleTitle: {
     fontFamily: fonts.bold,

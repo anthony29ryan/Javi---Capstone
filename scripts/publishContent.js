@@ -173,7 +173,7 @@ async function main() {
     console.log('Wrote questions for module:', moduleId);
   }
 
-  if (fs.existsSync(questionsDir)) {
+  if (publishedQuestionIds.size > 0) {
     removed.questions = await removeStale(db, 'questions', publishedQuestionIds);
     await removeStale(db, 'answerKeys', publishedQuestionIds);
   }
@@ -186,7 +186,7 @@ async function main() {
       await db.collection('traces').doc(id).set(data);
       publishedTraceIds.add(id);
     }
-    removed.traces = await removeStale(db, 'traces', publishedTraceIds);
+    if (publishedTraceIds.size > 0) removed.traces = await removeStale(db, 'traces', publishedTraceIds);
   }
 
   // Code Challenges, split like questions: `challenges` is what the app shows,
@@ -202,8 +202,10 @@ async function main() {
       await batch.commit();
       publishedChallengeIds.add(id);
     }
-    removed.challenges = await removeStale(db, 'challenges', publishedChallengeIds);
-    await removeStale(db, 'challengeTests', publishedChallengeIds);
+    if (publishedChallengeIds.size > 0) {
+      removed.challenges = await removeStale(db, 'challenges', publishedChallengeIds);
+      await removeStale(db, 'challengeTests', publishedChallengeIds);
+    }
   }
 
   const removedSummary = Object.entries(removed)

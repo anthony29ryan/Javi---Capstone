@@ -70,4 +70,34 @@ async function purgeAccount({ db, auth }, userId) {
   return { attempts: attempts.size, chats: chats.size };
 }
 
-module.exports = { DELETION_WINDOW_DAYS, MAX_PER_RUN, dueAccounts, purgeAccount };
+/**
+ * Ids of Google sign-ins older than a day that never got a profile: the person
+ * closed the app on the sign-up Terms popup, so they never consented and
+ * nothing of theirs should be kept. Google-only, because an email account
+ * can be in use before its profile exists. At most MAX_PER_RUN.
+ */
+async function abandonedGoogleAccounts({ db, auth }, now = Date.now()) {
+  const found = [];
+  let pageToken;
+  do {
+    const page = await auth.listUsers(1000, pageToken);
+    const candidates = page.users.filter((account) => {
+      const providers = account.providerData.map((provider) => provider.providerId);
+      return (
+        providers.includes('google.com') &&
+        !providers.includes('password') &&
+        Date.parse(account.metadata.creationTime) <= now - DAY_MS
+      );
+    });
+    if (candidates.length) {
+      const profiles = await db.getAll(...candidates.map((account) => db.doc(`users/${account.uid}`)));
+      profiles.forEach((profile, i) => {
+        if (!profile.exists) found.push(candidates[i].uid);
+      });
+    }
+    pageToken = page.pageToken;
+  } while (pageToken && found.length < MAX_PER_RUN);
+  return found.slice(0, MAX_PER_RUN);
+}
+
+module.exports = { DELETION_WINDOW_DAYS, MAX_PER_RUN, abandonedGoogleAccounts, dueAccounts, purgeAccount };

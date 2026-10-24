@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
   },
   levelLabel: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   courseTitle: {
     ...type.cardTitle,
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     fontSize: 11.5,
     lineHeight: 11.5 * 1.2,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: 3,
   },
   change: {

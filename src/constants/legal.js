@@ -9,8 +9,8 @@
 // A section's body is a list of parts: a string is a paragraph; an object is a
 // bullet list, with an optional bold label above it.
 
-export const TERMS_VERSION = '2026-10-21';
-export const TERMS_UPDATED = '21 Oct 2026';
+export const TERMS_VERSION = '2026-10-24';
+export const TERMS_UPDATED = '24 Oct 2026';
 export const LEGAL_CONTACT = 'support.javi@gmail.com';
 
 const APP_NAME = 'Javi: An AI-Powered Android Application for Java Learning ("Javi," "the Application," "we," "our," or "us")';
@@ -23,7 +23,7 @@ export const LEGAL_DOCS = {
       {
         h: 'Purpose of the Application',
         body: [
-          'Javi helps learners study and improve their Java programming skills. It provides structured Java lessons, quizzes, Code Tracer typing drills, progress tracking, suggestions on topics to review, and an AI tutor.',
+          'Javi helps learners study and improve their Java programming skills. It provides structured Java lessons, quizzes, Code Tracer typing drills, code challenges and a Playground for running Java programs, progress tracking, suggestions on topics to review, and an AI tutor.',
           'It is a supplementary educational resource, not a replacement for formal education, instructors or other programming resources.',
         ],
       },
@@ -56,7 +56,7 @@ export const LEGAL_DOCS = {
         body: [
           'The tutor answers Java questions about the module you are studying, with explanations, examples and hints. It is designed to guide your learning rather than hand over quiz answers, and it declines questions outside the module.',
           'Answers may contain errors or be incomplete, so check important information against the lessons, your instructors or the official Java documentation.',
-          'Every tutor question is sent over the internet to Google Gemini, so the tutor needs a connection. Each account can ask up to 30 questions in any 24 hours.',
+          'Every tutor question is sent over the internet to Google Gemini, so the tutor needs a connection. Each account can ask up to 30 questions a day, and the count resets at midnight Philippine time.',
         ],
       },
       {
@@ -75,13 +75,13 @@ export const LEGAL_DOCS = {
         h: 'Application Availability',
         body: [
           'The development team will make reasonable efforts to keep Javi working and available. It may occasionally be unavailable because of maintenance, updates, technical problems, internet connectivity or problems with third-party services.',
-          'Lessons you download can be read offline; quizzes, Code Tracer, the AI tutor and saving progress need an internet connection.',
+          'Lessons you download can be read offline; quizzes, Code Tracer, code challenges, the Playground, the AI tutor and saving progress need an internet connection.',
         ],
       },
       {
         h: 'Third-Party Services',
         body: [
-          "Javi uses Firebase (by Google) for sign-in, its database and its server functions, and Google Gemini for the AI tutor. These services are subject to their providers' own terms, policies and technical limits.",
+          "Javi uses Firebase (by Google) for sign-in, its database and its server functions, Google Gemini for the AI tutor, and Judge0 (through RapidAPI) to compile and run the Java code you submit in code challenges and the Playground. These services are subject to their providers' own terms, policies and technical limits.",
         ],
       },
       {
@@ -152,6 +152,7 @@ export const LEGAL_DOCS = {
               'your quiz answers: each answer’s topic, whether it was correct, how long it took and which attempt it was;',
               'quiz scores for each module;',
               'Code Tracer programs completed;',
+              'code challenges solved, and whether you have run a program in the Playground;',
               'your study streak; and',
               'topics suggested for review, worked out from your quiz answers.',
             ],
@@ -163,7 +164,8 @@ export const LEGAL_DOCS = {
           {
             label: 'D. On your device',
             items: [
-              "lessons you download for offline reading, kept in the app's storage on your phone; and",
+              "lessons you download for offline reading, kept in the app's storage on your phone;",
+              'code you write in code challenges and the Playground, kept on your phone until you log out; and',
               'study reminders, scheduled as notifications on your phone.',
             ],
           },
@@ -181,6 +183,7 @@ export const LEGAL_DOCS = {
               'suggest topics to review;',
               'send the study reminders you set;',
               'answer your AI tutor questions;',
+              'run and check the Java code you submit;',
               "keep the Application secure, for example by enforcing the tutor's daily limit;",
               'respond when you contact us; and',
               'maintain, troubleshoot and improve the Application.',
@@ -204,11 +207,12 @@ export const LEGAL_DOCS = {
       {
         h: 'Data Sharing and Third-Party Services',
         body: [
-          'Javi relies on two providers:',
+          'Javi relies on three providers:',
           {
             items: [
-              'Firebase (Google): Firebase Authentication for sign-in, Cloud Firestore to store your data, and Cloud Functions for quiz grading, topic suggestions and the tutor.',
+              'Firebase (Google): Firebase Authentication for sign-in, Cloud Firestore to store your data, and Cloud Functions for quiz grading, topic suggestions, the tutor and running code.',
               "Google Gemini: receives your tutor questions, together with the current module's lesson text, to write answers. Javi uses Gemini's free tier, under which Google may use the content it receives to improve its products. Never include personal details in tutor questions.",
+              'Judge0 (through RapidAPI): receives only the Java code and input you run in code challenges and the Playground, compiles and runs it, and returns the output. It does not receive your name, email or account. Javi does not save your code on its servers, but Judge0 may keep submissions under its own policy, so never put personal details in your code.',
             ],
           },
           'No other third parties receive your information, except where the law requires it.',

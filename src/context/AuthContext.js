@@ -15,7 +15,8 @@ import {
 } from 'firebase/auth';
 import { deleteField, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 
-import { permanentDeletionDate } from '../constants/accountDeletion';
+import { isPastDeletionWindow, permanentDeletionDate } from '../constants/accountDeletion';
+import { TERMS_VERSION } from '../constants/legal';
 import { auth, db } from '../services/firebase';
 import { forgetGoogleAccount, pickGoogleAccount } from '../services/googleSignIn';
 import { cancelDailyReminder } from '../services/notifications';
@@ -33,6 +34,9 @@ export function AuthProvider({ children }) {
   const [nickname, setNickname] = useState(null);
   // The picked avatar's id (see src/constants/art.js), or null for the letter.
   const [avatar, setAvatar] = useState(null);
+  // True when the profile's accepted Terms are older than TERMS_VERSION: the
+  // app then shows the new text once, and declining it signs out.
+  const [termsOutdated, setTermsOutdated] = useState(false);
   // While logIn() is deciding whether to restore or refuse an account, it
   // owns the signed-in state. The listener below stands aside so the app
   // does not flash open for an account that is about to be signed out again.
@@ -64,8 +68,15 @@ export function AuthProvider({ children }) {
     return onAuthStateChanged(auth, async (firebaseUser) => {
       // Before the logInInProgress check, so a sign-out during a log-in still clears the flag.
       if (!firebaseUser) {
-        if (userRef.current && !signingOut.current) setExpiredEmail(userRef.current.email ?? '');
+        if (userRef.current && !signingOut.current) {
+          setExpiredEmail(userRef.current.email ?? '');
+          // Firebase ended the session itself, so logOut() never ran: clear what it
+          // would have, or the next person on this phone sees this user's code drafts.
+          cancelDailyReminder().catch(() => {});
+          clearOfflineData().catch(() => {});
+        }
         signingOut.current = false;
+        setTermsOutdated(false); // so the next account on this phone starts clean
       }
       if (logInInProgress.current) return;
 
@@ -94,6 +105,9 @@ export function AuthProvider({ children }) {
 
       setNickname(profile?.nickname ?? null);
       setAvatar(profile?.avatar ?? null);
+      setTermsOutdated(Boolean(profile?.exists && profile.termsVersion !== TERMS_VERSION));
+      // Verified with the app closed: the saved token may still say unverified. Offline, carry on.
+      await syncVerifiedToken(firebaseUser).catch(() => {});
       setUser(firebaseUser);
       setInitializing(false);
     });
@@ -132,6 +146,7 @@ export function AuthProvider({ children }) {
    */
   async function refreshUser() {
     await auth.currentUser.reload();
+    await syncVerifiedToken(auth.currentUser);
     // reload() updates auth.currentUser in place, so spread it into a new object
     // for React to see a changed reference and re-render.
     setUser({ ...auth.currentUser });
@@ -210,12 +225,14 @@ export function AuthProvider({ children }) {
           deletionRequestedAt: requestedAt,
           nickname: savedNickname,
           avatar: savedAvatar,
+          termsVersion,
         } = await readProfile(signedInUser.uid);
         if (requireProfile && !exists) return { needsTerms: true };
         setNickname(savedNickname);
         name = savedNickname || signedInUser.displayName;
         setAvatar(savedAvatar);
-        if (requestedAt && permanentDeletionDate(requestedAt) <= new Date()) {
+        setTermsOutdated(exists && termsVersion !== TERMS_VERSION);
+        if (requestedAt && isPastDeletionWindow(requestedAt)) {
           const err = new Error('This account has been deleted.');
           err.code = 'account/deleted';
           throw err;
@@ -235,6 +252,15 @@ export function AuthProvider({ children }) {
     } finally {
       logInInProgress.current = false;
     }
+  }
+
+  /** Accept on the updated-Terms sheet: records consent to the current text, as sign-up does. */
+  async function acceptUpdatedTerms() {
+    await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+      termsAcceptedAt: serverTimestamp(),
+      termsVersion: TERMS_VERSION,
+    });
+    setTermsOutdated(false);
   }
 
   /** Welcome back's Restore: cancels the deletion and opens the app. */
@@ -376,6 +402,8 @@ export function AuthProvider({ children }) {
         keepDeleted,
         restoredNotice,
         clearRestoredNotice: () => setRestoredNotice(false),
+        termsOutdated,
+        acceptUpdatedTerms,
       }}
     >
       {children}
@@ -395,7 +423,21 @@ async function readProfile(userId) {
     deletionRequestedAt: data?.deletionRequestedAt?.toDate() ?? null,
     nickname: data?.nickname ?? null,
     avatar: data?.avatar ?? null,
+    termsVersion: data?.termsVersion ?? null,
   };
+}
+
+/**
+ * The Cloud Functions read email_verified from the ID token, which keeps the
+ * value it was issued with for up to an hour. So once the account shows as
+ * verified, fetch a new token, or every function call says "Verify your email
+ * first" until Firebase renews it on its own. Cheap when already in step: the
+ * claims come from the cached token.
+ */
+async function syncVerifiedToken(firebaseUser) {
+  if (!firebaseUser?.emailVerified) return;
+  const { claims } = await firebaseUser.getIdTokenResult();
+  if (!claims.email_verified) await firebaseUser.getIdToken(true);
 }
 
 function hasPasswordProvider(firebaseUser) {
