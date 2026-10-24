@@ -77,6 +77,11 @@ npm run accounts:purge               # lists who is due, deletes nothing
 npm run accounts:purge -- --confirm  # deletes them
 ```
 
+The password-reset and email-verification emails open `hosting/auth-action.html`, a Javi-styled
+page that sets the new password, confirms the email, or explains an expired link. Deploy it with
+`npx firebase deploy --only hosting`, then once, in the Firebase console, go to Authentication →
+Templates → edit a template → Customize action URL → `https://<project-id>.web.app/auth-action`.
+
 ### Run
 
 ```bash
