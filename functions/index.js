@@ -49,10 +49,10 @@ const ANSWERS_PER_DAY = 400;
  * claim, which matters because `attempts` is the trained model's feature
  * source — so the rules no longer let the app create attempts at all.
  *
- * Takes { questionId, choice, timeTakenMs, attemptId? } and returns { correct, answer },
- * where `answer` is the correct choice's index, for the screen to highlight.
- * attemptId names one viewing of a question: a retry after a lost reply sends
- * the same one, so it replaces that attempt instead of adding a second.
+ * Takes { questionId, choice, timeTakenMs, attemptId? } and returns { correct, answer, choice },
+ * where `answer` is the correct choice's index, for the screen to highlight,
+ * and `choice` the one graded. attemptId names one viewing of a question: a
+ * retry after a lost reply sends the same one and gets the first verdict back.
  */
 exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
   const userId = verifiedUserId(request, 'Sign in to take a quiz.');
@@ -99,16 +99,21 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
     ? db.collection('attempts').doc(`${userId}_${questionId}_${attemptId}`)
     : db.collection('attempts').doc();
   const retried = await attemptRef.get();
-  const attemptNumber = retried.exists
-    ? retried.data().attemptNumber
-    : (
-        await db
-          .collection('attempts')
-          .where('userId', '==', userId)
-          .where('questionId', '==', questionId)
-          .count()
-          .get()
-      ).data().count + 1;
+  // A retry after a lost reply gets the verdict already recorded, so answering
+  // again cannot turn a wrong answer right; finishQuiz counts these.
+  if (retried.exists) {
+    const recorded = retried.data();
+    return { correct: recorded.correct, answer, choice: recorded.choice ?? choice };
+  }
+  const attemptNumber =
+    (
+      await db
+        .collection('attempts')
+        .where('userId', '==', userId)
+        .where('questionId', '==', questionId)
+        .count()
+        .get()
+    ).data().count + 1;
 
   const correct = choice === answer;
   await attemptRef.set({
@@ -118,12 +123,82 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
     // "X Quiz") and can be renamed, and the model groups features by topic.
     topic: moduleId,
     correct,
+    choice, // for a retry's reply; not a model feature
     timeTakenMs: Math.round(timeTakenMs),
     attemptNumber,
     createdAt: FieldValue.serverTimestamp(),
   });
 
-  return { correct, answer };
+  return { correct, answer, choice };
+});
+
+// Keep in step with QUIZ_LENGTH in src/screens/QuizScreen.js.
+const QUIZ_LENGTH = 20;
+const FINISHES_PER_MINUTE = 6;
+
+/**
+ * Saves a finished quiz's score to progress/{uid}.moduleScores, counted here
+ * from the attempts gradeAnswer recorded, so the app cannot write a score of
+ * its own (firestore.rules no longer lets it touch moduleScores).
+ *
+ * shortcut: a script can still grade a question twice under two attemptIds and
+ * send the right one; tying attempts to a server-issued quiz id would close that.
+ *
+ * Takes { moduleId, answers: [{ questionId, attemptId }] }, one per question of
+ * the quiz, and returns { correct, total }.
+ */
+exports.finishQuiz = onCall({ region: 'asia-southeast1' }, async (request) => {
+  const userId = verifiedUserId(request, 'Sign in to save a quiz score.');
+
+  const { moduleId, answers } = request.data ?? {};
+  if (typeof moduleId !== 'string' || !/^[a-z0-9-]+$/.test(moduleId)) {
+    throw new HttpsError('invalid-argument', 'moduleId must be a module id.');
+  }
+  const validAnswer = (a) =>
+    typeof a?.questionId === 'string' &&
+    /^[A-Za-z0-9_-]{1,100}$/.test(a.questionId) &&
+    typeof a.attemptId === 'string' &&
+    /^[A-Za-z0-9-]{1,40}$/.test(a.attemptId);
+  if (!Array.isArray(answers) || answers.length > QUIZ_LENGTH || !answers.every(validAnswer)) {
+    throw new HttpsError('invalid-argument', `answers must be up to ${QUIZ_LENGTH} { questionId, attemptId }.`);
+  }
+  if (new Set(answers.map((a) => a.questionId)).size !== answers.length) {
+    throw new HttpsError('invalid-argument', 'Each question can be counted once.');
+  }
+
+  await takeAllowance(
+    `quizUsage/${userId}`,
+    'finishLastMinute',
+    FINISHES_PER_MINUTE,
+    'Slow down: try again in a minute.',
+    Date.now() - 60 * 1000
+  );
+
+  // A whole quiz, not a hand-picked few: otherwise sending only the right answers scores 100%.
+  const bank = (await db.collection('answerKeys').where('moduleId', '==', moduleId).count().get()).data().count;
+  if (bank === 0 || answers.length !== Math.min(QUIZ_LENGTH, bank)) {
+    throw new HttpsError('invalid-argument', 'Send every question of the quiz.');
+  }
+
+  // The uid in each id means only this user's attempts can be counted.
+  const attempts = await db.getAll(
+    ...answers.map((a) => db.doc(`attempts/${userId}_${a.questionId}_${a.attemptId}`))
+  );
+  if (attempts.some((attempt) => !attempt.exists || attempt.data().topic !== moduleId)) {
+    throw new HttpsError('failed-precondition', 'Some answers of this quiz were not recorded.');
+  }
+
+  const correct = attempts.filter((attempt) => attempt.data().correct).length;
+  const total = answers.length;
+  // merge keeps the other modules' scores.
+  await db.doc(`progress/${userId}`).set(
+    {
+      moduleScores: { [moduleId]: { correct, total, lastAttemptAt: Date.now() } },
+      updatedAt: FieldValue.serverTimestamp(),
+    },
+    { merge: true }
+  );
+  return { correct, total };
 });
 
 // ------------------------------------------------------------ weak topics

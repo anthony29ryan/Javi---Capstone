@@ -1,6 +1,7 @@
 import { arrayRemove, arrayUnion, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
 
-import { auth, db } from './firebase';
+import { auth, db, functions } from './firebase';
 import { advanceStreak } from './streak';
 
 const EMPTY_PROGRESS = {
@@ -21,6 +22,8 @@ async function readProgress(userId) {
 // offline, so screens would spin until reconnect. Give up after this long so
 // they can say "not saved"; the write stays queued and lands on reconnect.
 const SAVE_TIMEOUT_MS = 10000;
+
+const finishQuizFunction = httpsCallable(functions, 'finishQuiz', { timeout: SAVE_TIMEOUT_MS });
 
 /** Merges `fields` into progress/{userId}, rejecting if the server has not confirmed it in time. */
 function saveProgress(userId, fields) {
@@ -84,16 +87,17 @@ export async function setLessonComplete(lessonId, complete) {
   return changes;
 }
 
-export async function recordModuleQuizCompletion(moduleId, correct, total) {
+/**
+ * Saves a finished quiz. The score is counted and saved by the finishQuiz
+ * function from the graded attempts, since the rules do not let the app write
+ * moduleScores; the streak follows the phone's own day, so it is saved here.
+ * `answers` is one { questionId, attemptId } per question of the quiz.
+ */
+export async function recordModuleQuizCompletion(moduleId, answers) {
+  await finishQuizFunction({ moduleId, answers });
   const userId = auth.currentUser.uid;
   const existing = await readProgress(userId);
-
-  await saveProgress(userId, {
-    // merge keeps the other modules' scores, so two quizzes saved at once cannot erase each other.
-    moduleScores: { [moduleId]: { correct, total, lastAttemptAt: Date.now() } },
-    streak: advanceStreak(existing.streak),
-    updatedAt: serverTimestamp(),
-  });
+  await saveProgress(userId, { streak: advanceStreak(existing.streak), updatedAt: serverTimestamp() });
 }
 
 /**

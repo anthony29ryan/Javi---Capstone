@@ -32,8 +32,8 @@ const gradeAnswerFunction = httpsCallable(functions, 'gradeAnswer');
  * Grades one answer on the server, which also records the attempt.
  *
  * The app cannot grade by itself: the correct answers live in `answerKeys`,
- * which it is not allowed to read. Resolves to { correct, answer }, where
- * `answer` is the index of the correct choice.
+ * which it is not allowed to read. Resolves to { correct, answer, choice }, where
+ * `answer` is the index of the correct choice and `choice` the one graded.
  */
 export async function gradeAnswer({ questionId, choice, timeTakenMs, attemptId }) {
   const { data } = await gradeAnswerFunction({ questionId, choice, timeTakenMs, attemptId });
