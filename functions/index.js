@@ -3,12 +3,15 @@
 
 const { initializeApp } = require('firebase-admin/app');
 const { FieldValue, getFirestore } = require('firebase-admin/firestore');
+const { getAuth } = require('firebase-admin/auth');
 const { setGlobalOptions } = require('firebase-functions/v2');
 const { HttpsError, onCall } = require('firebase-functions/v2/https');
+const { onSchedule } = require('firebase-functions/v2/scheduler');
 const { defineSecret } = require('firebase-functions/params');
 
 const { RunnerUnavailable, outputMatches, runJava, withGiven } = require('./codeRunner');
 const { manilaDate, manilaDayStart, manilaMonth } = require('./dayStart');
+const { MAX_PER_RUN, dueAccounts, purgeAccount } = require('./purgeAccounts');
 
 // Spend cap: a traffic spike or loop can't scale past 5 instances per function.
 setGlobalOptions({ maxInstances: 5 });
@@ -660,3 +663,34 @@ exports.runCode = onCall(RUNNER_OPTIONS, async (request) => {
   }
   return result;
 });
+
+/**
+ * Daily at 03:00 Manila: permanently deletes accounts 30 days past "Delete my
+ * account", which the Privacy text promises (src/constants/legal.js). The work
+ * is in purgeAccounts.js, shared with scripts/purgeDeletedAccounts.js. A
+ * failed account keeps its marker and is retried the next day.
+ */
+exports.purgeDeletedAccounts = onSchedule(
+  { schedule: 'every day 03:00', timeZone: 'Asia/Manila', region: 'asia-southeast1' },
+  async () => {
+    const due = await dueAccounts(db);
+    if (!due.length) {
+      console.log('purgeDeletedAccounts: no accounts past their deletion window');
+      return;
+    }
+
+    const admin = { db, auth: getAuth() };
+    let failed = 0;
+    for (const profile of due) {
+      try {
+        const counts = await purgeAccount(admin, profile.id);
+        console.log(`purgeDeletedAccounts: deleted ${profile.id}`, counts);
+      } catch (err) {
+        failed++;
+        console.error(`purgeDeletedAccounts: could not delete ${profile.id}`, err.message);
+      }
+    }
+    const capped = due.length === MAX_PER_RUN ? `; hit the cap of ${MAX_PER_RUN}, the rest go tomorrow` : '';
+    console.log(`purgeDeletedAccounts: deleted ${due.length - failed} of ${due.length}${capped}`);
+  }
+);
