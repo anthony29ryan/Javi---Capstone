@@ -23,7 +23,7 @@ Deliberate differences from the design: code is set in JetBrains Mono, not
 Outfit; the Code Tracer list filters by level, not topic; the trace result has
 no variable-value chips.
 
-Totals: 84 done · 0 to do · 29 not built · 1 partly · 9 last
+Totals: 84 done · 0 to do · 26 not built · 4 partly · 9 last
 
 ## A · Onboarding and sign-in
 
@@ -34,13 +34,13 @@ Totals: 84 done · 0 to do · 29 not built · 1 partly · 9 last
 | 03 | Sign up | SignupScreen | done | 92c72ee |
 | 04 | Sign up · Terms popup | TermsSheet | done | 92c72ee |
 | 05 | Check your email | VerifyEmailScreen | done | 2d8ffad |
-| 06 | Link expired | — | not built |  |
+| 06 | Link expired | hosting/auth-action.html | partly | (page built and live at /auth-action; emails still open Firebase's page because Firebase refuses the action URL change (EMAIL_TEMPLATE_UPDATE_NOT_ALLOWED, support contacted 2026-10-24); a web page, not an app screen: email links can't open an Expo Go app; shown for a used, expired or superseded reset or verify link; no "30 minutes", no resend on the web, it says to open Javi instead; sad mascot until the sleepy art exists) |
 | 07 | Before you start | SetupScreen | done | 289e43f |
 | 08 | Notification permission | Android's own dialog | done | 289e43f |
 | 09 | Log in | LoginScreen | done | 00c4d64 |
 | 10 | Continue with Google | GoogleButton (Login, Signup); Android's own account picker replaces the drawn frame | done |  |
 | 11 | Forgot password | ForgotPasswordScreen | done | 388a1d4 |
-| 12 | Set a new password | — | not built |  |
+| 12 | Set a new password | hosting/auth-action.html | partly | (page built and live at /auth-action; emails still open Firebase's page because Firebase refuses the action URL change (EMAIL_TEMPLATE_UPDATE_NOT_ALLOWED, support contacted 2026-10-24); on the email-link web page; "Save new password" rather than "Save and log in", since the page can't sign into the app; success says to go back to Javi and log in) |
 
 ## A2 · First-time tour
 
@@ -159,7 +159,7 @@ Totals: 84 done · 0 to do · 29 not built · 1 partly · 9 last
 | 88 | Sign up · Field errors | with Sign up | partly | 92c72ee (one error at a time; the design shows all at once) |
 | 89 | Sign up · Email already used | with Sign up | done | 92c72ee |
 | 90 | Forgot password · Rate limited | with Forgot password | done | 388a1d4 (shown when Firebase refuses; no 3-in-10-minutes claim) |
-| 91 | New password · Mismatch | — | not built |  |
+| 91 | New password · Mismatch | with 12 | partly | (page built and live at /auth-action; emails still open Firebase's page because Firebase refuses the action URL change (EMAIL_TEMPLATE_UPDATE_NOT_ALLOWED, support contacted 2026-10-24); per-field errors and the "Fix 2 fields" banner, as designed) |
 | 92 | Set up · Name missing | with Before you start | done | 289e43f (asks for a nickname) |
 | 93 | Profile details · Unsaved changes | with Profile details | done | 3e5eb9c |
 | 94 | Change password · Wrong current | with Change password | done | 17911ea |
