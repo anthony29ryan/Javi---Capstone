@@ -369,13 +369,16 @@ export default function QuizScreen({ route, navigation }) {
         attemptId: String(questionStart),
       });
       setMarks((current) => [...current, { ...verdict, picked: selected }]);
-    } catch {
+    } catch (err) {
       // No verdict came back, so keep the choice and let them submit again
       // rather than ending the whole quiz over one dropped request.
       setGradeError(
-        offline
-          ? "Your answer wasn't checked. Reconnect and submit it again."
-          : 'Could not check that answer. Try submitting again.'
+        // A limit (per minute or per day): the server's message says how long to wait.
+        err.code === 'functions/resource-exhausted'
+          ? err.message
+          : offline
+            ? "Your answer wasn't checked. Reconnect and submit it again."
+            : 'Could not check that answer. Try submitting again.'
       );
     } finally {
       setGrading(false);
