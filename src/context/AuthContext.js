@@ -15,7 +15,7 @@ import {
 } from 'firebase/auth';
 import { deleteField, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 
-import { permanentDeletionDate } from '../constants/accountDeletion';
+import { isPastDeletionWindow, permanentDeletionDate } from '../constants/accountDeletion';
 import { auth, db } from '../services/firebase';
 import { forgetGoogleAccount, pickGoogleAccount } from '../services/googleSignIn';
 import { cancelDailyReminder } from '../services/notifications';
@@ -221,7 +221,7 @@ export function AuthProvider({ children }) {
         setNickname(savedNickname);
         name = savedNickname || signedInUser.displayName;
         setAvatar(savedAvatar);
-        if (requestedAt && permanentDeletionDate(requestedAt) <= new Date()) {
+        if (requestedAt && isPastDeletionWindow(requestedAt)) {
           const err = new Error('This account has been deleted.');
           err.code = 'account/deleted';
           throw err;
