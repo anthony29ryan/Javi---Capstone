@@ -64,7 +64,13 @@ export function AuthProvider({ children }) {
     return onAuthStateChanged(auth, async (firebaseUser) => {
       // Before the logInInProgress check, so a sign-out during a log-in still clears the flag.
       if (!firebaseUser) {
-        if (userRef.current && !signingOut.current) setExpiredEmail(userRef.current.email ?? '');
+        if (userRef.current && !signingOut.current) {
+          setExpiredEmail(userRef.current.email ?? '');
+          // Firebase ended the session itself, so logOut() never ran: clear what it
+          // would have, or the next person on this phone sees this user's code drafts.
+          cancelDailyReminder().catch(() => {});
+          clearOfflineData().catch(() => {});
+        }
         signingOut.current = false;
       }
       if (logInInProgress.current) return;
