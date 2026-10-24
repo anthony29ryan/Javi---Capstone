@@ -36,6 +36,9 @@ function verifiedUserId(request, signedOutMessage) {
 // Per user, in quizUsage/{uid}. A quiz question takes a person at least a few
 // seconds, so this only ever stops a script.
 const ANSWERS_PER_MINUTE = 30;
+// Per user per day (20 full quizzes), resetting at midnight Manila time: every
+// attempt is stored, and getWeakTopics' reads grow with them.
+const ANSWERS_PER_DAY = 400;
 
 /**
  * Grades one quiz answer and records it in `attempts`.
@@ -72,13 +75,20 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
 
   // Each answer is a paid write, and attempts feed getWeakTopics, which reads
   // them all, so a script must not be able to add thousands a minute.
-  await takeAllowance(
-    `quizUsage/${userId}`,
+  const usagePath = `quizUsage/${userId}`;
+  const burst = await takeAllowance(
+    usagePath,
     'lastMinute',
     ANSWERS_PER_MINUTE,
     `Slow down: you can answer ${ANSWERS_PER_MINUTE} questions a minute. Try again shortly.`,
     Date.now() - 60 * 1000
   );
+  try {
+    await takeAllowance(usagePath, 'today', ANSWERS_PER_DAY, `You can answer ${ANSWERS_PER_DAY} questions a day. They reset at midnight.`);
+  } catch (err) {
+    await giveBackAllowance(usagePath, 'lastMinute', burst.at); // refused before grading
+    throw err;
+  }
 
   const key = await db.collection('answerKeys').doc(questionId).get();
   if (!key.exists) throw new HttpsError('not-found', 'No such question.');
@@ -118,6 +128,10 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
 
 // ------------------------------------------------------------ weak topics
 
+// Per user, in quizUsage/{uid}. The app asks once per session and again only after a new answer.
+const WEAK_TOPICS_PER_MINUTE = 6;
+const MAX_ATTEMPTS_READ = 500;
+
 /**
  * Predicts which topics the signed-in learner is weak in, using the trained
  * classifier in weakTopics.js (method in docs/model.md). Only topics with
@@ -127,12 +141,21 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
  */
 exports.getWeakTopics = onCall({ region: 'asia-southeast1' }, async (request) => {
   const userId = verifiedUserId(request, 'Sign in to see weak topics.');
+  // Each call reads up to MAX_ATTEMPTS_READ documents, so a script must not call it in a loop.
+  await takeAllowance(
+    `quizUsage/${userId}`,
+    'weakTopicsLastMinute',
+    WEAK_TOPICS_PER_MINUTE,
+    'Slow down: try again in a minute.',
+    Date.now() - 60 * 1000
+  );
 
   // Required here, not at the top: TensorFlow.js would slow every other function's cold start.
   const { loadModel, predictWeakTopics } = require('./weakTopics');
-  // shortcut: reads all of a user's attempts, add orderBy+index or a cap if users reach thousands.
   const [attempts, modules, model] = await Promise.all([
-    db.collection('attempts').where('userId', '==', userId).get(),
+    // Newest first (index in firestore.indexes.json). The model uses only the last
+    // 20 answers per topic, and 21 topics × 20 fits well inside the cap.
+    db.collection('attempts').where('userId', '==', userId).orderBy('createdAt', 'desc').limit(MAX_ATTEMPTS_READ).get(),
     db.collection('modules').select().get(),
     loadModel(),
   ]);

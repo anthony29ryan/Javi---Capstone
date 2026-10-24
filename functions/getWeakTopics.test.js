@@ -50,3 +50,9 @@ test('a learner with no attempts gets an empty list, and signed-out callers are 
   assert.deepStrictEqual(await getWeakTopics.run({ auth: { uid: 'newcomer', token: { email_verified: true } }, data: {} }), { topics: [] });
   await assert.rejects(getWeakTopics.run({ data: {} }), (err) => err.code === 'unauthenticated');
 });
+
+test('a seventh call within a minute is refused, so a script cannot loop the reads', async () => {
+  const asLooper = () => getWeakTopics.run({ auth: { uid: 'looper', token: { email_verified: true } }, data: {} });
+  for (let i = 0; i < 6; i++) await asLooper();
+  await assert.rejects(asLooper(), (err) => err.code === 'resource-exhausted' && /Slow down/.test(err.message));
+});

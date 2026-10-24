@@ -67,6 +67,16 @@ test('a 31st answer within a minute is refused', async () => {
   );
 });
 
+test("the 401st answer of the day is refused, and it does not use up the minute's allowance", async () => {
+  await db.doc('quizUsage/dave').set({ today: Array(400).fill(Date.now()) });
+  const asDave = (data) => gradeAnswer.run({ auth: { uid: 'dave', token: { email_verified: true } }, data });
+  await assert.rejects(
+    asDave({ questionId: 'q1', choice: 2, timeTakenMs: 1 }),
+    (err) => err.code === 'resource-exhausted' && /a day/.test(err.message)
+  );
+  assert.deepStrictEqual((await db.doc('quizUsage/dave').get()).data().lastMinute, []);
+});
+
 test('signed-out callers, bad input and unknown questions are refused', async () => {
   const refused = (code) => (err) => err.code === code;
   await assert.rejects(
