@@ -16,6 +16,9 @@ import Text from './AppText';
 
 // Splits on the markers but keeps them, so the runs can be styled in order.
 const INLINE_PATTERN = /(\*\*[^*]+\*\*|`[^`]+`)/g;
+const CODE_PATTERN = /(`[^`]+`)/g;
+
+const isCode = (run) => run.length > 2 && run.startsWith('`') && run.endsWith('`');
 
 export function InlineText({ value, style }) {
   const styles = useScaledStyles(baseStyles);
@@ -27,11 +30,23 @@ export function InlineText({ value, style }) {
         if (run.startsWith('**') && run.endsWith('**')) {
           return (
             <Text key={index} style={styles.bold}>
-              {run.slice(2, -2)}
+              {/* Code inside bold, like **`final`**, which 101 lessons use. */}
+              {run
+                .slice(2, -2)
+                .split(CODE_PATTERN)
+                .map((part, partIndex) =>
+                  isCode(part) ? (
+                    <Text key={partIndex} style={styles.inlineCode}>
+                      {part.slice(1, -1)}
+                    </Text>
+                  ) : (
+                    part
+                  )
+                )}
             </Text>
           );
         }
-        if (run.startsWith('`') && run.endsWith('`')) {
+        if (isCode(run)) {
           return (
             <Text key={index} style={styles.inlineCode}>
               {run.slice(1, -1)}
