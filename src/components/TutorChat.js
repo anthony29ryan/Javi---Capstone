@@ -281,6 +281,9 @@ export default function TutorChat({
         contentContainerStyle={styles.fullThreadContent}
         keyboardShouldPersistTaps="handled"
         onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
+        // The view itself shrinks too (the sheet settling, the keyboard opening), and that changes the end.
+        // A frame later, once the native view has its new height, or the scroll lands on the old end.
+        onLayout={() => requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: false }))}
       >
         {thread}
       </ScrollView>
