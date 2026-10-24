@@ -99,6 +99,7 @@ test('a passing submit runs only the hidden tests and marks the challenge solved
   const result = await call(runChallenge, 'u3', { challengeId: 'sum-of-two-numbers', code: 'sum', mode: 'submit' });
   assert.strictEqual(result.status, 'passed');
   assert.strictEqual(result.solved, true);
+  assert.strictEqual(result.timeSeconds, 0.1, 'the solved screen shows the runtime');
   assert.deepStrictEqual(runnerCalls.map((c) => c.stdin), ['-3 10', '0 0', '1000000 2345'], 'no example run');
   assert.deepStrictEqual((await db.doc('progress/u3').get()).data().completedChallenges, ['sum-of-two-numbers']);
   assert.strictEqual((await db.doc('runUsage/u3').get()).data().challenge.length, 1, 'a submit counts once');
@@ -111,6 +112,8 @@ test('printing the example answer passes Run but fails the hidden tests', async 
   // Stops at the first failure, so the other two cost nothing.
   assert.deepStrictEqual(result.tests.map((t) => [t.passed, Boolean(t.notRun)]), [[false, false], [false, true], [false, true]]);
   assert.strictEqual(runnerCalls.length, 1);
+  // CPU time is withheld on a failure, or it could leak a hidden input.
+  assert.strictEqual(result.timeSeconds, 0);
   assert.ok(!(await db.doc('progress/u4').get()).exists);
 });
 

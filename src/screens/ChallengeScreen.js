@@ -64,7 +64,8 @@ function describe(result, running, challenge) {
       // A submit with hidden tests runs only those, so it has no output to show.
       const hiddenOnly = result.tests.every((t) => t.hidden);
       return {
-        status: `${passed}/${result.tests.length} tests passed · ${result.timeSeconds}s`,
+        // A failed hidden submit has no runtime: the server withholds it (runChallenge).
+        status: `${passed}/${result.tests.length} tests passed` + (hiddenOnly && !allPassed ? '' : ` · ${result.timeSeconds}s`),
         statusColor: allPassed ? colors.success : colors.error,
         console: hiddenOnly ? 'Submit runs the hidden tests only. Press Run to see your output.' : result.stdout || '(no output)',
         consoleColor: !hiddenOnly && result.stdout ? colors.codeText : CONSOLE_MUTED,

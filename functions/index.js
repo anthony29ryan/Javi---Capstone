@@ -708,7 +708,9 @@ exports.runChallenge = onCall(RUNNER_OPTIONS, async (request) => {
         }
         tests.push({ label, hidden: true, passed: run.kind === 'ok' && outputMatches(run.stdout, test.output) });
       }
-      return { status: tests.every((t) => t.passed) ? 'passed' : 'failed', stdout: '', error: '', timeSeconds, tests };
+      const allPassed = tests.every((t) => t.passed);
+      // Only on a pass: a program could burn CPU in proportion to a hidden input, then fail on purpose to read it here.
+      return { status: allPassed ? 'passed' : 'failed', stdout: '', error: '', timeSeconds: allPassed ? timeSeconds : 0, tests };
     }
   );
 
