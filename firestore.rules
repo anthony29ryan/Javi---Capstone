@@ -137,6 +137,9 @@ service cloud.firestore {
                 && data.streak.keys().hasOnly(['current', 'longest', 'lastActiveDate', 'days'])
                 && data.streak.current is int
                 && data.streak.longest is int
+                // What advanceStreak in streak.js always keeps true.
+                && data.streak.current >= 0
+                && data.streak.current <= data.streak.longest
                 && (data.streak.lastActiveDate == null || data.streak.lastActiveDate is string)
                 // The days studied, for the Streak calendar; capped like MAX_STUDIED_DAYS in streak.js.
                 && (!('days' in data.streak)

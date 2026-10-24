@@ -314,6 +314,8 @@ describe('progress', () => {
       setDoc(ref, { moduleScores: { oop: { correct: 20, total: 20, lastAttemptAt: Date.now() } } }, { merge: true })
     );
     await assertFails(setDoc(ref, { streak: { current: 'lots' } }, { merge: true }));
+    await assertFails(setDoc(ref, { streak: { current: -5, longest: -5, lastActiveDate: null } }, { merge: true }));
+    await assertFails(setDoc(ref, { streak: { current: 9, longest: 3, lastActiveDate: null } }, { merge: true }));
     await assertFails(
       setDoc(ref, { streak: { current: 1, longest: 1, lastActiveDate: null, bonus: 9 } }, { merge: true })
     );
