@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     ...type.sectionLabel,
     fontSize: 11,
     letterSpacing: 11 * 0.12,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     flex: 1,
   },
   title: {
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
     ...type.sectionLabel,
     fontSize: 10.5,
     letterSpacing: 10.5 * 0.08,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: 6,
   },
   description: {
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
   },
   exampleLabel: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   exampleRow: {
     flexDirection: 'row',

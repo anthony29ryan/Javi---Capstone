@@ -538,7 +538,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     letterSpacing: 11 * 0.1,
     textTransform: 'uppercase',
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   track: {
     height: 5,
@@ -763,7 +763,7 @@ const styles = StyleSheet.create({
   },
   nextLabel: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   nextBody: {
     fontFamily: fonts.medium,
@@ -799,7 +799,7 @@ const styles = StyleSheet.create({
   },
   reviewNumber: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   reviewVerdict: {
     fontFamily: fonts.bold,

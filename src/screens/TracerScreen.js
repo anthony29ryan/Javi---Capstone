@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     ...type.sectionLabel,
     fontSize: 11,
     letterSpacing: 11 * 0.12,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     flex: 1,
   },
   headerRight: {
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
   },
   drillEyebrow: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: 6,
   },
   stats: {
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   statValue: {
     fontFamily: fonts.mono,
@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginBottom: spacing.sm,
   },
   console: {

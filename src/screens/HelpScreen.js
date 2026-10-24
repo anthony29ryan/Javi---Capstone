@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: 22,
     marginBottom: 10,
   },

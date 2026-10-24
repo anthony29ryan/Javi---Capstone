@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
   thinkingText: {
     fontFamily: fonts.medium,
     fontSize: 11.5,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: 12,
   },
   errorCard: {
@@ -447,7 +447,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 10 * 0.12,
     textTransform: 'uppercase',
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   limitTitle: {
     fontFamily: fonts.bold,

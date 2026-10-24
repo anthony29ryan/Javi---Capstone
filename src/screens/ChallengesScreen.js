@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     ...type.sectionLabel,
     fontSize: 11,
     letterSpacing: 11 * 0.12,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   title: {
     ...type.screenTitle,
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
   tabCount: {
     fontFamily: fonts.medium,
     fontSize: 10.5,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   levelRow: {
     flexDirection: 'row',
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     ...type.sectionLabel,
     fontSize: 11,
     letterSpacing: 11 * 0.08,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   track: {
     height: 6,
@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
   ioLabel: {
     ...type.sectionLabel,
     fontSize: 9.5,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   ioValue: {
     flex: 1,
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
     ...type.sectionLabel,
     fontSize: 10.5,
     letterSpacing: 10.5 * 0.08,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     flexShrink: 1,
   },
   cta: {

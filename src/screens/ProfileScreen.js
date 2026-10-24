@@ -573,7 +573,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     ...type.sectionLabel,
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   bigPercent: {
     fontFamily: fonts.bold,
@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
     fontSize: 9.5,
     letterSpacing: 0.95,
     textTransform: 'uppercase',
-    color: colors.borderStrong,
+    color: colors.textMuted,
   },
   levelTrack: {
     height: 6,
@@ -775,7 +775,7 @@ const styles = StyleSheet.create({
   headingNote: {
     ...type.small,
     fontSize: 12,
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: -spacing.sm,
     marginBottom: 14,
   },
@@ -855,7 +855,7 @@ const styles = StyleSheet.create({
     fontSize: 11.5,
     lineHeight: 11.5 * 1.3,
     textAlign: 'center',
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: 10,
   },
   badgeTitleEarned: {
@@ -866,7 +866,7 @@ const styles = StyleSheet.create({
     fontSize: 9.5,
     lineHeight: 9.5 * 1.3,
     textAlign: 'center',
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: spacing.xs,
   },
   badgeState: {
@@ -874,7 +874,7 @@ const styles = StyleSheet.create({
     fontSize: 8.5,
     letterSpacing: 8.5 * 0.1,
     textTransform: 'uppercase',
-    color: colors.borderStrong,
+    color: colors.textMuted,
     marginTop: 6,
   },
   skelLines: {
