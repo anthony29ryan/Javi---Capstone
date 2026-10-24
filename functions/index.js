@@ -146,8 +146,11 @@ const FINISHES_PER_MINUTE = 6;
  * from the attempts gradeAnswer recorded, so the app cannot write a score of
  * its own (firestore.rules no longer lets it touch moduleScores).
  *
- * shortcut: a script can still grade a question twice under two attemptIds and
- * send the right one; tying attempts to a server-issued quiz id would close that.
+ * Left open on purpose: a script can grade a question twice under two
+ * attemptIds, learn the answer from the first reply and send the second. That
+ * is only a faster retake: the app shows each answer after it is graded and
+ * allows retakes, and a score unlocks nothing (badges and the score display).
+ * A server-issued quiz id would not change this, since a script can start two.
  *
  * Takes { moduleId, answers: [{ questionId, attemptId }] }, one per question of
  * the quiz, and returns { correct, total }.
