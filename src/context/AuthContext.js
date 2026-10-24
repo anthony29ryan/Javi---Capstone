@@ -106,6 +106,8 @@ export function AuthProvider({ children }) {
       setNickname(profile?.nickname ?? null);
       setAvatar(profile?.avatar ?? null);
       setTermsOutdated(Boolean(profile?.exists && profile.termsVersion !== TERMS_VERSION));
+      // Verified with the app closed: the saved token may still say unverified. Offline, carry on.
+      await syncVerifiedToken(firebaseUser).catch(() => {});
       setUser(firebaseUser);
       setInitializing(false);
     });
@@ -144,6 +146,7 @@ export function AuthProvider({ children }) {
    */
   async function refreshUser() {
     await auth.currentUser.reload();
+    await syncVerifiedToken(auth.currentUser);
     // reload() updates auth.currentUser in place, so spread it into a new object
     // for React to see a changed reference and re-render.
     setUser({ ...auth.currentUser });
@@ -422,6 +425,19 @@ async function readProfile(userId) {
     avatar: data?.avatar ?? null,
     termsVersion: data?.termsVersion ?? null,
   };
+}
+
+/**
+ * The Cloud Functions read email_verified from the ID token, which keeps the
+ * value it was issued with for up to an hour. So once the account shows as
+ * verified, fetch a new token, or every function call says "Verify your email
+ * first" until Firebase renews it on its own. Cheap when already in step: the
+ * claims come from the cached token.
+ */
+async function syncVerifiedToken(firebaseUser) {
+  if (!firebaseUser?.emailVerified) return;
+  const { claims } = await firebaseUser.getIdTokenResult();
+  if (!claims.email_verified) await firebaseUser.getIdToken(true);
 }
 
 function hasPasswordProvider(firebaseUser) {
