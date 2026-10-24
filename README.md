@@ -68,8 +68,9 @@ publish lesson content (courses/modules/lessons, sourced from the `content/` fol
 npm run content:publish
 ```
 
-Deleted accounts are kept for 30 days, and logging in during that time restores them. Run this
-regularly (e.g. weekly) to permanently remove accounts past their 30 days:
+Deleted accounts are kept for 30 days, and logging in during that time restores them. The
+`purgeDeletedAccounts` function permanently removes accounts past their 30 days every day at
+03:00 Manila time (at most 50 a run). To see who is due, or to run it by hand:
 
 ```bash
 npm run accounts:purge               # lists who is due, deletes nothing
