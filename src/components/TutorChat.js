@@ -160,6 +160,8 @@ export default function TutorChat({
           style={[
             styles.bubble,
             message.role === 'learner' ? styles.bubbleLearner : styles.bubbleTutor,
+            // A definite width: sized to fit, the sideways code box throws off the text's height on Android.
+            message.role === 'tutor' && message.text.includes('```') && styles.bubbleWide,
             message.failed && styles.bubbleFailed,
           ]}
         >
@@ -345,6 +347,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  bubbleWide: {
+    width: '84%',
   },
   bubbleLearner: {
     alignSelf: 'flex-end',
