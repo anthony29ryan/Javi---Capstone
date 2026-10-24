@@ -92,6 +92,9 @@ test('signed-out callers, bad input and unknown questions are refused', async ()
   );
   await assert.rejects(asAlice({ questionId: 'q1', choice: '2', timeTakenMs: 1 }), refused('invalid-argument'));
   await assert.rejects(asAlice({ questionId: 'q1', choice: 2, timeTakenMs: -5 }), refused('invalid-argument'));
-  await assert.rejects(asAlice({ questionId: '', choice: 2, timeTakenMs: 1 }), refused('invalid-argument'));
+  // Ids Firestore would reject as paths come back as invalid-argument, not INTERNAL.
+  for (const questionId of ['', 'a/b', '..', '__x__']) {
+    await assert.rejects(asAlice({ questionId, choice: 2, timeTakenMs: 1 }), refused('invalid-argument'));
+  }
   await assert.rejects(asAlice({ questionId: 'nope', choice: 2, timeTakenMs: 1 }), refused('not-found'));
 });

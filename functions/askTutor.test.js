@@ -64,7 +64,10 @@ test('signed-out callers, bad input and unknown modules are refused', async () =
     askTutor.run({ auth: { uid: 't0', token: { email_verified: false } }, data: { moduleId: 'arrays', question: 'hi' } }),
     refused('permission-denied')
   );
-  await assert.rejects(ask('t1', { moduleId: '', question: 'hi' }), refused('invalid-argument'));
+  // Ids Firestore would reject as paths come back as invalid-argument, not INTERNAL.
+  for (const moduleId of ['', 'a/b', '..', '__x__']) {
+    await assert.rejects(ask('t1', { moduleId, question: 'hi' }), refused('invalid-argument'));
+  }
   await assert.rejects(ask('t1', { moduleId: 'arrays', question: '   ' }), refused('invalid-argument'));
   await assert.rejects(ask('t1', { moduleId: 'arrays', question: 'x'.repeat(501) }), refused('invalid-argument'));
   await assert.rejects(ask('t1', { moduleId: 'nope', question: 'hi' }), refused('not-found'));

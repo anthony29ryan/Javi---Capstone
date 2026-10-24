@@ -18,6 +18,10 @@ const LESSONS_DIR = path.join(CONTENT_DIR, 'lessons');
 // without adding a case there means blank space in the app.
 const RENDERABLE = new Set(['text', 'code', 'heading', 'list', 'note', 'table', 'image', 'video']);
 
+// Keep in step with CONTENT_ID in functions/index.js: the functions refuse any
+// other module or question id, so a quiz using one could never be answered.
+const CONTENT_ID = /^[a-z0-9-]{1,100}$/;
+
 const problems = [];
 const warnings = [];
 
@@ -33,6 +37,7 @@ const moduleIds = new Set(modules.map((m) => m.id));
 
 for (const m of modules) {
   if (!courseIds.has(m.courseId)) problems.push(`module ${m.id}: unknown courseId "${m.courseId}"`);
+  if (!CONTENT_ID.test(m.id)) problems.push(`module ${m.id}: id must be lowercase letters, digits and hyphens`);
 }
 
 /* ------------------------------------------------------------------- lessons */
@@ -156,6 +161,7 @@ for (const file of questionFiles) {
     const at = `${where} ${q.id || '(no id)'}`;
 
     if (!q.id?.trim()) problems.push(`${at}: missing id`);
+    else if (!CONTENT_ID.test(q.id)) problems.push(`${at}: id must be lowercase letters, digits and hyphens`);
     else if (questionIds.has(q.id)) problems.push(`${at}: duplicate id`);
     questionIds.add(q.id);
 

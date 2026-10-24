@@ -33,6 +33,11 @@ function verifiedUserId(request, signedOutMessage) {
   return request.auth.uid;
 }
 
+// Every module and question id (checked by scripts/verifyContent.js). Anything
+// else is refused up front: a / or a reserved id like __x__ would otherwise
+// crash the Firestore lookup and reach the caller as INTERNAL.
+const CONTENT_ID = /^[a-z0-9-]{1,100}$/;
+
 // Per user, in quizUsage/{uid}. A quiz question takes a person at least a few
 // seconds, so this only ever stops a script.
 const ANSWERS_PER_MINUTE = 30;
@@ -59,8 +64,8 @@ exports.gradeAnswer = onCall({ region: 'asia-southeast1' }, async (request) => {
 
   // Everything below comes from the client, so none of it is trusted.
   const { questionId, choice, timeTakenMs, attemptId } = request.data ?? {};
-  if (typeof questionId !== 'string' || !questionId) {
-    throw new HttpsError('invalid-argument', 'questionId must be a non-empty string.');
+  if (typeof questionId !== 'string' || !CONTENT_ID.test(questionId)) {
+    throw new HttpsError('invalid-argument', 'questionId must be a question id.');
   }
   if (!Number.isInteger(choice) || choice < 0) {
     throw new HttpsError('invalid-argument', 'choice must be a choice index.');
@@ -151,12 +156,12 @@ exports.finishQuiz = onCall({ region: 'asia-southeast1' }, async (request) => {
   const userId = verifiedUserId(request, 'Sign in to save a quiz score.');
 
   const { moduleId, answers } = request.data ?? {};
-  if (typeof moduleId !== 'string' || !/^[a-z0-9-]+$/.test(moduleId)) {
+  if (typeof moduleId !== 'string' || !CONTENT_ID.test(moduleId)) {
     throw new HttpsError('invalid-argument', 'moduleId must be a module id.');
   }
   const validAnswer = (a) =>
     typeof a?.questionId === 'string' &&
-    /^[A-Za-z0-9_-]{1,100}$/.test(a.questionId) &&
+    CONTENT_ID.test(a.questionId) &&
     typeof a.attemptId === 'string' &&
     /^[A-Za-z0-9-]{1,40}$/.test(a.attemptId);
   if (!Array.isArray(answers) || answers.length > QUIZ_LENGTH || !answers.every(validAnswer)) {
@@ -451,8 +456,8 @@ exports.askTutor = onCall({ region: 'asia-southeast1', secrets: [geminiKey] }, a
   const userId = verifiedUserId(request, 'Sign in to use the tutor.');
 
   const { moduleId, question } = request.data ?? {};
-  if (typeof moduleId !== 'string' || !moduleId) {
-    throw new HttpsError('invalid-argument', 'moduleId must be a non-empty string.');
+  if (typeof moduleId !== 'string' || !CONTENT_ID.test(moduleId)) {
+    throw new HttpsError('invalid-argument', 'moduleId must be a module id.');
   }
   if (typeof question !== 'string' || !question.trim() || question.length > MAX_QUESTION_CHARS) {
     throw new HttpsError('invalid-argument', `Ask a question of 1 to ${MAX_QUESTION_CHARS} characters.`);
