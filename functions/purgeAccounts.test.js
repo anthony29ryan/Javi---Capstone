@@ -11,7 +11,7 @@ const { test } = require('node:test');
 
 const { initializeApp } = require('firebase-admin/app');
 const { Timestamp, getFirestore } = require('firebase-admin/firestore');
-const { dueAccounts, purgeAccount } = require('./purgeAccounts');
+const { abandonedGoogleAccounts, dueAccounts, purgeAccount } = require('./purgeAccounts');
 
 initializeApp();
 const db = getFirestore();
@@ -66,4 +66,34 @@ test('an account whose sign-in is already gone still has its data removed', asyn
 
   await purgeAccount({ db, auth }, 'purge-half-done');
   assert.strictEqual(await leftovers('purge-half-done'), 0);
+});
+
+test('only Google sign-ups over a day old with no profile count as abandoned', async () => {
+  const daysAgo = (days) => new Date(Date.now() - days * DAY_MS).toUTCString();
+  const account = (uid, providers, days) => ({
+    uid,
+    providerData: providers.map((providerId) => ({ providerId })),
+    metadata: { creationTime: daysAgo(days) },
+  });
+  await db.doc('users/abandon-has-profile').set({ email: 'kept@example.com' });
+  // Two pages, to check the listing is followed to the end.
+  const pages = {
+    first: {
+      users: [
+        account('abandon-old-google', ['google.com'], 2), // the one to remove
+        account('abandon-new-google', ['google.com'], 0.5), // may still be on the popup
+        account('abandon-has-profile', ['google.com'], 9), // accepted the Terms
+      ],
+      pageToken: 'second',
+    },
+    second: {
+      users: [
+        account('abandon-email', ['password'], 9), // email accounts can work without a profile
+        account('abandon-linked', ['google.com', 'password'], 9),
+      ],
+    },
+  };
+  const auth = { listUsers: async (max, pageToken) => pages[pageToken ?? 'first'] };
+
+  assert.deepStrictEqual(await abandonedGoogleAccounts({ db, auth }), ['abandon-old-google']);
 });

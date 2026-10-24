@@ -11,7 +11,7 @@ const { defineSecret } = require('firebase-functions/params');
 
 const { RunnerUnavailable, outputMatches, runJava, withGiven } = require('./codeRunner');
 const { manilaDate, manilaDayStart, manilaMonth } = require('./dayStart');
-const { MAX_PER_RUN, dueAccounts, purgeAccount } = require('./purgeAccounts');
+const { MAX_PER_RUN, abandonedGoogleAccounts, dueAccounts, purgeAccount } = require('./purgeAccounts');
 
 // Spend cap: a traffic spike or loop can't scale past 5 instances per function.
 setGlobalOptions({ maxInstances: 5 });
@@ -771,24 +771,24 @@ exports.runCode = onCall(RUNNER_OPTIONS, async (request) => {
 exports.purgeDeletedAccounts = onSchedule(
   { schedule: 'every day 03:00', timeZone: 'Asia/Manila', region: 'asia-southeast1' },
   async () => {
-    const due = await dueAccounts(db);
-    if (!due.length) {
-      console.log('purgeDeletedAccounts: no accounts past their deletion window');
-      return;
-    }
-
     const admin = { db, auth: getAuth() };
-    let failed = 0;
-    for (const profile of due) {
-      try {
-        const counts = await purgeAccount(admin, profile.id);
-        console.log(`purgeDeletedAccounts: deleted ${profile.id}`, counts);
-      } catch (err) {
-        failed++;
-        console.error(`purgeDeletedAccounts: could not delete ${profile.id}`, err.message);
+    // Deleted accounts past their window, then Google sign-ups abandoned on the Terms popup.
+    for (const [kind, ids] of [
+      ['past their deletion window', (await dueAccounts(db)).map((profile) => profile.id)],
+      ['abandoned at the Terms popup', await abandonedGoogleAccounts(admin)],
+    ]) {
+      let failed = 0;
+      for (const userId of ids) {
+        try {
+          const counts = await purgeAccount(admin, userId);
+          console.log(`purgeDeletedAccounts: deleted ${userId}`, counts);
+        } catch (err) {
+          failed++;
+          console.error(`purgeDeletedAccounts: could not delete ${userId}`, err.message);
+        }
       }
+      const capped = ids.length === MAX_PER_RUN ? `; hit the cap of ${MAX_PER_RUN}, the rest go tomorrow` : '';
+      console.log(`purgeDeletedAccounts: ${kind}: deleted ${ids.length - failed} of ${ids.length}${capped}`);
     }
-    const capped = due.length === MAX_PER_RUN ? `; hit the cap of ${MAX_PER_RUN}, the rest go tomorrow` : '';
-    console.log(`purgeDeletedAccounts: deleted ${due.length - failed} of ${due.length}${capped}`);
   }
 );
