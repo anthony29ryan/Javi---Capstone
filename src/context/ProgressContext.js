@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import NetInfo from '@react-native-community/netinfo';
 
 import { getAllModules, getCourses, getLessonIndex, getModuleLessons } from '../services/content';
 import {
@@ -106,6 +107,22 @@ export function ProgressProvider({ children }) {
       .then((ids) => setDownloadedIds(new Set(ids)))
       .catch(() => {});
   }, [refresh]);
+
+  // A connection lost mid-session shows the offline state at once, instead of only after the
+  // next failed load. Coming back reloads, since the screens may be showing the saved snapshot.
+  const wasOnline = useRef(true);
+  useEffect(
+    () =>
+      NetInfo.addEventListener(({ isConnected, isInternetReachable }) => {
+        // isInternetReachable is null until checked; only a definite false counts as offline.
+        const online = isConnected !== false && isInternetReachable !== false;
+        if (online === wasOnline.current) return;
+        wasOnline.current = online;
+        if (online) refresh();
+        else setOffline(true);
+      }),
+    [refresh]
+  );
 
   const downloadModule = useCallback(async (moduleId) => {
     await saveModule(moduleId, await getModuleLessons(moduleId));
