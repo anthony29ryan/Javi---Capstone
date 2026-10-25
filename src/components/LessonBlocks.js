@@ -1,10 +1,10 @@
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { colors, fonts, radius, spacing, type } from '../theme/colors';
 import { useScaledStyles, useTextSize } from '../context/TextSizeContext';
 import { parseInline } from '../services/inlineFormat';
-import Text from './AppText';
+import Text, { MAX_FONT_SCALE } from './AppText';
 
 /**
  * Lesson content is stored as an array of blocks. This renders them.
@@ -150,8 +150,11 @@ function measureColumns(headers, rows) {
 function TableBlock({ headers, rows }) {
   const styles = useScaledStyles(baseStyles);
   const { scale } = useTextSize();
-  // Bigger reading text needs wider columns to keep the same line breaks.
-  const widths = measureColumns(headers, rows).map((width) => Math.round(width * scale));
+  const { fontScale } = useWindowDimensions();
+  // Bigger reading text needs wider columns to keep the same line breaks: the app's
+  // text size and the phone's own font size (capped like all text) both enlarge it.
+  const textScale = scale * Math.min(fontScale, MAX_FONT_SCALE);
+  const widths = measureColumns(headers, rows).map((width) => Math.round(width * textScale));
   if (widths.length === 0) return null;
 
   const renderRow = (cells, { key, header = false, first = false, alt = false }) => (
