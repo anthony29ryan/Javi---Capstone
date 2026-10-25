@@ -1,11 +1,5 @@
 import { useRef, useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Text, { AppTextInput as TextInput } from '../components/AppText';
@@ -83,6 +77,7 @@ export default function TracerScreen({ route, navigation }) {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
   const startedAt = useRef(Date.now());
+  const scrollRef = useRef(null);
 
   async function saveCompletion() {
     setSaving(true);
@@ -204,11 +199,18 @@ export default function TracerScreen({ route, navigation }) {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      // Android too: SDK 54 is edge-to-edge, so the window no longer resizes for the keyboard.
+      behavior="padding"
     >
       <ScrollView
+        ref={scrollRef}
         contentContainerStyle={[styles.content, styles.drillContent, screenPadding]}
         keyboardShouldPersistTaps="handled"
+        // The input is invisible and covers the whole panel, so Android cannot tell which line to
+        // keep in view. The current line is at the panel's foot, the end of the scroll: stay there
+        // as lines are added and when the keyboard shrinks the view.
+        onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
+        onLayout={() => requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: false }))}
       >
         <View>
           <Header

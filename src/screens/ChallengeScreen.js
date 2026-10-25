@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Text from '../components/AppText';
@@ -202,7 +202,8 @@ export default function ChallengeScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      {/* Android too: SDK 54 is edge-to-edge, so the window no longer resizes for the keyboard. */}
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
         <ScrollView
           ref={scrollRef}
           contentContainerStyle={[
