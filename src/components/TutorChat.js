@@ -74,6 +74,9 @@ export default function TutorChat({
   // next render, so a quick double tap could otherwise send twice.
   const inFlight = useRef(false);
   const scrollRef = useRef(null);
+  // Only a new message glides into view. Loading, or the tab coming back from display: none,
+  // jumps: an animated scroll started mid-relayout stops at a stale, shorter end.
+  const animateScroll = useRef(false);
   // Until the saved thread arrives, a new message would be wiped by it.
   const busy = sending || loadingThread || offline;
 
@@ -94,6 +97,7 @@ export default function TutorChat({
     setSending(true);
     setFailure(null);
     // A new question replaces one that failed.
+    animateScroll.current = true;
     setMessages((current) => [
       ...current.filter((message) => !message.failed),
       { role: 'learner', text: trimmed },
@@ -102,6 +106,7 @@ export default function TutorChat({
 
     try {
       const reply = await askTutor(moduleId, trimmed);
+      animateScroll.current = true;
       setMessages((current) => [...current, { role: 'tutor', text: reply }]);
     } catch (err) {
       if (err.code === 'functions/resource-exhausted' && /Slow down/.test(err.message)) {
@@ -280,7 +285,10 @@ export default function TutorChat({
         style={styles.fullThread}
         contentContainerStyle={styles.fullThreadContent}
         keyboardShouldPersistTaps="handled"
-        onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
+        onContentSizeChange={() => {
+          scrollRef.current?.scrollToEnd({ animated: animateScroll.current });
+          animateScroll.current = false;
+        }}
         // The view itself shrinks too (the sheet settling, the keyboard opening), and that changes the end.
         // A frame later, once the native view has its new height, or the scroll lands on the old end.
         onLayout={() => requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: false }))}
