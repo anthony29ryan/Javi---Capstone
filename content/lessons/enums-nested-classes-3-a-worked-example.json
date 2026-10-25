@@ -25,11 +25,11 @@
     {
       "type": "note",
       "variant": "note",
-      "title": "Added: the crash your handout's version has",
+      "title": "Why the `try...catch` matters",
       "blocks": [
         {
           "type": "text",
-          "value": "The original calls `Period.valueOf(input)` with no protection. Type `Pizza` and the program dies with `java.lang.IllegalArgumentException: No enum constant EnumDemo.Period.Pizza`. Since the input comes from a user, this is not a remote possibility. It is the first thing a tester will do. The `try...catch` above is the fix, using exactly the technique from Lesson 16."
+          "value": "Without protection, `Period.valueOf(input)` crashes on bad input. Type `Pizza` and the program dies with `java.lang.IllegalArgumentException: No enum constant EnumDemo.Period.Pizza`. Since the input comes from a user, this is not a remote possibility. It is the first thing a tester will do. The `try...catch` above is the fix, using exactly the technique from Lesson 16."
         }
       ]
     }

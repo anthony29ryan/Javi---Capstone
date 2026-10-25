@@ -90,7 +90,7 @@
       "blocks": [
         {
           "type": "text",
-          "value": "`double prices[]` and `double[] prices` are both legal, but `double[] prices` is standard Java style, the brackets belong to the *type*, not the name. Your handout mixes both. Prefer `double[] prices`."
+          "value": "`double prices[]` and `double[] prices` are both legal, but `double[] prices` is standard Java style, the brackets belong to the *type*, not the name. Prefer `double[] prices`."
         }
       ]
     },

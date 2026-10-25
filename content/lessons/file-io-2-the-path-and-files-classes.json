@@ -95,33 +95,26 @@
       "value": "Checking access"
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Correction: `checkAccess()` is not a method of `Files`",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "Your handout presents it as though you could write `Files.checkAccess(path)`. That will not compile. The method lives on `FileSystemProvider`, reached like this:"
-        },
-        {
-          "type": "code",
-          "language": "java",
-          "value": "FileSystems.getDefault().provider().checkAccess(filePath, AccessMode.READ);"
-        },
-        {
-          "type": "text",
-          "value": "In practice nobody writes that. `Files` has direct methods that do the same job and return a `boolean` instead of throwing:"
-        },
-        {
-          "type": "code",
-          "language": "java",
-          "value": "Files.exists(filePath);        // does it exist?\nFiles.isReadable(filePath);    // exists and readable?\nFiles.isWritable(filePath);    // exists and writable?\nFiles.isExecutable(filePath);  // exists and executable?"
-        }
-      ]
+      "type": "text",
+      "value": "`checkAccess()` is not a method of `Files`, so `Files.checkAccess(path)` will not compile. The method lives on `FileSystemProvider`, reached like this:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "FileSystems.getDefault().provider().checkAccess(filePath, AccessMode.READ);"
     },
     {
       "type": "text",
-      "value": "The arguments the handout lists still describe the underlying concept:"
+      "value": "In practice nobody writes that. `Files` has direct methods that do the same job and return a `boolean` instead of throwing:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Files.exists(filePath);        // does it exist?\nFiles.isReadable(filePath);    // exists and readable?\nFiles.isWritable(filePath);    // exists and writable?\nFiles.isExecutable(filePath);  // exists and executable?"
+    },
+    {
+      "type": "text",
+      "value": "The access modes it can check:"
     },
     {
       "type": "table",

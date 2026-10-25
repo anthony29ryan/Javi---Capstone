@@ -77,11 +77,11 @@
     {
       "type": "note",
       "variant": "note",
-      "title": "Added: predefined character classes",
+      "title": "Predefined character classes",
       "blocks": [
         {
           "type": "text",
-          "value": "Your handout writes every class out longhand. Java provides shorthands you will meet constantly:"
+          "value": "Writing every class out longhand works, but Java provides shorthands you will meet constantly:"
         },
         {
           "type": "table",

@@ -97,32 +97,17 @@
       "value": "In every case, the content of the original `String` object is unchanged."
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Three corrections to your handout's table",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "**1.** The `equalsIgnoreCase` row gives the example as `str.equals(\"java\")` and claims it returns `true`. It calls the wrong method. `\"Java\".equals(\"java\")` is **`false`**, because `equals` is case-sensitive. The example should be `str.equalsIgnoreCase(\"java\")`."
-        },
-        {
-          "type": "text",
-          "value": "**2.** The `toUpperCase` description reads \"with any uppercase letters converted to uppercase.\" It converts **lowercase** letters to uppercase."
-        },
-        {
-          "type": "text",
-          "value": "**3.** The `compareTo` description explains the result by **number of characters**: \"less than 0 … (less characters)\". That is not how `compareTo` works. It compares **lexicographically**, character by character, like dictionary order:"
-        },
-        {
-          "type": "code",
-          "language": "java",
-          "value": "\"apple\".compareTo(\"banana\");   // negative, 'a' before 'b', despite being shorter\n\"zoo\".compareTo(\"aardvark\");   // positive, 'z' after 'a', despite being shorter"
-        },
-        {
-          "type": "text",
-          "value": "Length only decides the result when one string is a **prefix** of the other, which is why `\"Java\".compareTo(\"Java's\")` happens to be negative. In practice, use `compareTo` for **sorting** and `equals` for checking equality."
-        }
-      ]
+      "type": "text",
+      "value": "`compareTo` compares **lexicographically**, character by character, like dictionary order, not by length:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "\"apple\".compareTo(\"banana\");   // negative, 'a' before 'b', despite being shorter\n\"zoo\".compareTo(\"aardvark\");   // positive, 'z' after 'a', despite being shorter"
+    },
+    {
+      "type": "text",
+      "value": "Length only decides the result when one string is a **prefix** of the other, which is why `\"Java\".compareTo(\"Java's\")` happens to be negative. In practice, use `compareTo` for **sorting** and `equals` for checking equality."
     },
     {
       "type": "heading",

@@ -68,17 +68,6 @@
       ]
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Correction",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "your handout prints the upper bound of `double` as 1.79769313486231570 × 10⁻³⁰⁸. The exponent should be **positive**: 1.7976931348623157 × 10**³⁰⁸**. As printed it would make the largest `double` smaller than the smallest one."
-        }
-      ]
-    },
-    {
       "type": "heading",
       "value": "When to use each"
     },

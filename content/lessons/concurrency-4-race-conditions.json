@@ -5,17 +5,6 @@
   "order": 5,
   "blocks": [
     {
-      "type": "note",
-      "variant": "note",
-      "title": null,
-      "blocks": [
-        {
-          "type": "text",
-          "value": "This section is not in your handout. It is the central problem in concurrent programming, and a concurrency lesson without it teaches only how to start threads, not how to write correct ones."
-        }
-      ]
-    },
-    {
       "type": "text",
       "value": "Remember that threads **share the same memory space**. Watch what that costs:"
     },

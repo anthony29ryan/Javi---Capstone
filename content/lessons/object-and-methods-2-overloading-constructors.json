@@ -6,7 +6,7 @@
   "blocks": [
     {
       "type": "text",
-      "value": "A class can have several constructors, each taking different parameters. Here is `Pet`, with the field declarations the handout omits:"
+      "value": "A class can have several constructors, each taking different parameters. Here is `Pet`, with its field declarations:"
     },
     {
       "type": "code",
@@ -43,7 +43,7 @@
         },
         {
           "type": "text",
-          "value": "If you want both, write both. Your handout does not mention this, and it causes a confusing error."
+          "value": "If you want both, write both. Forgetting this causes a confusing error."
         }
       ]
     }

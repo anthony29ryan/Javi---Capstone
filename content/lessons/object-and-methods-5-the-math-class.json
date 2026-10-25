@@ -98,17 +98,6 @@
       ]
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Correction",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "your handout describes `Math.random()` as returning a number \"**>0** and <1.\" The lower bound is **inclusive**: it can return exactly `0.0`, though never `1.0`. The range is `[0.0, 1.0)`."
-        }
-      ]
-    },
-    {
       "type": "heading",
       "value": "Using Math.random"
     },

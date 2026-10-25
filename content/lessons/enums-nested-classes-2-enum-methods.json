@@ -45,11 +45,11 @@
     {
       "type": "note",
       "variant": "note",
-      "title": "Clarification",
+      "title": "Comparing enum constants",
       "blocks": [
         {
           "type": "text",
-          "value": "Your handout says \"You can also use comparison operators with enumeration constants instead of using the `compareTo()` method.\" That needs splitting in two:"
+          "value": "Comparing enum constants works differently from comparing numbers:"
         },
         {
           "type": "text",

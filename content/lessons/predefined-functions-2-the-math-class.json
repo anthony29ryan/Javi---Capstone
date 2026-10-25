@@ -98,25 +98,6 @@
       ]
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Three corrections to your handout's table",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "**1.** The `abs` row gives the example as `Math.abs(d)` and claims it returns `57`. But `d` is `65.78`, so `Math.abs(d)` is `65.78`. The variable meant was **`e`** (`-57`): `Math.abs(e)` → `57`."
-        },
-        {
-          "type": "text",
-          "value": "**2.** The `floor` description says \"the largest integer value **less than** x.\" It must be **less than or equal to**: `Math.floor(5.0)` is `5.0`, not `4.0`."
-        },
-        {
-          "type": "text",
-          "value": "**3.** The `round` description reads \"a value of long type that is the greater closest to x,\" which is garbled. `round` returns the **closest** whole number, rounding halves **up**. It returns an `int` for a `float` argument and a `long` for a `double` argument."
-        }
-      ]
-    },
-    {
       "type": "text",
       "value": "When a method returns a value, it can be used in an expression:"
     },

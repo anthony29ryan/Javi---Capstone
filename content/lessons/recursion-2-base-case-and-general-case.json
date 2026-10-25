@@ -32,11 +32,11 @@
     {
       "type": "note",
       "variant": "note",
-      "title": "Added: what actually happens",
+      "title": "What actually happens",
       "blocks": [
         {
           "type": "text",
-          "value": "Your handout does not name the failure. Each pending call occupies memory on the **call stack**, and when that space runs out the JVM throws **`StackOverflowError`**:"
+          "value": "When the base case is never reached, each pending call occupies memory on the **call stack**, and when that space runs out the JVM throws **`StackOverflowError`**:"
         },
         {
           "type": "code",

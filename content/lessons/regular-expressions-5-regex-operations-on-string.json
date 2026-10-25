@@ -45,24 +45,17 @@
       "value": " Help me I have no idea what's going on!"
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Correction",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "your handout shows the output as `Help me I have no idea what's going on!` with no leading space. But the input **begins** with two spaces, and ` {2,}` replaces them with **one** space , so a single leading space remains. The printed output in the handout is what you would get after also calling `trim()`:"
-        },
-        {
-          "type": "code",
-          "language": "java",
-          "value": "str = str.replaceAll(\" {2,}\", \" \").trim();   // now the handout's output is correct"
-        },
-        {
-          "type": "text",
-          "value": "Worth noticing: a regex does exactly what you asked, which is rarely quite what you meant."
-        }
-      ]
+      "type": "text",
+      "value": "A single leading space remains: the input **begins** with two spaces, and ` {2,}` replaces them with **one** space. To remove it as well, add `trim()`:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "str = str.replaceAll(\" {2,}\", \" \").trim();   // no leading space"
+    },
+    {
+      "type": "text",
+      "value": "Worth noticing: a regex does exactly what you asked, which is rarely quite what you meant."
     },
     {
       "type": "heading",
