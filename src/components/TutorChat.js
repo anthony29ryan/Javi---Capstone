@@ -246,12 +246,12 @@ export default function TutorChat({
         <TextInput
           value={text}
           onChangeText={setText}
-          onSubmitEditing={() => send(text)}
+          // Enter makes a new line; the ↑ button sends.
+          multiline
           editable={!sending && !offline}
           maxLength={MAX_QUESTION_CHARS}
           placeholder={offline ? 'Reconnect to ask Javi' : 'Ask about this module…'}
           placeholderTextColor={colors.borderStrong}
-          returnKeyType="send"
           accessibilityLabel="Question for Javi"
           style={styles.input}
         />
@@ -499,6 +499,8 @@ const styles = StyleSheet.create({
   },
   composer: {
     flexDirection: 'row',
+    // The send button stays at the bottom as the box grows.
+    alignItems: 'flex-end',
     gap: spacing.sm,
   },
   composerOffline: {
@@ -507,12 +509,16 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     minWidth: 0,
-    height: 50,
+    // One line at rest, growing to about five before it scrolls inside itself.
+    minHeight: 50,
+    maxHeight: 120,
     borderRadius: 25,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
     paddingHorizontal: 18,
+    paddingVertical: 13,
+    textAlignVertical: 'center',
     fontFamily: fonts.medium,
     fontSize: 14,
     color: colors.text,
