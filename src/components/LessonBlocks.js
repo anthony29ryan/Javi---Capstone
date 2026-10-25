@@ -137,7 +137,8 @@ function measureColumns(headers, rows) {
 
   return Array.from({ length: columnCount }, (_, column) => {
     const widths = [measuredWidth(headers[column]), ...bodies.map((c) => measuredWidth(c[column]))];
-    const ideal = Math.max(...widths, 0) + TABLE_CELL_PADDING;
+    // One spare character: sized exactly, rounding wrapped `boolean` as "boolea / n".
+    const ideal = Math.max(...widths, 0) + TABLE_CODE_CHAR + TABLE_CELL_PADDING;
     return Math.round(Math.min(TABLE_MAX_COLUMN, Math.max(TABLE_MIN_COLUMN, ideal)));
   });
 }
