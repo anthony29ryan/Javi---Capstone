@@ -22,7 +22,8 @@ export default function CodeEditor({ value, onChangeText, placeholder, accessibi
   const { fontScale } = useWindowDimensions();
   const lines = value.split('\n');
   const longest = Math.max(...lines.map((line) => line.length));
-  const width = (longest + 2) * CHAR_WIDTH * Math.min(fontScale, MAX_FONT_SCALE);
+  // The input's paddingRight sits inside this width, so it is added on top of the two spare characters.
+  const width = (longest + 2) * CHAR_WIDTH * Math.min(fontScale, MAX_FONT_SCALE) + spacing.lg;
 
   return (
     <View style={styles.card}>
