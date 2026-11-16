@@ -368,3 +368,46 @@ REPO="$PWD" npx firebase emulators:exec --project demo-qa-probe --only firestore
 node docs/qa/evidence/reshuffle.sim.js "$PWD"
 node docs/qa/evidence/contrast.js
 ```
+
+---
+
+## Post-remediation results (appended after the fix; sections 1 to 10 above are unchanged)
+
+**Branch:** `qa/iso-25010-remediation`, from `origin/main` at `70a98f0`.
+
+**Scope:** confirmed Critical and High findings that can be fixed in code. There were no Critical findings, so the only change is F-01. F-02 (App Check) needs Firebase console access and a native provider, so it is documented, not changed.
+
+### Fix
+
+| Finding | Change | Files |
+|---|---|---|
+| F-01 (High) | The quiz's question set is drawn once per visit to the screen. `load` now depends only on `moduleId` and reads the lessons through a ref, so a ProgressContext refresh (on reconnect or an offline-banner tap) no longer redraws it mid-quiz. "Try again" after a failed load, and Retake, still draw a fresh set. The shuffle and order logic moved unchanged into a pure helper with unit tests. | `src/screens/QuizScreen.js`, `src/services/quizOrder.js` (new), `tests/quizOrder.test.js` (new), `package.json` (test list) |
+
+### Test results after the fix
+
+| Command | Before | After |
+|---|---|---|
+| `npm test` | 54 / 54 pass | **59 / 59 pass** (5 new `quizOrder` tests) |
+| `npm run test:rules` (emulator) | 93 / 93 pass | **93 / 93 pass** |
+| `npm run content:verify` | OK | **OK** |
+| `npx expo export --platform android` | Bundles, 6.2 MB | **Bundles, 6.21 MB** |
+| Lint / type check | Not available | Not available (none added; no new dependencies) |
+
+### Re-test of the affected cases
+
+| Test ID | Before | After | How verified |
+|---|---|---|---|
+| TC-FUN-08 | Fail | **Pass (code trace)**, device check pending | A refresh changes `lessons`. Only the ref-update effect runs, and `load` keeps its identity (its dependencies are `[moduleId]`), so `useEffect(load, [load])` does not run again and `questions`, `index` and `marks` stay consistent. The bundle compiles. No React Native component-test library is installed, so this could not be exercised automatically. It is listed for manual verification below. |
+| TC-FUN-12 | Pass | Pass | Unchanged. The server guard still refuses duplicates, which a fixed question set no longer produces. |
+
+### Remaining issues (not changed in this branch)
+- F-02 High (App Check)
+- F-03 to F-07 Medium
+- F-08 to F-11 and F-13 Low
+- F-12 Informational
+
+See section 8 for the recommended fixes. F-04 shares F-01's root cause and is still open: on reconnect, `ProgressContext.refresh()` still sets `loading`, which unmounts the tutor chat and flashes the tab skeletons.
+
+### Manual verification needed
+1. On an Android device: open a quiz, answer about 5 questions, turn airplane mode on, wait for the offline banner, turn it off, then finish. Expect the same questions, a review that matches the answers, and the score saved (no "Score not saved yet").
+2. Check that Retake still draws a different set, and that "Try again" after a failed load still works.
