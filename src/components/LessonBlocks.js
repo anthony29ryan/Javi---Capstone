@@ -1,62 +1,39 @@
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { colors, fonts, radius, spacing, type } from '../theme/colors';
 import { useScaledStyles, useTextSize } from '../context/TextSizeContext';
-import Text from './AppText';
+import { parseInline } from '../services/inlineFormat';
+import Text, { MAX_FONT_SCALE } from './AppText';
 
 /**
  * Lesson content is stored as an array of blocks. This renders them.
  *
  * Block types: text, code, heading, list, note, table, image, video.
- * Text values may contain **bold** and `inline code`, which InlineText turns
- * into nested <Text> runs. Doing it here avoids pulling in a markdown library
- * for the two bits of inline formatting the lessons actually use.
+ * Text values may contain **bold**, *italic* and `inline code`, which
+ * InlineText turns into nested <Text> runs (parsed by services/inlineFormat.js).
  */
-
-// Splits on the markers but keeps them, so the runs can be styled in order.
-const INLINE_PATTERN = /(\*\*[^*]+\*\*|`[^`]+`)/g;
-const CODE_PATTERN = /(`[^`]+`)/g;
-
-const isCode = (run) => run.length > 2 && run.startsWith('`') && run.endsWith('`');
 
 export function InlineText({ value, style }) {
   const styles = useScaledStyles(baseStyles);
-  const runs = String(value ?? '').split(INLINE_PATTERN).filter(Boolean);
+  const render = (runs) =>
+    runs.map((run, index) => {
+      if (run.kind === 'text') return run.value;
+      if (run.kind === 'code') {
+        return (
+          <Text key={index} style={styles.inlineCode}>
+            {run.value}
+          </Text>
+        );
+      }
+      return (
+        <Text key={index} style={run.kind === 'bold' ? styles.bold : styles.italic}>
+          {render(run.children)}
+        </Text>
+      );
+    });
 
-  return (
-    <Text style={style}>
-      {runs.map((run, index) => {
-        if (run.startsWith('**') && run.endsWith('**')) {
-          return (
-            <Text key={index} style={styles.bold}>
-              {/* Code inside bold, like **`final`**, which 101 lessons use. */}
-              {run
-                .slice(2, -2)
-                .split(CODE_PATTERN)
-                .map((part, partIndex) =>
-                  isCode(part) ? (
-                    <Text key={partIndex} style={styles.inlineCode}>
-                      {part.slice(1, -1)}
-                    </Text>
-                  ) : (
-                    part
-                  )
-                )}
-            </Text>
-          );
-        }
-        if (isCode(run)) {
-          return (
-            <Text key={index} style={styles.inlineCode}>
-              {run.slice(1, -1)}
-            </Text>
-          );
-        }
-        return run;
-      })}
-    </Text>
-  );
+  return <Text style={style}>{render(parseInline(value))}</Text>;
 }
 
 export function CodeBlock({ value, language, label }) {
@@ -137,18 +114,13 @@ function toCells(row) {
  * render in.
  */
 function measuredWidth(value) {
-  return String(value ?? '')
-    .split(INLINE_PATTERN)
-    .filter(Boolean)
-    .reduce((total, run) => {
-      if (run.startsWith('`') && run.endsWith('`')) {
-        return total + (run.length - 2) * TABLE_CODE_CHAR;
-      }
-      if (run.startsWith('**') && run.endsWith('**')) {
-        return total + (run.length - 4) * TABLE_TEXT_CHAR;
-      }
-      return total + run.length * TABLE_TEXT_CHAR;
+  const width = (runs) =>
+    runs.reduce((total, run) => {
+      if (run.kind === 'code') return total + run.value.length * TABLE_CODE_CHAR;
+      if (run.kind === 'text') return total + run.value.length * TABLE_TEXT_CHAR;
+      return total + width(run.children);
     }, 0);
+  return width(parseInline(value));
 }
 
 /**
@@ -165,7 +137,8 @@ function measureColumns(headers, rows) {
 
   return Array.from({ length: columnCount }, (_, column) => {
     const widths = [measuredWidth(headers[column]), ...bodies.map((c) => measuredWidth(c[column]))];
-    const ideal = Math.max(...widths, 0) + TABLE_CELL_PADDING;
+    // One spare character: sized exactly, rounding wrapped `boolean` as "boolea / n".
+    const ideal = Math.max(...widths, 0) + TABLE_CODE_CHAR + TABLE_CELL_PADDING;
     return Math.round(Math.min(TABLE_MAX_COLUMN, Math.max(TABLE_MIN_COLUMN, ideal)));
   });
 }
@@ -177,8 +150,11 @@ function measureColumns(headers, rows) {
 function TableBlock({ headers, rows }) {
   const styles = useScaledStyles(baseStyles);
   const { scale } = useTextSize();
-  // Bigger reading text needs wider columns to keep the same line breaks.
-  const widths = measureColumns(headers, rows).map((width) => Math.round(width * scale));
+  const { fontScale } = useWindowDimensions();
+  // Bigger reading text needs wider columns to keep the same line breaks: the app's
+  // text size and the phone's own font size (capped like all text) both enlarge it.
+  const textScale = scale * Math.min(fontScale, MAX_FONT_SCALE);
+  const widths = measureColumns(headers, rows).map((width) => Math.round(width * textScale));
   if (widths.length === 0) return null;
 
   const renderRow = (cells, { key, header = false, first = false, alt = false }) => (
@@ -292,6 +268,10 @@ const baseStyles = StyleSheet.create({
   },
   bold: {
     fontFamily: fonts.bold,
+  },
+  // Outfit has no italic file, so Android slants the regular one.
+  italic: {
+    fontStyle: 'italic',
   },
   inlineCode: {
     fontFamily: fonts.monoRegular,

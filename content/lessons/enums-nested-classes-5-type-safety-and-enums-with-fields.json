@@ -10,7 +10,7 @@
     },
     {
       "type": "text",
-      "value": "**As with other classes, you can also add methods and other fields to an enum type.** Your handout mentions this but does not show it, and it is where enums become powerful, the pizza example above keeps prices in a `switch`, far away from the sizes they belong to. Put them together:"
+      "value": "**As with other classes, you can also add methods and other fields to an enum type.** This is where enums become powerful: the pizza example above keeps prices in a `switch`, far away from the sizes they belong to. Put them together:"
     },
     {
       "type": "code",

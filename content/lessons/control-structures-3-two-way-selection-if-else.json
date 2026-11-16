@@ -25,7 +25,7 @@
     {
       "type": "note",
       "variant": "note",
-      "title": "Added: the conditional operator",
+      "title": "The conditional operator",
       "blocks": [
         {
           "type": "text",

@@ -20,11 +20,11 @@
     {
       "type": "note",
       "variant": "note",
-      "title": "Added (Java 7+, not in the source handout)",
+      "title": "Java 7+: catching several exceptions at once",
       "blocks": [
         {
           "type": "text",
-          "value": "when two exceptions need identical handling, combine them with `|` instead of duplicating the block:"
+          "value": "When two exceptions need identical handling, combine them with `|` instead of duplicating the block:"
         },
         {
           "type": "code",

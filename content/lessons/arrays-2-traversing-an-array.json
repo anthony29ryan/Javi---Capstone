@@ -28,7 +28,7 @@
       "blocks": [
         {
           "type": "text",
-          "value": "Your handout's comment calls it \"the length method.\" For an array it is written **`prices.length`** with no parentheses. Compare with Lesson 8, where a String uses **`str.length()`** *with* parentheses. Same word, different syntax, and the compiler will remind you often."
+          "value": "For an array it is written **`prices.length`** with no parentheses. Compare with Lesson 8, where a String uses **`str.length()`** *with* parentheses. Same word, different syntax, and the compiler will remind you often."
         }
       ]
     },

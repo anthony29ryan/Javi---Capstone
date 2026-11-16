@@ -53,11 +53,11 @@
     {
       "type": "note",
       "variant": "note",
-      "title": "Added: interfaces since Java 8",
+      "title": "Interfaces since Java 8",
       "blocks": [
         {
           "type": "text",
-          "value": "The description above (headings only) matches Java 7 and your handout's era. Modern interfaces may also contain **`default`** methods with a body and **`static`** methods:"
+          "value": "The description above matches Java 7. Modern interfaces may also contain **`default`** methods with a body and **`static`** methods:"
         },
         {
           "type": "code",

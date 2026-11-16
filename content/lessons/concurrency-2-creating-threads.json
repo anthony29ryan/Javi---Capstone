@@ -37,11 +37,11 @@
       "blocks": [
         {
           "type": "text",
-          "value": "**Important: that output is only *one* possible result.** Your handout presents it as *the* output. Once `start()` returns, two threads are running independently and the scheduler decides which proceeds. `Running in a thread` may appear **first**, **second**, or interleaved. Run it ten times and you may well see both orders."
+          "value": "**Important: that output is only *one* possible result.** Once `start()` returns, two threads are running independently and the scheduler decides which proceeds. `Running in a thread` may appear **first**, **second**, or interleaved. Run it ten times and you may well see both orders."
         },
         {
           "type": "text",
-          "value": "This matters more than it looks. A student who memorises the printed output will conclude that `start()` waits, the exact opposite of what the text says one paragraph later. **Never rely on the ordering of output from separate threads.**"
+          "value": "This matters more than it looks. If you memorise the printed output, you might conclude that `start()` waits, the exact opposite of what really happens. **Never rely on the ordering of output from separate threads.**"
         }
       ]
     },

@@ -87,7 +87,7 @@
       "blocks": [
         {
           "type": "text",
-          "value": "your handout's precedence table omits `^`, though it appears in the logical operators table. XOR binds more tightly than `&&`, which is where it sits above."
+          "value": "`^` (XOR) binds more tightly than `&&`, which is why it sits above it in the table."
         }
       ]
     },

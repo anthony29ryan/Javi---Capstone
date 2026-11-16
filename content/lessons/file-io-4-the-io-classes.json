@@ -54,17 +54,6 @@
       ]
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Correction",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "your handout describes `BufferedOutputStream` as \"**Handles input** from a system's standard or default output device.\" An output stream does not handle input, the row was copied from the `BufferedInputStream` entry above it."
-        }
-      ]
-    },
-    {
       "type": "heading",
       "value": "OutputStream methods"
     },
@@ -161,17 +150,6 @@
           "`write(int c)`",
           "Writes a single character"
         ]
-      ]
-    },
-    {
-      "type": "note",
-      "variant": "correction",
-      "title": "Correction",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "the handout spells this method `newline()`. The actual name is **`newLine()`** with a capital L, and Java is case-sensitive, `newline()` will not compile."
-        }
       ]
     }
   ]

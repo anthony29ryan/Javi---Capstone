@@ -76,17 +76,6 @@
       ]
     },
     {
-      "type": "note",
-      "variant": "note",
-      "title": "Note",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "your handout titles this table \"Format Specifiers for the `print()` method.\" These specifiers belong to **`printf()`**: `print()` does no formatting at all."
-        }
-      ]
-    },
-    {
       "type": "heading",
       "value": "printf does not add a newline"
     },

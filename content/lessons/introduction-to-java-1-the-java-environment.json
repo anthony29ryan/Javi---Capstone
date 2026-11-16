@@ -17,17 +17,6 @@
       "value": "**Java Virtual Machine (JVM)**: an environment that translates Java **bytecode** (the compiled format for Java programs) into machine language and executes it."
     },
     {
-      "type": "note",
-      "variant": "note",
-      "title": "Note",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "your handout calls this the \"Java Environment Machine.\" The correct name is **Java Virtual Machine**. Every other source and every exam will use \"Virtual.\""
-        }
-      ]
-    },
-    {
       "type": "heading",
       "value": "How your code becomes a running program"
     },

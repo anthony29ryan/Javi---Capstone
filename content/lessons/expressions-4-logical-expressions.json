@@ -32,19 +32,12 @@
       "value": "3 > 3 || 4 < 2 && 12 > 3 || 4 < 5     // true"
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Correction",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "your handout says that when two or more logical operators appear in an expression, it \"is evaluated from left to right.\" That is not accurate, and this very example disproves it. **`&&` has higher precedence than `||`**, so `&&` is grouped first regardless of position. Left-to-right ordering applies only between operators of *equal* precedence."
-        }
-      ]
+      "type": "text",
+      "value": "**`&&` has higher precedence than `||`**, so `&&` is grouped first regardless of position. Left-to-right ordering applies only between operators of *equal* precedence."
     },
     {
       "type": "text",
-      "value": "Trace it correctly:"
+      "value": "Trace it step by step:"
     },
     {
       "type": "code",

@@ -67,6 +67,11 @@ function walkBlocks(blocks, file) {
       }
     }
 
+    // Lessons stand on their own: no pointing back at the source handouts or at mistakes in them.
+    if (b.type === 'note' && b.variant === 'correction') problems.push(`${file}: correction note (lessons do not point out source errors)`);
+    if (b.type !== 'note' && /handout/i.test(JSON.stringify(b))) problems.push(`${file}: mentions the handout`);
+    if (b.type === 'note' && /handout/i.test(`${b.title ?? ''}`)) problems.push(`${file}: note title mentions the handout`);
+
     if (b.type === 'list' && !b.items?.length) problems.push(`${file}: empty list`);
     if (b.type === 'code' && !String(b.value || '').trim()) problems.push(`${file}: empty code block`);
     if ((b.type === 'text' || b.type === 'heading') && !String(b.value || '').trim()) {

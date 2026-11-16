@@ -29,11 +29,11 @@
     {
       "type": "note",
       "variant": "note",
-      "title": "Added (Java 7+, not in the source handout)",
+      "title": "Java 7+: try-with-resources",
       "blocks": [
         {
           "type": "text",
-          "value": "for anything that must be closed: files, streams, connections, prefer **try-with-resources** over a `finally` block. Java closes the resource automatically, even if an exception is thrown:"
+          "value": "For anything that must be closed: files, streams, connections, prefer **try-with-resources** over a `finally` block. Java closes the resource automatically, even if an exception is thrown:"
         },
         {
           "type": "code",

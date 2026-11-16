@@ -15,7 +15,7 @@
     {
       "type": "note",
       "variant": "note",
-      "title": "Added: the `@Override` annotation",
+      "title": "The `@Override` annotation",
       "blocks": [
         {
           "type": "text",

@@ -86,15 +86,11 @@
     {
       "type": "note",
       "variant": "note",
-      "title": "The handout contradicts itself here, and the second statement is the correct one",
+      "title": "Priority is a hint, not an order",
       "blocks": [
         {
           "type": "text",
-          "value": "It prints the output above as though priority determined the order, highest first, while also stating that priority guarantees nothing. **Priority is a hint to the scheduler, not an instruction.** Some JVMs and operating systems largely ignore it. Run this program repeatedly and you will see orders that do not follow priority at all."
-        },
-        {
-          "type": "text",
-          "value": "Its description of priority is also garbled: \"A thread can interrupt or supersede another thread with a higher thread priority than the other thread.\" What is meant is that a **higher**-priority thread may supersede a **lower**-priority one."
+          "value": "The output above may look as though priority decided the order, highest first, but priority guarantees nothing. **Priority is a hint to the scheduler, not an instruction.** Some JVMs and operating systems largely ignore it. Run this program repeatedly and you will see orders that do not follow priority at all."
         }
       ]
     },

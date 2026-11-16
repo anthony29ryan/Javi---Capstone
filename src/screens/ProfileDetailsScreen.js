@@ -67,9 +67,12 @@ export default function ProfileDetailsScreen({ navigation }) {
     getPreferences()
       .then((preferences) => {
         if (cancelled) return;
+        // The profile's name, not Firebase Auth's: linking Google copies the Google name onto Auth.
+        const first = preferences.displayName || name;
         const last = preferences.lastName ?? '';
+        setName(first);
         setLastName(last);
-        initial.current = { name: name.trim(), lastName: last.trim(), nick: nick.trim() };
+        initial.current = { name: first.trim(), lastName: last.trim(), nick: nick.trim() };
         setLoaded(true);
       })
       .catch((err) => {
@@ -139,7 +142,7 @@ export default function ProfileDetailsScreen({ navigation }) {
 
     setSaving(true);
     try {
-      if (trimmed !== user?.displayName) await updateDisplayName(trimmed);
+      if (trimmed !== initial.current.name) await updateDisplayName(trimmed);
       if (trimmedLast !== initial.current.lastName) await savePreferences({ lastName: trimmedLast });
       // Through the context, so greetings pick up the new nickname at once.
       if (trimmedNick !== nickname) await updateNickname(trimmedNick);

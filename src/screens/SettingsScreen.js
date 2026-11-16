@@ -3,6 +3,7 @@ import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Text from '../components/AppText';
+import { displayReminderTime } from '../components/ReminderTimePicker';
 import AuthToast from '../components/auth/AuthToast';
 import TermsSheet from '../components/auth/TermsSheet';
 import Skeleton from '../components/Skeleton';
@@ -144,7 +145,7 @@ export default function SettingsScreen({ navigation, route }) {
       setPreferences((current) => (current ? { ...current, ...reminder } : current));
       setToast(
         reminder.reminderEnabled
-          ? `Reminder set for ${reminder.reminderTime}`
+          ? `Reminder set for ${displayReminderTime(reminder.reminderTime)}`
           : "Time saved. The reminder is off: notifications aren't allowed for Javi."
       );
     } else if (route.params?.toast) {
@@ -228,7 +229,7 @@ export default function SettingsScreen({ navigation, route }) {
               !preferences
                 ? 'Connect to change your reminder'
                 : preferences.reminderEnabled
-                  ? `Daily nudge at ${preferences.reminderTime}`
+                  ? `Daily nudge at ${displayReminderTime(preferences.reminderTime)}`
                   : 'Off — no reminder scheduled'
             }
             onPress={toggleReminder}
@@ -237,7 +238,7 @@ export default function SettingsScreen({ navigation, route }) {
           />
           <Row
             title="Reminder time"
-            subtitle={preferences ? `Daily at ${preferences.reminderTime}` : 'Connect to change your reminder'}
+            subtitle={preferences ? `Daily at ${displayReminderTime(preferences.reminderTime)}` : 'Connect to change your reminder'}
             onPress={() =>
               navigation.navigate('ReminderSheet', { reminderTime: preferences.reminderTime })
             }

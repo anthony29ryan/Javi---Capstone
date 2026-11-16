@@ -42,7 +42,7 @@
     },
     {
       "type": "text",
-      "value": "Notice too that `logTransaction` is `private` and gets called from inside `deposit` and `withdraw`, the rule the handout stated backwards, in practice."
+      "value": "Notice too that `logTransaction` is `private` and gets called from inside `deposit` and `withdraw`: a private helper method in practice."
     }
   ]
 }

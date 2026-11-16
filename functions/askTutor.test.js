@@ -85,6 +85,7 @@ test('the model gets this module only, in order, and the question stays out of t
   assert.ok(options.signal instanceof AbortSignal, 'the call has a timeout');
   assert.match(instruction, /You are Javi/);
   assert.match(instruction, /"Arrays"/);
+  assert.match(instruction, /Never write a complete program or a full solution/, 'the tutor withholds full solutions (REQ017)');
   assert.ok(instruction.indexOf('One-dimensional arrays') < instruction.indexOf('Traversing'), 'lessons in order');
   assert.match(instruction, /int\[\] a = new int\[3\];/);
   assert.match(instruction, /Indices start at 0\./);

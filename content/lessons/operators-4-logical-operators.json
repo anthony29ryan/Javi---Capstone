@@ -60,17 +60,6 @@
       ]
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Correction",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "your handout lists `A && B` as `true`. With A true and B false, AND must be **`false`**: that is the definition of AND. The other rows are correct as printed. Worth checking carefully if this table has been used for revision."
-        }
-      ]
-    },
-    {
       "type": "heading",
       "value": "Truth tables"
     },
@@ -126,7 +115,7 @@
     {
       "type": "note",
       "variant": "note",
-      "title": "Added: short-circuit evaluation (not in the source handout)",
+      "title": "Short-circuit evaluation",
       "blocks": [
         {
           "type": "text",

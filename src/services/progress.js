@@ -23,7 +23,8 @@ async function readProgress(userId) {
 // they can say "not saved"; the write stays queued and lands on reconnect.
 const SAVE_TIMEOUT_MS = 10000;
 
-const finishQuizFunction = httpsCallable(functions, 'finishQuiz', { timeout: SAVE_TIMEOUT_MS });
+// Longer than a plain save: a function that has not run for a while can take most of 10 s just to start.
+const finishQuizFunction = httpsCallable(functions, 'finishQuiz', { timeout: 30000 });
 
 /** Merges `fields` into progress/{userId}, rejecting if the server has not confirmed it in time. */
 function saveProgress(userId, fields) {
@@ -96,8 +97,13 @@ export async function setLessonComplete(lessonId, complete) {
 export async function recordModuleQuizCompletion(moduleId, answers) {
   await finishQuizFunction({ moduleId, answers });
   const userId = auth.currentUser.uid;
-  const existing = await readProgress(userId);
-  await saveProgress(userId, { streak: advanceStreak(existing.streak), updatedAt: serverTimestamp() });
+  try {
+    const existing = await readProgress(userId);
+    await saveProgress(userId, { streak: advanceStreak(existing.streak), updatedAt: serverTimestamp() });
+  } catch {
+    // The score is already saved, so a slow streak write is not a failed quiz: a timed-out
+    // write stays queued and lands on reconnect, and the next study day advances it anyway.
+  }
 }
 
 /**

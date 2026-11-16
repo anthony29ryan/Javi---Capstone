@@ -36,24 +36,13 @@
       ]
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Correction",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "your handout states that a private method \"**cannot** be invoked within the definitions of methods in its class.\" That is inverted. It is *inside* its own class that a private method **can** be invoked. What it cannot do is be called from outside. A private method that could not be called anywhere would be useless."
-        },
-        {
-          "type": "code",
-          "language": "java",
-          "value": "public class Report {\n    public void print() {\n        formatHeader();      // fine, called from inside the class\n    }\n\n    private void formatHeader() {\n        System.out.println(\"=== REPORT ===\");\n    }\n}\n\n// elsewhere:\nnew Report().print();          // fine\nnew Report().formatHeader();   // error: formatHeader() has private access"
-        },
-        {
-          "type": "text",
-          "value": "Private methods are **helper methods**: internal steps the outside world has no business calling."
-        }
-      ]
+      "type": "text",
+      "value": "Private methods are **helper methods**: internal steps the outside world has no business calling. They can be called from inside their own class, but not from outside it:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "public class Report {\n    public void print() {\n        formatHeader();      // fine, called from inside the class\n    }\n\n    private void formatHeader() {\n        System.out.println(\"=== REPORT ===\");\n    }\n}\n\n// elsewhere:\nnew Report().print();          // fine\nnew Report().formatHeader();   // error: formatHeader() has private access"
     },
     {
       "type": "heading",

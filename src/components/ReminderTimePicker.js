@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { getCalendars } from 'expo-localization';
 
+import { formatReminderTime } from '../services/reminderTime';
 import { authColors, authFonts, authRadius } from '../theme/authTheme';
 import Text from './AppText';
+
+/** A stored "HH:MM" reminder time in the phone's own 12- or 24-hour clock, like the native picker. */
+export function displayReminderTime(time) {
+  return formatReminderTime(time, getCalendars()[0]?.uses24hourClock ?? false);
+}
 
 const PRESETS = [
   { time: '07:00', label: 'Morning' },
@@ -30,6 +37,9 @@ function toTimeString(date) {
 export default function ReminderTimePicker({ time, onChange }) {
   // A saved time that is not a preset opens on the custom row.
   const [customOpen, setCustomOpen] = useState(() => !PRESETS.some((p) => p.time === time));
+  // Apart from customOpen: on Android the picker is a dialog that shows once
+  // when it mounts, so it is mounted per tap and unmounted when it closes.
+  const [pickerShown, setPickerShown] = useState(false);
 
   function pickPreset(preset) {
     // Choosing a preset closes the custom row, so only one of the two ever
@@ -52,7 +62,7 @@ export default function ReminderTimePicker({ time, onChange }) {
               style={[styles.preset, selected && styles.presetSelected]}
             >
               <Text style={[styles.presetTime, selected && styles.presetTimeSelected]}>
-                {preset.time}
+                {displayReminderTime(preset.time)}
               </Text>
               <Text style={styles.presetLabel}>{preset.label}</Text>
             </Pressable>
@@ -61,26 +71,31 @@ export default function ReminderTimePicker({ time, onChange }) {
       </View>
 
       <Pressable
-        onPress={() => setCustomOpen(true)}
+        onPress={() => {
+          setCustomOpen(true);
+          setPickerShown(true);
+        }}
         accessibilityRole="radio"
         accessibilityState={{ selected: customOpen }}
         style={[styles.customRow, customOpen && styles.customRowOpen]}
       >
         <Text style={[styles.customLabel, customOpen && styles.customLabelOpen]}>Custom time</Text>
         {customOpen ? (
-          <Text style={styles.customValue}>{time}</Text>
+          <Text style={styles.customValue}>{displayReminderTime(time)}</Text>
         ) : (
           <Text style={styles.customSet}>Set</Text>
         )}
       </Pressable>
 
-      {customOpen ? (
+      {pickerShown ? (
         <DateTimePicker
           value={toDate(time)}
           mode="time"
           display="spinner"
           onChange={(event, date) => {
-            if (date) onChange(toTimeString(date));
+            setPickerShown(false);
+            // Cancel reports 'dismissed', which keeps the time already chosen.
+            if (event.type === 'set' && date) onChange(toTimeString(date));
           }}
         />
       ) : null}

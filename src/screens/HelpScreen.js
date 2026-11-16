@@ -44,7 +44,7 @@ const FAQS = [
   {
     question: 'Can I study offline?',
     answer:
-      'Only the modules you download, from a module page. Quizzes, Javi and the code runner need a connection.',
+      'Only the modules you download, with the download button on a course page. Quizzes, Javi and the code runner need a connection.',
   },
   {
     question: 'How do I change the text size?',

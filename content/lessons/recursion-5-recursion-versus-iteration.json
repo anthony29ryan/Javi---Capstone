@@ -18,30 +18,6 @@
       "value": "public static int factorial(int num) {\n    int fact = 1;\n    for (int i = 1; i <= num; i++) {\n        fact = fact * i;\n    }\n    return fact;\n}"
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Correction: your handout's version of this method is broken",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "It reads:"
-        },
-        {
-          "type": "code",
-          "language": "java",
-          "value": "int fact = 1;\nfor (int i = 0; i < num; i++) {   // starts at 0\n    fact = fact * i;\n}"
-        },
-        {
-          "type": "text",
-          "value": "Starting at `i = 0` multiplies `fact` by zero on the very first pass, so **it returns `0` for every input**. The loop must start at `1` and run to `num` inclusive, as in the corrected version above."
-        },
-        {
-          "type": "text",
-          "value": "The handout also captions it as \"an iterative version of the function `factorial()` **to find the largest element in an array**\": two unrelated examples merged by a copy-paste slip. It computes a factorial; it has nothing to do with arrays."
-        }
-      ]
-    },
-    {
       "type": "heading",
       "value": "The trade-off"
     },

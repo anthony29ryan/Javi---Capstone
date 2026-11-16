@@ -33,20 +33,13 @@
       "value": "Gen<Integer> iData = new Gen<>();"
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Correction",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "your handout says \"The data type on the left of the `new` operator is optional.\" It is the other way round. The **left** side declares the variable and its type: it is **required**, and it is what tells the compiler what `T` is. The **right** side may be shortened to `<>`, because the compiler infers the type from the left."
-        },
-        {
-          "type": "code",
-          "language": "java",
-          "value": "Gen<Integer> iData = new Gen<>();     // correct, diamond on the right\nGen iData = new Gen<Integer>();       // compiles, but Gen is now a \"raw type\", unchecked warnings"
-        }
-      ]
+      "type": "text",
+      "value": "The **left** side declares the variable and its type: it is **required**, and it is what tells the compiler what `T` is. The **right** side may be shortened to `<>`, because the compiler infers the type from the left."
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "Gen<Integer> iData = new Gen<>();     // correct, diamond on the right\nGen iData = new Gen<Integer>();       // compiles, but Gen is now a \"raw type\", unchecked warnings"
     },
     {
       "type": "heading",
@@ -67,7 +60,7 @@
     },
     {
       "type": "text",
-      "value": "Java converts automatically between primitives and their **wrapper classes**: `int`/`Integer`, `double`/`Double`, `char`/`Character`, `boolean`/`Boolean`. Your handout's example relies on this without naming it."
+      "value": "Java converts automatically between primitives and their **wrapper classes**: `int`/`Integer`, `double`/`Double`, `char`/`Character`, `boolean`/`Boolean`. The example above relies on this."
     },
     {
       "type": "heading",
@@ -95,7 +88,7 @@
       "blocks": [
         {
           "type": "text",
-          "value": "Your handout writes this class as `Gen<T, T2>`, immediately after stating that type parameter names should be single capital letters. `T2` breaks its own rule. The conventional second parameter is **`V`** (Value) or `U`. Renamed above."
+          "value": "Type parameter names are single capital letters by convention. A second parameter is usually **`V`** (Value) or `U`, as above."
         }
       ]
     },

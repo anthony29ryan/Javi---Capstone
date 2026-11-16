@@ -53,28 +53,17 @@
       ]
     },
     {
-      "type": "note",
-      "variant": "correction",
-      "title": "Two corrections to your handout's table",
-      "blocks": [
-        {
-          "type": "text",
-          "value": "**1.** The `fill` description reads \"Assigns the specified value to each element of the specified array **into ascending order**.\" The trailing phrase is copied from `sort`. `fill` does not sort, > it overwrites every element with the same value."
-        },
-        {
-          "type": "text",
-          "value": "**2.** The `binarySearch` examples are run on `a = {1, 3, 4, 5, 7, 4}`, which is **not sorted** (it ends `7, 4`). **Binary search requires a sorted array**; on unsorted input the result is undefined and may silently be wrong. Sort first:"
-        },
-        {
-          "type": "code",
-          "language": "java",
-          "value": "int[] data = {1, 3, 4, 5, 7, 4};\nArrays.sort(data);                              // {1, 3, 4, 4, 5, 7}\nSystem.out.println(Arrays.binarySearch(data, 5));   // 4\nSystem.out.println(Arrays.binarySearch(data, 53));  // -7, not found"
-        },
-        {
-          "type": "text",
-          "value": "A negative return means not found. `-7` decodes as insertion point `6`: `-(6) - 1 = -7`."
-        }
-      ]
+      "type": "text",
+      "value": "**Binary search only works on a sorted array.** On unsorted input the result is undefined and may silently be wrong, so sort first:"
+    },
+    {
+      "type": "code",
+      "language": "java",
+      "value": "int[] data = {1, 3, 4, 5, 7, 4};\nArrays.sort(data);                              // {1, 3, 4, 4, 5, 7}\nSystem.out.println(Arrays.binarySearch(data, 5));   // 4\nSystem.out.println(Arrays.binarySearch(data, 53));  // -7, not found"
+    },
+    {
+      "type": "text",
+      "value": "A negative return means not found. `-7` decodes as insertion point `6`: `-(6) - 1 = -7`."
     },
     {
       "type": "code",

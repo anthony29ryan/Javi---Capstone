@@ -40,17 +40,6 @@
       "value": "A constructor can also call methods within its class."
     },
     {
-      "type": "note",
-      "variant": "note",
-      "title": null,
-      "blocks": [
-        {
-          "type": "text",
-          "value": "Your handout reads \"`MyClass()` is a **class to** the constructor\": a typo for \"a **call to** the constructor.\""
-        }
-      ]
-    },
-    {
       "type": "heading",
       "value": "A constructor with parameters"
     },

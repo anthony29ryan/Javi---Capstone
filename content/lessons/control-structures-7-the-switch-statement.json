@@ -25,7 +25,7 @@
       "type": "list",
       "ordered": false,
       "items": [
-        "The variable used in a `switch` can only be of type `int`, `byte`, `short`, `char`, or `String`. *(Also `enum`, and the wrapper classes, your handout omits these. Enums are covered in Lesson 18.)*",
+        "The variable used in a `switch` can only be of type `int`, `byte`, `short`, `char`, or `String`. *(Also `enum` and the wrapper classes such as `Integer`. Enums are covered in Lesson 18.)*",
         "There can be any number of `case` statements. Each `case` is followed by the value to compare against and a colon.",
         "The value in a `case` must be the **same data type** as the switch variable, and must be a constant.",
         "When the switch variable equals a case, the statements following that case execute **until a `break` is reached**.",
@@ -53,7 +53,7 @@
     },
     {
       "type": "text",
-      "value": "Your handout mentions fall-through but never shows it. It is useful when several cases share an outcome:"
+      "value": "Fall-through is useful when several cases share an outcome:"
     },
     {
       "type": "code",
