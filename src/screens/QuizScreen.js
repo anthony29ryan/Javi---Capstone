@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,6 +13,7 @@ import Skeleton from '../components/Skeleton';
 import { PASS_PERCENT, useProgress } from '../context/ProgressContext';
 import { useScaledStyles } from '../context/TextSizeContext';
 import { getModuleQuestions, gradeAnswer } from '../services/quizzes';
+import { pickQuizQuestions } from '../services/quizOrder';
 import { recordModuleQuizCompletion } from '../services/progress';
 import { authColors } from '../theme/authTheme';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
@@ -167,36 +168,30 @@ export default function QuizScreen({ route, navigation }) {
   // Frame 98: the score did not reach the account.
   const [unsynced, setUnsynced] = useState(false);
 
+  // The lessons are read through a ref so that `load` does not depend on them.
+  // ProgressContext replaces its lesson list on every refresh (the connection
+  // coming back, or a tap on the offline banner). Drawing again then swapped in
+  // a new random set mid-quiz while `index` and `marks` still belonged to the
+  // old one: the review paired answers with the wrong questions, and a repeated
+  // question made finishQuiz refuse the score for good. So a set is drawn once
+  // per visit. "Try again" after a failed load, and Retake (a fresh screen),
+  // still draw a new one.
+  const lessonsRef = useRef(lessons);
+  useEffect(() => {
+    lessonsRef.current = lessons;
+  }, [lessons]);
+
   const load = useCallback(() => {
     setLoading(true);
     setLoadFailed(false);
-    // A module quiz is every lesson's questions put together, so they have to
-    // be ordered by which lesson they came from first — a question's own
-    // `order` only ranks it within its own lesson. Anything written at module
-    // level rather than against a lesson sits at the end.
-    const lessonOrder = new Map(lessons.map((lesson) => [lesson.id, lesson.order ?? 0]));
-
     getModuleQuestions(moduleId)
       .then((qs) => {
-        const picked = qs
-          .map((question) => ({ question, key: Math.random() }))
-          .sort((a, b) => a.key - b.key)
-          .slice(0, QUIZ_LENGTH)
-          .map(({ question }) => question);
-
-        const ordered = picked.sort((a, b) => {
-          const lessonDelta =
-            (a.lessonId ? (lessonOrder.get(a.lessonId) ?? 0) : Number.MAX_SAFE_INTEGER) -
-            (b.lessonId ? (lessonOrder.get(b.lessonId) ?? 0) : Number.MAX_SAFE_INTEGER);
-          return lessonDelta !== 0 ? lessonDelta : (a.order ?? 0) - (b.order ?? 0);
-        });
-
-        setQuestions(ordered);
+        setQuestions(pickQuizQuestions(qs, lessonsRef.current, { length: QUIZ_LENGTH }));
         setQuestionStart(Date.now());
       })
       .catch(() => setLoadFailed(true))
       .finally(() => setLoading(false));
-  }, [moduleId, lessons]);
+  }, [moduleId]);
 
   useEffect(load, [load]);
 
