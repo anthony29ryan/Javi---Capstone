@@ -11,9 +11,8 @@
 // so remapping the values re-skins the whole app without touching a single
 // screen — which is also what makes this easy to revert if the look is wrong.
 //
-// Only the light theme exists so far. The handoff also defines a dark "Night
-// study mode", but an app-wide theme toggle (Settings screen, persisted
-// preference, every screen re-checked) is its own feature.
+// Night study mode needs nothing here: `authColors` is already the night
+// palette when it is on.
 
 import { authColors } from './authTheme';
 
@@ -27,10 +26,7 @@ export const colors = {
 
   primary: authColors.accent, // terracotta - active elements, links, progress
   primaryDark: authColors.accentDeep, // pressed states, accent text on light ground
-  // The handoff has no token for this: progress-bar fills that need to sit
-  // between the track and the full accent. A lightened accent keeps that
-  // hierarchy without inventing a second hue.
-  primaryLight: '#DCA08E',
+  primaryLight: authColors.accentLight, // progress fills between track and accent
   primarySoft: authColors.accentSoft, // tinted panel behind selected/secondary surfaces
 
   button: authColors.button, // filled buttons only
@@ -43,13 +39,11 @@ export const colors = {
   borderStrong: authColors.muted, // chevrons, emphasized borders
 
   success: authColors.success,
-  successBg: '#E6F4EC',
+  successBg: authColors.successSoft,
   error: authColors.error,
   errorBg: authColors.errorSoft,
 
-  // The design gives code its own ground, slightly bluer and deeper than the
-  // near-black used for the tutor card and toast.
-  codeBg: '#262B45',
+  codeBg: authColors.codeBg,
   codeText: '#E7E9F5',
   codeLine: 'rgba(231,233,245,.14)',
   codeLabel: 'rgba(231,233,245,.5)',

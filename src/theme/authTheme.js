@@ -10,11 +10,19 @@
 // app has its own (coarser) scale in `theme/colors.js`; those two have not
 // been reconciled yet.
 //
-// Only the light theme is implemented for now — the handoff also defines a
-// "Night study mode" dark theme, but wiring an app-wide theme toggle is a
-// separate feature (Settings screen, persisted preference, everything else
-// in the app re-themed too).
-export const authColors = {
+// Text on a fixed pastel ground (stickers, level cards) uses
+// `lightColors.ink` directly, so it stays dark in both themes.
+//
+// Two palettes with the same keys: light, and the handoff's "Night study mode".
+// `authColors` is whichever one is on, picked once at launch (see themeMode.js).
+//
+// shortcut: the theme applies on the next launch, not live, because every
+// StyleSheet reads these at import. A live switch means moving all of them
+// into a hook.
+// With the extension so tests/theme.test.js can load this file under Node.
+import { isNightMode } from './themeMode.js';
+
+export const lightColors = {
   bg: '#F7F5F0',
   surface: '#FFFFFF',
   surface2: '#EFEDE7',
@@ -34,6 +42,7 @@ export const authColors = {
   buttonPressed: '#C88B7A',
 
   line: 'rgba(46,49,65,.09)',
+  lineStrong: 'rgba(46,49,65,.25)', // unticked checkbox outline
 
   error: '#B4483E',
   errorSoft: '#FBE9E5',
@@ -44,10 +53,74 @@ export const authColors = {
   warnLine: 'rgba(214,150,60,.4)',
   warnInk: '#6B4A1A',
   success: '#5EB78D',
+  successSoft: '#E6F4EC',
+  successInk: '#2F7F5E', // small success text, darker than `success` to read on white
+
+  // Progress fills between the track and the full accent. The handoff has no
+  // token for this; a lightened accent keeps the hierarchy without a new hue.
+  accentLight: '#DCA08E',
+  // The "vi" in the wordmark.
+  wordmark: '#A8563F',
+  // Advanced's progress bars on Profile; its card ground is too dark for them at night.
+  advancedBar: '#333242',
+  // Sticker outline and hard drop edge (Sticker Edge Options board, 1d for night).
+  stickerLine: '#2E3141',
+  // Progress bars on a terracotta sticker: filled and empty segments.
+  onAccentFill: '#F7F5F0',
+  onAccentTrack: 'rgba(247,245,240,.3)',
+  // The design gives code its own ground, slightly bluer and deeper than the
+  // near-black used for the tutor card and toast.
+  codeBg: '#262B45',
 
   white: '#FFFFFF',
   toastBg: '#333242',
 };
+
+// From the handoff's dark set. successSoft, accentLight and toastBg have no
+// dark value in the design, so they follow its patterns (soft = colour at .14).
+export const nightColors = {
+  bg: '#0C1338',
+  surface: '#17204A',
+  surface2: '#1E2857',
+
+  ink: '#F4F5FB',
+  ink2: '#B6BCDC',
+  muted: '#8890B8',
+
+  accent: '#8E97FD',
+  accentDeep: '#B7BDFF',
+  accentSoft: '#253066',
+
+  button: '#5C66DB',
+  buttonPressed: '#8E97FD',
+
+  line: 'rgba(255,255,255,.1)',
+  lineStrong: 'rgba(255,255,255,.25)',
+
+  error: '#FF9C8F',
+  errorSoft: 'rgba(255,120,105,.14)',
+  errorLine: 'rgba(255,156,143,.35)',
+  warn: '#F0B65E',
+  warnSoft: 'rgba(240,182,94,.14)',
+  warnLine: 'rgba(240,182,94,.35)',
+  warnInk: '#F5D7A6',
+  success: '#5EB78D',
+  successSoft: 'rgba(94,183,141,.14)',
+  successInk: '#5EB78D',
+
+  accentLight: '#5C66DB',
+  wordmark: '#F2B440',
+  advancedBar: '#B6BCDC',
+  stickerLine: '#3B4580',
+  onAccentFill: '#2E3141',
+  onAccentTrack: 'rgba(46,49,65,.25)',
+  codeBg: '#080E2A',
+
+  white: '#FFFFFF',
+  toastBg: '#253066',
+};
+
+export const authColors = isNightMode() ? nightColors : lightColors;
 
 export const authRadius = {
   field: 16,

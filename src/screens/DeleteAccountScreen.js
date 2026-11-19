@@ -14,7 +14,7 @@ import {
   permanentDeletionDate,
 } from '../constants/accountDeletion';
 import { useAuth } from '../context/AuthContext';
-import { authColors, authFonts, authSpacing, authType, centeredColumn, contentWidth } from '../theme/authTheme';
+import { authColors, authFonts, authSpacing, authType, centeredColumn, contentWidth, lightColors } from '../theme/authTheme';
 
 const CONFIRM_WORD = 'DELETE';
 
@@ -229,9 +229,10 @@ const styles = StyleSheet.create({
     marginTop: 14,
     marginHorizontal: 4,
   },
+  // The light red in both themes: the night error colour is for text, too pale under white.
   destructive: {
     marginTop: 22,
-    backgroundColor: authColors.error,
+    backgroundColor: lightColors.error,
   },
   destructiveOff: {
     backgroundColor: authColors.surface2,
