@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, DevSettings, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { reloadAppAsync } from 'expo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { terminate } from 'firebase/firestore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Text from '../components/AppText';
@@ -11,10 +14,12 @@ import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
 import { useTextSize } from '../context/TextSizeContext';
 import { syncDailyReminder } from '../services/notifications';
+import { db } from '../services/firebase';
 import { downloadsSize } from '../services/offline';
 import { getPreferences, savePreferences } from '../services/preferences';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 import { TEXT_SIZES } from '../theme/textScale';
+import { isNightMode, NIGHT_MODE_KEY } from '../theme/themeMode';
 
 // The "A" in each text size button, smallest to largest, as in the design.
 const SIZE_GLYPHS = [13, 16, 19, 22];
@@ -27,10 +32,11 @@ function Toggle({ on, disabled }) {
   );
 }
 
-function Row({ title, subtitle, onPress, right, isLast, destructive, disabled }) {
+function Row({ title, subtitle, onPress, right, isLast, destructive, disabled, hint }) {
   return (
     <Pressable
       onPress={disabled ? undefined : onPress}
+      accessibilityHint={hint}
       style={({ pressed }) => [
         styles.row,
         !isLast && styles.rowDivider,
@@ -196,6 +202,23 @@ export default function SettingsScreen({ navigation, route }) {
     await savePreferences({ reminderEnabled: scheduled }).catch(() => {});
   }
 
+  // Styles read the palette once, at import, so the switch saves the choice
+  // and restarts the app; index.js applies it before anything loads.
+  async function toggleNightMode() {
+    try {
+      await AsyncStorage.setItem(NIGHT_MODE_KEY, isNightMode() ? 'off' : 'on');
+      // A JS reload leaves Firestore's open connections behind on the native
+      // side; after a few switches they fill the per-host limit and reads hang.
+      await terminate(db).catch(() => {});
+      // Expo Go has no native reloadAppAsync (the call silently does nothing
+      // there), so development uses React Native's own reload instead.
+      if (__DEV__) DevSettings.reload();
+      else await reloadAppAsync('Night study mode changed');
+    } catch {
+      setToast('Close and reopen Javi to change Night study mode.');
+    }
+  }
+
   function confirmDeleteDownloads() {
     Alert.alert('Delete all downloads?', 'Lessons will need a connection until you download them again.', [
       { text: 'Cancel', style: 'cancel' },
@@ -293,12 +316,10 @@ export default function SettingsScreen({ navigation, route }) {
         <View style={styles.group}>
           <Row
             title="Night study mode"
-            // The handoff defines a full dark palette, but applying it means
-            // re-checking every screen in a second theme, so it is deliberately
-            // not wired up rather than half-applied.
-            subtitle="Coming later — the app is light-only for now"
-            right={<Toggle on={false} disabled />}
-            disabled
+            subtitle={isNightMode() ? 'Dark palette, on' : 'Dark palette, off'}
+            onPress={toggleNightMode}
+            hint="Restarts Javi to change the colours"
+            right={<Toggle on={isNightMode()} />}
           />
           <Row
             title="Profile details"

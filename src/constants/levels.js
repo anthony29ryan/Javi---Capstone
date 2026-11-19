@@ -1,5 +1,10 @@
-import { authColors } from '../theme/authTheme';
+import { authColors, lightColors } from '../theme/authTheme';
 import { colors } from '../theme/colors';
+
+// The cards are fixed-colour stickers, so their inks come from the light
+// palette and stay readable in Night study mode.
+const INK = lightColors.ink;
+const CREAM = lightColors.bg;
 
 /**
  * Per-tier presentation, in course order.
@@ -11,36 +16,41 @@ import { colors } from '../theme/colors';
  */
 export const LEVEL_TAGS = ['Foundations', 'Objects', 'Systems'];
 
-// Beginner's text is the page cream, as on Home's terracotta Continue sticker.
+// Beginner is terracotta in both themes, like Home's Continue sticker: page-coloured
+// text (cream by day, navy at night). `bar` is the tier's colour as a progress
+// fill on the page (Profile), which follows the theme accent.
 export const LEVEL_THEMES = [
   {
-    background: colors.primary,
+    background: lightColors.accent,
+    bar: colors.primary,
     ink: colors.background,
     subtleInk: colors.background,
     eyebrowInk: colors.background,
-    track: 'rgba(247,245,240,.3)',
-    fill: colors.background,
-    chipBackground: authColors.ink,
+    track: authColors.onAccentTrack,
+    fill: authColors.onAccentFill,
+    chipBackground: INK,
     chipInk: colors.white,
   },
   {
     background: '#FFC97E',
-    ink: authColors.ink,
+    bar: '#FFC97E',
+    ink: INK,
     subtleInk: 'rgba(46,49,65,.78)',
-    eyebrowInk: authColors.ink,
+    eyebrowInk: INK,
     track: 'rgba(46,49,65,.2)',
-    fill: authColors.ink,
-    chipBackground: authColors.ink,
+    fill: INK,
+    chipBackground: INK,
     chipInk: colors.white,
   },
   {
     background: '#333242',
+    bar: authColors.advancedBar,
     ink: colors.white,
     subtleInk: 'rgba(255,255,255,.7)',
     eyebrowInk: 'rgba(255,255,255,.6)',
     track: 'rgba(255,255,255,.16)',
     fill: colors.white,
-    chipBackground: colors.background,
+    chipBackground: CREAM,
     chipInk: '#333242',
   },
 ];

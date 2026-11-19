@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Text from '../components/AppText';
 import AuthButton from '../components/auth/AuthButton';
 import BottomSheet from '../components/BottomSheet';
+import { lightColors } from '../theme/authTheme';
 import { colors, fonts, type } from '../theme/colors';
 
 /**
@@ -65,8 +66,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 24,
   },
+  // The light red in both themes: the night error colour is for text, too pale under white.
   confirm: {
-    backgroundColor: colors.error,
+    backgroundColor: lightColors.error,
   },
   keep: {
     marginTop: 12,

@@ -11,6 +11,7 @@ import Mascot from '../components/Mascot';
 import { useProgress } from '../context/ProgressContext';
 import { clearDraft, describeRunError, loadDraft, runChallenge, saveDraft } from '../services/challenges';
 import { recordChallengeStreak } from '../services/progress';
+import { authColors } from '../theme/authTheme';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 import { StatusPill } from './ChallengesScreen';
 
@@ -475,7 +476,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(180,72,62,.32)',
+    borderColor: authColors.errorLine,
     backgroundColor: colors.errorBg,
   },
   hintText: {

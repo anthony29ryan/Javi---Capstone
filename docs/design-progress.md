@@ -199,12 +199,12 @@ Totals: 84 done · 0 to do · 26 not built · 4 partly · 9 last
 
 | # | Frame | App screen | Status | Commit |
 |---|---|---|---|---|
-| 116 | Welcome · Dark | needs a theme switch | last |  |
-| 117 | Home · Dark | needs a theme switch | last |  |
-| 118 | Lesson · Dark | needs a theme switch | last |  |
-| 119 | Practice · Dark | needs a theme switch | last |  |
-| 120 | Quiz · Dark | needs a theme switch | last |  |
-| 121 | Settings · Dark | needs a theme switch | last |  |
-| 122 | Download sheet · Dark | needs a theme switch | last |  |
-| 123 | Module · Downloading · Dark | needs a theme switch | last |  |
-| 124 | Offline lessons · Dark | needs a theme switch | last |  |
+| 116 | Welcome · Dark | Settings → Night study mode (restarts the app) | partly | palette + switch built, not yet checked on a device |
+| 117 | Home · Dark | Settings → Night study mode (restarts the app) | partly | checked on the emulator 2026-11-20; sticker edges per "Sticker Edge Options" 1d (slate #3B4580), stickers keep light fills |
+| 118 | Lesson · Dark | Settings → Night study mode (restarts the app) | partly | palette + switch built, not yet checked on a device |
+| 119 | Practice · Dark | Settings → Night study mode (restarts the app) | partly | palette + switch built, not yet checked on a device |
+| 120 | Quiz · Dark | Settings → Night study mode (restarts the app) | partly | palette + switch built, not yet checked on a device |
+| 121 | Settings · Dark | Settings → Night study mode (restarts the app) | partly | palette + switch built, not yet checked on a device |
+| 122 | Download sheet · Dark | Settings → Night study mode (restarts the app) | partly | palette + switch built, not yet checked on a device |
+| 123 | Module · Downloading · Dark | Settings → Night study mode (restarts the app) | partly | palette + switch built, not yet checked on a device |
+| 124 | Offline lessons · Dark | Settings → Night study mode (restarts the app) | partly | palette + switch built, not yet checked on a device |

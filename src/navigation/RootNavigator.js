@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 import { useAssets } from 'expo-asset';
@@ -83,6 +83,13 @@ const withStatusStrip = ({ children }) => <StatusStrip>{children}</StatusStrip>;
 // Sheets skip the strip: theirs would sit undimmed above the backdrop, while
 // the screen underneath keeps its own strip under the dim.
 const bare = ({ children }) => children;
+
+// What shows behind a screen while it slides (e.g. going back). The default is
+// light grey, which flashed during transitions in Night study mode.
+const NAVIGATION_THEME = {
+  ...DefaultTheme,
+  colors: { ...DefaultTheme.colors, background: colors.background },
+};
 
 // Bottom sheets drawn as see-through screens over the one below. Transparent,
 // or the stack's page background hides that screen behind the sheet. No stack
@@ -314,7 +321,7 @@ export default function RootNavigator() {
   if (!minimumSplashDone) return <SplashView onSkip={() => setMinimumSplashDone(true)} />;
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={NAVIGATION_THEME}>
       {/* Three states, in order: signed out, signed in but unverified, and fully
           in. ProgressProvider sits inside the last branch so it never loads
           progress for a user that does not exist yet. */}

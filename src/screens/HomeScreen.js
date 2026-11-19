@@ -14,13 +14,15 @@ import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
 import { pickWeakLessons } from '../services/recommendations';
 import { useWeakTopics } from '../services/weakTopics';
-import { authColors, authFonts } from '../theme/authTheme';
+import { authColors, authFonts, lightColors } from '../theme/authTheme';
 import { colors, fonts, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 // Shortcut sticker colours from the Home options board (1a).
 const QUIZ_STICKER = '#FFC97E';
 const JAVI_STICKER = '#EBC2B3';
 const INK = authColors.ink;
+// Text on the pastel tiles and the resume pill stays dark in Night study mode.
+const STICKER_INK = lightColors.ink;
 // The Flow's Continue card sets its text in the page cream.
 const CREAM = colors.background;
 const RECOMMENDATION_COUNT = 3;
@@ -274,7 +276,7 @@ export default function HomeScreen({ navigation }) {
           style={styles.hero}
         >
           {({ pressed }) => (
-            <Sticker background={colors.primary} tilt={-1} drop={5} corner={24} pressed={pressed} faceStyle={styles.heroFace}>
+            <Sticker background={lightColors.accent} tilt={-1} drop={5} corner={24} pressed={pressed} faceStyle={styles.heroFace}>
               <Text style={styles.heroEyebrow}>{next ? 'Continue learning' : 'All caught up'}</Text>
               <Text style={styles.heroTitle}>{next ? next.title : 'Every lesson done'}</Text>
               <Text style={styles.heroCrumb}>
@@ -422,7 +424,7 @@ const styles = StyleSheet.create({
   },
   avatarRing: {
     borderWidth: 2,
-    borderColor: INK,
+    borderColor: authColors.stickerLine,
     borderRadius: radius.pill,
   },
   hero: {
@@ -462,10 +464,10 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 8,
     borderRadius: 4,
-    backgroundColor: 'rgba(247,245,240,.3)',
+    backgroundColor: authColors.onAccentTrack,
   },
   segmentDone: {
-    backgroundColor: CREAM,
+    backgroundColor: authColors.onAccentFill,
   },
   heroFooter: {
     flexDirection: 'row',
@@ -485,7 +487,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 22,
     justifyContent: 'center',
-    backgroundColor: INK,
+    backgroundColor: STICKER_INK,
   },
   resumeLabel: {
     fontFamily: fonts.bold,
@@ -517,19 +519,19 @@ const styles = StyleSheet.create({
     fontFamily: fonts.mono,
     fontSize: 18,
     lineHeight: 22,
-    color: INK,
+    color: STICKER_INK,
   },
   tileTitle: {
     fontFamily: authFonts.extraBold,
     fontSize: 15,
     lineHeight: 15 * 1.2,
-    color: INK,
+    color: STICKER_INK,
   },
   tileMeta: {
     fontFamily: fonts.semiBold,
     fontSize: 11.5,
     lineHeight: 11.5 * 1.3,
-    color: INK,
+    color: STICKER_INK,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -571,7 +573,7 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     backgroundColor: colors.surface,
     borderWidth: 2,
-    borderColor: INK,
+    borderColor: authColors.stickerLine,
     alignItems: 'center',
     justifyContent: 'center',
   },

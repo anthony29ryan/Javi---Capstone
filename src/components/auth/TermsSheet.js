@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
   tabMark: {
     fontFamily: authFonts.bold,
     fontSize: 12,
-    color: '#2F7F5E',
+    color: authColors.successInk,
   },
   scroll: {
     flex: 1,
@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     color: authColors.muted,
   },
   hintDone: {
-    color: '#2F7F5E',
+    color: authColors.successInk,
   },
   agreeRow: {
     flexDirection: 'row',
@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 8,
     borderWidth: 1.5,
-    borderColor: 'rgba(46,49,65,.25)',
+    borderColor: authColors.lineStrong,
     alignItems: 'center',
     justifyContent: 'center',
   },

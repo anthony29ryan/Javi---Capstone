@@ -31,10 +31,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    backgroundColor: authColors.ink,
+    backgroundColor: authColors.stickerLine,
   },
   face: {
     borderWidth: 2,
-    borderColor: authColors.ink,
+    borderColor: authColors.stickerLine,
   },
 });

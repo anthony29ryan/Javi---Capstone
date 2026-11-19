@@ -22,7 +22,7 @@ import PracticeScreen from '../screens/PracticeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import TutorScreen from '../screens/TutorScreen';
 import { getPreferences, savePreferences } from '../services/preferences';
-import { authColors } from '../theme/authTheme';
+import { authColors, lightColors } from '../theme/authTheme';
 import { colors, fonts } from '../theme/colors';
 import { createSlideTabNavigator } from './SlideTabs';
 
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     backgroundColor: colors.surface,
     borderTopWidth: 2,
-    borderTopColor: authColors.ink,
+    borderTopColor: authColors.stickerLine,
   },
   button: {
     flex: 1,
@@ -268,14 +268,14 @@ const styles = StyleSheet.create({
     top: 3,
     bottom: -3,
     borderRadius: 16,
-    backgroundColor: authColors.ink,
+    backgroundColor: authColors.stickerLine,
   },
   stickerFill: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: 16,
     borderWidth: 2,
-    borderColor: authColors.ink,
-    backgroundColor: colors.primary,
+    borderColor: authColors.stickerLine,
+    backgroundColor: lightColors.accent,
   },
   glyph: {
     fontFamily: fonts.mono,
@@ -290,8 +290,9 @@ const styles = StyleSheet.create({
     lineHeight: 13,
     color: colors.textMuted,
   },
+  // On the accent fill, so dark in both themes.
   textOn: {
-    color: authColors.ink,
+    color: lightColors.ink,
   },
   // The raised centre button: Javi's face in the primary button colour,
   // standing 24px above the bar.
@@ -308,7 +309,7 @@ const styles = StyleSheet.create({
     top: 2,
     height: 52,
     borderRadius: 26,
-    backgroundColor: authColors.ink,
+    backgroundColor: authColors.stickerLine,
   },
   javiShadowOn: {
     top: 3,
@@ -318,8 +319,8 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 26,
     borderWidth: 2,
-    borderColor: authColors.ink,
-    backgroundColor: colors.primaryDark,
+    borderColor: authColors.stickerLine,
+    backgroundColor: lightColors.accentDeep,
     alignItems: 'center',
     overflow: 'hidden',
   },
@@ -338,7 +339,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: authColors.ink,
-    backgroundColor: colors.primary,
+    borderColor: authColors.stickerLine,
+    backgroundColor: lightColors.accent,
   },
 });
