@@ -157,7 +157,7 @@ function PracticePanel({ courses, modules, moduleScores, tracedIds, isChallengeS
     return {
       id: course.id,
       label: course.title,
-      color: levelTheme(index).background,
+      color: levelTheme(index).bar,
       count: `${doneInTier}/${inTier.length}`,
       percent: inTier.length ? Math.round((doneInTier / inTier.length) * 100) : 0,
       complete: inTier.length > 0 && doneInTier === inTier.length,
@@ -384,7 +384,7 @@ function ProfileBody({ navigation }) {
                   <View
                     style={[
                       styles.levelFill,
-                      { width: `${coursePercent}%`, backgroundColor: levelTheme(index).background },
+                      { width: `${coursePercent}%`, backgroundColor: levelTheme(index).bar },
                     ]}
                   />
                 </View>

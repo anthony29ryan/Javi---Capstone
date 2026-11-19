@@ -10,7 +10,7 @@ import Skeleton, { SkeletonSticker } from '../components/Skeleton';
 import Sticker from '../components/Sticker';
 import { scorePercent, useProgress } from '../context/ProgressContext';
 import { getChallenges } from '../services/challenges';
-import { authColors, authFonts } from '../theme/authTheme';
+import { authFonts, lightColors } from '../theme/authTheme';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 import { quizCount } from './QuizzesScreen';
 
@@ -19,7 +19,8 @@ import { quizCount } from './QuizzesScreen';
 const TRACER_STICKER = '#FFC97E';
 const CHALLENGE_STICKER = '#EBC2B3';
 const PLAYGROUND_STICKER = '#BFE6CF';
-const INK = authColors.ink;
+// Text on the pastel stickers stays dark in Night study mode.
+const INK = lightColors.ink;
 const CREAM = colors.background;
 
 function StatSticker({ label, background, tilt }) {
@@ -135,7 +136,7 @@ export default function PracticeScreen({ navigation }) {
             />
             <StatSticker
               label={`${taken.length} ${taken.length === 1 ? 'quiz' : 'quizzes'} taken`}
-              background={colors.primarySoft}
+              background={lightColors.accentSoft}
               tilt={3}
             />
           </View>
@@ -164,7 +165,7 @@ export default function PracticeScreen({ navigation }) {
             glyph="?"
             name="Quiz"
             line={lowestTitle ? `Retry ${lowestTitle}` : quizCount(modules.length)}
-            background={colors.primary}
+            background={lightColors.accent}
             ink={CREAM}
             tilt={-1.5}
             onPress={() => navigation.navigate('Quizzes')}

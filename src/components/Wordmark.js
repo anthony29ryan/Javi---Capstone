@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 
+import { authColors } from '../theme/authTheme';
 import { colors, fonts } from '../theme/colors';
 import Text from './AppText';
 
@@ -26,6 +27,6 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   vi: {
-    color: colors.button,
+    color: authColors.wordmark,
   },
 });

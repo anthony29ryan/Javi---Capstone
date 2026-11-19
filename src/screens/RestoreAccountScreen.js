@@ -7,7 +7,7 @@ import AuthButton from '../components/auth/AuthButton';
 import Mascot from '../components/Mascot';
 import { formatDeletionDate } from '../constants/accountDeletion';
 import { useAuth } from '../context/AuthContext';
-import { authColors, authFonts, authSpacing, centeredColumn, contentWidth } from '../theme/authTheme';
+import { authColors, authFonts, authSpacing, centeredColumn, contentWidth, lightColors } from '../theme/authTheme';
 
 /**
  * Frame 52, Welcome back · Restore: shown when someone logs in inside the
@@ -208,7 +208,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginHorizontal: 4,
   },
+  // Dark in both themes: the label is white.
   logOut: {
-    backgroundColor: authColors.ink,
+    backgroundColor: lightColors.ink,
   },
 });
