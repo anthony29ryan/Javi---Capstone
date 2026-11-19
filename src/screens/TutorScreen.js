@@ -81,7 +81,9 @@ export default function TutorScreen({ route }) {
     if (route.params?.moduleId) setModuleId(route.params.moduleId);
   }, [route.params?.moduleId, route.params?.openedAt]);
 
-  if (loading) return <TutorSkeleton top={insets.top + spacing.lg} />;
+  // Skeleton on the first load only. A reconnect also sets `loading`, and swapping
+  // the chat out then would lose the typed question and any reply on its way.
+  if (loading && modules.length === 0) return <TutorSkeleton top={insets.top + spacing.lg} />;
   if (error) return <ScreenState error={error} onRetry={refresh} />;
   if (modules.length === 0) {
     return <ScreenState message="No modules yet." hint="Content has not been published." />;

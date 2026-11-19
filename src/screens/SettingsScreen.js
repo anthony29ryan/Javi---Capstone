@@ -198,7 +198,8 @@ export default function SettingsScreen({ navigation, route }) {
     });
 
     setPreferences((current) => ({ ...current, reminderEnabled: scheduled }));
-    await savePreferences({ reminderEnabled: scheduled });
+    // The switch already shows the new value; offline the write stays queued and lands later.
+    await savePreferences({ reminderEnabled: scheduled }).catch(() => {});
   }
 
   // Styles read the palette once, at import, so the switch saves the choice

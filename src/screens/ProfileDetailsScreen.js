@@ -19,6 +19,7 @@ import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';
 import { useAuth } from '../context/AuthContext';
 import { getPreferences, savePreferences } from '../services/preferences';
+import { OFFLINE_SAVE_MESSAGE, savesWhenOnline } from '../services/saveTimeout';
 import { authColors, authRadius, authSpacing, authType, authFonts, centeredColumn, contentWidth } from '../theme/authTheme';
 
 // The form's shape in grey while the profile loads; labels stay real.
@@ -152,7 +153,7 @@ export default function ProfileDetailsScreen({ navigation }) {
         params: { toast: 'Profile updated', toastAt: Date.now() },
       });
     } catch (err) {
-      setSaveError(err.message);
+      setSaveError(savesWhenOnline(err) ? OFFLINE_SAVE_MESSAGE : err.message);
     } finally {
       setSaving(false);
     }

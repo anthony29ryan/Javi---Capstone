@@ -11,6 +11,7 @@ import ScreenState from '../components/ScreenState';
 import Skeleton from '../components/Skeleton';
 import { useProgress } from '../context/ProgressContext';
 import { getLesson } from '../services/content';
+import { OFFLINE_SAVE_MESSAGE, savesWhenOnline } from '../services/saveTimeout';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 // How close to the bottom counts as having read to the end.
@@ -213,8 +214,8 @@ export default function LessonDetailScreen({ route, navigation }) {
     try {
       await markLessonComplete(lesson.id, completing);
       saved = true;
-    } catch {
-      setToast('Could not save. Try again.');
+    } catch (err) {
+      setToast(savesWhenOnline(err) ? OFFLINE_SAVE_MESSAGE : 'Could not save. Try again.');
     } finally {
       setSaving(false);
     }

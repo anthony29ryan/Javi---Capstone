@@ -5,6 +5,7 @@ import Text from '../components/AppText';
 import Button from '../components/Button';
 import TextField from '../components/TextField';
 import { useAuth } from '../context/AuthContext';
+import { OFFLINE_SAVE_MESSAGE, savesWhenOnline } from '../services/saveTimeout';
 import { colors, radius, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 export default function EditProfileScreen({ navigation }) {
@@ -22,7 +23,7 @@ export default function EditProfileScreen({ navigation }) {
       await updateDisplayName(displayName.trim());
       navigation.goBack();
     } catch (err) {
-      setError(err.message);
+      setError(savesWhenOnline(err) ? OFFLINE_SAVE_MESSAGE : err.message);
     } finally {
       setSubmitting(false);
     }

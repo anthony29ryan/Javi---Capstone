@@ -8,6 +8,7 @@ import AuthButton from '../components/auth/AuthButton';
 import BottomSheet from '../components/BottomSheet';
 import { AVATAR_IDS, AVATARS } from '../constants/art';
 import { useAuth } from '../context/AuthContext';
+import { OFFLINE_SAVE_MESSAGE, savesWhenOnline } from '../services/saveTimeout';
 import { colors, fonts, type } from '../theme/colors';
 
 // A see-through screen in the root stack (presentation 'transparentModal')
@@ -33,8 +34,8 @@ export default function AvatarSheetScreen({ navigation }) {
     try {
       await updateAvatar(picked);
       close();
-    } catch {
-      setError('Could not save your avatar. Check your connection and try again.');
+    } catch (err) {
+      setError(savesWhenOnline(err) ? OFFLINE_SAVE_MESSAGE : 'Could not save your avatar. Try again.');
     } finally {
       setSaving(false);
     }

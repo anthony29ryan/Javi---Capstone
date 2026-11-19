@@ -7,6 +7,7 @@ import AuthButton from '../components/auth/AuthButton';
 import Mascot from '../components/Mascot';
 import { formatDeletionDate } from '../constants/accountDeletion';
 import { useAuth } from '../context/AuthContext';
+import { OFFLINE_SAVE_MESSAGE, savesWhenOnline } from '../services/saveTimeout';
 import { authColors, authFonts, authSpacing, centeredColumn, contentWidth, lightColors } from '../theme/authTheme';
 
 /**
@@ -54,12 +55,14 @@ export default function RestoreAccountScreen({ navigation, route }) {
         await keepDeleted();
         navigation.popToTop();
       }
-    } catch {
+    } catch (err) {
       settled.current = false;
       setError(
-        choice === 'restore'
-          ? 'Could not restore your account. Check your connection and try again.'
-          : 'Could not log out. Try again.'
+        choice !== 'restore'
+          ? 'Could not log out. Try again.'
+          : savesWhenOnline(err)
+            ? OFFLINE_SAVE_MESSAGE
+            : 'Could not restore your account. Try again.'
       );
       setBusy(false);
     }
