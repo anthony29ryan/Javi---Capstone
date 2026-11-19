@@ -8,6 +8,7 @@ import BottomSheet from '../components/BottomSheet';
 import ReminderTimePicker from '../components/ReminderTimePicker';
 import { syncDailyReminder } from '../services/notifications';
 import { savePreferences } from '../services/preferences';
+import { OFFLINE_SAVE_MESSAGE, savesWhenOnline } from '../services/saveTimeout';
 import { colors, fonts, type } from '../theme/colors';
 
 /**
@@ -31,8 +32,8 @@ export default function ReminderSheetScreen({ navigation, route }) {
       await savePreferences({ reminderTime: time, reminderEnabled: scheduled });
       result.current = { reminderTime: time, reminderEnabled: scheduled };
       close();
-    } catch {
-      setError('Could not save the reminder. Check your connection and try again.');
+    } catch (err) {
+      setError(savesWhenOnline(err) ? OFFLINE_SAVE_MESSAGE : 'Could not save the reminder. Try again.');
       setSaving(false);
     }
   }

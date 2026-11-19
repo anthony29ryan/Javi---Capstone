@@ -21,6 +21,7 @@ import { auth, db } from '../services/firebase';
 import { forgetGoogleAccount, pickGoogleAccount } from '../services/googleSignIn';
 import { cancelDailyReminder } from '../services/notifications';
 import { clearOfflineData } from '../services/offline';
+import { withSaveTimeout } from '../services/saveTimeout';
 
 const AuthContext = createContext(undefined);
 
@@ -88,9 +89,11 @@ export function AuthProvider({ children }) {
         // on another one. Only logging in again restores an account, so
         // end the session rather than quietly cancelling the deletion. The
         // sign-out calls this listener again with no user.
-        await cancelDailyReminder();
-        await clearOfflineData();
-        await forgetGoogleAccount();
+        // Cleanup is best-effort: if one step throws (AsyncStorage, say), the
+        // sign-out must still run or the app sits on the splash for good.
+        await cancelDailyReminder().catch(() => {});
+        await clearOfflineData().catch(() => {});
+        await forgetGoogleAccount(); // catches its own errors
         await endSession();
         return;
       }
@@ -256,16 +259,18 @@ export function AuthProvider({ children }) {
 
   /** Accept on the updated-Terms sheet: records consent to the current text, as sign-up does. */
   async function acceptUpdatedTerms() {
-    await updateDoc(doc(db, 'users', auth.currentUser.uid), {
-      termsAcceptedAt: serverTimestamp(),
-      termsVersion: TERMS_VERSION,
-    });
+    await withSaveTimeout(
+      updateDoc(doc(db, 'users', auth.currentUser.uid), {
+        termsAcceptedAt: serverTimestamp(),
+        termsVersion: TERMS_VERSION,
+      })
+    );
     setTermsOutdated(false);
   }
 
   /** Welcome back's Restore: cancels the deletion and opens the app. */
   async function restoreAccount() {
-    await updateDoc(doc(db, 'users', auth.currentUser.uid), { deletionRequestedAt: deleteField() });
+    await withSaveTimeout(updateDoc(doc(db, 'users', auth.currentUser.uid), { deletionRequestedAt: deleteField() }));
     setRestoredNotice(true);
     setUser(auth.currentUser);
   }
@@ -353,18 +358,18 @@ export function AuthProvider({ children }) {
   }
 
   async function updateNickname(value) {
-    await setDoc(doc(db, 'users', auth.currentUser.uid), { nickname: value }, { merge: true });
+    await withSaveTimeout(setDoc(doc(db, 'users', auth.currentUser.uid), { nickname: value }, { merge: true }));
     setNickname(value);
   }
 
   async function updateAvatar(id) {
-    await setDoc(doc(db, 'users', auth.currentUser.uid), { avatar: id }, { merge: true });
+    await withSaveTimeout(setDoc(doc(db, 'users', auth.currentUser.uid), { avatar: id }, { merge: true }));
     setAvatar(id);
   }
 
   async function updateDisplayName(displayName) {
     await updateProfile(auth.currentUser, { displayName });
-    await updateDoc(doc(db, 'users', auth.currentUser.uid), { displayName });
+    await withSaveTimeout(updateDoc(doc(db, 'users', auth.currentUser.uid), { displayName }));
     // updateProfile mutates auth.currentUser in place; spread it so React sees a new
     // reference and re-renders anything reading user.displayName.
     setUser({ ...auth.currentUser });

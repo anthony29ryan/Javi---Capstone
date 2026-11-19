@@ -1,6 +1,7 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 import { auth, db } from './firebase';
+import { withSaveTimeout } from './saveTimeout';
 
 export const DEFAULT_REMINDER_TIME = '20:00';
 
@@ -25,5 +26,5 @@ export async function getPreferences() {
 }
 
 export async function savePreferences(updates) {
-  await setDoc(doc(db, 'users', auth.currentUser.uid), updates, { merge: true });
+  await withSaveTimeout(setDoc(doc(db, 'users', auth.currentUser.uid), updates, { merge: true }));
 }

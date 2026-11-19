@@ -192,7 +192,8 @@ export default function SettingsScreen({ navigation, route }) {
     });
 
     setPreferences((current) => ({ ...current, reminderEnabled: scheduled }));
-    await savePreferences({ reminderEnabled: scheduled });
+    // The switch already shows the new value; offline the write stays queued and lands later.
+    await savePreferences({ reminderEnabled: scheduled }).catch(() => {});
   }
 
   function confirmDeleteDownloads() {

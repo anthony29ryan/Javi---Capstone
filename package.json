@@ -37,7 +37,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "node --experimental-test-module-mocks --test tests/accountDeletion.test.js tests/streak.test.js tests/offline.test.js tests/tracer.test.js tests/recommendations.test.js tests/textScale.test.js tests/swipeTarget.test.js functions/weakTopics.test.js functions/codeRunner.test.js functions/dayStart.test.js tests/authAction.test.js tests/reminderTime.test.js tests/inlineFormat.test.js tests/quizOrder.test.js",
+    "test": "node --experimental-test-module-mocks --test tests/accountDeletion.test.js tests/streak.test.js tests/offline.test.js tests/tracer.test.js tests/recommendations.test.js tests/textScale.test.js tests/swipeTarget.test.js functions/weakTopics.test.js functions/codeRunner.test.js functions/dayStart.test.js tests/authAction.test.js tests/reminderTime.test.js tests/inlineFormat.test.js tests/quizOrder.test.js tests/saveTimeout.test.js",
     "model:train": "node functions/scripts/trainModel.js",
     "content:verify": "node scripts/verifyContent.js",
     "content:import": "node scripts/importLessons.js",

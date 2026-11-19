@@ -8,6 +8,7 @@ import Button from '../components/Button';
 import { useProgress } from '../context/ProgressContext';
 import { recordTraceCompletion } from '../services/progress';
 import { countsAsSlip, lineMatches, mismatchIndex, straightenQuotes } from '../services/tracer';
+import { OFFLINE_SAVE_MESSAGE, savesWhenOnline } from '../services/saveTimeout';
 import { colors, fonts, spacing, type, centeredColumn, contentWidth } from '../theme/colors';
 
 export function formatDuration(ms) {
@@ -85,8 +86,8 @@ export default function TracerScreen({ route, navigation }) {
     try {
       await recordTraceCompletion(trace.id);
       await reloadProgress();
-    } catch {
-      setSaveError('Could not save this drill. Check your connection and try again.');
+    } catch (err) {
+      setSaveError(savesWhenOnline(err) ? OFFLINE_SAVE_MESSAGE : 'Could not save this drill. Try again.');
     } finally {
       setSaving(false);
     }

@@ -2,6 +2,7 @@ import { arrayRemove, arrayUnion, doc, getDoc, serverTimestamp, setDoc } from 'f
 import { httpsCallable } from 'firebase/functions';
 
 import { auth, db, functions } from './firebase';
+import { withSaveTimeout } from './saveTimeout';
 import { advanceStreak } from './streak';
 
 const EMPTY_PROGRESS = {
@@ -18,23 +19,12 @@ async function readProgress(userId) {
   return snapshot.exists() ? { ...EMPTY_PROGRESS, ...snapshot.data() } : EMPTY_PROGRESS;
 }
 
-// Firestore resolves a write only once the server has it, which never happens
-// offline, so screens would spin until reconnect. Give up after this long so
-// they can say "not saved"; the write stays queued and lands on reconnect.
-const SAVE_TIMEOUT_MS = 10000;
-
 // Longer than a plain save: a function that has not run for a while can take most of 10 s just to start.
 const finishQuizFunction = httpsCallable(functions, 'finishQuiz', { timeout: 30000 });
 
 /** Merges `fields` into progress/{userId}, rejecting if the server has not confirmed it in time. */
 function saveProgress(userId, fields) {
-  let timer;
-  const timedOut = new Promise((_, reject) => {
-    timer = setTimeout(() => reject(new Error('Saving timed out. Check your connection.')), SAVE_TIMEOUT_MS);
-  });
-  return Promise.race([setDoc(doc(db, 'progress', userId), fields, { merge: true }), timedOut]).finally(() =>
-    clearTimeout(timer)
-  );
+  return withSaveTimeout(setDoc(doc(db, 'progress', userId), fields, { merge: true }));
 }
 
 export async function getProgress() {
